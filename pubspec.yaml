@@ -1,4 +1,4 @@
-name: dart_test
+name: clock_app
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -32,9 +32,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
   iconsax: ^0.0.8
   intl: ^0.18.0
   timezone: ^0.9.1
