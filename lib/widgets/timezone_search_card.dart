@@ -38,17 +38,11 @@ class TimeZoneSearchCard extends StatelessWidget {
                     children: [
                       Text(
                         city.name,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: Theme.of(context).textTheme.displayMedium,
                       ),
                       Text(
                         city.country,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
                   ),

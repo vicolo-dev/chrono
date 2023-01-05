@@ -40,6 +40,22 @@ class _ClockScreenState extends State<ClockScreen> {
     });
   }
 
+  Widget proxyDecorator(Widget child, int index, Animation<double> animation) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (BuildContext context, Widget? child) {
+        return Material(
+          shadowColor: Colors.black.withOpacity(0.5),
+          borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+          elevation: 4,
+          color: Colors.transparent,
+          child: child,
+        );
+      },
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,13 +78,24 @@ class _ClockScreenState extends State<ClockScreen> {
             const MainClock(),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView.builder(
+              child: ReorderableListView.builder(
+                proxyDecorator: proxyDecorator,
                 itemCount: _cities.length,
                 itemBuilder: (BuildContext context, int index) {
                   return TimeZoneCard(
+                    key: ValueKey(_cities[index]),
                     city: _cities[index],
                     onDelete: () => _onDeleteTimeZone(index),
                   );
+                },
+                onReorder: (int oldIndex, int newIndex) {
+                  setState(() {
+                    if (oldIndex < newIndex) {
+                      newIndex -= 1;
+                    }
+                    final City reorderedCity = _cities.removeAt(oldIndex);
+                    _cities.insert(newIndex, reorderedCity);
+                  });
                 },
               ),
             ),
@@ -90,7 +117,7 @@ class _ClockScreenState extends State<ClockScreen> {
             _onSearchReturn(value);
           });
         },
-        tooltip: 'Increment',
+        tooltip: 'Add City',
         child: const Icon(
           FluxIcons.add,
           color: Colors.white,
@@ -131,10 +158,8 @@ class _ClockScreenState extends State<ClockScreen> {
         selectedItemColor: Colors.cyan,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
-        unselectedFontSize: 10,
-
-        // selectedIconTheme:
-        selectedFontSize: 10,
+        selectedLabelStyle: Theme.of(context).textTheme.displaySmall,
+        unselectedLabelStyle: Theme.of(context).textTheme.displaySmall,
         iconSize: 20,
         type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,

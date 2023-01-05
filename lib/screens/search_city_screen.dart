@@ -1,11 +1,9 @@
+import 'package:clock_app/data/paths.dart';
 import 'package:clock_app/widgets/timezone_search_card.dart';
 import 'package:flutter/material.dart';
 
-import 'dart:io';
 import 'package:clock_app/types/city.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as path;
 
 class SearchCityScreen extends StatefulWidget {
   const SearchCityScreen({super.key, required this.existingCities});
@@ -49,9 +47,8 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
   }
 
   _loadDatabase() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String databasePath = path.join(appDocDir.path, 'timezones.db');
-    _db = await openDatabase(databasePath);
+    String databasePath = await getTimezonesDatabasePath();
+    _db = await openDatabase(databasePath, readOnly: true);
     setState(() {
       _isDatabaseLoaded = true;
     });

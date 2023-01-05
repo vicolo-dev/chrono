@@ -31,6 +31,7 @@ class TimeZoneCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var deleteActionPane = ActionPane(
       motion: const ScrollMotion(),
+      // extentRatio: Platform == 0.25,
       children: [
         SlidableAction(
           onPressed: (context) => onDelete(),
@@ -41,6 +42,32 @@ class TimeZoneCard extends StatelessWidget {
         ),
       ],
     );
+
+    var contents = Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                city.name,
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+              Text(
+                offset != 0
+                    ? ' ${formatTimeOffset(offset.abs())} ${offset == 1 ? 'hour' : 'hours'} ${offset < 0 ? 'behind' : 'ahead'}'
+                    : 'Same time',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ],
+          ),
+          const Spacer(),
+          TimeZoneClock(timezoneLocation: timezoneLocation, fontSize: 22),
+        ],
+      ),
+    );
+
     return SizedBox(
       width: double.infinity,
       child: Card(
@@ -50,33 +77,10 @@ class TimeZoneCard extends StatelessWidget {
         ),
         clipBehavior: Clip.hardEdge,
         child: Slidable(
-          startActionPane: deleteActionPane,
-          endActionPane: deleteActionPane,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      city.name,
-                      style: Theme.of(context).textTheme.headline2,
-                    ),
-                    Text(
-                      offset != 0
-                          ? ' ${formatTimeOffset(offset.abs())} ${offset == 1 ? 'hour' : 'hours'} ${offset < 0 ? 'behind' : 'ahead'}'
-                          : 'Same time',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                TimeZoneClock(timezoneLocation: timezoneLocation, fontSize: 22),
-              ],
-            ),
-          ),
-        ),
+            key: key,
+            startActionPane: deleteActionPane,
+            endActionPane: deleteActionPane,
+            child: contents),
       ),
     );
   }
