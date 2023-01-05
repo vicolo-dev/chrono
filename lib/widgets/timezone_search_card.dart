@@ -11,7 +11,7 @@ class TimeZoneSearchCard extends StatelessWidget {
     required this.city,
     required this.onTap,
   }) : super(key: key) {
-    timezoneLocation = timezone.getLocation(city.timeZone);
+    timezoneLocation = timezone.getLocation(city.timezone);
   }
 
   late final timezone.Location timezoneLocation;

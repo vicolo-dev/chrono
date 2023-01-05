@@ -1,3 +1,4 @@
+import 'package:clock_app/data/database.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/widgets/main_clock.dart';
@@ -20,6 +21,17 @@ class _ClockScreenState extends State<ClockScreen> {
 
   final List<City> _cities = <City>[];
 
+  @override
+  void initState() {
+    super.initState();
+
+    database?.rawQuery('SELECT * FROM SavedCities').then((List<Map> value) {
+      setState(() {
+        _cities.addAll(value.map((Map map) => City.fromMap(map)));
+      });
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -27,6 +39,9 @@ class _ClockScreenState extends State<ClockScreen> {
   }
 
   void _onSearchReturn(dynamic city) {
+    city = city as City;
+    database?.rawInsert(
+        'INSERT INTO SavedCities(City, Timezone, Country) VALUES("${city.name}", "${city.timezone}", "${city.country}")');
     setState(() {
       if (city != null) {
         _cities.add(city);
@@ -35,6 +50,8 @@ class _ClockScreenState extends State<ClockScreen> {
   }
 
   void _onDeleteTimeZone(int index) {
+    database?.rawDelete(
+        'DELETE FROM SavedCities WHERE City = "${_cities[index].name}"');
     setState(() {
       _cities.removeAt(index);
     });
@@ -113,9 +130,7 @@ class _ClockScreenState extends State<ClockScreen> {
             MaterialPageRoute(
                 builder: (context) =>
                     SearchCityScreen(existingCities: _cities)),
-          ).then((value) {
-            _onSearchReturn(value);
-          });
+          ).then(_onSearchReturn);
         },
         tooltip: 'Add City',
         child: const Icon(

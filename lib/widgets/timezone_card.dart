@@ -12,7 +12,7 @@ class TimeZoneCard extends StatelessWidget {
     required this.city,
     required this.onDelete,
   }) : super(key: key) {
-    timezoneLocation = timezone.getLocation(city.timeZone);
+    timezoneLocation = timezone.getLocation(city.timezone);
     offset = (timezoneLocation.currentTimeZone.offset -
             DateTime.now().timeZoneOffset.inMilliseconds) /
         3600000;
