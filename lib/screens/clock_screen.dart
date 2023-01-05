@@ -1,10 +1,10 @@
-import 'package:clock_app/screens/search_city_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/widgets/main_clock.dart';
+import 'package:clock_app/screens/search_city_screen.dart';
 import 'package:clock_app/widgets/timezone_card.dart';
 import 'package:clock_app/types/city.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:clock_app/icons/flux_icons.dart';
 
 class ClockScreen extends StatefulWidget {
   const ClockScreen({super.key, required this.title});
@@ -48,6 +48,12 @@ class _ClockScreenState extends State<ClockScreen> {
             style: const TextStyle(fontWeight: FontWeight.bold)),
         elevation: 0,
         backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(FluxIcons.settings, semanticLabel: "Settings"),
+          ),
+        ],
       ),
       body: Center(
         child: Padding(
@@ -86,7 +92,7 @@ class _ClockScreenState extends State<ClockScreen> {
         },
         tooltip: 'Increment',
         child: const Icon(
-          Iconsax.add,
+          FluxIcons.add,
           color: Colors.white,
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -95,28 +101,28 @@ class _ClockScreenState extends State<ClockScreen> {
           BottomNavigationBarItem(
             icon: Padding(
                 padding: EdgeInsets.only(bottom: 6),
-                child: Icon(Iconsax.alarm)),
+                child: Icon(FluxIcons.alarm)),
             // activeIcon: Icon(Iconsax.alarm5),r
             label: 'Alarms',
           ),
           BottomNavigationBarItem(
             icon: Padding(
                 padding: EdgeInsets.only(bottom: 6),
-                child: Icon(Iconsax.clock)),
+                child: Icon(FluxIcons.clock)),
             // activeIcon: Icon(Iconsax.clock5),
             label: 'Clock',
           ),
           BottomNavigationBarItem(
             icon: Padding(
                 padding: EdgeInsets.only(bottom: 6),
-                child: Icon(Iconsax.timer)),
+                child: Icon(FluxIcons.timer)),
             // activeIcon: Icon(Iconsax.timer4),
             label: 'Timer',
           ),
           BottomNavigationBarItem(
             icon: Padding(
                 padding: EdgeInsets.only(bottom: 6),
-                child: Icon(Iconsax.timer_1)),
+                child: Icon(FluxIcons.stopwatch)),
             // activeIcon: Icon(Iconsax.timer_15),
             label: 'Stopwatch',
           ),
