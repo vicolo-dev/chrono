@@ -13,6 +13,6 @@ Future<String> getTimezonesDatabasePath() async {
   return path.join(await getAppDataDirectoryPath(), 'timezones.db');
 }
 
-Future<String> getMainDatabasePath() async {
-  return path.join(await getDatabasesPath(), 'database.db');
-}
+// Future<String> getMainDatabasePath() async {
+//   return path.join(await getDatabasesPath(), 'database.db');
+// }

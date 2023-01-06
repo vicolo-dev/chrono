@@ -1,6 +1,8 @@
-import 'package:clock_app/data/database.dart';
 import 'package:flutter/material.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:clock_app/widgets/navigation_bar.dart';
 import 'package:clock_app/widgets/main_clock.dart';
 import 'package:clock_app/screens/search_city_screen.dart';
 import 'package:clock_app/widgets/timezone_card.dart';
@@ -17,31 +19,35 @@ class ClockScreen extends StatefulWidget {
 }
 
 class _ClockScreenState extends State<ClockScreen> {
-  int _selectedIndex = 0;
+  List<City> _cities = <City>[];
 
-  final List<City> _cities = <City>[];
+  _loadFavoriteCities() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    final String? encodedFavoriteCities =
+        preferences.getString('favorite_cities');
+
+    if (encodedFavoriteCities != null) {
+      setState(() => _cities = City.decode(encodedFavoriteCities));
+    }
+  }
+
+  _saveFavoriteCities() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('favorite_cities', City.encode(_cities));
+  }
 
   @override
   void initState() {
     super.initState();
 
-    database?.rawQuery('SELECT * FROM SavedCities').then((List<Map> value) {
-      setState(() {
-        _cities.addAll(value.map((Map map) => City.fromMap(map)));
-      });
-    });
+    _loadFavoriteCities();
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  void _onSearchReturn(dynamic city) {
+  _onSearchReturn(dynamic city) {
     city = city as City;
-    database?.rawInsert(
-        'INSERT INTO SavedCities(City, Timezone, Country) VALUES("${city.name}", "${city.timezone}", "${city.country}")');
+    _saveFavoriteCities();
+
     setState(() {
       if (city != null) {
         _cities.add(city);
@@ -49,11 +55,23 @@ class _ClockScreenState extends State<ClockScreen> {
     });
   }
 
-  void _onDeleteTimeZone(int index) {
-    database?.rawDelete(
-        'DELETE FROM SavedCities WHERE City = "${_cities[index].name}"');
+  _onDeleteCity(int index) {
+    _saveFavoriteCities();
+
     setState(() {
       _cities.removeAt(index);
+    });
+  }
+
+  _onReorderCities(int oldIndex, int newIndex) {
+    _saveFavoriteCities();
+
+    setState(() {
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+      final City reorderedCity = _cities.removeAt(oldIndex);
+      _cities.insert(newIndex, reorderedCity);
     });
   }
 
@@ -62,7 +80,7 @@ class _ClockScreenState extends State<ClockScreen> {
       animation: animation,
       builder: (BuildContext context, Widget? child) {
         return Material(
-          shadowColor: Colors.black.withOpacity(0.5),
+          shadowColor: Colors.black.withOpacity(0.3),
           borderRadius: const BorderRadius.all(Radius.circular(16.0)),
           elevation: 4,
           color: Colors.transparent,
@@ -75,10 +93,11 @@ class _ClockScreenState extends State<ClockScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var title = widget.title;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(title, style: Theme.of(context).textTheme.titleMedium),
         elevation: 0,
         backgroundColor: Colors.transparent,
         actions: [
@@ -102,18 +121,10 @@ class _ClockScreenState extends State<ClockScreen> {
                   return TimeZoneCard(
                     key: ValueKey(_cities[index]),
                     city: _cities[index],
-                    onDelete: () => _onDeleteTimeZone(index),
+                    onDelete: () => _onDeleteCity(index),
                   );
                 },
-                onReorder: (int oldIndex, int newIndex) {
-                  setState(() {
-                    if (oldIndex < newIndex) {
-                      newIndex -= 1;
-                    }
-                    final City reorderedCity = _cities.removeAt(oldIndex);
-                    _cities.insert(newIndex, reorderedCity);
-                  });
-                },
+                onReorder: _onReorderCities,
               ),
             ),
           ]),
@@ -138,47 +149,7 @@ class _ClockScreenState extends State<ClockScreen> {
           color: Colors.white,
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Padding(
-                padding: EdgeInsets.only(bottom: 6),
-                child: Icon(FluxIcons.alarm)),
-            // activeIcon: Icon(Iconsax.alarm5),r
-            label: 'Alarms',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-                padding: EdgeInsets.only(bottom: 6),
-                child: Icon(FluxIcons.clock)),
-            // activeIcon: Icon(Iconsax.clock5),
-            label: 'Clock',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-                padding: EdgeInsets.only(bottom: 6),
-                child: Icon(FluxIcons.timer)),
-            // activeIcon: Icon(Iconsax.timer4),
-            label: 'Timer',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-                padding: EdgeInsets.only(bottom: 6),
-                child: Icon(FluxIcons.stopwatch)),
-            // activeIcon: Icon(Iconsax.timer_15),
-            label: 'Stopwatch',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.cyan,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        selectedLabelStyle: Theme.of(context).textTheme.displaySmall,
-        unselectedLabelStyle: Theme.of(context).textTheme.displaySmall,
-        iconSize: 20,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: const AppNavigationBar(),
     );
   }
 }

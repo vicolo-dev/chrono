@@ -67,10 +67,13 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
         title: TextField(
           autofocus: true,
           controller: _filter,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: InputBorder.none,
             hintText: 'Search for a city',
+            hintStyle: Theme.of(context).textTheme.bodyLarge,
           ),
+          textAlignVertical: TextAlignVertical.center,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,

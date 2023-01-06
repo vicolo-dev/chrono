@@ -21,13 +21,8 @@ class TimeZoneClock extends StatelessWidget {
       builder: (context) {
         var date = timezone.TZDateTime.now(timezoneLocation);
         String formattedTime = DateFormat('kk:mm').format(date);
-        return Text(
-          formattedTime,
-          style: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-          ),
-        );
+        return Text(formattedTime,
+            style: Theme.of(context).textTheme.displayMedium);
       },
     );
   }

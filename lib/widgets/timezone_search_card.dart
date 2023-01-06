@@ -23,7 +23,7 @@ class TimeZoneSearchCard extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Card(
-          elevation: 4,
+          elevation: 2,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
           ),
@@ -38,11 +38,11 @@ class TimeZoneSearchCard extends StatelessWidget {
                     children: [
                       Text(
                         city.name,
-                        style: Theme.of(context).textTheme.displayMedium,
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
                       Text(
                         city.country,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
                   ),

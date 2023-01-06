@@ -1,6 +1,8 @@
 import 'dart:core';
 
+import 'package:clock_app/theme/font.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as timezone_db;
 
 import 'package:clock_app/screens/clock_screen.dart';
@@ -12,6 +14,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   timezone_db.initializeTimeZones();
   await initializeDatabases();
+  // SharedPreferences preferences = await SharedPreferences.getInstance();
+  // await preferences.clear();
   runApp(const App());
 }
 
@@ -24,15 +28,40 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        fontFamily: 'Poppins',
+        fontFamily: 'Montserrat',
         textTheme: const TextTheme(
-          displayLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+          titleMedium: TextStyle(
+              fontSize: 20,
+              fontVariations: FontVariations.semiBold,
+              color: Colors.black),
+          titleSmall: TextStyle(
+              fontSize: 12,
+              fontVariations: FontVariations.semiBold,
+              color: Colors.black),
+          displayLarge: TextStyle(
+              fontSize: 72,
+              fontVariations: FontVariations.bold,
+              color: Colors.black),
           displayMedium: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
+              fontSize: 28,
+              fontVariations: FontVariations.bold,
+              color: Colors.black),
           displaySmall: TextStyle(
-              fontSize: 10, fontWeight: FontWeight.w700, color: Colors.black),
+              fontSize: 16,
+              fontVariations: FontVariations.bold,
+              color: Colors.black),
           bodyLarge: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.w500, color: Colors.black),
+              fontSize: 16,
+              fontVariations: FontVariations.medium,
+              color: Colors.black),
+          bodyMedium: TextStyle(
+              fontSize: 12,
+              fontVariations: FontVariations.medium,
+              color: Colors.black),
+          bodySmall: TextStyle(
+              fontSize: 10,
+              fontVariations: FontVariations.medium,
+              color: Colors.black),
         ),
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.cyan)
             .copyWith(background: Colors.grey[300]),

@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-Database? database;
+// Database? database;
 
 Future<void> initializeDatabases() async {
   // If Clock directory doesn't exist, create it
@@ -16,13 +16,13 @@ Future<void> initializeDatabases() async {
     await Directory(appDataPath).create();
   }
 
-  print('Database path: ${await getMainDatabasePath()}');
+  // print('Database path: ${await getMainDatabasePath()}');
 
-  database = await openDatabase(await getMainDatabasePath(), version: 1,
-      onCreate: (Database db, int version) async {
-    await db.execute(
-        'CREATE TABLE IF NOT EXISTS SavedCities (City String, Timezone String, Country String)');
-  });
+  // database = await openDatabase(await getMainDatabasePath(), version: 1,
+  //     onCreate: (Database db, int version) async {
+  //   await db.execute(
+  //       'CREATE TABLE IF NOT EXISTS SavedCities (City String, Timezone String, Country String)');
+  // });
 
   String timezonesDatabasePath = await getTimezonesDatabasePath();
 

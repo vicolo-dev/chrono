@@ -52,13 +52,13 @@ class TimeZoneCard extends StatelessWidget {
             children: [
               Text(
                 city.name,
-                style: Theme.of(context).textTheme.displayMedium,
+                style: Theme.of(context).textTheme.displaySmall,
               ),
               Text(
                 offset != 0
                     ? ' ${formatTimeOffset(offset.abs())} ${offset == 1 ? 'hour' : 'hours'} ${offset < 0 ? 'behind' : 'ahead'}'
                     : 'Same time',
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
@@ -71,7 +71,7 @@ class TimeZoneCard extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Card(
-        elevation: 2,
+        elevation: 1,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(16.0)),
         ),

@@ -28,32 +28,23 @@ class MainClock extends StatelessWidget {
                   String formattedTime = DateFormat('h:mm').format(now);
                   return Text(
                     formattedTime,
-                    style: const TextStyle(
-                      fontSize: 64,
-                      fontWeight: FontWeight.bold,
-                      height: 0.75,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayLarge
+                        ?.copyWith(height: 0.75),
                   );
                 },
               ),
               const SizedBox(width: 5),
-              Text(
-                meridiem,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  height: 1,
-                ),
-              ),
+              Text(meridiem,
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayMedium
+                      ?.copyWith(height: 1)),
             ]),
-        Text(
-          formattedDate,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            height: 1,
-          ),
-        ),
+        Text(formattedDate,
+            style:
+                Theme.of(context).textTheme.displaySmall?.copyWith(height: 1)),
       ],
     );
   }
