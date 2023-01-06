@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as timezone_db;
 
-import 'package:clock_app/screens/clock_screen.dart';
+import 'package:clock_app/screens/app_scaffold.dart';
 import 'package:clock_app/data/database.dart';
 
 setupDatabases() async {}
@@ -66,7 +66,7 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.cyan)
             .copyWith(background: Colors.grey[300]),
       ),
-      home: const ClockScreen(title: 'Clock'),
+      home: const AppScaffold(title: 'Clock'),
     );
   }
 }

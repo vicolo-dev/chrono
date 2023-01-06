@@ -1,14 +1,14 @@
 import 'package:clock_app/data/paths.dart';
+import 'package:clock_app/data/preferences.dart';
 import 'package:clock_app/widgets/timezone_search_card.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/types/city.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SearchCityScreen extends StatefulWidget {
-  const SearchCityScreen({super.key, required this.existingCities});
-
-  final List<City> existingCities;
+  const SearchCityScreen({super.key});
 
   @override
   _SearchCityScreenState createState() => _SearchCityScreenState();
@@ -16,6 +16,8 @@ class SearchCityScreen extends StatefulWidget {
 
 class _SearchCityScreenState extends State<SearchCityScreen> {
   final TextEditingController _filter = TextEditingController();
+
+  List<City> _favoriteCities = [];
   List<City> _filteredCities = [];
   Database? _db;
   bool _isDatabaseLoaded = false;
@@ -36,8 +38,8 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
                       result['City'] as String,
                       result['Country'] as String,
                       result['Timezone'] as String))
-                  .where((result) => !widget.existingCities
-                      .any((city) => city.name == result.name))
+                  .where((result) =>
+                      !_favoriteCities.any((city) => city.name == result.name))
                   .toList();
             });
           }
@@ -46,18 +48,24 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
     });
   }
 
-  _loadDatabase() async {
+  _loadData() async {
+    var favoriteCitiesPromise = getFavoriteCities();
+
     String databasePath = await getTimezonesDatabasePath();
     _db = await openDatabase(databasePath, readOnly: true);
+
+    List<City> favoriteCities = await favoriteCitiesPromise;
+
     setState(() {
       _isDatabaseLoaded = true;
+      _favoriteCities = favoriteCities;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _loadDatabase();
+    _loadData();
   }
 
   @override

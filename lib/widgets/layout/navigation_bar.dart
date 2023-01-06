@@ -1,0 +1,54 @@
+import 'package:clock_app/screens/tabs/tabs.dart';
+import 'package:flutter/material.dart';
+
+import 'package:clock_app/icons/flux_icons.dart';
+
+class AppNavigationBar extends StatefulWidget {
+  final int selectedTabIndex;
+  final void Function(int) onTabSelected;
+
+  const AppNavigationBar(
+      {Key? key, required this.selectedTabIndex, required this.onTabSelected})
+      : super(key: key);
+
+  @override
+  _AppNavigationBarState createState() => _AppNavigationBarState();
+}
+
+class _AppNavigationBarState extends State<AppNavigationBar> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+      child: Card(
+        elevation: 2,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: BottomNavigationBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            items: <BottomNavigationBarItem>[
+              for (final tab in tabs)
+                BottomNavigationBarItem(
+                  icon: Icon(tab.icon),
+                  label: tab.title,
+                )
+            ],
+            currentIndex: widget.selectedTabIndex,
+            selectedItemColor: Colors.cyan,
+            unselectedItemColor: Colors.grey,
+            showUnselectedLabels: false,
+            selectedLabelStyle: Theme.of(context).textTheme.titleSmall,
+            unselectedLabelStyle: Theme.of(context).textTheme.titleSmall,
+            iconSize: 24,
+            type: BottomNavigationBarType.fixed,
+            onTap: widget.onTabSelected,
+          ),
+        ),
+      ),
+    );
+  }
+}
