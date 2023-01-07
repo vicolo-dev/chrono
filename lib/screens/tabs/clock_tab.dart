@@ -5,6 +5,7 @@ import 'package:clock_app/widgets/layout/FAB.dart';
 import 'package:clock_app/widgets/main_clock.dart';
 import 'package:clock_app/widgets/timezone_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ClockTab extends StatefulWidget {
   const ClockTab({Key? key}) : super(key: key);
@@ -76,18 +77,20 @@ class _ClockTabState extends State<ClockTab> {
         const MainClock(),
         const SizedBox(height: 16),
         Expanded(
-          child: ReorderableListView.builder(
-            proxyDecorator: _proxyDecorator,
-            itemCount: _cities.length,
-            itemBuilder: (BuildContext context, int index) {
-              return TimeZoneCard(
-                key: ValueKey(_cities[index]),
-                city: _cities[index],
-                onDelete: () => _onDeleteCity(index),
-              );
-            },
-            footer: const SizedBox(height: 72),
-            onReorder: _onReorderCities,
+          child: SlidableAutoCloseBehavior(
+            child: ReorderableListView.builder(
+              proxyDecorator: _proxyDecorator,
+              itemCount: _cities.length,
+              itemBuilder: (BuildContext context, int index) {
+                return TimeZoneCard(
+                  key: ValueKey(_cities[index]),
+                  city: _cities[index],
+                  onDelete: () => _onDeleteCity(index),
+                );
+              },
+              footer: const SizedBox(height: 72),
+              onReorder: _onReorderCities,
+            ),
           ),
         ),
       ]),

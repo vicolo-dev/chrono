@@ -33,12 +33,21 @@ class TimeZoneCard extends StatelessWidget {
       motion: const ScrollMotion(),
       // extentRatio: Platform == 0.25,
       children: [
-        SlidableAction(
+        CustomSlidableAction(
           onPressed: (context) => onDelete(),
           backgroundColor: const Color(0xFFFE4A49),
           foregroundColor: Colors.white,
-          icon: Icons.delete,
-          label: 'Delete',
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.delete),
+              Text('Delete',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.copyWith(color: Colors.white)),
+            ],
+          ),
         ),
       ],
     );
@@ -77,6 +86,7 @@ class TimeZoneCard extends StatelessWidget {
         ),
         clipBehavior: Clip.hardEdge,
         child: Slidable(
+            groupTag: 'cities',
             key: key,
             startActionPane: deleteActionPane,
             endActionPane: deleteActionPane,
