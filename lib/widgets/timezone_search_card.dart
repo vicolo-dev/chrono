@@ -1,3 +1,4 @@
+import 'package:clock_app/types/time.dart';
 import 'package:clock_app/widgets/clock.dart';
 import 'package:flutter/material.dart';
 
@@ -37,8 +38,11 @@ class TimeZoneSearchCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        city.name,
+                        city.name.replaceAll('', '\u{200B}'),
                         style: Theme.of(context).textTheme.displaySmall,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
                       ),
                       Text(
                         city.country,
@@ -47,7 +51,11 @@ class TimeZoneSearchCard extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  Clock(timezoneLocation: timezoneLocation, scale: 0.5),
+                  Clock(
+                    timezoneLocation: timezoneLocation,
+                    scale: 0.3,
+                    timeFormat: TimeFormat.H24,
+                  ),
                 ],
               ),
             ),

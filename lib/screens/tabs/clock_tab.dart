@@ -74,8 +74,9 @@ class _ClockTabState extends State<ClockTab> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Column(children: [
-        Clock(
+        const Clock(
           shouldShowDate: true,
+          shouldShowSeconds: true,
         ),
         const SizedBox(height: 16),
         Expanded(
@@ -90,7 +91,8 @@ class _ClockTabState extends State<ClockTab> {
                   onDelete: () => _onDeleteCity(index),
                 );
               },
-              footer: const SizedBox(height: 72),
+              footer: const SizedBox(
+                  height: 64), // Allows the last item to not be covered by FAB
               onReorder: _onReorderCities,
             ),
           ),

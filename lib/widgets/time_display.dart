@@ -14,7 +14,7 @@ class TimeDisplay extends StatelessWidget {
 
   final String format;
   final double fontSize;
-  final double height;
+  final double? height;
 
   final timezone.Location? timezoneLocation;
 

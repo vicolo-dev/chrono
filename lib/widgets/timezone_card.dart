@@ -1,7 +1,9 @@
+import 'package:clock_app/types/time.dart';
 import 'package:clock_app/widgets/clock.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;
 
 import '../types/city.dart';
@@ -56,23 +58,39 @@ class TimeZoneCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                city.name,
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-              Text(
-                offset != 0
-                    ? '${formatTimeOffset(offset.abs())} ${offset == 1 ? 'hour' : 'hours'} ${offset < 0 ? 'behind' : 'ahead'}'
-                    : 'Same time',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  // Flutter doesn't allow per character overflow, so this is a workaround
+                  city.name.replaceAll('', '\u{200B}'),
+                  style: Theme.of(context).textTheme.displaySmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                ),
+                TimerBuilder.periodic(
+                  const Duration(seconds: 1),
+                  builder: (context) {
+                    DateTime currentTime = DateTime.now();
+                    DateTime cityTime =
+                        timezone.TZDateTime.now(timezoneLocation);
+                    return Text(
+                      '${offset != 0 ? '${formatTimeOffset(offset.abs())} ${offset == 1 ? 'hour' : 'hours'} ${offset < 0 ? 'behind' : 'ahead'}' : 'Same time'}${currentTime.day < cityTime.day ? ' (next day)' : currentTime.day > cityTime.day ? ' (previous day)' : ''}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
-          Clock(timezoneLocation: timezoneLocation, scale: 0.5),
+          const SizedBox(width: 8),
+          Clock(
+            timezoneLocation: timezoneLocation,
+            scale: 0.3,
+            timeFormat: TimeFormat.H12,
+          ),
         ],
       ),
     );

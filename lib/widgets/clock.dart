@@ -1,3 +1,4 @@
+import 'package:clock_app/types/time.dart';
 import 'package:clock_app/widgets/time_display.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
@@ -8,12 +9,15 @@ class Clock extends StatelessWidget {
     Key? key,
     this.scale = 1,
     this.shouldShowDate = false,
+    this.shouldShowSeconds = false,
+    this.timeFormat = TimeFormat.H12,
     this.timezoneLocation,
   }) : super(key: key);
 
   final double scale;
   final bool shouldShowDate;
-
+  final TimeFormat timeFormat;
+  final bool shouldShowSeconds;
   final timezone.Location? timezoneLocation;
 
   @override
@@ -29,9 +33,9 @@ class Clock extends StatelessWidget {
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   TimeDisplay(
-                    format: 'h:mm',
+                    format: '${timeFormat == TimeFormat.H12 ? 'h' : 'kk'}:mm',
                     fontSize: 72 * scale,
-                    height: 0.75,
+                    height: shouldShowDate ? 0.75 : null,
                     timezoneLocation: timezoneLocation,
                   ),
                   SizedBox(width: 4 * scale),
@@ -39,22 +43,30 @@ class Clock extends StatelessWidget {
                     verticalDirection: VerticalDirection.up,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TimeDisplay(
-                        format: 'ss',
-                        fontSize: 36 * scale,
-                        height: 1,
-                        timezoneLocation: timezoneLocation,
-                      ),
+                      if (shouldShowSeconds)
+                        TimeDisplay(
+                          format: 'ss',
+                          fontSize: 36 * scale,
+                          height: 1,
+                          timezoneLocation: timezoneLocation,
+                        ),
                       Row(
-                        children: [
-                          TimeDisplay(
-                            format: 'a',
-                            fontSize: 24 * scale,
-                            height: 1,
-                            timezoneLocation: timezoneLocation,
-                          ),
-                          SizedBox(width: 12 * scale),
-                        ],
+                        children: timeFormat == TimeFormat.H12
+                            ? [
+                                TimeDisplay(
+                                  format: 'a',
+                                  fontSize:
+                                      (shouldShowSeconds ? 24 : 32) * scale,
+                                  height: 1,
+                                  timezoneLocation: timezoneLocation,
+                                ),
+                                if (shouldShowSeconds)
+                                  SizedBox(width: 16 * scale),
+                              ]
+                            : [
+                                if (shouldShowSeconds)
+                                  SizedBox(width: 56 * scale),
+                              ],
                       ),
                     ],
                   ),
