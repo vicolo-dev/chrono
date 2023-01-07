@@ -1,9 +1,9 @@
+import 'package:clock_app/widgets/clock.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:timezone/timezone.dart' as timezone;
 
-import 'package:clock_app/widgets/timezone_clock.dart';
 import '../types/city.dart';
 
 class TimeZoneCard extends StatelessWidget {
@@ -72,7 +72,7 @@ class TimeZoneCard extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          TimeZoneClock(timezoneLocation: timezoneLocation),
+          Clock(timezoneLocation: timezoneLocation, scale: 0.5),
         ],
       ),
     );

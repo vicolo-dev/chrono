@@ -85,9 +85,6 @@ flutter:
     - family: Montserrat
       fonts:
         - asset: fonts/Montserrat/Montserrat-VariableFont.ttf
-    - family: Sora
-      fonts:
-        - asset: fonts/Sora/Sora-VariableFont.ttf
 
     - family: FluxIcons
       fonts:

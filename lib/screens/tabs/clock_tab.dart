@@ -2,7 +2,7 @@ import 'package:clock_app/data/preferences.dart';
 import 'package:clock_app/screens/search_city_screen.dart';
 import 'package:clock_app/types/city.dart';
 import 'package:clock_app/widgets/layout/FAB.dart';
-import 'package:clock_app/widgets/main_clock.dart';
+import 'package:clock_app/widgets/clock.dart';
 import 'package:clock_app/widgets/timezone_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -74,7 +74,9 @@ class _ClockTabState extends State<ClockTab> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Column(children: [
-        const MainClock(),
+        Clock(
+          shouldShowDate: true,
+        ),
         const SizedBox(height: 16),
         Expanded(
           child: SlidableAutoCloseBehavior(

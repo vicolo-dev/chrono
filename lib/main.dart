@@ -4,7 +4,6 @@ import 'package:clock_app/data/preferences.dart';
 import 'package:clock_app/theme/color_theme.dart';
 import 'package:clock_app/theme/font.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as timezone_db;
 
 import 'package:clock_app/screens/app_scaffold.dart';
@@ -17,8 +16,6 @@ void main() async {
   timezone_db.initializeTimeZones();
   Preferences.initialize();
   await initializeDatabases();
-  // SharedPreferences preferences = await SharedPreferences.getInstance();
-  // await preferences.clear();
   runApp(const App());
 }
 
