@@ -1,12 +1,10 @@
+import 'package:clock_app/data/preferences.dart';
 import 'package:clock_app/screens/search_city_screen.dart';
 import 'package:clock_app/types/city.dart';
 import 'package:clock_app/widgets/layout/FAB.dart';
 import 'package:clock_app/widgets/main_clock.dart';
 import 'package:clock_app/widgets/timezone_card.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../data/preferences.dart';
 
 class ClockTab extends StatefulWidget {
   const ClockTab({Key? key}) : super(key: key);
@@ -18,16 +16,11 @@ class ClockTab extends StatefulWidget {
 class _ClockTabState extends State<ClockTab> {
   List<City> _cities = <City>[];
 
-  _loadFavoriteCities() async {
-    List<City> favoriteCities = await getFavoriteCities();
-    setState(() => _cities = favoriteCities);
-  }
-
   @override
   void initState() {
     super.initState();
 
-    _loadFavoriteCities();
+    setState(() => _cities = Preferences.getFavoriteCities());
   }
 
   _onSearchReturn(dynamic city) {
@@ -37,7 +30,7 @@ class _ClockTabState extends State<ClockTab> {
       }
     });
 
-    saveFavoriteCities(_cities);
+    Preferences.saveFavoriteCities(_cities);
   }
 
   _onDeleteCity(int index) {
@@ -45,7 +38,7 @@ class _ClockTabState extends State<ClockTab> {
       _cities.removeAt(index);
     });
 
-    saveFavoriteCities(_cities);
+    Preferences.saveFavoriteCities(_cities);
   }
 
   _onReorderCities(int oldIndex, int newIndex) {
@@ -57,7 +50,7 @@ class _ClockTabState extends State<ClockTab> {
       _cities.insert(newIndex, reorderedCity);
     });
 
-    saveFavoriteCities(_cities);
+    Preferences.saveFavoriteCities(_cities);
   }
 
   Widget _proxyDecorator(Widget child, int index, Animation<double> animation) {
@@ -93,6 +86,7 @@ class _ClockTabState extends State<ClockTab> {
                 onDelete: () => _onDeleteCity(index),
               );
             },
+            footer: const SizedBox(height: 72),
             onReorder: _onReorderCities,
           ),
         ),

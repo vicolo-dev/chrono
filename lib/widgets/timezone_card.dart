@@ -56,14 +56,14 @@ class TimeZoneCard extends StatelessWidget {
               ),
               Text(
                 offset != 0
-                    ? ' ${formatTimeOffset(offset.abs())} ${offset == 1 ? 'hour' : 'hours'} ${offset < 0 ? 'behind' : 'ahead'}'
+                    ? '${formatTimeOffset(offset.abs())} ${offset == 1 ? 'hour' : 'hours'} ${offset < 0 ? 'behind' : 'ahead'}'
                     : 'Same time',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
           const Spacer(),
-          TimeZoneClock(timezoneLocation: timezoneLocation, fontSize: 22),
+          TimeZoneClock(timezoneLocation: timezoneLocation),
         ],
       ),
     );

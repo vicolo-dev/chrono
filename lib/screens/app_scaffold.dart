@@ -1,5 +1,6 @@
 import 'package:clock_app/screens/tabs/clock_tab.dart';
 import 'package:clock_app/screens/tabs/tabs.dart';
+import 'package:clock_app/theme/color_theme.dart';
 import 'package:clock_app/types/tab.dart';
 import 'package:flutter/material.dart';
 
@@ -38,12 +39,13 @@ class _AppScaffoldState extends State<AppScaffold> {
           IconButton(
             onPressed: () {},
             icon: const Icon(FluxIcons.settings, semanticLabel: "Settings"),
+            color: ColorTheme.textColor,
           ),
         ],
       ),
       body: Center(
         child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 16.0),
             child: tabs[_selectedTabIndex].widget),
       ),
       // floatingActionButton: FloatingActionButton(

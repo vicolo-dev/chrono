@@ -1,20 +1,25 @@
 import 'package:clock_app/types/city.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<List<City>> getFavoriteCities() async {
-  final SharedPreferences preferences = await SharedPreferences.getInstance();
+class Preferences {
+  static SharedPreferences? _preferences;
 
-  final String? encodedFavoriteCities =
-      preferences.getString('favorite_cities');
-
-  if (encodedFavoriteCities == null) {
-    return [];
+  static initialize() async {
+    _preferences = await SharedPreferences.getInstance();
   }
 
-  return City.decode(encodedFavoriteCities);
-}
+  static List<City> getFavoriteCities() {
+    final String? encodedFavoriteCities =
+        _preferences?.getString('favorite_cities');
 
-saveFavoriteCities(List<City> cities) async {
-  final SharedPreferences preferences = await SharedPreferences.getInstance();
-  preferences.setString('favorite_cities', City.encode(cities));
+    if (encodedFavoriteCities == null) {
+      return [];
+    }
+
+    return City.decode(encodedFavoriteCities);
+  }
+
+  static void saveFavoriteCities(List<City> cities) {
+    _preferences?.setString('favorite_cities', City.encode(cities));
+  }
 }

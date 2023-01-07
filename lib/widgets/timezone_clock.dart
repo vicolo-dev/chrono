@@ -8,11 +8,9 @@ class TimeZoneClock extends StatelessWidget {
   const TimeZoneClock({
     Key? key,
     required this.timezoneLocation,
-    required this.fontSize,
   }) : super(key: key);
 
   final timezone.Location timezoneLocation;
-  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,9 @@ class TimeZoneClock extends StatelessWidget {
         var date = timezone.TZDateTime.now(timezoneLocation);
         String formattedTime = DateFormat('kk:mm').format(date);
         return Text(formattedTime,
-            style: Theme.of(context).textTheme.displayMedium);
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                  fontSize: 24,
+                ));
       },
     );
   }

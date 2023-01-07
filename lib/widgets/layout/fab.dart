@@ -14,7 +14,9 @@ class FAB extends StatelessWidget {
       child: GestureDetector(
         onTap: onPressed,
         child: Card(
-          shape: const CircleBorder(),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          ),
           elevation: 4,
           color: Theme.of(context).colorScheme.primary,
           child: const Padding(

@@ -47,8 +47,7 @@ class TimeZoneSearchCard extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  TimeZoneClock(
-                      timezoneLocation: timezoneLocation, fontSize: 22),
+                  TimeZoneClock(timezoneLocation: timezoneLocation),
                 ],
               ),
             ),

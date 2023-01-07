@@ -4,7 +4,6 @@ import 'package:clock_app/widgets/timezone_search_card.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/types/city.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SearchCityScreen extends StatefulWidget {
@@ -48,24 +47,22 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
     });
   }
 
-  _loadData() async {
-    var favoriteCitiesPromise = getFavoriteCities();
-
+  _loadDatabase() async {
     String databasePath = await getTimezonesDatabasePath();
     _db = await openDatabase(databasePath, readOnly: true);
 
-    List<City> favoriteCities = await favoriteCitiesPromise;
-
     setState(() {
       _isDatabaseLoaded = true;
-      _favoriteCities = favoriteCities;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _loadDatabase();
+    setState(() {
+      _favoriteCities = Preferences.getFavoriteCities();
+    });
   }
 
   @override

@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:clock_app/data/preferences.dart';
+import 'package:clock_app/theme/color_theme.dart';
 import 'package:clock_app/theme/font.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +15,7 @@ setupDatabases() async {}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   timezone_db.initializeTimeZones();
+  Preferences.initialize();
   await initializeDatabases();
   // SharedPreferences preferences = await SharedPreferences.getInstance();
   // await preferences.clear();
@@ -33,38 +36,40 @@ class App extends StatelessWidget {
           titleMedium: TextStyle(
               fontSize: 20,
               fontVariations: FontVariations.semiBold,
-              color: Colors.black),
+              color: ColorTheme.textColor),
           titleSmall: TextStyle(
               fontSize: 12,
               fontVariations: FontVariations.semiBold,
-              color: Colors.black),
+              color: ColorTheme.textColor),
           displayLarge: TextStyle(
               fontSize: 72,
               fontVariations: FontVariations.bold,
-              color: Colors.black),
+              color: ColorTheme.textColor),
           displayMedium: TextStyle(
               fontSize: 28,
               fontVariations: FontVariations.bold,
-              color: Colors.black),
+              color: ColorTheme.textColor),
           displaySmall: TextStyle(
               fontSize: 16,
               fontVariations: FontVariations.bold,
-              color: Colors.black),
+              color: ColorTheme.textColor),
           bodyLarge: TextStyle(
               fontSize: 16,
               fontVariations: FontVariations.medium,
-              color: Colors.black),
+              color: ColorTheme.textColor),
           bodyMedium: TextStyle(
               fontSize: 12,
               fontVariations: FontVariations.medium,
-              color: Colors.black),
+              color: ColorTheme.textColor),
           bodySmall: TextStyle(
               fontSize: 10,
               fontVariations: FontVariations.medium,
-              color: Colors.black),
+              color: ColorTheme.textColor),
         ),
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.cyan)
-            .copyWith(background: Colors.grey[300]),
+        colorScheme:
+            ColorScheme.fromSwatch(primarySwatch: Colors.cyan).copyWith(
+          background: Colors.grey[400],
+        ),
       ),
       home: const AppScaffold(title: 'Clock'),
     );
