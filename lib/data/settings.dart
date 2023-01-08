@@ -41,20 +41,27 @@ List<SettingGroup> settings = [
   ),
 ];
 
+const List<City> initialFavoriteCities = [
+  City("New York", "United States", "America/New_York"),
+  City("London", "United Kingdom", "Europe/London"),
+  City("Paris", "France", "Europe/Paris"),
+  City("Tokyo", "Japan", "Asia/Tokyo"),
+];
+
 class Settings {
   static SharedPreferences? _preferences;
 
   static initialize() async {
     _preferences = await SharedPreferences.getInstance();
+
+    // Comment this out after the preferences are cleared
+    // _preferences?.clear();
+
     bool? firstLaunch = _preferences?.getBool('first_launch');
     if (firstLaunch == null) {
       _preferences?.setBool('first_launch', false);
-      saveFavoriteCities([
-        City("New York", "America/New_York", "USA"),
-        City("London", "Europe/London", "UK"),
-        City("Paris", "Europe/Paris", "France"),
-        City("Tokyo", "Asia/Tokyo", "Japan"),
-      ]);
+      saveFavoriteCities(initialFavoriteCities);
+
       for (SettingGroup group in settings) {
         for (Setting setting in group.settings) {
           if (setting is ToggleSetting) {

@@ -17,7 +17,7 @@ class TimeZoneSearchCard extends StatelessWidget {
 
   late final timezone.Location timezoneLocation;
   final City city;
-  final Function onTap;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +30,7 @@ class TimeZoneSearchCard extends StatelessWidget {
           ),
           child: InkWell(
             borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+            onTap: onTap,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -59,7 +60,6 @@ class TimeZoneSearchCard extends StatelessWidget {
                 ],
               ),
             ),
-            onTap: () => onTap(),
           )),
     );
   }

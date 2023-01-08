@@ -5,7 +5,7 @@ class City {
   final String country;
   final String timezone;
 
-  City(this.name, this.country, this.timezone);
+  const City(this.name, this.country, this.timezone);
 
   factory City.fromJson(Map<String, dynamic> jsonData) {
     return City(

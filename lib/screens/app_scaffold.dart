@@ -2,6 +2,7 @@ import 'package:clock_app/screens/tabs/clock_tab.dart';
 import 'package:clock_app/screens/tabs/tabs.dart';
 import 'package:clock_app/theme/color_theme.dart';
 import 'package:clock_app/types/tab.dart';
+import 'package:clock_app/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,7 +38,12 @@ class _AppScaffoldState extends State<AppScaffold> {
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SettingsScreen()));
+            },
             icon: const Icon(FluxIcons.settings, semanticLabel: "Settings"),
             color: ColorTheme.textColor,
           ),
