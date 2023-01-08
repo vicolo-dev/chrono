@@ -1,4 +1,4 @@
-import 'package:clock_app/data/preferences.dart';
+import 'package:clock_app/data/settings.dart';
 import 'package:clock_app/screens/search_city_screen.dart';
 import 'package:clock_app/types/city.dart';
 import 'package:clock_app/widgets/layout/FAB.dart';
@@ -21,7 +21,7 @@ class _ClockTabState extends State<ClockTab> {
   void initState() {
     super.initState();
 
-    setState(() => _cities = Preferences.getFavoriteCities());
+    setState(() => _cities = Settings.loadFavoriteCities());
   }
 
   _onSearchReturn(dynamic city) {
@@ -31,7 +31,7 @@ class _ClockTabState extends State<ClockTab> {
       }
     });
 
-    Preferences.saveFavoriteCities(_cities);
+    Settings.saveFavoriteCities(_cities);
   }
 
   _onDeleteCity(int index) {
@@ -39,7 +39,7 @@ class _ClockTabState extends State<ClockTab> {
       _cities.removeAt(index);
     });
 
-    Preferences.saveFavoriteCities(_cities);
+    Settings.saveFavoriteCities(_cities);
   }
 
   _onReorderCities(int oldIndex, int newIndex) {
@@ -51,7 +51,7 @@ class _ClockTabState extends State<ClockTab> {
       _cities.insert(newIndex, reorderedCity);
     });
 
-    Preferences.saveFavoriteCities(_cities);
+    Settings.saveFavoriteCities(_cities);
   }
 
   Widget _proxyDecorator(Widget child, int index, Animation<double> animation) {

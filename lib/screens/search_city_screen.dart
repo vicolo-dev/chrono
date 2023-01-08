@@ -1,5 +1,5 @@
 import 'package:clock_app/data/paths.dart';
-import 'package:clock_app/data/preferences.dart';
+import 'package:clock_app/data/settings.dart';
 import 'package:clock_app/widgets/timezone_search_card.dart';
 import 'package:flutter/material.dart';
 
@@ -61,7 +61,7 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
     super.initState();
     _loadDatabase();
     setState(() {
-      _favoriteCities = Preferences.getFavoriteCities();
+      _favoriteCities = Settings.loadFavoriteCities();
     });
   }
 

@@ -1,6 +1,6 @@
 import 'dart:core';
 
-import 'package:clock_app/data/preferences.dart';
+import 'package:clock_app/data/settings.dart';
 import 'package:clock_app/theme/color_theme.dart';
 import 'package:clock_app/theme/font.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ setupDatabases() async {}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   timezone_db.initializeTimeZones();
-  Preferences.initialize();
+  Settings.initialize();
   await initializeDatabases();
   runApp(const App());
 }

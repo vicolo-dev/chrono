@@ -15,19 +15,14 @@ class City {
     );
   }
 
-  static Map<String, dynamic> toMap(City city) => {
-        'name': city.name,
-        'country': city.country,
-        'timezone': city.timezone,
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'country': country,
+        'timezone': timezone,
       };
 
-  City.fromMap(Map<dynamic, dynamic> map)
-      : name = map['name'],
-        country = map['country'],
-        timezone = map['timezone'];
-
   static String encode(List<City> cities) => json.encode(
-        cities.map<Map<String, dynamic>>((city) => City.toMap(city)).toList(),
+        cities.map<Map<String, dynamic>>((city) => city.toMap()).toList(),
       );
 
   static List<City> decode(String cities) =>
