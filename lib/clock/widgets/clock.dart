@@ -1,5 +1,5 @@
-import 'package:clock_app/types/time.dart';
-import 'package:clock_app/widgets/time_display.dart';
+import 'package:clock_app/clock/widgets/time_display.dart';
+import 'package:clock_app/clock/types/time.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;

@@ -1,17 +1,25 @@
 import 'dart:core';
+import 'dart:isolate';
 
-import 'package:alarm/alarm.dart';
-import 'package:clock_app/data/settings.dart';
-import 'package:clock_app/theme/color_theme.dart';
-import 'package:clock_app/theme/font.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest_all.dart' as timezone_db;
-
-import 'package:clock_app/screens/app_scaffold.dart';
-import 'package:clock_app/data/database.dart';
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter_system_ringtones/flutter_system_ringtones.dart';
 
+import 'package:clock_app/settings/data/settings.dart';
+import 'package:clock_app/theme/color_theme.dart';
+import 'package:clock_app/theme/font.dart';
+import 'package:clock_app/navigation/screens/nav_scaffold.dart';
+import 'package:clock_app/clock/data/timezone_database.dart';
+
 setupDatabases() async {}
+
+@pragma('vm:entry-point')
+void printHello() {
+  final DateTime now = DateTime.now();
+  final int isolateId = Isolate.current.hashCode;
+  print("[$now] Hello, world! isolate=${isolateId} function='$printHello'");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,19 +29,19 @@ void main() async {
 
   var alarms = await FlutterSystemRingtones.getAlarmSounds();
 
-  print(alarms);
+  // print(alarms);
 
-  Alarm.init();
-
-  Alarm.set(
-    alarmDateTime: DateTime(2023, 1, 8, 15, 10),
-    assetAudio: alarms[0].uri,
-    onRing: () => print("ringing"),
-    notifTitle: 'Alarm notification',
-    notifBody: 'Your alarm is ringing',
-  );
+  await AndroidAlarmManager.initialize();
 
   runApp(const App());
+
+  for (int i = 35; i < 59; i++) {
+    AndroidAlarmManager.oneShotAt(DateTime(2023, 1, 8, 19, i), i, printHello,
+        allowWhileIdle: true,
+        exact: true,
+        wakeup: true,
+        rescheduleOnReboot: true);
+  }
 }
 
 class App extends StatelessWidget {

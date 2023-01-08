@@ -1,13 +1,13 @@
-import 'package:clock_app/screens/tabs/clock_tab.dart';
-import 'package:clock_app/screens/tabs/tabs.dart';
+import 'package:clock_app/clock/screens/clock_screen.dart';
+import 'package:clock_app/navigation/data/tabs.dart';
 import 'package:clock_app/theme/color_theme.dart';
-import 'package:clock_app/types/tab.dart';
-import 'package:clock_app/screens/settings_screen.dart';
+import 'package:clock_app/navigation/types/tab.dart';
+import 'package:clock_app/clock/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:clock_app/widgets/layout/navigation_bar.dart';
+import 'package:clock_app/navigation/widgets/navigation_bar.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 
 class AppScaffold extends StatefulWidget {
@@ -50,10 +50,7 @@ class _AppScaffoldState extends State<AppScaffold> {
         ],
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 16.0),
-          child: tabs[_selectedTabIndex].widget,
-        ),
+        child: tabs[_selectedTabIndex].widget,
       ),
       bottomNavigationBar: AppNavigationBar(
         selectedTabIndex: _selectedTabIndex,

@@ -1,5 +1,5 @@
 import 'package:clock_app/theme/color_theme.dart';
-import 'package:clock_app/types/setting.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
 class SettingGroupCard extends StatelessWidget {

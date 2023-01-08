@@ -1,10 +1,10 @@
-import 'package:clock_app/types/time.dart';
-import 'package:clock_app/widgets/clock.dart';
 import 'package:flutter/material.dart';
 
 import 'package:timezone/timezone.dart' as timezone;
 
-import 'package:clock_app/types/city.dart';
+import 'package:clock_app/clock/widgets/clock.dart';
+import 'package:clock_app/clock/types/time.dart';
+import 'package:clock_app/clock/types/city.dart';
 
 class TimeZoneSearchCard extends StatelessWidget {
   TimeZoneSearchCard({

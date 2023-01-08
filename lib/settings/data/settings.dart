@@ -4,8 +4,8 @@ import 'package:clock_app/icons/flux_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:clock_app/types/city.dart';
-import 'package:clock_app/types/setting.dart';
+import 'package:clock_app/clock/types/city.dart';
+import 'package:clock_app/settings/types/setting.dart';
 
 List<SettingGroup> settings = [
   SettingGroup(

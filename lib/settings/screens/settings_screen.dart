@@ -1,17 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:clock_app/data/paths.dart';
-import 'package:clock_app/data/settings.dart';
-import 'package:clock_app/types/setting.dart';
-import 'package:clock_app/widgets/setting_group_card.dart';
-import 'package:clock_app/widgets/timezone_search_card.dart';
+import 'package:clock_app/settings/data/settings.dart';
+import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/widgets/setting_group_card.dart';
+import 'package:clock_app/icons/flux_icons.dart';
+import 'package:clock_app/theme/color_theme.dart';
 import 'package:flutter/material.dart';
-
-import 'package:clock_app/types/city.dart';
-import 'package:sqflite/sqflite.dart';
-
-import '../icons/flux_icons.dart';
-import '../theme/color_theme.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

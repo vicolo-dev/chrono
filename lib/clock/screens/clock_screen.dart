@@ -1,11 +1,12 @@
-import 'package:clock_app/data/settings.dart';
-import 'package:clock_app/screens/search_city_screen.dart';
-import 'package:clock_app/types/city.dart';
-import 'package:clock_app/widgets/layout/FAB.dart';
-import 'package:clock_app/widgets/clock.dart';
-import 'package:clock_app/widgets/timezone_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+
+import 'package:clock_app/clock/widgets/clock.dart';
+import 'package:clock_app/settings/data/settings.dart';
+import 'package:clock_app/clock/screens/search_city_screen.dart';
+import 'package:clock_app/clock/types/city.dart';
+import 'package:clock_app/widgets/layout/FAB.dart';
+import 'package:clock_app/clock/widgets/timezone_card.dart';
 
 class ClockTab extends StatefulWidget {
   const ClockTab({Key? key}) : super(key: key);
@@ -74,14 +75,18 @@ class _ClockTabState extends State<ClockTab> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Column(children: [
-        const Clock(
-          shouldShowDate: true,
-          shouldShowSeconds: true,
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Clock(
+            shouldShowDate: true,
+            shouldShowSeconds: true,
+          ),
         ),
         const SizedBox(height: 16),
         Expanded(
           child: SlidableAutoCloseBehavior(
             child: ReorderableListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               proxyDecorator: _proxyDecorator,
               itemCount: _cities.length,
               itemBuilder: (BuildContext context, int index) {

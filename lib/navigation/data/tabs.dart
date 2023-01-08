@@ -1,11 +1,11 @@
-import 'package:clock_app/screens/tabs/alarm_tab.dart';
-import 'package:clock_app/screens/tabs/stopwatch_tab.dart';
-import 'package:clock_app/screens/tabs/timer_tab.dart';
+import 'package:clock_app/alarm/screens/alarm_screen.dart';
+import 'package:clock_app/stopwatch/screens/stopwatch_screen.dart';
+import 'package:clock_app/timer/screens/timer_screen.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:clock_app/icons/flux_icons.dart';
-import 'package:clock_app/screens/tabs/clock_tab.dart';
-import 'package:clock_app/types/tab.dart';
+import 'package:clock_app/clock/screens/clock_screen.dart';
+import 'package:clock_app/navigation/types/tab.dart';
 
 final List<Tab> tabs = [
   Tab(title: 'Alarm', icon: FluxIcons.alarm, widget: const AlarmTab()),
