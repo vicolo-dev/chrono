@@ -45,23 +45,14 @@ class _AppScaffoldState extends State<AppScaffold> {
       ),
       body: Center(
         child: Padding(
-            padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 16.0),
-            child: tabs[_selectedTabIndex].widget),
+          padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 16.0),
+          child: tabs[_selectedTabIndex].widget,
+        ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   mouseCursor: SystemMouseCursors.alias,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.circular(10.0),
-      //   ),
-      //   onPressed: screens[_selectedTabIndex].onFabPressed,
-      //   tooltip: 'Add City',
-      //   child: const Icon(
-      //     FluxIcons.add,
-      //     color: Colors.white,
-      //   ),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
       bottomNavigationBar: AppNavigationBar(
-          selectedTabIndex: _selectedTabIndex, onTabSelected: _onTabSelected),
+        selectedTabIndex: _selectedTabIndex,
+        onTabSelected: _onTabSelected,
+      ),
     );
   }
 }

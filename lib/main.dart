@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:alarm/alarm.dart';
 import 'package:clock_app/data/settings.dart';
 import 'package:clock_app/theme/color_theme.dart';
 import 'package:clock_app/theme/font.dart';
@@ -8,6 +9,7 @@ import 'package:timezone/data/latest_all.dart' as timezone_db;
 
 import 'package:clock_app/screens/app_scaffold.dart';
 import 'package:clock_app/data/database.dart';
+import 'package:flutter_system_ringtones/flutter_system_ringtones.dart';
 
 setupDatabases() async {}
 
@@ -16,6 +18,21 @@ void main() async {
   timezone_db.initializeTimeZones();
   Settings.initialize();
   await initializeDatabases();
+
+  var alarms = await FlutterSystemRingtones.getAlarmSounds();
+
+  print(alarms);
+
+  Alarm.init();
+
+  Alarm.set(
+    alarmDateTime: DateTime(2023, 1, 8, 15, 10),
+    assetAudio: alarms[0].uri,
+    onRing: () => print("ringing"),
+    notifTitle: 'Alarm notification',
+    notifBody: 'Your alarm is ringing',
+  );
+
   runApp(const App());
 }
 

@@ -41,6 +41,8 @@ dependencies:
   sqflite_common_ffi: ^2.2.0+1
   flutter_slidable: ^2.0.0
   shared_preferences: ^2.0.0-nullsafety
+  flutter_system_ringtones: ^0.0.6
+  alarm: ^0.0.5
 
 dev_dependencies:
   flutter_test:
