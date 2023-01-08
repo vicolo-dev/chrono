@@ -1,4 +1,4 @@
-import 'package:clock_app/widgets/layout/FAB.dart';
+import 'package:clock_app/common/widgets/fab.dart';
 import 'package:flutter/material.dart';
 
 class AlarmTab extends StatefulWidget {

@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:clock_app/common/data/paths.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import 'package:clock_app/common/data/paths.dart';
 // Database? database;
 
 Future<void> initializeDatabases() async {

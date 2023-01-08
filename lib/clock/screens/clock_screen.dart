@@ -1,3 +1,4 @@
+import 'package:clock_app/common/widgets/fab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -5,7 +6,6 @@ import 'package:clock_app/clock/widgets/clock.dart';
 import 'package:clock_app/settings/data/settings.dart';
 import 'package:clock_app/clock/screens/search_city_screen.dart';
 import 'package:clock_app/clock/types/city.dart';
-import 'package:clock_app/widgets/layout/FAB.dart';
 import 'package:clock_app/clock/widgets/timezone_card.dart';
 
 class ClockTab extends StatefulWidget {
