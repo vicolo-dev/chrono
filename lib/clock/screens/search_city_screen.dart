@@ -1,9 +1,9 @@
+import 'package:clock_app/clock/data/favorite_cities.dart';
 import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 
 import 'package:clock_app/common/data/paths.dart';
-import 'package:clock_app/settings/data/settings.dart';
 import 'package:clock_app/clock/widgets/timezone_search_card.dart';
 import 'package:clock_app/clock/types/city.dart';
 
@@ -62,7 +62,7 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
     super.initState();
     _loadDatabase();
     setState(() {
-      _favoriteCities = Settings.loadFavoriteCities();
+      _favoriteCities = loadFavoriteCities();
     });
   }
 

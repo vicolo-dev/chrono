@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/icons/flux_icons.dart';
-import 'package:clock_app/settings/data/settings.dart';
+import 'package:clock_app/settings/data/settings_data.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/widgets/setting_group_card.dart';
-import 'package:clock_app/theme/color_theme.dart';
+import 'package:clock_app/theme/color.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -25,18 +25,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text("Settings", style: Theme.of(context).textTheme.titleMedium),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsScreen()));
-            },
-            icon: const Icon(FluxIcons.settings, semanticLabel: "Settings"),
-            color: ColorTheme.textColor,
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

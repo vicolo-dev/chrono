@@ -10,7 +10,7 @@ class FAB extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       bottom: 0,
-      right: 0,
+      right: 16,
       child: GestureDetector(
         onTap: onPressed,
         child: Card(

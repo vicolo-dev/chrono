@@ -25,11 +25,7 @@ class TimeZoneSearchCard extends StatelessWidget {
       width: double.infinity,
       child: Card(
           elevation: 2,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0)),
-          ),
           child: InkWell(
-            borderRadius: const BorderRadius.all(Radius.circular(16.0)),
             onTap: onTap,
             child: Padding(
               padding: const EdgeInsets.all(16.0),

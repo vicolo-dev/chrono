@@ -1,6 +1,6 @@
 import 'package:clock_app/clock/screens/clock_screen.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
-import 'package:clock_app/theme/color_theme.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/navigation/types/tab.dart';
 import 'package:clock_app/clock/screens/settings_screen.dart';
 import 'package:flutter/material.dart';

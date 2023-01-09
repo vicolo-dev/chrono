@@ -1,4 +1,4 @@
-import 'package:clock_app/theme/color_theme.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +13,6 @@ class SettingGroupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         elevation: 1,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0))),
         child: InkWell(
             borderRadius: const BorderRadius.all(Radius.circular(16.0)),
             // onTap: onTap,
@@ -25,20 +23,23 @@ class SettingGroupCard extends StatelessWidget {
                   children: [
                     Icon(settingGroup.icon, color: ColorTheme.textColor),
                     const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          settingGroup.name,
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
-                        if (settingGroup.description.isNotEmpty)
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            settingGroup.description,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          )
-                      ],
-                    )
+                            settingGroup.name,
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                          if (settingGroup.description.isNotEmpty)
+                            Text(
+                              settingGroup.description,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            )
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_right, color: ColorTheme.textColor),
                   ],
                 ))));
   }

@@ -23,9 +23,6 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
           const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0, top: 0),
       child: Card(
         elevation: 2,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BottomNavigationBar(

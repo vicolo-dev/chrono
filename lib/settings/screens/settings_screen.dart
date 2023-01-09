@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:clock_app/settings/data/settings.dart';
+import 'package:clock_app/settings/data/settings_data.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/widgets/setting_group_card.dart';
 import 'package:clock_app/icons/flux_icons.dart';
-import 'package:clock_app/theme/color_theme.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {

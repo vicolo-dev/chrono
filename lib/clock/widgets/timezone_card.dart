@@ -99,10 +99,6 @@ class TimeZoneCard extends StatelessWidget {
       width: double.infinity,
       child: Card(
         elevation: 1,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
-        clipBehavior: Clip.hardEdge,
         child: Slidable(
             groupTag: 'cities',
             key: key,

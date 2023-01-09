@@ -43,6 +43,8 @@ dependencies:
   shared_preferences: ^2.0.0-nullsafety
   flutter_system_ringtones: ^0.0.6
   android_alarm_manager_plus: ^2.1.0
+  audio_service: ^0.18.9
+  just_audio: ^0.9.31
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +89,9 @@ flutter:
     - family: Montserrat
       fonts:
         - asset: fonts/Montserrat/Montserrat-VariableFont.ttf
+    - family: Rubik
+      fonts:
+        - asset: fonts/Rubik/Rubik-VariableFont.ttf
 
     - family: FluxIcons
       fonts:
