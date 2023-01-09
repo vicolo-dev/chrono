@@ -1,6 +1,6 @@
-import 'package:clock_app/data/database.dart';
-import 'package:clock_app/types/city.dart';
-import 'package:clock_app/widgets/timezone_search_card.dart';
+import 'package:clock_app/clock/data/timezone_database.dart';
+import 'package:clock_app/clock/types/city.dart';
+import 'package:clock_app/clock/widgets/timezone_search_card.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:clock_app/data/settings.dart';
