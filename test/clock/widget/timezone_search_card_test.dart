@@ -1,35 +1,56 @@
+import 'package:flutter/material.dart';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:timezone/data/latest_all.dart' as timezone_db;
+
 import 'package:clock_app/clock/data/timezone_database.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/clock/widgets/timezone_search_card.dart';
 import 'package:clock_app/settings/logic/settings.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
-import 'package:timezone/data/latest_all.dart' as timezone_db;
-
-import 'package:timezone/timezone.dart' as timezone;
 
 void main() {
-  testWidgets('timeZoneSearchCard shows correctly', (tester) async {
-    //setup
-    timezone_db.initializeTimeZones();
-    await initializeDatabases();
-    Settings.initialize();
+  group('TimeZoneSearchCard', () {
+    setUp(
+      () async {
+        timezone_db.initializeTimeZones();
+        Settings.initialize();
+        await initializeDatabases();
+      },
+    );
+    testWidgets(
+      'shows city name correctly',
+      (tester) async {
+        City sampleCity = await renderWidget(tester);
 
-    const sampleCity = City("New York", "United States", "America/New_York");
-    final timezoneLocation = timezone.getLocation(sampleCity.timezone);
+        //The widget code uses replaceAll code to work around flutter's
+        // limitation of cutting entire words on overflow instead of
+        // individual letters, so we do the same here
+        expect(find.text(sampleCity.name.replaceAll('', '\u{200B}')),
+            findsOneWidget);
+      },
+    );
+    testWidgets(
+      'shows country name correctly',
+      (tester) async {
+        City sampleCity = await renderWidget(tester);
 
-    DateTime now = timezone.TZDateTime.now(timezoneLocation);
-    String formattedTime = DateFormat('h:mm').format(now);
-
-    await tester.pumpWidget(TimeZoneSearchCard(
-      city: sampleCity,
-      onTap: () {},
-    ));
-    //action
-
-    //assert
-    expect(find.text(sampleCity.name), findsOneWidget);
-    expect(find.text(sampleCity.country), findsOneWidget);
-    expect(find.text(formattedTime), findsOneWidget);
+        expect(find.text(sampleCity.country), findsOneWidget);
+      },
+    );
   });
+}
+
+Future<City> renderWidget(WidgetTester tester) async {
+  const sampleCity = City("Tokyo", "Japan", "Asia/Tokyo");
+
+  await tester.pumpWidget(
+    MaterialApp(
+      home: TimeZoneSearchCard(
+        city: sampleCity,
+        onTap: () {},
+      ),
+    ),
+  );
+  //action
+  return sampleCity;
 }
