@@ -38,12 +38,10 @@ dependencies:
   path_provider: ^2.0.11
   path: ^1.8.2
   sqflite: ^2.2.2
-  sqflite_common_ffi: ^2.2.0+1
   flutter_slidable: ^2.0.0
   shared_preferences: ^2.0.0-nullsafety
   flutter_system_ringtones: ^0.0.6
   android_alarm_manager_plus: ^2.1.0
-  audio_service: ^0.18.9
   just_audio: ^0.9.31
 
 dev_dependencies:
