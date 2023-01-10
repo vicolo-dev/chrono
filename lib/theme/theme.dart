@@ -1,4 +1,5 @@
 import 'package:clock_app/theme/button.dart';
+import 'package:clock_app/theme/switch.dart';
 import 'package:clock_app/theme/time_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -14,5 +15,6 @@ ThemeData theme = ThemeData(
   colorScheme: colorScheme,
   timePickerTheme: timePickerTheme,
   dialogTheme: dialogTheme,
+  switchTheme: switchTheme,
   // textButtonTheme: textButtonTheme,
 );

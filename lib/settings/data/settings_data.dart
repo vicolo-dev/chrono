@@ -17,26 +17,26 @@ List<SettingGroup> settings = [
           SettingOption("System")
         ],
         1,
-        "12 or 24 hour time",
+        description: "12 or 24 hour time",
       ),
     ],
     FluxIcons.settings,
-    "Set app wide settings like time format",
+    description: "Set app wide settings like time format",
   ),
   SettingGroup(
-    "Appearance",
-    [
-      SelectSetting(
-          "Theme",
-          [
-            SettingOption("Light"),
-            SettingOption("Dark"),
-            SettingOption("Amoled"),
-            SettingOption("System"),
-          ],
-          1),
-      ColorSetting("Accent Color", const Color.fromARGB(255, 9, 163, 184)),
-    ],
-    FluxIcons.settings,
-  ),
+      "Appearance",
+      [
+        SelectSetting(
+            "Theme",
+            [
+              SettingOption("Light"),
+              SettingOption("Dark"),
+              SettingOption("Amoled"),
+              SettingOption("System"),
+            ],
+            1),
+        ColorSetting("Accent Color", const Color.fromARGB(255, 9, 163, 184)),
+      ],
+      FluxIcons.settings,
+      description: "Set themes, colors and change layout"),
 ];

@@ -1,11 +1,7 @@
-import 'package:clock_app/clock/screens/clock_screen.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
+import 'package:clock_app/settings/screens/settings_screen.dart';
 import 'package:clock_app/theme/color.dart';
-import 'package:clock_app/navigation/types/tab.dart';
-import 'package:clock_app/clock/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:clock_app/navigation/widgets/navigation_bar.dart';
 import 'package:clock_app/icons/flux_icons.dart';
@@ -33,7 +29,9 @@ class _AppScaffoldState extends State<AppScaffold> {
     return Scaffold(
       appBar: AppBar(
         title: Text(tabs[_selectedTabIndex].title,
-            style: Theme.of(context).textTheme.titleMedium),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: ColorTheme.textColorSecondary,
+                )),
         elevation: 0,
         backgroundColor: Colors.transparent,
         actions: [
@@ -45,7 +43,7 @@ class _AppScaffoldState extends State<AppScaffold> {
                       builder: (context) => const SettingsScreen()));
             },
             icon: const Icon(FluxIcons.settings, semanticLabel: "Settings"),
-            color: ColorTheme.textColor,
+            color: ColorTheme.textColorSecondary,
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:clock_app/navigation/data/tabs.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/icons/flux_icons.dart';
@@ -36,8 +37,8 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
                 )
             ],
             currentIndex: widget.selectedTabIndex,
-            selectedItemColor: Colors.cyan,
-            unselectedItemColor: Colors.grey,
+            selectedItemColor: Theme.of(context).colorScheme.primary,
+            unselectedItemColor: ColorTheme.textColorTertiary,
             showUnselectedLabels: false,
             selectedLabelStyle: Theme.of(context).textTheme.titleSmall,
             unselectedLabelStyle: Theme.of(context).textTheme.titleSmall,

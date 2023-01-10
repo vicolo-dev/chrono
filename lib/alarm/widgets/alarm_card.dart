@@ -12,6 +12,7 @@ class AlarmCard extends StatefulWidget {
 
 class _AlarmCardState extends State<AlarmCard> {
   final _days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  bool _isOn = true;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +22,20 @@ class _AlarmCardState extends State<AlarmCard> {
         elevation: 1,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(
-            widget.alarm.time.format(context),
-            style: Theme.of(context).textTheme.displayMedium,
+          child: Row(
+            children: [
+              Text(
+                widget.alarm.time.format(context),
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+              const Spacer(),
+              Switch(
+                value: _isOn,
+                onChanged: (value) => setState(() {
+                  _isOn = value;
+                }),
+              )
+            ],
           ),
         ),
       ),

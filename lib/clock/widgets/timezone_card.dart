@@ -98,7 +98,6 @@ class TimeZoneCard extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Card(
-        elevation: 1,
         child: Slidable(
             groupTag: 'cities',
             key: key,

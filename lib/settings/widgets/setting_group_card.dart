@@ -12,7 +12,6 @@ class SettingGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        elevation: 1,
         child: InkWell(
             borderRadius: const BorderRadius.all(Radius.circular(16.0)),
             // onTap: onTap,
@@ -31,6 +30,7 @@ class SettingGroupCard extends StatelessWidget {
                             settingGroup.name,
                             style: Theme.of(context).textTheme.displaySmall,
                           ),
+                          const SizedBox(height: 4),
                           if (settingGroup.description.isNotEmpty)
                             Text(
                               settingGroup.description,

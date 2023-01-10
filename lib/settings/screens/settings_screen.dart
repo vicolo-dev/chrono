@@ -25,31 +25,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text("Settings", style: Theme.of(context).textTheme.titleMedium),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsScreen()));
-            },
-            icon: const Icon(FluxIcons.settings, semanticLabel: "Settings"),
-            color: ColorTheme.textColor,
-          ),
-        ],
       ),
-      body: Padding(
+      body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ListView.builder(
-          itemCount: settings.length,
-          itemBuilder: (BuildContext context, int index) {
-            SettingGroup settingGroup = settings[index];
-            return SettingGroupCard(
-              settingGroup: settingGroup,
-              // onTap: () { },
-            );
-          },
-        ),
+        itemCount: settings.length,
+        itemBuilder: (BuildContext context, int index) {
+          SettingGroup settingGroup = settings[index];
+          return SettingGroupCard(
+            settingGroup: settingGroup,
+            // onTap: () { },
+          );
+        },
       ),
     );
   }

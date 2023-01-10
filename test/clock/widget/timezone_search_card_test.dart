@@ -22,7 +22,7 @@ void main() {
       (tester) async {
         City sampleCity = await renderWidget(tester);
 
-        //The widget code uses replaceAll code to work around flutter's
+        // The widget code uses `replaceAll` to work around flutter's
         // limitation of cutting entire words on overflow instead of
         // individual letters, so we do the same here
         expect(find.text(sampleCity.name.replaceAll('', '\u{200B}')),

@@ -9,7 +9,7 @@ class SettingGroup {
 
   List<Setting> settings;
 
-  SettingGroup(this.name, this.settings, this.icon, [this.description = ""]);
+  SettingGroup(this.name, this.settings, this.icon, {this.description = ""});
 }
 
 abstract class Setting<T> {
@@ -21,22 +21,22 @@ abstract class Setting<T> {
 }
 
 class ToggleSetting extends Setting<bool> {
-  ToggleSetting(String name, bool defaultValue, [String description = ""])
+  ToggleSetting(String name, bool defaultValue, {String description = ""})
       : super(name, description, defaultValue);
 }
 
 class NumberSetting extends Setting<double> {
-  NumberSetting(String name, double defaultValue, [String description = ""])
+  NumberSetting(String name, double defaultValue, {String description = ""})
       : super(name, description, defaultValue);
 }
 
 class ColorSetting extends Setting<Color> {
-  ColorSetting(String name, Color defaultValue, [String description = ""])
+  ColorSetting(String name, Color defaultValue, {String description = ""})
       : super(name, description, defaultValue);
 }
 
 class StringSetting extends Setting<String> {
-  StringSetting(String name, String defaultValue, [String description = ""])
+  StringSetting(String name, String defaultValue, {String description = ""})
       : super(name, description, defaultValue);
 }
 
@@ -45,7 +45,7 @@ class SliderSetting extends Setting<double> {
   double max;
 
   SliderSetting(String name, this.min, this.max, double defaultValue,
-      [String description = ""])
+      {String description = ""})
       : super(name, description, defaultValue);
 }
 
@@ -53,7 +53,7 @@ class SelectSetting extends Setting<int> {
   List<SettingOption> options;
 
   SelectSetting(String name, this.options, int defaultValue,
-      [String description = ""])
+      {String description = ""})
       : super(name, description, defaultValue);
 }
 
@@ -61,5 +61,5 @@ class SettingOption {
   String name;
   String description;
 
-  SettingOption(this.name, [this.description = ""]);
+  SettingOption(this.name, {this.description = ""});
 }

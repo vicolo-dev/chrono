@@ -36,17 +36,17 @@ const TextTheme textTheme = TextTheme(
   ),
   bodyLarge: TextStyle(
     fontSize: 16,
-    fontVariations: FontVariations.medium,
+    fontVariations: FontVariations.regular,
     color: ColorTheme.textColor,
   ),
   bodyMedium: TextStyle(
     fontSize: 12,
-    fontVariations: FontVariations.medium,
+    fontVariations: FontVariations.regular,
     color: ColorTheme.textColor,
   ),
   bodySmall: TextStyle(
     fontSize: 10,
-    fontVariations: FontVariations.medium,
+    fontVariations: FontVariations.regular,
     color: ColorTheme.textColor,
   ),
   labelLarge: TextStyle(

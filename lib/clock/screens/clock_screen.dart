@@ -17,12 +17,11 @@ class ClockScreen extends StatefulWidget {
 }
 
 class _ClockScreenState extends State<ClockScreen> {
-  List<City> _cities = <City>[];
+  List<City> _cities = [];
 
   @override
   void initState() {
     super.initState();
-
     setState(() => _cities = loadFavoriteCities());
   }
 

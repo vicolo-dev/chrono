@@ -1,3 +1,4 @@
+import 'package:clock_app/alarm/data/alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
@@ -14,7 +15,7 @@ class AlarmScreen extends StatefulWidget {
 }
 
 class _AlarmScreenState extends State<AlarmScreen> {
-  final List<Alarm> _alarms = [];
+  List<Alarm> _alarms = [];
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePickerDialog(
@@ -29,7 +30,15 @@ class _AlarmScreenState extends State<AlarmScreen> {
       setState(() {
         _alarms.add(Alarm(pickedTime));
       });
+
+      setAlarms(_alarms);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() => _alarms = loadAlarms());
   }
 
   _onReorderAlarms(int oldIndex, int newIndex) {
@@ -40,6 +49,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
       final Alarm reorderedAlarm = _alarms.removeAt(oldIndex);
       _alarms.insert(newIndex, reorderedAlarm);
     });
+    setAlarms(_alarms);
   }
 
   @override
