@@ -2358,7 +2358,10 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                   onPressed: _handleOk,
                   child: Text(
                     widget.confirmText ?? localizations.okButtonLabel,
-                    style: Theme.of(context).textTheme.labelMedium,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelMedium
+                        ?.copyWith(color: ColorTheme.accentColor),
                   ),
                 ),
               ],

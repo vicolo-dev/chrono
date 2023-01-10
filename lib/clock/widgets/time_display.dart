@@ -8,14 +8,15 @@ class TimeDisplay extends StatelessWidget {
     Key? key,
     required this.format,
     required this.fontSize,
-    required this.height,
+    this.height,
+    this.color,
     required this.timezoneLocation,
   }) : super(key: key);
 
   final String format;
   final double fontSize;
   final double? height;
-
+  final Color? color;
   final timezone.Location? timezoneLocation;
 
   @override
@@ -32,6 +33,7 @@ class TimeDisplay extends StatelessWidget {
       style: Theme.of(context).textTheme.displaySmall?.copyWith(
             fontSize: fontSize,
             height: height,
+            color: color,
           ),
     );
   }

@@ -1,8 +1,10 @@
-import 'package:clock_app/clock/widgets/time_display.dart';
-import 'package:clock_app/clock/types/time.dart';
 import 'package:flutter/material.dart';
+
 import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;
+
+import 'package:clock_app/clock/widgets/time_display.dart';
+import 'package:clock_app/clock/types/time.dart';
 
 class Clock extends StatelessWidget {
   const Clock({
@@ -11,6 +13,7 @@ class Clock extends StatelessWidget {
     this.shouldShowDate = false,
     this.shouldShowSeconds = false,
     this.timeFormat = TimeFormat.H12,
+    this.color,
     this.timezoneLocation,
   }) : super(key: key);
 
@@ -18,6 +21,7 @@ class Clock extends StatelessWidget {
   final bool shouldShowDate;
   final TimeFormat timeFormat;
   final bool shouldShowSeconds;
+  final Color? color;
   final timezone.Location? timezoneLocation;
 
   @override
@@ -37,6 +41,7 @@ class Clock extends StatelessWidget {
                     fontSize: 72 * scale,
                     height: shouldShowDate ? 0.75 : null,
                     timezoneLocation: timezoneLocation,
+                    color: color,
                   ),
                   SizedBox(width: 4 * scale),
                   Column(
@@ -49,6 +54,7 @@ class Clock extends StatelessWidget {
                           fontSize: 36 * scale,
                           height: 1,
                           timezoneLocation: timezoneLocation,
+                          color: color,
                         ),
                       Row(
                         children: timeFormat == TimeFormat.H12
@@ -59,6 +65,7 @@ class Clock extends StatelessWidget {
                                       (shouldShowSeconds ? 24 : 32) * scale,
                                   height: 1,
                                   timezoneLocation: timezoneLocation,
+                                  color: color,
                                 ),
                                 if (shouldShowSeconds)
                                   SizedBox(width: 16 * scale),

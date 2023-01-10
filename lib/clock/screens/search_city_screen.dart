@@ -38,8 +38,6 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
                       result['City'] as String,
                       result['Country'] as String,
                       result['Timezone'] as String))
-                  .where((result) =>
-                      !_favoriteCities.any((city) => city.name == result.name))
                   .toList();
             });
           }
@@ -92,6 +90,9 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
             City city = _filteredCities[index];
             return TimeZoneSearchCard(
               city: city,
+              disabled: _favoriteCities.any((favoriteCity) =>
+                  favoriteCity.name == city.name &&
+                  favoriteCity.country == city.country),
               onTap: () {
                 Navigator.pop(context, city);
               },

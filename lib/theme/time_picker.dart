@@ -7,7 +7,9 @@ TimePickerThemeData timePickerTheme = TimePickerThemeData(
   hourMinuteShape: defaultShape,
   dayPeriodShape: defaultShape,
   dialBackgroundColor: Colors.grey.shade200,
-  helpTextStyle: textTheme.displaySmall,
+  helpTextStyle: textTheme.displaySmall?.copyWith(
+    color: ColorTheme.textColorSecondary,
+  ),
   hourMinuteTextStyle: textTheme.displayMedium,
   dayPeriodTextStyle: textTheme.displaySmall,
   hourMinuteTextColor: ColorTheme.textColorSecondary,
