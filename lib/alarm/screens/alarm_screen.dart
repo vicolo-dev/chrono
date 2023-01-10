@@ -17,6 +17,12 @@ class AlarmScreen extends StatefulWidget {
 class _AlarmScreenState extends State<AlarmScreen> {
   List<Alarm> _alarms = [];
 
+  @override
+  void initState() {
+    super.initState();
+    setState(() => _alarms = loadAlarms());
+  }
+
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePickerDialog(
       context: context,
@@ -35,12 +41,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    setState(() => _alarms = loadAlarms());
-  }
-
   _onReorderAlarms(int oldIndex, int newIndex) {
     setState(() {
       if (oldIndex < newIndex) {
@@ -49,6 +49,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
       final Alarm reorderedAlarm = _alarms.removeAt(oldIndex);
       _alarms.insert(newIndex, reorderedAlarm);
     });
+    setAlarms(_alarms);
+  }
+
+  _onDeleteAlarm(int index) {
+    setState(() {
+      _alarms.removeAt(index);
+    });
+
     setAlarms(_alarms);
   }
 
@@ -64,6 +72,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             return AlarmCard(
               key: ValueKey(_alarms[index]),
               alarm: _alarms[index],
+              onDelete: () => _onDeleteAlarm(index),
             );
           },
           footer:

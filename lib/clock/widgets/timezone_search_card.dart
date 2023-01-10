@@ -30,16 +30,19 @@ class TimeZoneSearchCard extends StatelessWidget {
           surfaceTintColor: disabled ? Colors.pink : null,
           elevation: disabled ? 1 : 2,
           child: InkWell(
-            onTap: disabled
-                ? () {
-                    const snackBar = SnackBar(
-                      content: Text('This city is already in your favorites.'),
-                    );
+            onTap: () {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                : onTap,
+              if (disabled) {
+                const snackBar = SnackBar(
+                  content: Text('This city is already in your favorites.'),
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else {
+                onTap();
+              }
+            },
             child: TimezoneCardContent(
               title: city.name,
               subtitle: city.country,

@@ -1,4 +1,5 @@
 import 'package:clock_app/clock/widgets/timzone_card_content.dart';
+import 'package:clock_app/common/widgets/delete_action_pane.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -21,7 +22,7 @@ class TimeZoneCard extends StatelessWidget {
   late final timezone.Location timezoneLocation;
   late final double offset;
   final City city;
-  final Function onDelete;
+  final VoidCallback onDelete;
 
   String formatTimeOffset(double n) {
     return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 1);
@@ -48,37 +49,14 @@ class TimeZoneCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var deleteActionPane = ActionPane(
-      motion: const ScrollMotion(),
-      // extentRatio: Platform == 0.25,
-      children: [
-        CustomSlidableAction(
-          onPressed: (context) => onDelete(),
-          backgroundColor: const Color(0xFFFE4A49),
-          foregroundColor: Colors.white,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.delete),
-              Text('Delete',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: Colors.white)),
-            ],
-          ),
-        ),
-      ],
-    );
-
     return SizedBox(
       width: double.infinity,
       child: Card(
         child: Slidable(
             groupTag: 'cities',
             key: key,
-            startActionPane: deleteActionPane,
-            endActionPane: deleteActionPane,
+            startActionPane: getDeleteActionPane(onDelete, context),
+            endActionPane: getDeleteActionPane(onDelete, context),
             child: TimezoneCardContent(
               title: city.name,
               subtitle: getOffsetDescription(),
