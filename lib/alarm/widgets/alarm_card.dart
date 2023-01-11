@@ -1,14 +1,21 @@
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/alarm/utils/alarm_utils.dart';
+import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:clock_app/common/widgets/delete_action_pane.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class AlarmCard extends StatefulWidget {
-  const AlarmCard({Key? key, required this.alarm, required this.onDelete})
+  const AlarmCard(
+      {Key? key,
+      required this.alarm,
+      required this.onDelete,
+      required this.onEnabledChange})
       : super(key: key);
 
   final Alarm alarm;
   final VoidCallback onDelete;
+  final void Function(bool) onEnabledChange;
 
   @override
   _AlarmCardState createState() => _AlarmCardState();
@@ -16,7 +23,6 @@ class AlarmCard extends StatefulWidget {
 
 class _AlarmCardState extends State<AlarmCard> {
   final _days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  bool _isOn = true;
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +39,13 @@ class _AlarmCardState extends State<AlarmCard> {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  Text(
-                    widget.alarm.time.format(context),
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
+                  ClockDisplay(
+                      dateTime: timeOfDayToDateTime(widget.alarm.timeOfDay),
+                      scale: 0.6),
                   const Spacer(),
                   Switch(
-                    value: _isOn,
-                    onChanged: (value) => setState(() {
-                      _isOn = value;
-                    }),
+                    value: widget.alarm.enabled,
+                    onChanged: widget.onEnabledChange,
                   )
                 ],
               ),

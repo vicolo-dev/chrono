@@ -10,24 +10,18 @@ class TimeDisplay extends StatelessWidget {
     required this.fontSize,
     this.height,
     this.color,
-    required this.timezoneLocation,
+    required this.dateTime,
   }) : super(key: key);
 
+  final DateTime dateTime;
   final String format;
   final double fontSize;
   final double? height;
   final Color? color;
-  final timezone.Location? timezoneLocation;
 
   @override
   Widget build(BuildContext context) {
-    DateTime now;
-    if (timezoneLocation != null) {
-      now = timezone.TZDateTime.now(timezoneLocation!);
-    } else {
-      now = DateTime.now();
-    }
-    String formattedTime = DateFormat(format).format(now);
+    String formattedTime = DateFormat(format).format(dateTime);
     return Text(
       formattedTime,
       style: Theme.of(context).textTheme.displaySmall?.copyWith(

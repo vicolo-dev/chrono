@@ -6,13 +6,13 @@ import 'package:clock_app/clock/data/favorite_cities.dart';
 class Settings {
   static SharedPreferences? _preferences;
 
-  static get preferences => _preferences;
+  static SharedPreferences? get preferences => _preferences;
 
   static initialize() async {
     _preferences = await SharedPreferences.getInstance();
 
     // Comment this out after the preferences are cleared
-    // _preferences?.clear();
+    _preferences?.clear();
 
     bool? firstLaunch = _preferences?.getBool('first_launch');
     if (firstLaunch == null) {

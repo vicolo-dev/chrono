@@ -29,12 +29,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
       initialTime: TimeOfDay.now(),
       helpText: "Select Time",
       cancelText: "Cancel",
-      confirmText: "OK",
+      confirmText: "Save",
     );
 
     if (pickedTime != null) {
+      Alarm alarm = Alarm(pickedTime);
       setState(() {
-        _alarms.add(Alarm(pickedTime));
+        _alarms.add(alarm);
       });
 
       setAlarms(_alarms);
@@ -53,10 +54,18 @@ class _AlarmScreenState extends State<AlarmScreen> {
   }
 
   _onDeleteAlarm(int index) {
+    _alarms[index].disable();
     setState(() {
       _alarms.removeAt(index);
     });
 
+    setAlarms(_alarms);
+  }
+
+  _onEnableChangeAlarm(int index, bool value) {
+    setState(() {
+      _alarms[index].setIsEnabled(value);
+    });
     setAlarms(_alarms);
   }
 
@@ -73,6 +82,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
               key: ValueKey(_alarms[index]),
               alarm: _alarms[index],
               onDelete: () => _onDeleteAlarm(index),
+              onEnabledChange: (bool value) =>
+                  _onEnableChangeAlarm(index, value),
             );
           },
           footer:
