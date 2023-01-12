@@ -1,17 +1,16 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/theme/color.dart';
-import 'package:flutter/material.dart';
 
 const int alarmNotificationId = 10;
 
 const String alarmNotificationChannelGroupKey = 'clock_alarm_group';
 const String alarmNotificationChannelKey = 'clock_alarm';
 
-const String snoozeActionKey = "snooze";
-const String dismissActionKey = "dismiss";
+const String alarmSnoozeActionKey = "snooze";
+const String alarmDismissActionKey = "dismiss";
 
-const String snoozeActionLabel = "Snooze";
-const String dismissActionLabel = "Dismiss";
+const String alarmSnoozeActionLabel = "Snooze";
+const String alarmDismissActionLabel = "Dismiss";
 
 NotificationChannel alarmNotificationChannel = NotificationChannel(
   channelGroupKey: alarmNotificationChannelGroupKey,
@@ -19,9 +18,11 @@ NotificationChannel alarmNotificationChannel = NotificationChannel(
   channelName: 'Clock Alarm',
   channelDescription: 'Notification channel for clock alarms',
   defaultColor: ColorTheme.accentColor,
-  ledColor: Colors.white,
   locked: true,
   importance: NotificationImportance.Max,
+  playSound: false,
+  enableVibration: false,
+  enableLights: false,
 );
 
 NotificationChannelGroup alarmNotificationChannelGroup =

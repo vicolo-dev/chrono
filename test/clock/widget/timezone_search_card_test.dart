@@ -6,14 +6,14 @@ import 'package:timezone/data/latest_all.dart' as timezone_db;
 import 'package:clock_app/clock/data/timezone_database.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/clock/widgets/timezone_search_card.dart';
-import 'package:clock_app/settings/logic/settings.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
 
 void main() {
   group('TimeZoneSearchCard', () {
     setUp(
       () async {
         timezone_db.initializeTimeZones();
-        Settings.initialize();
+        SettingsManager.initialize();
         await initializeDatabases();
       },
     );

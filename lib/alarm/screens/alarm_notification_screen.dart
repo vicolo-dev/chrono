@@ -1,15 +1,17 @@
 import 'package:clock_app/alarm/data/alarm_notification_data.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
+import 'package:clock_app/alarm/utils/alarm_utils.dart';
+import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:flutter/material.dart';
 
 class AlarmNotificationScreen extends StatefulWidget {
   const AlarmNotificationScreen({
     Key? key,
-    required this.id,
+    required this.timeOfDay,
   }) : super(key: key);
 
-  final int? id;
+  final TimeOfDay? timeOfDay;
 
   @override
   State<AlarmNotificationScreen> createState() =>
@@ -30,7 +32,11 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            ClockDisplay(
+              dateTime: timeOfDayToDateTime(widget.timeOfDay!),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -39,14 +45,14 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
                     // dismissAlarm(widget.id);
                     // Navigator.pop(context);
                   },
-                  child: const Text(snoozeActionLabel),
+                  child: const Text(alarmSnoozeActionLabel),
                 ),
                 TextButton(
                   onPressed: () {
                     dismissAlarm();
                     // Navigator.pop(context);
                   },
-                  child: const Text(dismissActionLabel),
+                  child: const Text(alarmDismissActionLabel),
                 ),
               ],
             ),

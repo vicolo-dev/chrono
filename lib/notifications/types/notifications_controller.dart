@@ -39,11 +39,13 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> _onActionReceivedMethod(
       ReceivedAction receivedAction) async {
+    print("payload: ${receivedAction.payload}");
+
     switch (receivedAction.buttonKeyPressed) {
-      case snoozeActionKey:
+      case alarmSnoozeActionKey:
         break;
 
-      case dismissActionLabel:
+      case alarmDismissActionKey:
         dismissAlarm();
         break;
 
@@ -54,8 +56,9 @@ class NotificationController {
             return (route.settings.name != alarmNotificationRoute) ||
                 route.isFirst;
           },
-          arguments: receivedAction.id,
+          arguments: receivedAction,
         );
+        break;
     }
   }
 }

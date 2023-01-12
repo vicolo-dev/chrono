@@ -1,8 +1,9 @@
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/settings/logic/settings.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
 
 List<Alarm> loadAlarms() {
-  final String? encodedAlarms = Settings.preferences?.getString('alarms');
+  final String? encodedAlarms =
+      SettingsManager.preferences?.getString('alarms');
 
   if (encodedAlarms == null) {
     return [];
@@ -12,5 +13,5 @@ List<Alarm> loadAlarms() {
 }
 
 void setAlarms(List<Alarm> alarms) {
-  Settings.preferences?.setString('alarms', Alarm.encode(alarms));
+  SettingsManager.preferences?.setString('alarms', Alarm.encode(alarms));
 }

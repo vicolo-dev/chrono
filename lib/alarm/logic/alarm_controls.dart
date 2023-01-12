@@ -5,12 +5,17 @@ import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/main.dart';
 
 @pragma('vm:entry-point')
-void ringAlarm() async {
+void ringAlarm(int num, Map<String, dynamic> params) async {
+  // print("Time of day : ${params['timeOfDay']}, num : $num");
+
   AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: alarmNotificationId,
       channelKey: alarmNotificationChannelKey,
       title: 'Alarm Ringing...',
+      payload: {
+        'timeOfDay': params['timeOfDay'].toString(),
+      },
       // body: '',
       category: NotificationCategory.Alarm,
       fullScreenIntent: true,
@@ -20,14 +25,14 @@ void ringAlarm() async {
     ),
     actionButtons: [
       NotificationActionButton(
-        key: snoozeActionKey,
-        label: dismissActionLabel,
+        key: alarmSnoozeActionKey,
+        label: alarmSnoozeActionLabel,
         actionType: ActionType.Default,
         autoDismissible: true,
       ),
       NotificationActionButton(
-        key: dismissActionKey,
-        label: dismissActionLabel,
+        key: alarmDismissActionKey,
+        label: alarmDismissActionLabel,
         actionType: ActionType.Default,
         autoDismissible: true,
       ),

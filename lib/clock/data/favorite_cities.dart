@@ -1,5 +1,5 @@
 import 'package:clock_app/clock/types/city.dart';
-import 'package:clock_app/settings/logic/settings.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
 
 const List<City> initialFavoriteCities = [
   City("New York City", "United States", "America/New_York"),
@@ -14,7 +14,7 @@ void initializeDefaultFavoriteCities() {
 
 List<City> loadFavoriteCities() {
   final String? encodedFavoriteCities =
-      Settings.preferences?.getString('favorite_cities');
+      SettingsManager.preferences?.getString('favorite_cities');
 
   if (encodedFavoriteCities == null) {
     return [];
@@ -24,5 +24,6 @@ List<City> loadFavoriteCities() {
 }
 
 void saveFavoriteCities(List<City> cities) {
-  Settings.preferences?.setString('favorite_cities', City.encode(cities));
+  SettingsManager.preferences
+      ?.setString('favorite_cities', City.encode(cities));
 }

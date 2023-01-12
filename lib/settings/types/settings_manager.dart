@@ -3,7 +3,7 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:clock_app/clock/data/favorite_cities.dart';
 
-class Settings {
+class SettingsManager {
   static SharedPreferences? _preferences;
 
   static SharedPreferences? get preferences => _preferences;
@@ -12,7 +12,7 @@ class Settings {
     _preferences = await SharedPreferences.getInstance();
 
     // Comment this out after the preferences are cleared
-    _preferences?.clear();
+    // _preferences?.clear();
 
     bool? firstLaunch = _preferences?.getBool('first_launch');
     if (firstLaunch == null) {

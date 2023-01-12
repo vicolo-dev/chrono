@@ -6,6 +6,12 @@ double timeOfDayToHours(TimeOfDay timeOfDay) =>
 double dateTimeToHours(DateTime dateTime) =>
     dateTime.hour + dateTime.minute / 60.0;
 
+TimeOfDay hoursToTimeOfDay(double hours) {
+  int hour = hours.floor();
+  int minute = ((hours - hour) * 60).round();
+  return TimeOfDay(hour: hour, minute: minute);
+}
+
 DateTime getOneTimeAlarmDate(TimeOfDay timeOfDay) {
   DateTime alarmTime;
 

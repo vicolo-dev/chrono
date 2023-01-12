@@ -5,11 +5,12 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/data/alarm_notification_data.dart';
 import 'package:clock_app/alarm/data/alarm_notification_route.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
+import 'package:clock_app/alarm/utils/alarm_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest_all.dart' as timezone_db;
 
-import 'package:clock_app/settings/logic/settings.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/clock/data/timezone_database.dart';
@@ -19,7 +20,7 @@ import 'package:clock_app/notifications/types/notifications_controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   timezone_db.initializeTimeZones();
-  Settings.initialize();
+  SettingsManager.initialize();
   await initializeDatabases();
   await AndroidAlarmManager.initialize();
   await AlarmAudioPlayer.initialize();
@@ -63,7 +64,12 @@ class _AppState extends State<App> {
           case alarmNotificationRoute:
             return MaterialPageRoute(
               builder: (context) {
-                return AlarmNotificationScreen(id: settings.arguments as int);
+                final ReceivedAction receivedAction =
+                    settings.arguments as ReceivedAction;
+                String? timeOfDayString = receivedAction.payload?['timeOfDay'];
+                TimeOfDay? timeOfDay =
+                    hoursToTimeOfDay(double.parse(timeOfDayString!));
+                return AlarmNotificationScreen(timeOfDay: timeOfDay);
               },
             );
 

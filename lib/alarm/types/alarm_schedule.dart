@@ -28,6 +28,7 @@ class WeekdayAlarmSchedule extends AlarmSchedule {
       exact: true,
       wakeup: true,
       rescheduleOnReboot: true,
+      params: <String, dynamic>{'timeOfDay': timeOfDayToHours(_timeOfDay)},
     );
   }
 }
@@ -52,6 +53,7 @@ class OneTimeAlarmSchedule extends AlarmSchedule {
       exact: true,
       wakeup: true,
       rescheduleOnReboot: true,
+      params: <String, dynamic>{'timeOfDay': timeOfDayToHours(_timeOfDay)},
     );
   }
 }
