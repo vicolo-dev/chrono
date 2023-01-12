@@ -60,7 +60,7 @@ class _ClockScreenState extends State<ClockScreen> {
     return Stack(children: [
       Column(children: [
         const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Clock(
             shouldShowDate: true,
             shouldShowSeconds: true,

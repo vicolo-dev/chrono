@@ -1,7 +1,6 @@
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/widgets/time_display.dart';
 import 'package:flutter/material.dart';
-import 'package:timezone/timezone.dart' as timezone;
 
 class ClockDisplay extends StatelessWidget {
   const ClockDisplay({
@@ -11,7 +10,7 @@ class ClockDisplay extends StatelessWidget {
     this.shouldShowDate = false,
     this.shouldShowSeconds = false,
     required this.dateTime,
-    this.timeFormat = TimeFormat.H12,
+    this.timeFormat = TimeFormat.h12,
   }) : super(key: key);
 
   final TimeFormat timeFormat;
@@ -31,7 +30,7 @@ class ClockDisplay extends StatelessWidget {
             textBaseline: TextBaseline.alphabetic,
             children: [
               TimeDisplay(
-                format: '${timeFormat == TimeFormat.H12 ? 'h' : 'kk'}:mm',
+                format: '${timeFormat == TimeFormat.h12 ? 'h' : 'kk'}:mm',
                 fontSize: 72 * scale,
                 height: shouldShowDate ? 0.75 : null,
                 color: color,
@@ -51,7 +50,7 @@ class ClockDisplay extends StatelessWidget {
                       dateTime: dateTime,
                     ),
                   Row(
-                    children: timeFormat == TimeFormat.H12
+                    children: timeFormat == TimeFormat.h12
                         ? [
                             TimeDisplay(
                               format: 'a',

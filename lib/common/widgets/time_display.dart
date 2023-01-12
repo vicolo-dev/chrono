@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
-import 'package:timezone/timezone.dart' as timezone;
 
 class TimeDisplay extends StatelessWidget {
   const TimeDisplay({

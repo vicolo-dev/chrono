@@ -6,16 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:clock_app/navigation/widgets/navigation_bar.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 
-class AppScaffold extends StatefulWidget {
-  const AppScaffold({super.key, required this.title});
-
-  final String title;
+class NavScaffold extends StatefulWidget {
+  const NavScaffold({super.key});
 
   @override
-  State<AppScaffold> createState() => _AppScaffoldState();
+  State<NavScaffold> createState() => _NavScaffoldState();
 }
 
-class _AppScaffoldState extends State<AppScaffold> {
+class _NavScaffoldState extends State<NavScaffold> {
   int _selectedTabIndex = 0;
 
   void _onTabSelected(int index) {

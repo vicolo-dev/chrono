@@ -50,17 +50,17 @@ const TextTheme textTheme = TextTheme(
     color: ColorTheme.textColor,
   ),
   labelLarge: TextStyle(
-    fontSize: 20,
+    fontSize: 18,
     fontVariations: FontVariations.medium,
     color: ColorTheme.textColor,
   ),
   labelMedium: TextStyle(
-    fontSize: 16,
+    fontSize: 14,
     fontVariations: FontVariations.medium,
     color: ColorTheme.textColor,
   ),
   labelSmall: TextStyle(
-    fontSize: 14,
+    fontSize: 12,
     fontVariations: FontVariations.medium,
     color: ColorTheme.textColor,
   ),

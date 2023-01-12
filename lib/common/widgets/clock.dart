@@ -13,7 +13,7 @@ class Clock extends StatelessWidget {
     this.scale = 1,
     this.shouldShowDate = false,
     this.shouldShowSeconds = false,
-    this.timeFormat = TimeFormat.H12,
+    this.timeFormat = TimeFormat.h12,
     this.color,
     this.timezoneLocation,
   }) : super(key: key);

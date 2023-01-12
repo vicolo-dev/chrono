@@ -2,8 +2,6 @@ import 'package:clock_app/navigation/data/tabs.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
-import 'package:clock_app/icons/flux_icons.dart';
-
 class AppNavigationBar extends StatefulWidget {
   final int selectedTabIndex;
   final void Function(int) onTabSelected;

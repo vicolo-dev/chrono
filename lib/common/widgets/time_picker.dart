@@ -77,11 +77,7 @@ class _TimePickerFragmentContext {
     required this.onHourDoubleTapped,
     required this.onMinuteDoubleTapped,
     required this.use24HourDials,
-  })  : assert(selectedTime != null),
-        assert(mode != null),
-        assert(onTimeChange != null),
-        assert(onModeChange != null),
-        assert(use24HourDials != null);
+  });
 
   final TimeOfDay selectedTime;
   final _TimePickerMode mode;
@@ -103,10 +99,7 @@ class _TimePickerHeader extends StatelessWidget {
     required this.onMinuteDoubleTapped,
     required this.use24HourDials,
     required this.helpText,
-  })  : assert(selectedTime != null),
-        assert(mode != null),
-        assert(orientation != null),
-        assert(use24HourDials != null);
+  });
 
   final TimeOfDay selectedTime;
   final _TimePickerMode mode;
@@ -268,9 +261,7 @@ class _HourMinuteControl extends StatelessWidget {
     required this.onTap,
     required this.onDoubleTap,
     required this.isSelected,
-  })  : assert(text != null),
-        assert(onTap != null),
-        assert(isSelected != null);
+  });
 
   final String text;
   final GestureTapCallback onTap;
@@ -682,12 +673,6 @@ class _DayPeriodControl extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Expanded(child: amButton),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(left: borderSide),
-                    ),
-                    width: 1,
-                  ),
                   Expanded(child: pmButton),
                 ],
               ),
@@ -963,9 +948,7 @@ class _Dial extends StatefulWidget {
     required this.use24HourDials,
     required this.onChanged,
     required this.onHourSelected,
-  })  : assert(selectedTime != null),
-        assert(mode != null),
-        assert(use24HourDials != null);
+  });
 
   final TimeOfDay selectedTime;
   final _TimePickerMode mode;
@@ -1374,8 +1357,7 @@ class _TimePickerInput extends StatefulWidget {
     required this.autofocusMinute,
     required this.onChanged,
     this.restorationId,
-  })  : assert(initialSelectedTime != null),
-        assert(onChanged != null);
+  });
 
   /// The time initially selected when the dialog is shown.
   final TimeOfDay initialSelectedTime;
@@ -1923,6 +1905,7 @@ class TimePickerDialog extends StatefulWidget {
     this.restorationId,
     this.initialEntryMode = TimePickerEntryMode.dial,
     this.onEntryModeChanged,
+    this.dialogActions,
   }) : assert(initialTime != null);
 
   /// The time initially selected when the dialog is shown.
@@ -1952,6 +1935,8 @@ class TimePickerDialog extends StatefulWidget {
 
   /// Optionally provide your own minute label text.
   final String? minuteLabelText;
+
+  final List<DialogAction>? dialogActions;
 
   /// Restoration ID to save and restore the state of the [TimePickerDialog].
   ///
@@ -2272,7 +2257,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
     // parts of the time picker scale up with textScaleFactor, we cap the factor
     // to 1.1 as that provides enough space to reasonably fit all the content.
     final double textScaleFactor =
-        math.min(MediaQuery.of(context).textScaleFactor, 1.1);
+        math.min(MediaQuery.of(context).textScaleFactor, 1.2);
 
     final double timePickerWidth;
     final double timePickerHeight;
@@ -2354,6 +2339,18 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                         ?.copyWith(color: ColorTheme.textColorTertiary),
                   ),
                 ),
+                for (DialogAction action
+                    in widget.dialogActions ?? <DialogAction>[])
+                  TextButton(
+                    onPressed: action.onPressed,
+                    child: Text(
+                      action.label,
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelMedium
+                          ?.copyWith(color: ColorTheme.accentColor),
+                    ),
+                  ),
                 TextButton(
                   onPressed: _handleOk,
                   child: Text(
@@ -2377,8 +2374,8 @@ class _TimePickerDialogState extends State<TimePickerDialog>
       case TimePickerEntryMode.dialOnly:
         final Widget dial = Padding(
           padding: orientation == Orientation.portrait
-              ? const EdgeInsets.symmetric(horizontal: 36, vertical: 24)
-              : const EdgeInsets.all(24),
+              ? const EdgeInsets.symmetric(horizontal: 24, vertical: 12)
+              : const EdgeInsets.only(right: 12, left: 12, top: 24, bottom: 12),
           child: ExcludeSemantics(
             child: AspectRatio(
               aspectRatio: 1.0,
@@ -2598,6 +2595,7 @@ Future<TimeOfDay?> showTimePickerDialog({
   RouteSettings? routeSettings,
   EntryModeChangeCallback? onEntryModeChanged,
   Offset? anchorPoint,
+  List<DialogAction>? dialogActions,
 }) async {
   assert(context != null);
   assert(initialTime != null);
@@ -2615,6 +2613,7 @@ Future<TimeOfDay?> showTimePickerDialog({
     hourLabelText: hourLabelText,
     minuteLabelText: minuteLabelText,
     onEntryModeChanged: onEntryModeChanged,
+    dialogActions: dialogActions,
   );
   return showDialog<TimeOfDay>(
     context: context,
@@ -2629,4 +2628,11 @@ Future<TimeOfDay?> showTimePickerDialog({
 
 void _announceToAccessibility(BuildContext context, String message) {
   SemanticsService.announce(message, Directionality.of(context));
+}
+
+class DialogAction {
+  String label;
+  VoidCallback onPressed;
+
+  DialogAction({required this.label, required this.onPressed});
 }

@@ -1,1 +1,1 @@
-enum TimeFormat { H24, H12 }
+enum TimeFormat { h24, h12 }

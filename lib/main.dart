@@ -1,17 +1,20 @@
 import 'dart:core';
-import 'dart:isolate';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:clock_app/alarm/data/alarm_notification_data.dart';
+import 'package:clock_app/alarm/data/alarm_notification_route.dart';
+import 'package:clock_app/alarm/types/alarm_audio_player.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:timezone/data/latest_all.dart' as timezone_db;
 
 import 'package:clock_app/settings/logic/settings.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/clock/data/timezone_database.dart';
-
-setupDatabases() async {}
+import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
+import 'package:clock_app/notifications/types/notifications_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,24 +22,56 @@ void main() async {
   Settings.initialize();
   await initializeDatabases();
   await AndroidAlarmManager.initialize();
+  await AlarmAudioPlayer.initialize();
+  await AwesomeNotifications().initialize(null, [alarmNotificationChannel],
+      channelGroups: [alarmNotificationChannelGroup], debug: kDebugMode);
 
   runApp(const App());
-
-  // for (int i = 26; i < 59; i++) {
-
-  // }
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
+
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    NotificationController.setListeners();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: App.navigatorKey,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Clock',
       theme: theme,
-      home: const AppScaffold(title: 'Clock'),
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (context) => const NavScaffold());
+
+          case alarmNotificationRoute:
+            return MaterialPageRoute(
+              builder: (context) {
+                return AlarmNotificationScreen(id: settings.arguments as int);
+              },
+            );
+
+          default:
+            assert(false, 'Page ${settings.name} not found');
+            return null;
+        }
+      },
     );
   }
 }

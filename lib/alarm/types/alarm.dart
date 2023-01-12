@@ -1,135 +1,34 @@
 import 'dart:convert';
-import 'dart:isolate';
 
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/utils/alarm_utils.dart';
+import 'package:clock_app/alarm/types/alarm_schedule.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_system_ringtones/flutter_system_ringtones.dart';
-import 'package:just_audio/just_audio.dart';
-
-@pragma('vm:entry-point')
-void _ringAlarm() async {
-  var alarms = await FlutterSystemRingtones.getAlarmSounds();
-  final DateTime now = DateTime.now();
-  final player = AudioPlayer();
-  await player.setAudioSource(AudioSource.uri(Uri.parse(alarms[0].uri)));
-  player.play();
-  print("[$now] Alarm ringing");
-}
-
-class AlarmId {
-  static int _id = 0;
-  static int get() => _id++;
-}
-
-class WeekdayAlarmSchedule extends AlarmSchedule {
-  WeekdayAlarmSchedule(TimeOfDay timeOfDay, int weekday)
-      : super(getRepeatAlarmDate(timeOfDay, weekday)) {
-    schedule();
-  }
-
-  WeekdayAlarmSchedule.withoutScheduling(TimeOfDay timeOfDay, int weekday)
-      : super(getRepeatAlarmDate(timeOfDay, weekday));
-
-  int getWeekDay() {
-    return dateTime.weekday;
-  }
-
-  @override
-  DateTime getNextAlarmDate(TimeOfDay timeOfDay) {
-    return getRepeatAlarmDate(timeOfDay, getWeekDay());
-  }
-
-  @override
-  void schedule() {
-    AndroidAlarmManager.periodic(
-      const Duration(days: 7),
-      id,
-      _ringAlarm,
-      allowWhileIdle: true,
-      startAt: dateTime,
-      exact: true,
-      wakeup: true,
-      rescheduleOnReboot: true,
-    );
-  }
-}
-
-class OneTimeAlarmSchedule extends AlarmSchedule {
-  OneTimeAlarmSchedule(TimeOfDay timeOfDay)
-      : super(getOneTimeAlarmDate(timeOfDay)) {
-    schedule();
-  }
-
-  OneTimeAlarmSchedule.withoutScheduling(TimeOfDay timeOfDay)
-      : super(getOneTimeAlarmDate(timeOfDay));
-
-  @override
-  DateTime getNextAlarmDate(TimeOfDay timeOfDay) {
-    return getOneTimeAlarmDate(timeOfDay);
-  }
-
-  @override
-  void schedule() {
-    AndroidAlarmManager.oneShotAt(
-      dateTime,
-      id,
-      _ringAlarm,
-      allowWhileIdle: true,
-      alarmClock: true,
-      exact: true,
-      wakeup: true,
-      rescheduleOnReboot: true,
-    );
-  }
-}
-
-abstract class AlarmSchedule {
-  late int _id;
-  DateTime _dateTime;
-
-  int get id => _id;
-  DateTime get dateTime => _dateTime;
-
-  AlarmSchedule(this._dateTime) {
-    _id = AlarmId.get();
-  }
-
-  void changeDateTime(TimeOfDay timeOfDay) {
-    _dateTime = getNextAlarmDate(timeOfDay);
-    cancel();
-    schedule();
-  }
-
-  DateTime getNextAlarmDate(TimeOfDay timeOfDay);
-
-  void schedule();
-
-  void cancel() {
-    AndroidAlarmManager.cancel(_id);
-  }
-}
 
 class Alarm {
-  bool _enabled = false;
+  bool _enabled;
   TimeOfDay _timeOfDay;
-  final List<OneTimeAlarmSchedule> _oneTimeAlarms = [];
-  final List<WeekdayAlarmSchedule> _repeatAlarms = [];
+  final String _label;
+  final List<OneTimeAlarmSchedule> _oneTimeSchedules = [];
+  final List<WeekdayAlarmSchedule> _repeatSchedules = [];
 
   bool get enabled => _enabled;
   TimeOfDay get timeOfDay => _timeOfDay;
+  String get label => _label;
 
-  Alarm(this._timeOfDay, {List<int> weekdays = const []}) {
+  Alarm(this._timeOfDay, {List<int> weekdays = const []})
+      : _enabled = true,
+        _label = "" {
     _enabled = true;
-    setSchedules(weekdays);
+    setSchedules(weekdays, shouldSchedule: true);
   }
 
-  void setSchedules(List<int> weekdays) {
+  void setSchedules(List<int> weekdays, {bool shouldSchedule = false}) {
     if (weekdays.isEmpty) {
-      _oneTimeAlarms.add(OneTimeAlarmSchedule(_timeOfDay));
+      _oneTimeSchedules.add(OneTimeAlarmSchedule(_timeOfDay));
+      if (shouldSchedule) _oneTimeSchedules.last.schedule();
     } else {
       for (var weekday in weekdays) {
-        _repeatAlarms.add(WeekdayAlarmSchedule(_timeOfDay, weekday));
+        _repeatSchedules.add(WeekdayAlarmSchedule(_timeOfDay, weekday));
+        if (shouldSchedule) _repeatSchedules.last.schedule();
       }
     }
   }
@@ -150,38 +49,46 @@ class Alarm {
     }
   }
 
+  void schedule() {
+    for (var alarm in _oneTimeSchedules) {
+      alarm.schedule();
+    }
+    for (var alarm in _repeatSchedules) {
+      alarm.schedule();
+    }
+  }
+
+  void cancel() {
+    for (var alarm in _oneTimeSchedules) {
+      alarm.cancel();
+    }
+    for (var alarm in _repeatSchedules) {
+      alarm.cancel();
+    }
+  }
+
   void enable() {
     _enabled = true;
-    for (var alarm in _oneTimeAlarms) {
-      alarm.schedule();
-    }
-    for (var alarm in _repeatAlarms) {
-      alarm.schedule();
-    }
+    schedule();
   }
 
   void disable() {
     _enabled = false;
-    for (var alarm in _oneTimeAlarms) {
-      alarm.cancel();
-    }
-    for (var alarm in _repeatAlarms) {
-      alarm.cancel();
-    }
+    cancel();
   }
 
-  void changeTimeOfDay(TimeOfDay timeOfDay) {
+  void setTimeOfDay(TimeOfDay timeOfDay) {
     _timeOfDay = timeOfDay;
-    for (var alarm in _oneTimeAlarms) {
-      alarm.changeDateTime(_timeOfDay);
+    for (var alarm in _oneTimeSchedules) {
+      alarm.setTimeOfDay(timeOfDay);
     }
-    for (var alarm in _repeatAlarms) {
-      alarm.changeDateTime(_timeOfDay);
+    for (var alarm in _repeatSchedules) {
+      alarm.setTimeOfDay(timeOfDay);
     }
   }
 
   List<int> getWeekdays() {
-    return _repeatAlarms.map((e) => e.getWeekDay()).toList();
+    return _repeatSchedules.map((e) => e.weekday).toList();
   }
 
   Alarm.fromJson(Map<String, dynamic> json)
@@ -189,7 +96,8 @@ class Alarm {
           hour: json['time']['hour'],
           minute: json['time']['minute'],
         ),
-        _enabled = json['enabled'] {
+        _enabled = json['enabled'],
+        _label = json['label'] {
     setSchedules(json['weekDays'].cast<int>());
   }
 
@@ -199,6 +107,7 @@ class Alarm {
           'minute': _timeOfDay.minute,
         },
         'enabled': _enabled,
+        'label': _label,
         'weekDays': getWeekdays(),
       };
 

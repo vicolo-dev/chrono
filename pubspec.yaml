@@ -32,7 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  intl: ^0.18.0
+  intl: ^0.17.0
   timezone: ^0.9.1
   timer_builder: ^2.0.0
   path_provider: ^2.0.11
@@ -43,6 +43,8 @@ dependencies:
   flutter_system_ringtones: ^0.0.6
   android_alarm_manager_plus: ^2.1.0
   just_audio: ^0.9.31
+  flutter_overlay_window: ^0.3.3
+  awesome_notifications: ^0.7.4+1
 
 dev_dependencies:
   flutter_test:

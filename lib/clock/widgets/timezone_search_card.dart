@@ -1,6 +1,5 @@
 import 'package:clock_app/clock/widgets/timzone_card_content.dart';
 import 'package:clock_app/theme/color.dart';
-import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
 
 import 'package:timezone/timezone.dart' as timezone;
