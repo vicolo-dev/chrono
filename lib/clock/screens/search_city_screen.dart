@@ -1,4 +1,5 @@
 import 'package:clock_app/clock/data/favorite_cities.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
@@ -60,7 +61,7 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
     super.initState();
     _loadDatabase();
     setState(() {
-      _favoriteCities = loadFavoriteCities();
+      _favoriteCities = loadList('favorite_cities');
     });
   }
 

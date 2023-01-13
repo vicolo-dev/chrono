@@ -11,8 +11,9 @@ class SettingsManager {
   static initialize() async {
     _preferences = await SharedPreferences.getInstance();
 
+    // Used to clear the preferences in case of a change in format of the data
     // Comment this out after the preferences are cleared
-    // _preferences?.clear();
+    _preferences?.clear();
 
     bool? firstLaunch = _preferences?.getBool('first_launch');
     if (firstLaunch == null) {

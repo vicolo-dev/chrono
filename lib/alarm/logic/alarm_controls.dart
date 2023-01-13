@@ -14,7 +14,7 @@ void ringAlarm(int num, Map<String, dynamic> params) async {
       channelKey: alarmNotificationChannelKey,
       title: 'Alarm Ringing...',
       payload: {
-        'timeOfDay': params['timeOfDay'].toString(),
+        'schedule-id': params['schedule-id'],
       },
       // body: '',
       category: NotificationCategory.Alarm,

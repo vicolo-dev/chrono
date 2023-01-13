@@ -1,6 +1,6 @@
-import 'dart:convert';
+import 'package:clock_app/common/utils/json_serialize.dart';
 
-class City {
+class City extends JsonSerializable {
   final String name;
   final String country;
   final String timezone;
@@ -15,18 +15,10 @@ class City {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() => {
         'name': name,
         'country': country,
         'timezone': timezone,
       };
-
-  static String encode(List<City> cities) => json.encode(
-        cities.map<Map<String, dynamic>>((city) => city.toJson()).toList(),
-      );
-
-  static List<City> decode(String cities) =>
-      (json.decode(cities) as List<dynamic>)
-          .map<City>((item) => City.fromJson(item))
-          .toList();
 }

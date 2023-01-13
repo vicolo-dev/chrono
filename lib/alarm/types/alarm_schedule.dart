@@ -1,15 +1,14 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
-import 'package:clock_app/alarm/types/alarm_id.dart';
-import 'package:clock_app/alarm/utils/alarm_utils.dart';
+import 'package:clock_app/alarm/utils/alarm_time.dart';
 import 'package:flutter/material.dart';
 
-class WeekdayAlarmSchedule extends AlarmSchedule {
+class WeeklyAlarmSchedule extends AlarmSchedule {
   final int _weekday;
 
   int get weekday => _weekday;
 
-  WeekdayAlarmSchedule(TimeOfDay timeOfDay, this._weekday) : super(timeOfDay);
+  WeeklyAlarmSchedule(TimeOfDay timeOfDay, this._weekday) : super(timeOfDay);
 
   @override
   DateTime getNextAlarmDate() {
@@ -28,9 +27,23 @@ class WeekdayAlarmSchedule extends AlarmSchedule {
       exact: true,
       wakeup: true,
       rescheduleOnReboot: true,
-      params: <String, dynamic>{'timeOfDay': timeOfDayToHours(_timeOfDay)},
+      params: <String, String>{'schedule-id': _id.toString()},
     );
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': _id,
+        'timeOfDay': {
+          'hour': _timeOfDay.hour,
+          'minute': _timeOfDay.minute,
+        },
+        'weekday': _weekday,
+      };
+
+  WeeklyAlarmSchedule.fromJson(Map<String, dynamic> json)
+      : _weekday = json['weekday'],
+        super.fromJson(json);
 }
 
 class OneTimeAlarmSchedule extends AlarmSchedule {
@@ -53,9 +66,21 @@ class OneTimeAlarmSchedule extends AlarmSchedule {
       exact: true,
       wakeup: true,
       rescheduleOnReboot: true,
-      params: <String, dynamic>{'timeOfDay': timeOfDayToHours(_timeOfDay)},
+      params: <String, String>{'schedule-id': _id.toString()},
     );
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': _id,
+        'timeOfDay': {
+          'hour': _timeOfDay.hour,
+          'minute': _timeOfDay.minute,
+        }
+      };
+
+  OneTimeAlarmSchedule.fromJson(Map<String, dynamic> json)
+      : super.fromJson(json);
 }
 
 abstract class AlarmSchedule {
@@ -66,8 +91,16 @@ abstract class AlarmSchedule {
   TimeOfDay get timeOfDay => _timeOfDay;
 
   AlarmSchedule(this._timeOfDay) {
-    _id = AlarmId.get();
+    _id = UniqueKey().hashCode;
   }
+
+  AlarmSchedule.fromJson(Map<String, dynamic> json)
+      : _id = json['id'],
+        _timeOfDay = TimeOfDay(
+            hour: json['timeOfDay']['hour'],
+            minute: json['timeOfDay']['minute']);
+
+  Map<String, dynamic> toJson();
 
   void setTimeOfDay(TimeOfDay timeOfDay) {
     _timeOfDay = timeOfDay;

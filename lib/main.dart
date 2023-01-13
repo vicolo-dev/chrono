@@ -4,8 +4,9 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/data/alarm_notification_data.dart';
 import 'package:clock_app/alarm/data/alarm_notification_route.dart';
+import 'package:clock_app/alarm/logic/alarm_storage.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
-import 'package:clock_app/alarm/utils/alarm_utils.dart';
+import 'package:clock_app/alarm/utils/alarm_time.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest_all.dart' as timezone_db;
@@ -13,7 +14,7 @@ import 'package:timezone/data/latest_all.dart' as timezone_db;
 import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
-import 'package:clock_app/clock/data/timezone_database.dart';
+import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 
@@ -24,6 +25,11 @@ void main() async {
   await initializeDatabases();
   await AndroidAlarmManager.initialize();
   await AlarmAudioPlayer.initialize();
+  AwesomeNotifications().isNotificationAllowed().then((allowed) {
+    if (!allowed) {
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    }
+  });
   await AwesomeNotifications().initialize(null, [alarmNotificationChannel],
       channelGroups: [alarmNotificationChannelGroup], debug: kDebugMode);
 
@@ -66,10 +72,10 @@ class _AppState extends State<App> {
               builder: (context) {
                 final ReceivedAction receivedAction =
                     settings.arguments as ReceivedAction;
-                String? timeOfDayString = receivedAction.payload?['timeOfDay'];
-                TimeOfDay? timeOfDay =
-                    hoursToTimeOfDay(double.parse(timeOfDayString!));
-                return AlarmNotificationScreen(timeOfDay: timeOfDay);
+                int scheduleId =
+                    int.parse((receivedAction.payload?['schedule-id'])!);
+                return AlarmNotificationScreen(
+                    alarm: getAlarmByScheduleId(scheduleId));
               },
             );
 

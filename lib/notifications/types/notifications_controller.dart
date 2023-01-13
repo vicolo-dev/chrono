@@ -1,7 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/data/alarm_notification_data.dart';
 import 'package:clock_app/alarm/data/alarm_notification_route.dart';
+import 'package:clock_app/alarm/logic/alarm_storage.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/main.dart';
 
 class NotificationController {
@@ -18,6 +20,14 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> _onNotificationCreatedMethod(
       ReceivedNotification receivedNotification) async {
+    switch (receivedNotification.channelKey) {
+      case alarmNotificationChannelKey:
+        AlarmAudioPlayer.play();
+        int scheduleId =
+            int.parse((receivedNotification.payload?['schedule-id'])!);
+        disableAlarmByScheduleId(scheduleId);
+        break;
+    }
     // Your code goes here
   }
 

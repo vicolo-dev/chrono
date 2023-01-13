@@ -12,7 +12,7 @@ const String alarmDismissActionKey = "dismiss";
 const String alarmSnoozeActionLabel = "Snooze";
 const String alarmDismissActionLabel = "Dismiss";
 
-NotificationChannel alarmNotificationChannel = NotificationChannel(
+final NotificationChannel alarmNotificationChannel = NotificationChannel(
   channelGroupKey: alarmNotificationChannelGroupKey,
   channelKey: alarmNotificationChannelKey,
   channelName: 'Clock Alarm',
@@ -25,7 +25,7 @@ NotificationChannel alarmNotificationChannel = NotificationChannel(
   enableLights: false,
 );
 
-NotificationChannelGroup alarmNotificationChannelGroup =
+final NotificationChannelGroup alarmNotificationChannelGroup =
     NotificationChannelGroup(
   channelGroupKey: alarmNotificationChannelGroupKey,
   channelGroupName: 'Clock Alarm Group',

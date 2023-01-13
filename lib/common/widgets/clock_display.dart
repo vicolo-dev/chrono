@@ -11,6 +11,7 @@ class ClockDisplay extends StatelessWidget {
     this.shouldShowSeconds = false,
     required this.dateTime,
     this.timeFormat = TimeFormat.h12,
+    this.horizontalAlignment = MainAxisAlignment.start,
   }) : super(key: key);
 
   final TimeFormat timeFormat;
@@ -19,6 +20,7 @@ class ClockDisplay extends StatelessWidget {
   final Color? color;
   final DateTime dateTime;
   final bool shouldShowSeconds;
+  final MainAxisAlignment horizontalAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class ClockDisplay extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Row(
+            mainAxisAlignment: horizontalAlignment,
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [

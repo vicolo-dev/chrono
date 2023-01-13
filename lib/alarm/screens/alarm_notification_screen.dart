@@ -1,17 +1,18 @@
 import 'package:clock_app/alarm/data/alarm_notification_data.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
-import 'package:clock_app/alarm/utils/alarm_utils.dart';
+import 'package:clock_app/alarm/utils/alarm_time.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:flutter/material.dart';
 
 class AlarmNotificationScreen extends StatefulWidget {
   const AlarmNotificationScreen({
     Key? key,
-    required this.timeOfDay,
+    required this.alarm,
   }) : super(key: key);
 
-  final TimeOfDay? timeOfDay;
+  final Alarm alarm;
 
   @override
   State<AlarmNotificationScreen> createState() =>
@@ -22,7 +23,6 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   @override
   void initState() {
     super.initState();
-    AlarmAudioPlayer.play();
   }
 
   @override
@@ -35,7 +35,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClockDisplay(
-              dateTime: timeOfDayToDateTime(widget.timeOfDay!),
+              dateTime: timeOfDayToDateTime(widget.alarm.timeOfDay),
+              horizontalAlignment: MainAxisAlignment.center,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

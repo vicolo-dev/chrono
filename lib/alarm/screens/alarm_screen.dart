@@ -1,6 +1,7 @@
-import 'package:clock_app/alarm/data/alarms.dart';
+import 'package:clock_app/alarm/logic/alarm_storage.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list_footer.dart';
@@ -20,7 +21,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
   @override
   void initState() {
     super.initState();
-    setState(() => _alarms = loadAlarms());
+    setState(() => _alarms = loadList('alarms'));
   }
 
   Future<void> _selectTime(BuildContext context) async {
@@ -44,7 +45,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
         _alarms.add(alarm);
       });
 
-      setAlarms(_alarms);
+      saveList('alarms', _alarms);
     }
   }
 
@@ -56,7 +57,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
       final Alarm reorderedAlarm = _alarms.removeAt(oldIndex);
       _alarms.insert(newIndex, reorderedAlarm);
     });
-    setAlarms(_alarms);
+    saveList('alarms', _alarms);
   }
 
   _onDeleteAlarm(int index) {
@@ -65,14 +66,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
       _alarms.removeAt(index);
     });
 
-    setAlarms(_alarms);
+    saveList('alarms', _alarms);
   }
 
   _onEnableChangeAlarm(int index, bool value) {
     setState(() {
       _alarms[index].setIsEnabled(value);
     });
-    setAlarms(_alarms);
+    saveList('alarms', _alarms);
   }
 
   @override

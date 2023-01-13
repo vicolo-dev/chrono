@@ -1,3 +1,4 @@
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -22,7 +23,7 @@ class _ClockScreenState extends State<ClockScreen> {
   @override
   void initState() {
     super.initState();
-    setState(() => _cities = loadFavoriteCities());
+    setState(() => _cities = loadList('favorite_cities'));
   }
 
   _onSearchReturn(dynamic city) {
@@ -32,7 +33,7 @@ class _ClockScreenState extends State<ClockScreen> {
       }
     });
 
-    saveFavoriteCities(_cities);
+    saveList('favorite_cities', _cities);
   }
 
   _onDeleteCity(int index) {
@@ -40,7 +41,7 @@ class _ClockScreenState extends State<ClockScreen> {
       _cities.removeAt(index);
     });
 
-    saveFavoriteCities(_cities);
+    saveList('favorite_cities', _cities);
   }
 
   _onReorderCities(int oldIndex, int newIndex) {
@@ -52,7 +53,7 @@ class _ClockScreenState extends State<ClockScreen> {
       _cities.insert(newIndex, reorderedCity);
     });
 
-    saveFavoriteCities(_cities);
+    saveList('favorite_cities', _cities);
   }
 
   @override
