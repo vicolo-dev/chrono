@@ -1,8 +1,7 @@
 import 'package:clock_app/alarm/data/alarm_notification_data.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/types/alarm_audio_player.dart';
-import 'package:clock_app/alarm/utils/alarm_time.dart';
+import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +34,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClockDisplay(
-              dateTime: timeOfDayToDateTime(widget.alarm.timeOfDay),
+              dateTime: widget.alarm.timeOfDay.toDateTime(),
               horizontalAlignment: MainAxisAlignment.center,
             ),
             Row(

@@ -1,4 +1,5 @@
 import 'package:clock_app/alarm/logic/alarm_storage.dart';
+import 'package:clock_app/alarm/screens/add_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
@@ -22,31 +23,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
   void initState() {
     super.initState();
     setState(() => _alarms = loadList('alarms'));
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePickerDialog(
-      context: context,
-      initialTime: TimeOfDay.now(),
-      helpText: "Select Time",
-      cancelText: "Cancel",
-      confirmText: "Save",
-      // dialogActions: [
-      //   DialogAction(
-      //     onPressed: () => {},
-      //     label: "Customize",
-      //   ),
-      // ],
-    );
-
-    if (pickedTime != null) {
-      Alarm alarm = Alarm(pickedTime);
-      setState(() {
-        _alarms.add(alarm);
-      });
-
-      saveList('alarms', _alarms);
-    }
   }
 
   _onReorderAlarms(int oldIndex, int newIndex) {
@@ -78,6 +54,29 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> selectTime(void Function(TimeOfDay) onCustomize) async {
+      final TimePickerResult? timePickerResult = await showTimePickerDialog(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        helpText: "Select Time",
+        cancelText: "Cancel",
+        confirmText: "Save",
+      );
+
+      if (timePickerResult != null) {
+        if (timePickerResult.isCustomize) {
+          onCustomize(timePickerResult.timeOfDay);
+        } else {
+          Alarm alarm = Alarm(timePickerResult.timeOfDay);
+          setState(() {
+            _alarms.add(alarm);
+          });
+
+          saveList('alarms', _alarms);
+        }
+      }
+    }
+
     return Stack(
       children: [
         ReorderableListView.builder(
@@ -98,19 +97,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
           onReorder: _onReorderAlarms,
         ),
         FAB(
-          onPressed: () {
-            // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-            //   if (!isAllowed) {
-            //     // This is just a basic example. For real apps, you must show some
-            //     // friendly dialog box before call the request method.
-            //     // This is very important to not harm the user experience
-            //     AwesomeNotifications().requestPermissionToSendNotifications();
-            //   }
-            // });
-
-            _selectTime(context);
-          },
-        )
+            onPressed: () => selectTime((TimeOfDay initialTimeOfDay) => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AddAlarmScreen(initialTimeOfDay: initialTimeOfDay)),
+                  ).then((dynamic value) => {})
+                }))
       ],
     );
   }

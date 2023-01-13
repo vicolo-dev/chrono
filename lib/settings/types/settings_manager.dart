@@ -1,7 +1,7 @@
+import 'package:clock_app/clock/logic/inittialize_default_favorite_cities.dart';
 import 'package:clock_app/settings/data/settings_data.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:clock_app/clock/data/favorite_cities.dart';
 
 class SettingsManager {
   static SharedPreferences? _preferences;
@@ -13,7 +13,7 @@ class SettingsManager {
 
     // Used to clear the preferences in case of a change in format of the data
     // Comment this out after the preferences are cleared
-    _preferences?.clear();
+    // _preferences?.clear();
 
     bool? firstLaunch = _preferences?.getBool('first_launch');
     if (firstLaunch == null) {

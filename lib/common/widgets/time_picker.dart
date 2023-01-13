@@ -235,6 +235,10 @@ class _TimePickerHeader extends StatelessWidget {
         break;
     }
 
+    void _handleCancel() {
+      Navigator.pop(context);
+    }
+
     return Container(
       width: width,
       padding: padding,
@@ -242,11 +246,26 @@ class _TimePickerHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 16.0),
-          Text(
-            helpText ??
-                MaterialLocalizations.of(context).timePickerDialHelpText,
-            style: TimePickerTheme.of(context).helpTextStyle ??
-                themeData.textTheme.overline,
+          Row(
+            children: [
+              Text(
+                helpText ??
+                    MaterialLocalizations.of(context).timePickerDialHelpText,
+                style: TimePickerTheme.of(context).helpTextStyle ??
+                    themeData.textTheme.overline,
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: _handleCancel,
+                child: Text(
+                  "Cancel",
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelMedium
+                      ?.copyWith(color: ColorTheme.textColorTertiary),
+                ),
+              ),
+            ],
           ),
           controls,
         ],
@@ -2231,11 +2250,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
     });
   }
 
-  void _handleCancel() {
-    Navigator.pop(context);
-  }
-
-  void _handleOk() {
+  void _handleOk({bool isCustomize = false}) {
     if (_entryMode.value == TimePickerEntryMode.input ||
         _entryMode.value == TimePickerEntryMode.inputOnly) {
       final FormState form = _formKey.currentState!;
@@ -2247,7 +2262,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
       }
       form.save();
     }
-    Navigator.pop(context, _selectedTime.value);
+    Navigator.pop(context, TimePickerResult(_selectedTime.value, isCustomize));
   }
 
   Size _dialogSize(BuildContext context) {
@@ -2329,28 +2344,28 @@ class _TimePickerDialogState extends State<TimePickerDialog>
               spacing: 8,
               overflowAlignment: OverflowBarAlignment.end,
               children: <Widget>[
+                // for (DialogAction action
+                //     in widget.dialogActions ?? <DialogAction>[])
+                //   TextButton(
+                //     onPressed: action.onPressed,
+                //     child: Text(
+                //       action.label,
+                //       style: Theme.of(context)
+                //           .textTheme
+                //           .labelMedium
+                //           ?.copyWith(color: ColorTheme.accentColor),
+                //     ),
+                //   ),
                 TextButton(
-                  onPressed: _handleCancel,
+                  onPressed: () => _handleOk(isCustomize: true),
                   child: Text(
-                    widget.cancelText ?? localizations.cancelButtonLabel,
+                    "Customize",
                     style: Theme.of(context)
                         .textTheme
                         .labelMedium
-                        ?.copyWith(color: ColorTheme.textColorTertiary),
+                        ?.copyWith(color: ColorTheme.accentColor),
                   ),
                 ),
-                for (DialogAction action
-                    in widget.dialogActions ?? <DialogAction>[])
-                  TextButton(
-                    onPressed: action.onPressed,
-                    child: Text(
-                      action.label,
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          ?.copyWith(color: ColorTheme.accentColor),
-                    ),
-                  ),
                 TextButton(
                   onPressed: _handleOk,
                   child: Text(
@@ -2578,7 +2593,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
 ///    typography, and shape of the time picker.
 ///  * [DisplayFeatureSubScreen], which documents the specifics of how
 ///    [DisplayFeature]s can split the screen into sub-screens.
-Future<TimeOfDay?> showTimePickerDialog({
+Future<TimePickerResult?> showTimePickerDialog({
   required BuildContext context,
   required TimeOfDay initialTime,
   TransitionBuilder? builder,
@@ -2615,7 +2630,7 @@ Future<TimeOfDay?> showTimePickerDialog({
     onEntryModeChanged: onEntryModeChanged,
     dialogActions: dialogActions,
   );
-  return showDialog<TimeOfDay>(
+  return showDialog<TimePickerResult>(
     context: context,
     useRootNavigator: useRootNavigator,
     builder: (BuildContext context) {
@@ -2628,6 +2643,12 @@ Future<TimeOfDay?> showTimePickerDialog({
 
 void _announceToAccessibility(BuildContext context, String message) {
   SemanticsService.announce(message, Directionality.of(context));
+}
+
+class TimePickerResult {
+  TimeOfDay timeOfDay;
+  bool isCustomize;
+  TimePickerResult(this.timeOfDay, this.isCustomize);
 }
 
 class DialogAction {

@@ -5,7 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:clock_app/clock/screens/search_city_screen.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/clock/widgets/timezone_card.dart';
-import 'package:clock_app/clock/data/favorite_cities.dart';
+import 'package:clock_app/clock/data/default_favorite_cities.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/clock.dart';
 import 'package:clock_app/common/widgets/fab.dart';

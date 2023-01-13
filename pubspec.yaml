@@ -45,6 +45,7 @@ dependencies:
   just_audio: ^0.9.31
   flutter_overlay_window: ^0.3.3
   awesome_notifications: ^0.7.4+1
+  audio_session: ^0.1.13
 
 dev_dependencies:
   flutter_test:

@@ -24,7 +24,7 @@ class NotificationController {
       case alarmNotificationChannelKey:
         AlarmAudioPlayer.play();
         int scheduleId =
-            int.parse((receivedNotification.payload?['schedule-id'])!);
+            int.parse((receivedNotification.payload?['scheduleId'])!);
         disableAlarmByScheduleId(scheduleId);
         break;
     }

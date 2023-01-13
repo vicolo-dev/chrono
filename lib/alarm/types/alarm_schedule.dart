@@ -1,6 +1,7 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
-import 'package:clock_app/alarm/utils/alarm_time.dart';
+import 'package:clock_app/alarm/logic/alarm_time.dart';
+import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:flutter/material.dart';
 
 class WeeklyAlarmSchedule extends AlarmSchedule {
@@ -27,17 +28,17 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
       exact: true,
       wakeup: true,
       rescheduleOnReboot: true,
-      params: <String, String>{'schedule-id': _id.toString()},
+      params: <String, String>{
+        'scheduleId': _id.toString(),
+        'timeOfDay': _timeOfDay.encode()
+      },
     );
   }
 
   @override
   Map<String, dynamic> toJson() => {
         'id': _id,
-        'timeOfDay': {
-          'hour': _timeOfDay.hour,
-          'minute': _timeOfDay.minute,
-        },
+        'timeOfDay': _timeOfDay.toJson(),
         'weekday': _weekday,
       };
 
@@ -66,18 +67,16 @@ class OneTimeAlarmSchedule extends AlarmSchedule {
       exact: true,
       wakeup: true,
       rescheduleOnReboot: true,
-      params: <String, String>{'schedule-id': _id.toString()},
+      params: <String, String>{
+        'scheduleId': _id.toString(),
+        'timeOfDay': _timeOfDay.encode()
+      },
     );
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-        'id': _id,
-        'timeOfDay': {
-          'hour': _timeOfDay.hour,
-          'minute': _timeOfDay.minute,
-        }
-      };
+  Map<String, dynamic> toJson() =>
+      {'id': _id, 'timeOfDay': _timeOfDay.toJson()};
 
   OneTimeAlarmSchedule.fromJson(Map<String, dynamic> json)
       : super.fromJson(json);
@@ -96,9 +95,7 @@ abstract class AlarmSchedule {
 
   AlarmSchedule.fromJson(Map<String, dynamic> json)
       : _id = json['id'],
-        _timeOfDay = TimeOfDay(
-            hour: json['timeOfDay']['hour'],
-            minute: json['timeOfDay']['minute']);
+        _timeOfDay = TimeOfDayUtils.fromJson(json['timeOfDay']);
 
   Map<String, dynamic> toJson();
 

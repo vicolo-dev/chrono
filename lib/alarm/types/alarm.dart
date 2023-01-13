@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/types/alarm_schedule.dart';
+import 'package:clock_app/alarm/logic/alarm_time.dart';
+import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:flutter/material.dart';
 
 class Alarm extends JsonSerializable {
@@ -33,6 +37,18 @@ class Alarm extends JsonSerializable {
         if (shouldSchedule) _repeatSchedules.last.schedule();
       }
     }
+  }
+
+  void addWeekday(int weekday) {
+    _repeatSchedules.add(WeeklyAlarmSchedule(_timeOfDay, weekday));
+    if (_enabled) _repeatSchedules.last.schedule();
+  }
+
+  void removeWeekday(int weekday) {
+    _repeatSchedules
+        .firstWhere((element) => element.weekday == weekday)
+        .cancel();
+    _repeatSchedules.removeWhere((schedule) => schedule.weekday == weekday);
   }
 
   void toggle() {
@@ -93,15 +109,16 @@ class Alarm extends JsonSerializable {
     return _oneTimeSchedules.any((e) => e.id == scheduleId);
   }
 
-  List<int> getWeekdays() {
-    return _repeatSchedules.map((e) => e.weekday).toList();
+  List<Weekday> getWeekdays() {
+    return _repeatSchedules
+        .map((schedule) => schedule.weekday)
+        .map((weekdayId) =>
+            weekdays.firstWhere((weekday) => weekday.id == weekdayId))
+        .toList();
   }
 
   Alarm.fromJson(Map<String, dynamic> json)
-      : _timeOfDay = TimeOfDay(
-          hour: json['timeOfDay']['hour'],
-          minute: json['timeOfDay']['minute'],
-        ),
+      : _timeOfDay = TimeOfDayUtils.fromJson(json['timeOfDay']),
         _enabled = json['enabled'],
         _label = json['label'],
         _oneTimeSchedules = (json['oneTimeSchedules'] as List<dynamic>)
@@ -115,10 +132,7 @@ class Alarm extends JsonSerializable {
 
   @override
   Map<String, dynamic> toJson() => {
-        'timeOfDay': {
-          'hour': _timeOfDay.hour,
-          'minute': _timeOfDay.minute,
-        },
+        'timeOfDay': _timeOfDay.toJson(),
         'enabled': _enabled,
         'label': _label,
         'oneTimeSchedules': _oneTimeSchedules
