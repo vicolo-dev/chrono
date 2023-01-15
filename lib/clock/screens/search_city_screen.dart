@@ -1,9 +1,8 @@
-import 'package:clock_app/clock/data/default_favorite_cities.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/clock/widgets/timezone_search_card.dart';
 import 'package:clock_app/clock/types/city.dart';
@@ -12,7 +11,7 @@ class SearchCityScreen extends StatefulWidget {
   const SearchCityScreen({super.key});
 
   @override
-  _SearchCityScreenState createState() => _SearchCityScreenState();
+  State<SearchCityScreen> createState() => _SearchCityScreenState();
 }
 
 class _SearchCityScreenState extends State<SearchCityScreen> {

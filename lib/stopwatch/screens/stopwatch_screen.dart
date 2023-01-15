@@ -5,7 +5,7 @@ class StopwatchTab extends StatefulWidget {
   const StopwatchTab({Key? key}) : super(key: key);
 
   @override
-  _StopwatchTabState createState() => _StopwatchTabState();
+  State<StopwatchTab> createState() => _StopwatchTabState();
 }
 
 class _StopwatchTabState extends State<StopwatchTab> {

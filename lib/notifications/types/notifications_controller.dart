@@ -49,8 +49,6 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> _onActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    print("payload: ${receivedAction.payload}");
-
     switch (receivedAction.buttonKeyPressed) {
       case alarmSnoozeActionKey:
         break;

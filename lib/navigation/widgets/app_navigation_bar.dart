@@ -11,7 +11,7 @@ class AppNavigationBar extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AppNavigationBarState createState() => _AppNavigationBarState();
+  State<AppNavigationBar> createState() => _AppNavigationBarState();
 }
 
 class _AppNavigationBarState extends State<AppNavigationBar> {

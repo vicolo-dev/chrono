@@ -1,6 +1,5 @@
 import 'package:awesome_select/awesome_select.dart';
 import 'package:clock_app/alarm/data/schedule_types.dart';
-import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/logic/alarm_description.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/schedule_type.dart';
@@ -9,7 +8,6 @@ import 'package:clock_app/alarm/widgets/weekday_select.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
-import 'package:clock_app/theme/border.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +20,7 @@ class CustomizeAlarmScreen extends StatefulWidget {
   final Alarm initialAlarm;
 
   @override
-  _CustomizeAlarmScreenState createState() => _CustomizeAlarmScreenState();
+  State<CustomizeAlarmScreen> createState() => _CustomizeAlarmScreenState();
 }
 
 class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
@@ -57,7 +55,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
               onPressed: () {
                 Navigator.pop(context, _alarm);
               },
-              child: Text("Save"))
+              child: const Text("Save"))
         ],
         elevation: 0,
         backgroundColor: Colors.transparent,

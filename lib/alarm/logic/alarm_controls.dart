@@ -5,7 +5,6 @@ import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/main.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 @pragma('vm:entry-point')
 void ringAlarm(int num, Map<String, dynamic> params) async {

@@ -1851,13 +1851,12 @@ class _HourMinuteTextFieldState extends State<_HourMinuteTextField>
     InputDecoration inputDecoration =
         const InputDecoration().applyDefaults(theme.inputDecorationTheme);
 
-    final Color unfocusedFillColor = timePickerTheme.hourMinuteColor ??
-        colorScheme.onSurface.withOpacity(0.12);
+    // final Color unfocusedFillColor = timePickerTheme.hourMinuteColor ??
+    //     colorScheme.onSurface.withOpacity(0.12);
     // If screen reader is in use, make the hint text say hours/minutes.
     // Otherwise, remove the hint text when focused because the centered cursor
     // appears odd above the hint text.
     //
-    // TODO(rami-a): Once https://github.com/flutter/flutter/issues/67571 is
     // resolved, remove the window check for semantics being enabled on web.
     final String? hintText = MediaQuery.of(context).accessibleNavigation ||
             WidgetsBinding.instance.window.semanticsEnabled
@@ -1930,7 +1929,7 @@ class TimePickerDialog extends StatefulWidget {
     this.onEntryModeChanged,
     this.dialogActions,
     this.useSimple = true,
-  }) : assert(initialTime != null);
+  });
 
   /// The time initially selected when the dialog is shown.
   final TimeOfDay initialTime;
@@ -2642,10 +2641,6 @@ Future<TimePickerResult?> showTimePickerDialog({
   List<DialogAction>? dialogActions,
   bool useSimple = true,
 }) async {
-  assert(context != null);
-  assert(initialTime != null);
-  assert(useRootNavigator != null);
-  assert(initialEntryMode != null);
   assert(debugCheckHasMaterialLocalizations(context));
 
   final Widget dialog = TimePickerDialog(

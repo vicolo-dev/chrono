@@ -5,7 +5,7 @@ class TimerTab extends StatefulWidget {
   const TimerTab({Key? key}) : super(key: key);
 
   @override
-  _TimerTabState createState() => _TimerTabState();
+  State<TimerTab> createState() => _TimerTabState();
 }
 
 class _TimerTabState extends State<TimerTab> {

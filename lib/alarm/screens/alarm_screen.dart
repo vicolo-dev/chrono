@@ -1,4 +1,3 @@
-import 'package:clock_app/alarm/logic/alarm_storage.dart';
 import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
@@ -13,7 +12,7 @@ class AlarmScreen extends StatefulWidget {
   const AlarmScreen({Key? key}) : super(key: key);
 
   @override
-  _AlarmScreenState createState() => _AlarmScreenState();
+  State<AlarmScreen> createState() => _AlarmScreenState();
 }
 
 class _AlarmScreenState extends State<AlarmScreen> {
