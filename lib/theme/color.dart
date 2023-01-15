@@ -4,7 +4,9 @@ class ColorTheme {
   static const MaterialColor primarySwatch = Colors.cyan;
 
   static const Color accentColor = primarySwatch;
-  static const Color backgroundColor = Colors.grey;
+  static const Color backgroundColor = Color.fromARGB(255, 250, 250, 250);
+
+  static const Color errorColor = Color.fromARGB(255, 194, 64, 64);
 
   static const Color textColor = Color.fromARGB(255, 46, 53, 68);
   static const Color textColorSecondary = Color.fromARGB(255, 81, 91, 114);
@@ -12,5 +14,5 @@ class ColorTheme {
 }
 
 ColorScheme colorScheme =
-    ColorScheme.fromSwatch(primarySwatch: ColorTheme.primarySwatch)
-        .copyWith(background: ColorTheme.backgroundColor);
+    ColorScheme.fromSwatch(primarySwatch: ColorTheme.primarySwatch).copyWith(
+        background: ColorTheme.backgroundColor, error: ColorTheme.errorColor);

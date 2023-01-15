@@ -21,7 +21,6 @@ void ringAlarm(int num, Map<String, dynamic> params) async {
       payload: {
         'scheduleId': params['scheduleId'],
       },
-      // body: '',
       category: NotificationCategory.Alarm,
       fullScreenIntent: true,
       autoDismissible: false,
@@ -51,5 +50,8 @@ void dismissAlarm() {
   AlarmAudioPlayer.stop();
   AwesomeNotifications().cancel(alarmNotificationId);
   AndroidForegroundService.stopForeground(alarmNotificationId);
-  App.navigatorKey.currentState?.pop();
+
+  if (App.navigatorKey.currentState?.canPop() ?? false) {
+    App.navigatorKey.currentState?.pop();
+  }
 }

@@ -39,6 +39,7 @@ class TimezoneCardContent extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   softWrap: false,
                 ),
+                const SizedBox(height: 4),
                 TimerBuilder.periodic(
                   const Duration(seconds: 1),
                   builder: (context) {

@@ -1,5 +1,5 @@
 import 'package:clock_app/alarm/logic/alarm_storage.dart';
-import 'package:clock_app/alarm/screens/add_alarm_screen.dart';
+import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
@@ -25,7 +25,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     setState(() => _alarms = loadList('alarms'));
   }
 
-  _onReorderAlarms(int oldIndex, int newIndex) {
+  _handleReorderAlarms(int oldIndex, int newIndex) {
     setState(() {
       if (oldIndex < newIndex) {
         newIndex -= 1;
@@ -36,7 +36,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     saveList('alarms', _alarms);
   }
 
-  _onDeleteAlarm(int index) {
+  _handleDeleteAlarm(int index) {
     _alarms[index].disable();
     setState(() {
       _alarms.removeAt(index);
@@ -45,34 +45,70 @@ class _AlarmScreenState extends State<AlarmScreen> {
     saveList('alarms', _alarms);
   }
 
-  _onEnableChangeAlarm(int index, bool value) {
+  _handleEnableChangeAlarm(int index, bool value) {
     setState(() {
       _alarms[index].setIsEnabled(value);
     });
     saveList('alarms', _alarms);
   }
 
+  _handleAddAlarm(Alarm alarm) {
+    alarm.schedule();
+    setState(() {
+      _alarms.add(alarm);
+    });
+
+    saveList('alarms', _alarms);
+  }
+
+  _handleCustomizeAlarm(int index) {
+    Alarm? newAlarm = _openCustomizeAlarmScreen(_alarms[index]);
+
+    if (newAlarm == null) return;
+
+    setState(() {
+      _alarms[index] = newAlarm;
+    });
+
+    saveList('alarms', _alarms);
+  }
+
+  Alarm? _openCustomizeAlarmScreen(Alarm alarm) {
+    Alarm? newAlarm;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CustomizeAlarmScreen(initialAlarm: alarm)),
+    ).then(
+      (dynamic value) {
+        if (value != null) {
+          newAlarm = value as Alarm;
+        }
+      },
+    );
+
+    return newAlarm;
+  }
+
   @override
   Widget build(BuildContext context) {
-    Future<void> selectTime(void Function(TimeOfDay) onCustomize) async {
+    Future<void> selectTime(void Function(Alarm) onCustomize) async {
       final TimePickerResult? timePickerResult = await showTimePickerDialog(
         context: context,
         initialTime: TimeOfDay.now(),
         helpText: "Select Time",
         cancelText: "Cancel",
         confirmText: "Save",
+        useSimple: false,
       );
 
       if (timePickerResult != null) {
+        Alarm alarm = Alarm(timePickerResult.timeOfDay);
         if (timePickerResult.isCustomize) {
-          onCustomize(timePickerResult.timeOfDay);
+          onCustomize(alarm);
         } else {
-          Alarm alarm = Alarm(timePickerResult.timeOfDay);
-          setState(() {
-            _alarms.add(alarm);
-          });
-
-          saveList('alarms', _alarms);
+          _handleAddAlarm(alarm);
         }
       }
     }
@@ -87,24 +123,24 @@ class _AlarmScreenState extends State<AlarmScreen> {
             return AlarmCard(
               key: ValueKey(_alarms[index]),
               alarm: _alarms[index],
-              onDelete: () => _onDeleteAlarm(index),
+              onTap: () => _handleCustomizeAlarm(index),
+              onDelete: () => _handleDeleteAlarm(index),
               onEnabledChange: (bool value) =>
-                  _onEnableChangeAlarm(index, value),
+                  _handleEnableChangeAlarm(index, value),
             );
           },
           footer:
               const ListFooter(), // Allows the last item to not be covered by FAB
-          onReorder: _onReorderAlarms,
+          onReorder: _handleReorderAlarms,
         ),
         FAB(
-            onPressed: () => selectTime((TimeOfDay initialTimeOfDay) => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            AddAlarmScreen(initialTimeOfDay: initialTimeOfDay)),
-                  ).then((dynamic value) => {})
-                }))
+          onPressed: () => selectTime(
+            (Alarm alarm) {
+              Alarm? newAlarm = _openCustomizeAlarmScreen(alarm);
+              if (newAlarm != null) _handleAddAlarm(newAlarm);
+            },
+          ),
+        )
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -14,7 +15,7 @@ class ClockScreen extends StatefulWidget {
   const ClockScreen({Key? key}) : super(key: key);
 
   @override
-  _ClockScreenState createState() => _ClockScreenState();
+  State<ClockScreen> createState() => _ClockScreenState();
 }
 
 class _ClockScreenState extends State<ClockScreen> {
@@ -26,7 +27,7 @@ class _ClockScreenState extends State<ClockScreen> {
     setState(() => _cities = loadList('favorite_cities'));
   }
 
-  _onSearchReturn(dynamic city) {
+  _handleSearchReturn(dynamic city) {
     setState(() {
       if (city != null) {
         _cities.add(city);
@@ -36,7 +37,7 @@ class _ClockScreenState extends State<ClockScreen> {
     saveList('favorite_cities', _cities);
   }
 
-  _onDeleteCity(int index) {
+  _handleDeleteCity(int index) {
     setState(() {
       _cities.removeAt(index);
     });
@@ -44,7 +45,7 @@ class _ClockScreenState extends State<ClockScreen> {
     saveList('favorite_cities', _cities);
   }
 
-  _onReorderCities(int oldIndex, int newIndex) {
+  _handleReorderCities(int oldIndex, int newIndex) {
     setState(() {
       if (oldIndex < newIndex) {
         newIndex -= 1;
@@ -61,10 +62,11 @@ class _ClockScreenState extends State<ClockScreen> {
     return Stack(children: [
       Column(children: [
         const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Clock(
             shouldShowDate: true,
             shouldShowSeconds: true,
+            horizontalAlignment: ElementAlignment.center,
           ),
         ),
         const SizedBox(height: 16),
@@ -78,12 +80,12 @@ class _ClockScreenState extends State<ClockScreen> {
                 return TimeZoneCard(
                   key: ValueKey(_cities[index]),
                   city: _cities[index],
-                  onDelete: () => _onDeleteCity(index),
+                  onDelete: () => _handleDeleteCity(index),
                 );
               },
               footer: const SizedBox(
                   height: 64), // Allows the last item to not be covered by FAB
-              onReorder: _onReorderCities,
+              onReorder: _handleReorderCities,
             ),
           ),
         ),
@@ -93,7 +95,7 @@ class _ClockScreenState extends State<ClockScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SearchCityScreen()),
-          ).then(_onSearchReturn);
+          ).then(_handleSearchReturn);
         },
       )
     ]);

@@ -3,19 +3,57 @@ package com.flux.clock
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
-
-// import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.MethodChannel
+import android.app.Activity
+import android.app.KeyguardManager
+import android.content.Context
+import android.os.Build
+import android.view.WindowManager
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "samples.flutter.dev/alarm"
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        // MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-        //   call, result ->
-        //   // This method is invoked on the main thread.
-        //   // TODO
-        // }
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
+          call, result ->
+        if (call.method == "turnKeyguardOff") {
+            turnScreenOnAndKeyguardOff()
+        }
+        if (call.method == "turnKeyguardOn") {
+            turnScreenOffAndKeyguardOn()
+        }
+        }
+    }
+}
+
+fun Activity.turnScreenOnAndKeyguardOff() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+        setShowWhenLocked(true)
+        setTurnScreenOn(true)
+    } else {
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+        )
+    }
+
+    with(getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            requestDismissKeyguard(this@turnScreenOnAndKeyguardOff, null)
+        }
+    }
+}
+
+fun Activity.turnScreenOffAndKeyguardOn() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+        setShowWhenLocked(false)
+        setTurnScreenOn(false)
+    } else {
+        window.clearFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+        )
     }
 }
 

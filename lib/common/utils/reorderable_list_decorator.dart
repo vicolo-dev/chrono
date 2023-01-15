@@ -9,7 +9,7 @@ Widget reorderableListDecorator(
       return Material(
         shadowColor: Colors.black.withOpacity(0.3),
         borderRadius: defaultBorderRadius,
-        elevation: 6,
+        elevation: Theme.of(context).cardTheme.elevation! * 6,
         color: Colors.transparent,
         child: child,
       );

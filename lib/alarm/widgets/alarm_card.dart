@@ -15,11 +15,13 @@ class AlarmCard extends StatefulWidget {
       {Key? key,
       required this.alarm,
       required this.onDelete,
-      required this.onEnabledChange})
+      required this.onEnabledChange,
+      required this.onTap})
       : super(key: key);
 
   final Alarm alarm;
   final VoidCallback onDelete;
+  final VoidCallback onTap;
   final void Function(bool) onEnabledChange;
 
   @override
@@ -31,47 +33,50 @@ class _AlarmCardState extends State<AlarmCard> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: Card(
-        elevation: 1,
-        child: Slidable(
-            groupTag: 'alarms',
-            key: widget.key,
-            startActionPane: getDeleteActionPane(widget.onDelete, context),
-            endActionPane: getDeleteActionPane(widget.onDelete, context),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      ClockDisplay(
-                          dateTime: widget.alarm.timeOfDay.toDateTime(),
-                          scale: 0.6,
-                          color: widget.alarm.enabled
-                              ? null
-                              : ColorTheme.textColorTertiary),
-                      const Spacer(),
-                      Switch(
-                        value: widget.alarm.enabled,
-                        onChanged: widget.onEnabledChange,
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        getAlarmDescriptionText(widget.alarm),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: widget.alarm.enabled
-                                  ? null
-                                  : ColorTheme.textColorTertiary,
-                            ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            )),
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Card(
+          child: Slidable(
+              groupTag: 'alarms',
+              key: widget.key,
+              startActionPane: getDeleteActionPane(widget.onDelete, context),
+              endActionPane: getDeleteActionPane(widget.onDelete, context),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        ClockDisplay(
+                            dateTime: widget.alarm.timeOfDay.toDateTime(),
+                            scale: 0.6,
+                            color: widget.alarm.enabled
+                                ? null
+                                : ColorTheme.textColorTertiary),
+                        const Spacer(),
+                        Switch(
+                          value: widget.alarm.enabled,
+                          onChanged: widget.onEnabledChange,
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          getAlarmDescriptionText(widget.alarm),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: widget.alarm.enabled
+                                        ? ColorTheme.textColorSecondary
+                                        : ColorTheme.textColorTertiary,
+                                  ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )),
+        ),
       ),
     );
   }

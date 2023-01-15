@@ -1,3 +1,5 @@
+import 'package:clock_app/theme/border.dart';
+import 'package:clock_app/theme/input.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/theme/card.dart';
@@ -17,5 +19,7 @@ ThemeData theme = ThemeData(
   dialogTheme: dialogTheme,
   switchTheme: switchTheme,
   snackBarTheme: snackBarTheme,
+  inputDecorationTheme: inputTheme,
+  scaffoldBackgroundColor: ColorTheme.backgroundColor,
   // textButtonTheme: textButtonTheme,
 );

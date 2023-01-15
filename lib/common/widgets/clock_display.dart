@@ -1,5 +1,7 @@
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/widgets/time_display.dart';
+import 'package:clock_app/navigation/types/alignment.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class ClockDisplay extends StatelessWidget {
@@ -11,7 +13,7 @@ class ClockDisplay extends StatelessWidget {
     this.shouldShowSeconds = false,
     required this.dateTime,
     this.timeFormat = TimeFormat.h12,
-    this.horizontalAlignment = MainAxisAlignment.start,
+    this.horizontalAlignment = ElementAlignment.start,
   }) : super(key: key);
 
   final TimeFormat timeFormat;
@@ -20,15 +22,16 @@ class ClockDisplay extends StatelessWidget {
   final Color? color;
   final DateTime dateTime;
   final bool shouldShowSeconds;
-  final MainAxisAlignment horizontalAlignment;
+  final ElementAlignment horizontalAlignment;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.values[horizontalAlignment.index],
       children: <Widget>[
         Row(
-            mainAxisAlignment: horizontalAlignment,
+            mainAxisAlignment:
+                MainAxisAlignment.values[horizontalAlignment.index],
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
@@ -77,6 +80,7 @@ class ClockDisplay extends StatelessWidget {
             fontSize: 16 * scale,
             height: 1,
             dateTime: dateTime,
+            color: color ?? ColorTheme.textColorSecondary,
           ),
       ],
     );

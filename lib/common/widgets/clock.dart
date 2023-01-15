@@ -1,3 +1,4 @@
+import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:flutter/material.dart';
 
 import 'package:timer_builder/timer_builder.dart';
@@ -16,8 +17,10 @@ class Clock extends StatelessWidget {
     this.timeFormat = TimeFormat.h12,
     this.color,
     this.timezoneLocation,
+    this.horizontalAlignment = ElementAlignment.start,
   }) : super(key: key);
 
+  final ElementAlignment horizontalAlignment;
   final double scale;
   final bool shouldShowDate;
   final TimeFormat timeFormat;
@@ -43,6 +46,7 @@ class Clock extends StatelessWidget {
           color: color,
           shouldShowSeconds: shouldShowSeconds,
           dateTime: dateTime,
+          horizontalAlignment: horizontalAlignment,
         );
       },
     );

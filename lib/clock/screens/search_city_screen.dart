@@ -74,6 +74,9 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
           controller: _filter,
           decoration: InputDecoration(
             border: InputBorder.none,
+            focusedBorder:
+                const OutlineInputBorder(borderSide: BorderSide.none),
+            fillColor: Colors.transparent,
             hintText: 'Search for a city',
             hintStyle: Theme.of(context).textTheme.bodyLarge,
           ),

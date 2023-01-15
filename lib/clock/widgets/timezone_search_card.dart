@@ -23,11 +23,12 @@ class TimeZoneSearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double defaultCardElevation = Theme.of(context).cardTheme.elevation ?? 1;
     return SizedBox(
       width: double.infinity,
       child: Card(
           surfaceTintColor: disabled ? Colors.pink : null,
-          elevation: disabled ? 1 : 2,
+          elevation: disabled ? defaultCardElevation : defaultCardElevation * 2,
           child: InkWell(
             onTap: () {
               ScaffoldMessenger.of(context).removeCurrentSnackBar();

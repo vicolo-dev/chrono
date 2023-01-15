@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.4+1"
+  awesome_select:
+    dependency: "direct main"
+    description:
+      name: awesome_select
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -104,13 +111,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  flutter_overlay_window:
-    dependency: "direct main"
-    description:
-      name: flutter_overlay_window
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.3"
   flutter_slidable:
     dependency: "direct main"
     description:

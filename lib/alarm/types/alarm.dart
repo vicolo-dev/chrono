@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/types/alarm_schedule.dart';
-import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
@@ -24,17 +21,22 @@ class Alarm extends JsonSerializable {
         _label = "",
         _oneTimeSchedules = [],
         _repeatSchedules = [] {
-    setSchedules(weekdays, shouldSchedule: true);
+    setSchedules(weekdays);
   }
 
-  void setSchedules(List<int> weekdays, {bool shouldSchedule = false}) {
+  Alarm.fromAlarm(Alarm alarm)
+      : _enabled = alarm._enabled,
+        _timeOfDay = alarm._timeOfDay,
+        _label = alarm._label,
+        _oneTimeSchedules = alarm._oneTimeSchedules,
+        _repeatSchedules = alarm._repeatSchedules;
+
+  void setSchedules(List<int> weekdays) {
     if (weekdays.isEmpty) {
       _oneTimeSchedules.add(OneTimeAlarmSchedule(_timeOfDay));
-      if (shouldSchedule) _oneTimeSchedules.last.schedule();
     } else {
       for (var weekday in weekdays) {
         _repeatSchedules.add(WeeklyAlarmSchedule(_timeOfDay, weekday));
-        if (shouldSchedule) _repeatSchedules.last.schedule();
       }
     }
   }
