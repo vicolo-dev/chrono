@@ -6,21 +6,23 @@ import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:flutter/material.dart';
 
 class Alarm extends JsonSerializable {
-  bool _enabled;
+  bool _enabled = true;
   TimeOfDay _timeOfDay;
-  final String _label;
-  final List<OneTimeAlarmSchedule> _oneTimeSchedules;
-  final List<WeeklyAlarmSchedule> _repeatSchedules;
+  String _label = "";
+  int _scheduleType = 0;
+  int _ringtone = 0;
+  bool _vibrate = true;
+  List<OneTimeAlarmSchedule> _oneTimeSchedules = [];
+  List<WeeklyAlarmSchedule> _repeatSchedules = [];
 
   bool get enabled => _enabled;
   TimeOfDay get timeOfDay => _timeOfDay;
   String get label => _label;
+  int get scheduleType => _scheduleType;
+  int get ringtone => _ringtone;
+  bool get vibrate => _vibrate;
 
-  Alarm(this._timeOfDay, {List<int> weekdays = const []})
-      : _enabled = true,
-        _label = "",
-        _oneTimeSchedules = [],
-        _repeatSchedules = [] {
+  Alarm(this._timeOfDay, {List<int> weekdays = const []}) {
     setSchedules(weekdays);
   }
 
@@ -29,7 +31,8 @@ class Alarm extends JsonSerializable {
         _timeOfDay = alarm._timeOfDay,
         _label = alarm._label,
         _oneTimeSchedules = alarm._oneTimeSchedules,
-        _repeatSchedules = alarm._repeatSchedules;
+        _repeatSchedules = alarm._repeatSchedules,
+        _scheduleType = alarm._scheduleType;
 
   void setSchedules(List<int> weekdays) {
     if (weekdays.isEmpty) {
@@ -41,9 +44,24 @@ class Alarm extends JsonSerializable {
     }
   }
 
+  void setRingtone(int ringtone) {
+    _ringtone = ringtone;
+  }
+
+  void setScheduleType(int scheduleType) {
+    _scheduleType = scheduleType;
+  }
+
+  void setLabel(String label) {
+    _label = label;
+  }
+
+  void setVibrate(bool vibrate) {
+    _vibrate = vibrate;
+  }
+
   void addWeekday(int weekday) {
     _repeatSchedules.add(WeeklyAlarmSchedule(_timeOfDay, weekday));
-    if (_enabled) _repeatSchedules.last.schedule();
   }
 
   void removeWeekday(int weekday) {
@@ -71,10 +89,10 @@ class Alarm extends JsonSerializable {
 
   void schedule() {
     for (var alarm in _oneTimeSchedules) {
-      alarm.schedule();
+      alarm.schedule(_ringtone);
     }
     for (var alarm in _repeatSchedules) {
-      alarm.schedule();
+      alarm.schedule(_ringtone);
     }
   }
 
@@ -130,7 +148,10 @@ class Alarm extends JsonSerializable {
         _repeatSchedules = (json['repeatSchedules'] as List<dynamic>)
             .map<WeeklyAlarmSchedule>(
                 (item) => WeeklyAlarmSchedule.fromJson(item))
-            .toList();
+            .toList(),
+        _scheduleType = json['scheduleType'],
+        _ringtone = json['ringtone'],
+        _vibrate = json['vibrate'];
 
   @override
   Map<String, dynamic> toJson() => {
@@ -143,5 +164,8 @@ class Alarm extends JsonSerializable {
         'repeatSchedules': _repeatSchedules
             .map<Map<String, dynamic>>((schedule) => schedule.toJson())
             .toList(), //
+        'scheduleType': _scheduleType,
+        'ringtone': _ringtone,
+        'vibrate': _vibrate,
       };
 }

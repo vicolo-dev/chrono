@@ -3,9 +3,10 @@ import 'dart:core';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:timezone/data/latest_all.dart' as timezone_db;
+import 'package:timezone/data/latest_all.dart';
 
 import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/theme/theme.dart';
@@ -20,13 +21,17 @@ import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  timezone_db.initializeTimeZones();
-  SettingsManager.initialize();
+
+  initializeTimeZones();
+  await initializeSettings();
   await initializeDatabases();
   // const platform = MethodChannel("samples.flutter.dev/alarm");
   // platform.invokeMethod('turnKeyguardOff');
   final session = await AudioSession.instance;
   await session.configure(const AudioSessionConfiguration(
+    avAudioSessionCategory: AVAudioSessionCategory.playback,
+    avAudioSessionCategoryOptions:
+        AVAudioSessionCategoryOptions.defaultToSpeaker,
     androidAudioAttributes: AndroidAudioAttributes(
       flags: AndroidAudioFlags.audibilityEnforced,
       usage: AndroidAudioUsage.alarm,

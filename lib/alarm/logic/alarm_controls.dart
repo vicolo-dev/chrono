@@ -19,6 +19,7 @@ void ringAlarm(int num, Map<String, dynamic> params) async {
       body: timeOfDay.formatToString('h:mm a'),
       payload: {
         'scheduleId': params['scheduleId'],
+        'ringtoneIndex': params['ringtoneIndex'],
       },
       category: NotificationCategory.Alarm,
       fullScreenIntent: true,

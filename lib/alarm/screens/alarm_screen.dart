@@ -60,11 +60,12 @@ class _AlarmScreenState extends State<AlarmScreen> {
     saveList('alarms', _alarms);
   }
 
-  _handleCustomizeAlarm(int index) {
-    Alarm? newAlarm = _openCustomizeAlarmScreen(_alarms[index]);
+  _handleCustomizeAlarm(int index) async {
+    Alarm? newAlarm = await _openCustomizeAlarmScreen(_alarms[index]);
 
     if (newAlarm == null) return;
 
+    newAlarm.schedule();
     setState(() {
       _alarms[index] = newAlarm;
     });
@@ -72,27 +73,17 @@ class _AlarmScreenState extends State<AlarmScreen> {
     saveList('alarms', _alarms);
   }
 
-  Alarm? _openCustomizeAlarmScreen(Alarm alarm) {
-    Alarm? newAlarm;
-
-    Navigator.push(
+  Future<Alarm?> _openCustomizeAlarmScreen(Alarm alarm) async {
+    return await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => CustomizeAlarmScreen(initialAlarm: alarm)),
-    ).then(
-      (dynamic value) {
-        if (value != null) {
-          newAlarm = value as Alarm;
-        }
-      },
     );
-
-    return newAlarm;
   }
 
   @override
   Widget build(BuildContext context) {
-    Future<void> selectTime(void Function(Alarm) onCustomize) async {
+    Future<void> selectTime(Future<Alarm?> Function(Alarm) onCustomize) async {
       final TimePickerResult? timePickerResult = await showTimePickerDialog(
         context: context,
         initialTime: TimeOfDay.now(),
@@ -105,10 +96,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
       if (timePickerResult != null) {
         Alarm alarm = Alarm(timePickerResult.timeOfDay);
         if (timePickerResult.isCustomize) {
-          onCustomize(alarm);
-        } else {
-          _handleAddAlarm(alarm);
+          alarm = await onCustomize(alarm) ?? alarm;
         }
+
+        _handleAddAlarm(alarm);
       }
     }
 
@@ -133,12 +124,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
           onReorder: _handleReorderAlarms,
         ),
         FAB(
-          onPressed: () => selectTime(
-            (Alarm alarm) {
-              Alarm? newAlarm = _openCustomizeAlarmScreen(alarm);
-              if (newAlarm != null) _handleAddAlarm(newAlarm);
-            },
-          ),
+          onPressed: () => selectTime(_openCustomizeAlarmScreen),
         )
       ],
     );

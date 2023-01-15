@@ -12,13 +12,13 @@ class AlarmAudioPlayer {
     _ringtones = await FlutterSystemRingtones.getAlarmSounds();
   }
 
-  static void play({int ringtoneIndex = 0}) async {
-    if (!_player.playing) {
-      await _player.setAudioSource(
-          AudioSource.uri(Uri.parse(ringtones[ringtoneIndex].uri)));
-      _player.setLoopMode(LoopMode.one);
-      _player.play();
-    }
+  static void play(int ringtoneIndex,
+      {LoopMode loopMode = LoopMode.one}) async {
+    _player.stop();
+    await _player.setAudioSource(
+        AudioSource.uri(Uri.parse(ringtones[ringtoneIndex].uri)));
+    await _player.setLoopMode(loopMode);
+    _player.play();
   }
 
   static void stop() {

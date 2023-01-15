@@ -1,6 +1,7 @@
 import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/theme/border.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class WeekdaySelect extends StatelessWidget {
@@ -14,6 +15,9 @@ class WeekdaySelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ToggleButtons(
+      fillColor: ColorTheme.accentColor,
+      selectedColor: Colors.white,
+      renderBorder: false,
       borderRadius: defaultBorderRadius,
       constraints: BoxConstraints(
         minHeight: (MediaQuery.of(context).size.width - 40) / 7,

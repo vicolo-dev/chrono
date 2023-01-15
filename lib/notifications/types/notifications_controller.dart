@@ -22,7 +22,9 @@ class NotificationController {
       ReceivedNotification receivedNotification) async {
     switch (receivedNotification.channelKey) {
       case alarmNotificationChannelKey:
-        AlarmAudioPlayer.play();
+        int ringtoneIndex =
+            int.parse((receivedNotification.payload?['ringtoneIndex']) ?? '0');
+        AlarmAudioPlayer.play(ringtoneIndex);
         int scheduleId =
             int.parse((receivedNotification.payload?['scheduleId'])!);
         disableAlarmByScheduleId(scheduleId);

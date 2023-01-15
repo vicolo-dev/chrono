@@ -65,12 +65,12 @@ const TextTheme textTheme = TextTheme(
     color: ColorTheme.textColor,
   ),
   headlineLarge: TextStyle(
-    fontSize: 32,
+    fontSize: 28,
     fontVariations: FontVariations.semiBold,
     color: ColorTheme.textColor,
   ),
   headlineMedium: TextStyle(
-    fontSize: 20,
+    fontSize: 16,
     fontVariations: FontVariations.semiBold,
     color: ColorTheme.textColor,
   ),

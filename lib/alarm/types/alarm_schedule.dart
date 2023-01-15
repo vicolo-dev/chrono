@@ -3,6 +3,7 @@ import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_system_ringtones/flutter_system_ringtones.dart';
 
 class WeeklyAlarmSchedule extends AlarmSchedule {
   final int _weekday;
@@ -17,7 +18,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  void schedule() {
+  void schedule(int ringtoneIndex) {
     cancel();
     AndroidAlarmManager.periodic(
       const Duration(days: 7),
@@ -30,7 +31,8 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
       rescheduleOnReboot: true,
       params: <String, String>{
         'scheduleId': _id.toString(),
-        'timeOfDay': _timeOfDay.encode()
+        'timeOfDay': _timeOfDay.encode(),
+        'ringtoneIndex': ringtoneIndex.toString(),
       },
     );
   }
@@ -56,7 +58,7 @@ class OneTimeAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  void schedule() {
+  void schedule(int ringtoneIndex) {
     cancel();
     AndroidAlarmManager.oneShotAt(
       getNextAlarmDate(),
@@ -69,7 +71,8 @@ class OneTimeAlarmSchedule extends AlarmSchedule {
       rescheduleOnReboot: true,
       params: <String, String>{
         'scheduleId': _id.toString(),
-        'timeOfDay': _timeOfDay.encode()
+        'timeOfDay': _timeOfDay.encode(),
+        'ringtoneIndex': ringtoneIndex.toString(),
       },
     );
   }
@@ -101,12 +104,11 @@ abstract class AlarmSchedule {
 
   void setTimeOfDay(TimeOfDay timeOfDay) {
     _timeOfDay = timeOfDay;
-    schedule();
   }
 
   DateTime getNextAlarmDate();
 
-  void schedule();
+  void schedule(int ringtoneIndex);
 
   void cancel() {
     AndroidAlarmManager.cancel(_id);

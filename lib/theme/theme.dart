@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:clock_app/theme/radio.dart';
 import 'package:clock_app/theme/input.dart';
 import 'package:clock_app/theme/card.dart';
 import 'package:clock_app/theme/color.dart';
@@ -20,5 +21,6 @@ ThemeData theme = ThemeData(
   snackBarTheme: snackBarTheme,
   inputDecorationTheme: inputTheme,
   scaffoldBackgroundColor: ColorTheme.backgroundColor,
+  radioTheme: radioTheme,
   // textButtonTheme: textButtonTheme,
 );
