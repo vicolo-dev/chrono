@@ -14,6 +14,7 @@ class Select<T> extends StatefulWidget {
     Key? key,
     required this.initialSelectedIndex,
     required this.title,
+    this.description,
     required this.choices,
     required this.onChange,
     this.onSelect,
@@ -21,6 +22,7 @@ class Select<T> extends StatefulWidget {
 
   final int initialSelectedIndex;
   final String title;
+  final String? description;
   final List<SelectChoice> choices;
   final void Function(int index) onChange;
   final Function(int index)? onSelect;
@@ -35,6 +37,7 @@ class _SelectState<T> extends State<Select<T>> {
   @override
   void initState() {
     super.initState();
+    print("initState: ${widget.initialSelectedIndex}");
     _selectedIndex = widget.initialSelectedIndex;
   }
 
@@ -61,6 +64,32 @@ class _SelectState<T> extends State<Select<T>> {
                     ),
                   ),
                   const SizedBox(height: 12.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(color: ColorTheme.textColorSecondary),
+                        ),
+                        if (widget.description != null)
+                          const SizedBox(height: 8.0),
+                        if (widget.description != null)
+                          Text(
+                            widget.description!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: ColorTheme.textColorSecondary),
+                          ),
+                      ],
+                    ),
+                  ),
                   Flexible(
                     child: ListView.builder(
                       itemCount: widget.choices.length,
@@ -73,7 +102,12 @@ class _SelectState<T> extends State<Select<T>> {
                             }),
                           },
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical:
+                                    widget.choices[index].description != null
+                                        ? 8.0
+                                        : 2.0),
                             child: Row(
                               children: [
                                 Radio(
@@ -87,7 +121,7 @@ class _SelectState<T> extends State<Select<T>> {
                                     Text(widget.choices[index].title,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .titleMedium),
+                                            .headlineMedium),
                                     if (widget.choices[index].description !=
                                         null)
                                       const SizedBox(height: 4.0),

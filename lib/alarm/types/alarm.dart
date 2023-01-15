@@ -32,7 +32,9 @@ class Alarm extends JsonSerializable {
         _label = alarm._label,
         _oneTimeSchedules = alarm._oneTimeSchedules,
         _repeatSchedules = alarm._repeatSchedules,
-        _scheduleType = alarm._scheduleType;
+        _scheduleType = alarm._scheduleType,
+        _ringtone = alarm._ringtone,
+        _vibrate = alarm._vibrate;
 
   void setSchedules(List<int> weekdays) {
     if (weekdays.isEmpty) {

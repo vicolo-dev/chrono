@@ -155,7 +155,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                       ),
                     ),
                     Select(
-                      initialSelectedIndex: _alarm.scheduleType,
+                      initialSelectedIndex: _alarm.ringtone,
                       title: "Melody",
                       choices: AlarmAudioPlayer.ringtones
                           .map((ringtone) => SelectChoice(
@@ -166,8 +166,9 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                       onSelect: (index) =>
                           AlarmAudioPlayer.play(index, loopMode: LoopMode.off),
                       onChange: (value) {
-                        AlarmAudioPlayer.stop();
                         setState(() => _alarm.setRingtone(value));
+                        AlarmAudioPlayer.stop();
+                        print(value);
                       },
                     ),
                     Row(
