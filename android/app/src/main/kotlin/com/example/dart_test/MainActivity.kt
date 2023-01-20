@@ -8,54 +8,63 @@ import android.app.Activity
 import android.app.KeyguardManager
 import android.content.Context
 import android.os.Build
-import android.view.WindowManager
+import android.os.Bundle
+import android.view.WindowManager;
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "samples.flutter.dev/alarm"
 
+    // override fun onCreate(savedInstanceState: Bundle?) {
+    //     super.onCreate(savedInstanceState)
+    //     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    //     getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+    //     getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+    //     getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+    // }
+
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-          call, result ->
-        if (call.method == "turnKeyguardOff") {
-            turnScreenOnAndKeyguardOff()
-        }
-        if (call.method == "turnKeyguardOn") {
-            turnScreenOffAndKeyguardOn()
-        }
-        }
+        // MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
+        //   call, result ->
+        // if (call.method == "turnKeyguardOff") {
+        //     turnScreenOnAndKeyguardOff()
+        // }
+        // if (call.method == "turnKeyguardOn") {
+        //     turnScreenOffAndKeyguardOn()
+        // }
+        // }
     }
 }
 
-fun Activity.turnScreenOnAndKeyguardOff() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-        setShowWhenLocked(true)
-        setTurnScreenOn(true)
-    } else {
-        window.addFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                    or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
-        )
-    }
+// fun Activity.turnScreenOnAndKeyguardOff() {
+//     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+//         setShowWhenLocked(true)
+//         setTurnScreenOn(true)
+//     } else {
+//         window.addFlags(
+//             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+//                     or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+//         )
+//     }
 
-    with(getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            requestDismissKeyguard(this@turnScreenOnAndKeyguardOff, null)
-        }
-    }
-}
+//     with(getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager) {
+//         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//             requestDismissKeyguard(this@turnScreenOnAndKeyguardOff, null)
+//         }
+//     }
+// }
 
-fun Activity.turnScreenOffAndKeyguardOn() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-        setShowWhenLocked(false)
-        setTurnScreenOn(false)
-    } else {
-        window.clearFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                    or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
-        )
-    }
-}
+// fun Activity.turnScreenOffAndKeyguardOn() {
+//     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+//         setShowWhenLocked(false)
+//         setTurnScreenOn(false)
+//     } else {
+//         window.clearFlags(
+//             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+//                     or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+//         )
+//     }
+// }
 
 // fun Context.scheduleNotification(isLockScreen: Boolean) {
 //     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager

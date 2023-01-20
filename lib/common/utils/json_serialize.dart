@@ -6,10 +6,6 @@ import 'package:clock_app/clock/types/city.dart';
 
 final fromJsonFactories = <Type, Function>{
   Alarm: (Map<String, dynamic> json) => Alarm.fromJson(json),
-  OneTimeAlarmSchedule: (Map<String, dynamic> json) =>
-      OneTimeAlarmSchedule.fromJson(json),
-  WeeklyAlarmSchedule: (Map<String, dynamic> json) =>
-      WeeklyAlarmSchedule.fromJson(json),
   City: (Map<String, dynamic> json) => City.fromJson(json),
 };
 

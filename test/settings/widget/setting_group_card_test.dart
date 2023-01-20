@@ -13,7 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   testWidgets('SettingGroupCard shows title', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-      home: SettingGroupCard(settingGroup: settings[0]),
+      home: SettingGroupCard(settingGroup: settingsItems[0]),
     ));
 
     expect(find.text('General'), findsOneWidget);

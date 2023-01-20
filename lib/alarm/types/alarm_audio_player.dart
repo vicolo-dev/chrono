@@ -4,9 +4,11 @@ import 'package:just_audio/just_audio.dart';
 class AlarmAudioPlayer {
   static final AudioPlayer _player = AudioPlayer();
   static List<Ringtone> _ringtones = [];
+  static int _lastPlayedRingtoneIndex = -1;
 
   static AudioPlayer get player => _player;
   static List<Ringtone> get ringtones => _ringtones;
+  static int get lastPlayedRingtoneIndex => _lastPlayedRingtoneIndex;
 
   static Future<void> initialize() async {
     _ringtones = await FlutterSystemRingtones.getAlarmSounds();
@@ -14,6 +16,7 @@ class AlarmAudioPlayer {
 
   static void play(int ringtoneIndex,
       {LoopMode loopMode = LoopMode.one}) async {
+    _lastPlayedRingtoneIndex = ringtoneIndex;
     _player.stop();
     await _player.setAudioSource(
         AudioSource.uri(Uri.parse(ringtones[ringtoneIndex].uri)));
@@ -23,5 +26,6 @@ class AlarmAudioPlayer {
 
   static void stop() {
     _player.stop();
+    _lastPlayedRingtoneIndex = -1;
   }
 }

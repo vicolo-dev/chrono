@@ -5,6 +5,7 @@ import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 class AlarmNotificationScreen extends StatefulWidget {
   const AlarmNotificationScreen({
@@ -23,6 +24,23 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void clearFlags() async {
+    await FlutterWindowManager.addFlags(
+        FlutterWindowManager.FLAG_DISMISS_KEYGUARD);
+    await FlutterWindowManager.addFlags(
+        FlutterWindowManager.FLAG_KEEP_SCREEN_ON);
+    await FlutterWindowManager.addFlags(
+        FlutterWindowManager.FLAG_SHOW_WHEN_LOCKED);
+    await FlutterWindowManager.addFlags(
+        FlutterWindowManager.FLAG_TURN_SCREEN_ON);
+  }
+
+  @override
+  void dispose() {
+    clearFlags();
+    super.dispose();
   }
 
   @override

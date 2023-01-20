@@ -2,16 +2,24 @@ import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:flutter/material.dart';
 
-DateTime getOneTimeAlarmDate(TimeOfDay timeOfDay) {
+DateTime getDailyAlarmDate(
+  TimeOfDay timeOfDay, {
+  DateTime? scheduledDate,
+}) {
+  if (scheduledDate != null) {
+    return DateTime(scheduledDate.year, scheduledDate.month, scheduledDate.day,
+        timeOfDay.hour, timeOfDay.minute);
+  }
+
+  scheduledDate = DateTime.now();
+
   DateTime alarmTime;
 
-  DateTime currentDateTime = DateTime.now();
-
-  if (timeOfDay.toHours() > currentDateTime.toHours()) {
-    alarmTime = DateTime(currentDateTime.year, currentDateTime.month,
-        currentDateTime.day, timeOfDay.hour, timeOfDay.minute);
+  if (timeOfDay.toHours() > scheduledDate.toHours()) {
+    alarmTime = DateTime(scheduledDate.year, scheduledDate.month,
+        scheduledDate.day, timeOfDay.hour, timeOfDay.minute);
   } else {
-    DateTime nextDateTime = currentDateTime.add(const Duration(days: 1));
+    DateTime nextDateTime = scheduledDate.add(const Duration(days: 1));
     alarmTime = DateTime(nextDateTime.year, nextDateTime.month,
         nextDateTime.day, timeOfDay.hour, timeOfDay.minute);
   }
@@ -19,8 +27,8 @@ DateTime getOneTimeAlarmDate(TimeOfDay timeOfDay) {
   return alarmTime;
 }
 
-DateTime getRepeatAlarmDate(TimeOfDay timeOfDay, int weekday) {
-  DateTime dateTime = getOneTimeAlarmDate(timeOfDay);
+DateTime getWeeklyAlarmDate(TimeOfDay timeOfDay, int weekday) {
+  DateTime dateTime = getDailyAlarmDate(timeOfDay);
   while (dateTime.weekday != weekday) {
     dateTime = dateTime.add(const Duration(days: 1));
   }

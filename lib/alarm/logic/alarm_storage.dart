@@ -3,13 +3,12 @@ import 'package:clock_app/common/utils/list_storage.dart';
 
 Alarm getAlarmByScheduleId(int id) {
   final List<Alarm> alarms = loadList('alarms');
-  return alarms.firstWhere((alarm) => alarm.hasOneTimeScheduleWithId(id));
+  return alarms.firstWhere((alarm) => alarm.hasAlarmWithId(id));
 }
 
 void disableAlarmByScheduleId(int id) {
   final List<Alarm> alarms = loadList('alarms');
-  final Alarm alarm =
-      alarms.firstWhere((alarm) => alarm.hasOneTimeScheduleWithId(id));
+  final Alarm alarm = alarms.firstWhere((alarm) => alarm.hasAlarmWithId(id));
   alarm.disable();
   saveList('alarms', alarms);
 }

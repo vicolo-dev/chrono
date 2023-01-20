@@ -5,6 +5,7 @@ import 'package:clock_app/alarm/logic/alarm_storage.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/main.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 class NotificationController {
   static void setListeners() {
@@ -60,6 +61,14 @@ class NotificationController {
         break;
 
       default:
+        await FlutterWindowManager.addFlags(
+            FlutterWindowManager.FLAG_DISMISS_KEYGUARD);
+        await FlutterWindowManager.addFlags(
+            FlutterWindowManager.FLAG_KEEP_SCREEN_ON);
+        await FlutterWindowManager.addFlags(
+            FlutterWindowManager.FLAG_SHOW_WHEN_LOCKED);
+        await FlutterWindowManager.addFlags(
+            FlutterWindowManager.FLAG_TURN_SCREEN_ON);
         App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
           alarmNotificationRoute,
           (route) {

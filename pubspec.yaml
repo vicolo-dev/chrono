@@ -46,6 +46,7 @@ dependencies:
   awesome_notifications: ^0.7.4+1
   audio_session: ^0.1.13
   awesome_select: ^6.0.0
+  flutter_windowmanager: ^0.2.0
 
 dev_dependencies:
   flutter_test:

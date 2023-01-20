@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:clock_app/settings/data/settings_data.dart';
+import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/widgets/setting_group_card.dart';
 import 'package:flutter/material.dart';
@@ -24,16 +25,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: settings.length,
-        itemBuilder: (BuildContext context, int index) {
-          SettingGroup settingGroup = settings[index];
-          return SettingGroupCard(
-            settingGroup: settingGroup,
-            // onTap: () { },
-          );
-        },
+      body: ListView(
+        children: [...getSettingWidgets(appSettings)],
       ),
     );
   }
