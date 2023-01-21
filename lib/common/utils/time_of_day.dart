@@ -18,7 +18,11 @@ extension TimeOfDayUtils on TimeOfDay {
         minute: json['minute'],
       );
 
-  DateTime toDateTime() => DateTime(0, 0, 0, hour, minute);
+  DateTime toDateTime() {
+    DateTime currentDateTime = DateTime.now();
+    return DateTime(currentDateTime.year, currentDateTime.month,
+        currentDateTime.day, hour, minute);
+  }
 
   Map<String, dynamic> toJson() =>
       <String, dynamic>{'hour': hour, 'minute': minute};

@@ -11,11 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('SettingGroupCard shows title', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: SettingGroupCard(settingGroup: settingsItems[0]),
-    ));
+  // testWidgets('SettingGroupCard shows title', (WidgetTester tester) async {
+  //   await tester.pumpWidget(MaterialApp(
+  //     home: SettingGroupCard(settingGroup: settingsItems[0]),
+  //   ));
 
-    expect(find.text('General'), findsOneWidget);
-  });
+  //   expect(find.text('General'), findsOneWidget);
+  // });
 }

@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/data/alarm_notification_data.dart';
+import 'package:clock_app/alarm/logic/schedule.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/main.dart';
@@ -8,8 +9,19 @@ import 'package:flutter/material.dart';
 
 @pragma('vm:entry-point')
 void ringAlarm(int num, Map<String, dynamic> params) async {
-  // print("Time of day : ${params['timeOfDay']}, num : $num");
   TimeOfDay timeOfDay = TimeOfDayUtils.decode(params['timeOfDay']);
+  Duration repeatInterval =
+      Duration(milliseconds: int.parse(params['repeatInterval']));
+
+  if (repeatInterval != Duration.zero) {
+    int scheduleId = int.parse(params['scheduleId']);
+    int ringtoneIndex = int.parse(params['ringtoneIndex']);
+
+    DateTime nextAlarmDateTime = timeOfDay.toDateTime().add(repeatInterval);
+
+    scheduleAlarm(scheduleId, nextAlarmDateTime, ringtoneIndex,
+        repeatInterval: repeatInterval);
+  }
 
   AwesomeNotifications().createNotification(
     content: NotificationContent(
@@ -20,6 +32,7 @@ void ringAlarm(int num, Map<String, dynamic> params) async {
       payload: {
         'scheduleId': params['scheduleId'],
         'ringtoneIndex': params['ringtoneIndex'],
+        'type': repeatInterval == Duration.zero ? 'oneTime' : 'repeat',
       },
       category: NotificationCategory.Alarm,
       fullScreenIntent: true,

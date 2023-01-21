@@ -22,28 +22,6 @@ class AlarmNotificationScreen extends StatefulWidget {
 
 class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  void clearFlags() async {
-    await FlutterWindowManager.addFlags(
-        FlutterWindowManager.FLAG_DISMISS_KEYGUARD);
-    await FlutterWindowManager.addFlags(
-        FlutterWindowManager.FLAG_KEEP_SCREEN_ON);
-    await FlutterWindowManager.addFlags(
-        FlutterWindowManager.FLAG_SHOW_WHEN_LOCKED);
-    await FlutterWindowManager.addFlags(
-        FlutterWindowManager.FLAG_TURN_SCREEN_ON);
-  }
-
-  @override
-  void dispose() {
-    clearFlags();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(

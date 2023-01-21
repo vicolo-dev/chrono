@@ -4,6 +4,7 @@ import 'package:clock_app/alarm/data/alarm_notification_route.dart';
 import 'package:clock_app/alarm/logic/alarm_storage.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
+import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/main.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
@@ -23,15 +24,22 @@ class NotificationController {
       ReceivedNotification receivedNotification) async {
     switch (receivedNotification.channelKey) {
       case alarmNotificationChannelKey:
-        int ringtoneIndex =
-            int.parse((receivedNotification.payload?['ringtoneIndex']) ?? '0');
-        AlarmAudioPlayer.play(ringtoneIndex);
-        int scheduleId =
-            int.parse((receivedNotification.payload?['scheduleId'])!);
-        disableAlarmByScheduleId(scheduleId);
+        handleAlarmNotificationCreated(receivedNotification);
         break;
     }
     // Your code goes here
+  }
+
+  static void handleAlarmNotificationCreated(
+      ReceivedNotification receivedNotification) {
+    int ringtoneIndex =
+        int.parse((receivedNotification.payload?['ringtoneIndex']) ?? '0');
+    AlarmAudioPlayer.play(ringtoneIndex);
+    if (receivedNotification.payload?['type'] == 'oneTime') {
+      int scheduleId =
+          int.parse((receivedNotification.payload?['scheduleId'])!);
+      disableAlarmByScheduleId(scheduleId);
+    }
   }
 
   /// Use this method to detect every time that a new notification is displayed
@@ -54,21 +62,16 @@ class NotificationController {
       ReceivedAction receivedAction) async {
     switch (receivedAction.buttonKeyPressed) {
       case alarmSnoozeActionKey:
+        await clearLockScreenFlags();
         break;
 
       case alarmDismissActionKey:
+        await clearLockScreenFlags();
         dismissAlarm();
         break;
 
       default:
-        await FlutterWindowManager.addFlags(
-            FlutterWindowManager.FLAG_DISMISS_KEYGUARD);
-        await FlutterWindowManager.addFlags(
-            FlutterWindowManager.FLAG_KEEP_SCREEN_ON);
-        await FlutterWindowManager.addFlags(
-            FlutterWindowManager.FLAG_SHOW_WHEN_LOCKED);
-        await FlutterWindowManager.addFlags(
-            FlutterWindowManager.FLAG_TURN_SCREEN_ON);
+        await setLockScreenFlags();
         App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
           alarmNotificationRoute,
           (route) {

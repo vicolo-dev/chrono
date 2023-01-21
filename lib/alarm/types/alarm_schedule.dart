@@ -11,14 +11,13 @@ import 'package:flutter/material.dart';
 
 class WeekdaySchedule extends JsonSerializable {
   int weekday;
-  PeriodicAlarmRunner alarmRunner;
+  AlarmRunner alarmRunner;
 
-  WeekdaySchedule(this.weekday)
-      : alarmRunner = PeriodicAlarmRunner(const Duration(days: 7));
+  WeekdaySchedule(this.weekday) : alarmRunner = AlarmRunner();
 
   WeekdaySchedule.fromJson(Map<String, dynamic> json)
       : weekday = json['weekday'],
-        alarmRunner = PeriodicAlarmRunner.fromJson(json['alarmRunner']);
+        alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -29,13 +28,13 @@ class WeekdaySchedule extends JsonSerializable {
 
 class DateSchedule extends JsonSerializable {
   DateTime date;
-  OneTimeAlarmRunner alarmRunner;
+  AlarmRunner alarmRunner;
 
-  DateSchedule(this.date) : alarmRunner = OneTimeAlarmRunner();
+  DateSchedule(this.date) : alarmRunner = AlarmRunner();
 
   DateSchedule.fromJson(Map<String, dynamic> json)
       : date = DateTime.parse(json['date']),
-        alarmRunner = OneTimeAlarmRunner.fromJson(json['alarmRunner']);
+        alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -55,10 +54,10 @@ abstract class AlarmSchedule extends JsonSerializable {
 }
 
 class OnceAlarmSchedule extends AlarmSchedule {
-  late final OneTimeAlarmRunner _alarmRunner;
+  late final AlarmRunner _alarmRunner;
 
   OnceAlarmSchedule(Settings alarmSettings)
-      : _alarmRunner = OneTimeAlarmRunner(),
+      : _alarmRunner = AlarmRunner(),
         super(alarmSettings);
 
   @override
@@ -78,7 +77,7 @@ class OnceAlarmSchedule extends AlarmSchedule {
       };
 
   OnceAlarmSchedule.fromJson(Map<String, dynamic> json, Settings alarmSettings)
-      : _alarmRunner = OneTimeAlarmRunner.fromJson(json['alarmRunner']),
+      : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
         super(alarmSettings);
 
   @override
@@ -88,16 +87,17 @@ class OnceAlarmSchedule extends AlarmSchedule {
 }
 
 class DailyAlarmSchedule extends AlarmSchedule {
-  late final PeriodicAlarmRunner _alarmRunner;
+  late final AlarmRunner _alarmRunner;
 
   DailyAlarmSchedule(Settings alarmSettings)
-      : _alarmRunner = PeriodicAlarmRunner(const Duration(days: 1)),
+      : _alarmRunner = AlarmRunner(),
         super(alarmSettings);
 
   @override
   void schedule(TimeOfDay timeOfDay, int ringtoneIndex) {
     DateTime alarmDate = getDailyAlarmDate(timeOfDay);
-    _alarmRunner.schedule(alarmDate, ringtoneIndex);
+    _alarmRunner.schedule(alarmDate, ringtoneIndex,
+        repeatInterval: const Duration(days: 1));
   }
 
   @override
@@ -111,7 +111,7 @@ class DailyAlarmSchedule extends AlarmSchedule {
       };
 
   DailyAlarmSchedule.fromJson(Map<String, dynamic> json, Settings alarmSettings)
-      : _alarmRunner = PeriodicAlarmRunner.fromJson(json['alarmRunner']),
+      : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
         super(alarmSettings);
 
   @override
@@ -140,7 +140,11 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       DateTime alarmDate =
           getWeeklyAlarmDate(timeOfDay, weekdaySchedule.weekday);
-      weekdaySchedule.alarmRunner.schedule(alarmDate, ringtoneIndex);
+      weekdaySchedule.alarmRunner.schedule(
+        alarmDate,
+        ringtoneIndex,
+        repeatInterval: const Duration(days: 7),
+      );
     }
   }
 
@@ -241,7 +245,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
 }
 
 class RangeAlarmSchedule extends AlarmSchedule {
-  late final PeriodicAlarmRunner _alarmRunner;
+  late final AlarmRunner _alarmRunner;
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(const Duration(days: 7));
   Duration _interval = const Duration(days: 1);
@@ -249,15 +253,15 @@ class RangeAlarmSchedule extends AlarmSchedule {
   DateTime get startDate => _startDate;
   DateTime get endDate => _endDate;
 
-  RangeAlarmSchedule(Settings alarmSettings) : super(alarmSettings) {
-    _alarmRunner = PeriodicAlarmRunner(_interval);
-  }
+  RangeAlarmSchedule(Settings alarmSettings)
+      : _alarmRunner = AlarmRunner(),
+        super(alarmSettings);
 
   @override
   void schedule(TimeOfDay timeOfDay, int ringtoneIndex) {
     DateTime alarmDate =
         getDailyAlarmDate(timeOfDay, scheduledDate: _startDate);
-    _alarmRunner.schedule(alarmDate, ringtoneIndex);
+    _alarmRunner.schedule(alarmDate, ringtoneIndex, repeatInterval: _interval);
   }
 
   @override
@@ -274,7 +278,7 @@ class RangeAlarmSchedule extends AlarmSchedule {
       };
 
   RangeAlarmSchedule.fromJson(Map<String, dynamic> json, Settings alarmSettings)
-      : _alarmRunner = PeriodicAlarmRunner.fromJson(json['alarmRunner']),
+      : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
         _startDate = DateTime.parse(json['startDate']),
         _endDate = DateTime.parse(json['endDate']),
         _interval = Duration(milliseconds: json['interval']),
