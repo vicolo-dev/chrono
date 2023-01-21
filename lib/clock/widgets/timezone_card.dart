@@ -54,7 +54,7 @@ class TimeZoneCard extends StatelessWidget {
       child: Card(
         child: Slidable(
             groupTag: 'cities',
-            key: key,
+            // key: key,
             startActionPane: getDeleteActionPane(onDelete, context),
             endActionPane: getDeleteActionPane(onDelete, context),
             child: TimezoneCardContent(
