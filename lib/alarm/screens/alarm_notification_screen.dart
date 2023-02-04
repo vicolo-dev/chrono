@@ -1,6 +1,7 @@
-import 'package:clock_app/alarm/data/alarm_notification_data.dart';
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/data/alarm_notification_channel.dart';
+import 'package:clock_app/alarm/logic/handle_alarm_trigger.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/alarm/types/alarm_notification_manager.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
@@ -22,6 +23,11 @@ class AlarmNotificationScreen extends StatefulWidget {
 
 class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
@@ -42,14 +48,15 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
                     // dismissAlarm(widget.id);
                     // Navigator.pop(context);
                   },
-                  child: const Text(alarmSnoozeActionLabel),
+                  child: const Text(AlarmNotificationManager.snoozeActionLabel),
                 ),
                 TextButton(
                   onPressed: () {
-                    dismissAlarm();
+                    AlarmNotificationManager.dismissAlarm();
                     // Navigator.pop(context);
                   },
-                  child: const Text(alarmDismissActionLabel),
+                  child:
+                      const Text(AlarmNotificationManager.dismissActionLabel),
                 ),
               ],
             ),

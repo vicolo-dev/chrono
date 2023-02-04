@@ -1,7 +1,8 @@
 import 'package:clock_app/alarm/data/alarm_settings.dart';
 import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/logic/schedule_type.dart';
-import 'package:clock_app/alarm/types/alarm_schedule.dart';
+import 'package:clock_app/alarm/types/alarm_runner.dart';
+import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/alarm/types/schedule_type.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
@@ -25,6 +26,14 @@ class Alarm extends JsonSerializable {
   Type get scheduleType => _settings.getSetting("Schedule Type").value;
   int get ringtoneIndex => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibrate").value;
+  AlarmSchedule get activeSchedule =>
+      _schedules.firstWhere((schedule) => schedule.runtimeType == scheduleType);
+  List<AlarmRunner> get activeAlarmRunners => activeSchedule.alarmRunners;
+  bool get isRepeating => [
+        RangeAlarmSchedule,
+        DatesAlarmSchedule,
+        WeeklyAlarmSchedule
+      ].contains(scheduleType);
 
   Alarm(this._timeOfDay) {
     _schedules = [
@@ -103,7 +112,7 @@ class Alarm extends JsonSerializable {
     _timeOfDay = timeOfDay;
   }
 
-  bool hasAlarmWithId(int scheduleId) {
+  bool hasScheduleWithId(int scheduleId) {
     return _schedules.any((schedule) => schedule.hasId(scheduleId));
   }
 

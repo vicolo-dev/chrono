@@ -1,7 +1,7 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/handle_alarm_trigger.dart';
 import 'package:clock_app/alarm/logic/alarm_time.dart';
-import 'package:clock_app/alarm/logic/schedule.dart';
+import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/types/schedule_type.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
@@ -70,24 +70,30 @@ import 'package:flutter/material.dart';
 
 class AlarmRunner extends JsonSerializable {
   late int _id;
+  DateTime _nextScheduleDateTime = DateTime.now();
 
   int get id => _id;
+  DateTime get nextScheduleDateTime => _nextScheduleDateTime;
 
   AlarmRunner() {
     _id = UniqueKey().hashCode;
   }
 
-  void schedule(DateTime startDate, int ringtoneIndex,
+  void schedule(DateTime dateTime, int ringtoneIndex,
       {Duration repeatInterval = Duration.zero}) {
-    scheduleAlarm(_id, startDate, ringtoneIndex,
-        repeatInterval: repeatInterval);
+    _nextScheduleDateTime = dateTime;
+    scheduleAlarm(_id, dateTime, ringtoneIndex, repeatInterval: repeatInterval);
   }
 
-  AlarmRunner.fromJson(Map<String, dynamic> json) : _id = json['id'];
+  AlarmRunner.fromJson(Map<String, dynamic> json)
+      : _id = json['id'],
+        _nextScheduleDateTime =
+            DateTime.fromMillisecondsSinceEpoch(json['nextScheduleDateTime']);
 
   @override
   Map<String, dynamic> toJson() => {
         'id': _id,
+        'nextScheduleDateTime': _nextScheduleDateTime.millisecondsSinceEpoch,
       };
 
   void cancel() {

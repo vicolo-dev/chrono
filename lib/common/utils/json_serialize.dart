@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/types/alarm_schedule.dart';
+import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/clock/types/city.dart';
 
 final fromJsonFactories = <Type, Function>{

@@ -1,7 +1,11 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/handle_alarm_trigger.dart';
+import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/utils/date_time.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
 
 void scheduleAlarm(int id, DateTime startDate, int ringtoneIndex,
     {Duration repeatInterval = Duration.zero}) {
@@ -9,7 +13,7 @@ void scheduleAlarm(int id, DateTime startDate, int ringtoneIndex,
   AndroidAlarmManager.oneShotAt(
     startDate,
     id,
-    ringAlarm,
+    handleAlarmTrigger,
     allowWhileIdle: true,
     alarmClock: true,
     exact: true,
@@ -19,7 +23,7 @@ void scheduleAlarm(int id, DateTime startDate, int ringtoneIndex,
       'scheduleId': id.toString(),
       'timeOfDay': startDate.toTimeOfDay().encode(),
       'ringtoneIndex': ringtoneIndex.toString(),
-      'repeatInterval': repeatInterval.inMilliseconds.toString(),
+      'alarms': SettingsManager.preferences?.getString("alarms") ?? "",
     },
   );
 }

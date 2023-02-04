@@ -6,12 +6,6 @@ import 'package:clock_app/common/data/paths.dart';
 // Database? database;
 
 Future<void> initializeDatabases() async {
-  String appDataPath = await getAppDataDirectoryPath();
-
-  if (!await Directory(appDataPath).exists()) {
-    await Directory(appDataPath).create();
-  }
-
   String timezonesDatabasePath = await getTimezonesDatabasePath();
 
   // Only copy if the database doesn't exist

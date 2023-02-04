@@ -1,5 +1,5 @@
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
-import 'package:clock_app/alarm/types/alarm_schedule.dart';
+import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/alarm/types/schedule_type.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';

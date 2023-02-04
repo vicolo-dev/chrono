@@ -1,11 +1,14 @@
 import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list_footer.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
+import 'package:clock_app/navigation/data/route_observer.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 class AlarmScreen extends StatefulWidget {
@@ -15,13 +18,43 @@ class AlarmScreen extends StatefulWidget {
   State<AlarmScreen> createState() => _AlarmScreenState();
 }
 
-class _AlarmScreenState extends State<AlarmScreen> {
+class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
   List<Alarm> _alarms = [];
 
   @override
   void initState() {
     super.initState();
+    SettingsManager.addOnChangeListener(
+        "alarms", () => setState(() => _alarms = loadList('alarms')));
     setState(() => _alarms = loadList('alarms'));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    SettingsManager.removeOnChangeListener("alarms");
+    super.dispose();
+  }
+
+  @override
+  void didPush() async {
+    print("didPush");
+    setState(() => _alarms = loadList('alarms'));
+    // Route was pushed onto navigator and is now topmost route.
+  }
+
+  @override
+  void didPopNext() async {
+    print("didPopNext");
+    setState(() => _alarms = loadList('alarms'));
+
+    // Covering route was popped off the navigator.
   }
 
   _handleReorderAlarms(int oldIndex, int newIndex) {

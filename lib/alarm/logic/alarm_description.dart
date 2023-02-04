@@ -1,6 +1,6 @@
 import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/types/alarm_schedule.dart';
+import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:flutter/material.dart';

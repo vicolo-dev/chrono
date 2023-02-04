@@ -1,4 +1,4 @@
-import 'package:clock_app/alarm/types/alarm_schedule.dart';
+import 'package:clock_app/alarm/types/alarm_schedules.dart';
 
 Type stringToScheduleType(String name) {
   switch (name) {

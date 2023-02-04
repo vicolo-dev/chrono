@@ -32,6 +32,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_boot_receiver:
+    git:
+      url: https://github.com/AhsanSarwar45/flutter_boot_receiver.git
+      ref: master
+  # flutter_boot_receiver:
+  #   path: "../flutter_boot_receiver"
   intl: ^0.17.0
   timezone: ^0.9.1
   timer_builder: ^2.0.0
@@ -45,8 +51,10 @@ dependencies:
   just_audio: ^0.9.31
   awesome_notifications: ^0.7.4+1
   audio_session: ^0.1.13
-  awesome_select: ^6.0.0
   flutter_windowmanager: ^0.2.0
+  navigation_history_observer: ^1.1.0
+  flutter_fgbg: ^0.2.2
+  move_to_background: ^1.0.2
 
 dev_dependencies:
   flutter_test:

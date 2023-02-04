@@ -1,5 +1,5 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/handle_alarm_trigger.dart';
 import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/schedule_type.dart';
@@ -48,6 +48,7 @@ abstract class AlarmSchedule extends JsonSerializable {
 
   AlarmSchedule(this.alarmSettings);
 
+  List<AlarmRunner> get alarmRunners;
   void schedule(TimeOfDay timeOfDay, int ringtoneIndex);
   void cancel();
   bool hasId(int id);
@@ -84,6 +85,9 @@ class OnceAlarmSchedule extends AlarmSchedule {
   bool hasId(int id) {
     return _alarmRunner.id == id;
   }
+
+  @override
+  List<AlarmRunner> get alarmRunners => [_alarmRunner];
 }
 
 class DailyAlarmSchedule extends AlarmSchedule {
@@ -118,6 +122,9 @@ class DailyAlarmSchedule extends AlarmSchedule {
   bool hasId(int id) {
     return _alarmRunner.id == id;
   }
+
+  @override
+  List<AlarmRunner> get alarmRunners => [_alarmRunner];
 }
 
 class WeeklyAlarmSchedule extends AlarmSchedule {
@@ -131,11 +138,13 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
       weekdaySchedule.alarmRunner.cancel();
     }
 
-    _weekdaySchedules =
+    List<int> weekdays =
         (alarmSettings.getSetting("Week Days") as ToggleSetting<int>)
             .selected
-            .map((weekday) => WeekdaySchedule(weekday))
             .toList();
+
+    _weekdaySchedules =
+        weekdays.map((weekday) => WeekdaySchedule(weekday)).toList();
 
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       DateTime alarmDate =
@@ -172,6 +181,10 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
     return _weekdaySchedules
         .any((weekdaySchedule) => weekdaySchedule.alarmRunner.id == id);
   }
+
+  @override
+  List<AlarmRunner> get alarmRunners =>
+      _weekdaySchedules.map((e) => e.alarmRunner).toList();
 }
 
 /*
@@ -242,6 +255,10 @@ class DatesAlarmSchedule extends AlarmSchedule {
     return _dateSchedules
         .any((dateSchedule) => dateSchedule.alarmRunner.id == id);
   }
+
+  @override
+  List<AlarmRunner> get alarmRunners =>
+      _dateSchedules.map((e) => e.alarmRunner).toList();
 }
 
 class RangeAlarmSchedule extends AlarmSchedule {
@@ -288,4 +305,7 @@ class RangeAlarmSchedule extends AlarmSchedule {
   bool hasId(int id) {
     return _alarmRunner.id == id;
   }
+
+  @override
+  List<AlarmRunner> get alarmRunners => [_alarmRunner];
 }
