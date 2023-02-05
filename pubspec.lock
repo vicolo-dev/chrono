@@ -4,9 +4,11 @@ packages:
   android_alarm_manager_plus:
     dependency: "direct main"
     description:
-      path: "../android_alarm_manager_plus"
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "9c91110fdaa4598bf3d47cf62ed2634dbc99fbdd"
+      url: "https://github.com/AhsanSarwar45/android_alarm_manager_plus"
+    source: git
     version: "2.1.0"
   async:
     dependency: transitive

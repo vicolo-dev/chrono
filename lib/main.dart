@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'dart:developer';
+import 'dart:io';
 import 'dart:isolate';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,16 @@ void main() async {
   await initializeNotifications();
   AppVisibilityListener.initialize();
   await LockScreenFlagManager.initialize();
+
+  String appDataDirectory = await getAppDataDirectoryPath();
+
+  // log something to a file in the app's data directory
+  try {
+    print(
+        "FileContents: ${File('$appDataDirectory/log-dart.txt').readAsStringSync()}");
+  } catch (e) {
+    print("Error: $e");
+  }
 
   runApp(const App());
 

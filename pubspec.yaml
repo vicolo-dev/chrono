@@ -48,7 +48,11 @@ dependencies:
   shared_preferences: ^2.0.0-nullsafety
   flutter_system_ringtones: ^0.0.6
   android_alarm_manager_plus:
-    path: ../android_alarm_manager_plus
+    git:
+      url: https://github.com/AhsanSarwar45/android_alarm_manager_plus
+      ref: main
+  # android_alarm_manager_plus:
+  #   path: ../android_alarm_manager_plus
   just_audio: ^0.9.31
   awesome_notifications: ^0.7.4+1
   audio_session: ^0.1.13

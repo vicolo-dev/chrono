@@ -1,4 +1,6 @@
+import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/data/settings_data.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
@@ -16,6 +18,7 @@ Future<void> initializeSettings() async {
   if (firstLaunch == null) {
     preferences?.setBool('first_launch', false);
     initializeDefaultFavoriteCities();
+    saveList<Alarm>('alarms', []);
 
     // for (SettingGroup group in settings) {
     //   for (Setting setting in group.settings) {

@@ -73,14 +73,14 @@ class AlarmNotificationManager {
 
     // print("android initializeL : ${await AndroidAlarmManager.initialize()}");
 
-    print("alaaaarm initializeL : ${await AndroidAlarmManager.oneShotAfterDelay(
+    await AndroidAlarmManager.oneShotAfterDelay(
       const Duration(seconds: 0),
       scheduleId,
       stopAlarm,
       exact: true,
       useRTC: true,
       alarmClock: true,
-    )}");
+    );
 
     await SettingsManager.initialize();
     await LockScreenFlagManager.clearLockScreenFlags();
