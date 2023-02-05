@@ -1,5 +1,5 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/handle_alarm_trigger.dart';
+import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
@@ -10,10 +10,10 @@ import 'package:clock_app/settings/types/settings_manager.dart';
 void scheduleAlarm(int id, DateTime startDate, int ringtoneIndex,
     {Duration repeatInterval = Duration.zero}) {
   cancelAlarm(id);
-  AndroidAlarmManager.oneShotAt(
+  AndroidAlarmManager.oneShotAtTime(
     startDate,
     id,
-    handleAlarmTrigger,
+    triggerAlarm,
     allowWhileIdle: true,
     alarmClock: true,
     exact: true,

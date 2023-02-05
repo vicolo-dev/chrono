@@ -16,6 +16,7 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> _onNotificationCreatedMethod(
       ReceivedNotification receivedNotification) async {
+    print("Notification created: ${receivedNotification.id}");
     switch (receivedNotification.channelKey) {
       case alarmNotificationChannelKey:
         AlarmNotificationManager.handleNotificationCreated(
@@ -29,6 +30,7 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> _onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
+    print("Notification displayed: ${receivedNotification.id}");
     // Your code goes here
   }
 
@@ -36,6 +38,7 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> _onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
+    print("Dismiss action received: ${receivedAction.id}");
     // Your code goes here
   }
 
@@ -43,6 +46,7 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> _onActionReceivedMethod(
       ReceivedAction receivedAction) async {
+    print("Action received: ${receivedAction.id}");
     AlarmNotificationManager.handleNotificationAction(receivedAction);
   }
 }

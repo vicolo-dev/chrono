@@ -1,19 +1,29 @@
+import 'dart:io';
+
+import 'package:path/path.dart' as path;
+
+import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
-import 'package:clock_app/settings/types/settings_manager.dart';
 
 List<T> loadList<T extends JsonSerializable>(String key) {
-  final String? encodedList = SettingsManager.preferences?.getString(key);
-
-  if (encodedList == null) {
+  String appDataDirectory = getAppDataDirectoryPathSync();
+  File file = File(path.join(appDataDirectory, '$key.txt'));
+  try {
+    final String encodedList = file.readAsStringSync();
+    return decodeList<T>(encodedList);
+  } catch (e) {
+    print(e);
     return [];
   }
-
-  return decodeList<T>(encodedList);
 }
 
 Future<void> saveList<T extends JsonSerializable>(
     String key, List<T> list) async {
-  // print('saved: ${encodeList(list)}');
-  await SettingsManager.preferences?.setString(key, encodeList(list));
-  // await SettingsManager.reload();
+  String appDataDirectory = getAppDataDirectoryPathSync();
+  File file = File(path.join(appDataDirectory, '$key.txt'));
+  if (!file.existsSync()) {
+    file.createSync();
+  }
+  print('Saving list to ${file.path}...');
+  file.writeAsString(encodeList(list), mode: FileMode.writeOnly);
 }

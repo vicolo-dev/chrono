@@ -20,7 +20,7 @@ void handleBoot() async {
 
   initializeSettings();
 
-  List<Alarm> alarms = loadList("alarms");
+  List<Alarm> alarms = await loadList("alarms");
 
   alarms.where((alarm) => alarm.enabled).forEach((alarm) {
     if (alarm.isRepeating) {

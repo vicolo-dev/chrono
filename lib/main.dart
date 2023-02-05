@@ -1,4 +1,7 @@
 import 'dart:core';
+import 'dart:developer';
+import 'dart:isolate';
+import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:flutter/material.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
@@ -25,6 +28,8 @@ import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  print("Main Isolate: ${Service.getIsolateID(Isolate.current)}");
+
   initializeTimeZones();
   await initializeAppDataDirectory();
   await initializeSettings();
@@ -35,6 +40,7 @@ void main() async {
   await BootReceiver.initialize(handleBoot);
   await initializeNotifications();
   AppVisibilityListener.initialize();
+  await LockScreenFlagManager.initialize();
 
   runApp(const App());
 
@@ -82,8 +88,7 @@ class _AppState extends State<App> {
                     settings.arguments as ReceivedAction;
                 int scheduleId =
                     int.parse((receivedAction.payload?['scheduleId'])!);
-                return AlarmNotificationScreen(
-                    alarm: getAlarmByScheduleId(scheduleId));
+                return AlarmNotificationScreen(scheduleId: scheduleId);
               },
             );
 

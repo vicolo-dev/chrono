@@ -1,5 +1,6 @@
 import 'package:clock_app/alarm/data/alarm_notification_channel.dart';
-import 'package:clock_app/alarm/logic/handle_alarm_trigger.dart';
+import 'package:clock_app/alarm/logic/alarm_storage.dart';
+import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_notification_manager.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
@@ -11,10 +12,10 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 class AlarmNotificationScreen extends StatefulWidget {
   const AlarmNotificationScreen({
     Key? key,
-    required this.alarm,
+    required this.scheduleId,
   }) : super(key: key);
 
-  final Alarm alarm;
+  final int scheduleId;
 
   @override
   State<AlarmNotificationScreen> createState() =>
@@ -22,9 +23,12 @@ class AlarmNotificationScreen extends StatefulWidget {
 }
 
 class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
+  late Alarm alarm;
+
   @override
   void initState() {
     super.initState();
+    alarm = getAlarmByScheduleId(widget.scheduleId);
   }
 
   @override
@@ -37,7 +41,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClockDisplay(
-              dateTime: widget.alarm.timeOfDay.toDateTime(),
+              dateTime: alarm.timeOfDay.toDateTime(),
               horizontalAlignment: ElementAlignment.center,
             ),
             Row(
@@ -52,7 +56,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    AlarmNotificationManager.dismissAlarm();
+                    AlarmNotificationManager.dismissAlarm(widget.scheduleId);
                     // Navigator.pop(context);
                   },
                   child:

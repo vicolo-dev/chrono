@@ -1,6 +1,11 @@
+import 'dart:developer';
+import 'dart:isolate';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/data/alarm_notification_channel.dart';
+import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
@@ -49,22 +54,37 @@ class AlarmNotificationManager {
           showInCompactView: true,
           key: _snoozeActionKey,
           label: snoozeActionLabel,
-          actionType: ActionType.Default,
+          actionType: ActionType.SilentAction,
           autoDismissible: true,
         ),
         NotificationActionButton(
           showInCompactView: true,
           key: _dismissActionKey,
           label: dismissActionLabel,
-          actionType: ActionType.Default,
+          actionType: ActionType.SilentAction,
           autoDismissible: true,
         ),
       ],
     );
   }
 
-  static void dismissAlarm() {
-    AlarmAudioPlayer.stop();
+  static Future<void> dismissAlarm(int scheduleId) async {
+    print("Dismiss Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+
+    // print("android initializeL : ${await AndroidAlarmManager.initialize()}");
+
+    print("alaaaarm initializeL : ${await AndroidAlarmManager.oneShotAfterDelay(
+      const Duration(seconds: 0),
+      scheduleId,
+      stopAlarm,
+      exact: true,
+      useRTC: true,
+      alarmClock: true,
+    )}");
+
+    await SettingsManager.initialize();
+    await LockScreenFlagManager.clearLockScreenFlags();
+
     AwesomeNotifications().cancel(_notificationId);
     AndroidForegroundService.stopForeground(_notificationId);
 
@@ -72,59 +92,43 @@ class AlarmNotificationManager {
       App.navigatorKey.currentState?.pop();
     }
 
-    if (_fgbgType == FGBGType.background) {
+    if (_fgbgType == FGBGType.background &&
+        AppVisibilityListener.state == FGBGType.foreground) {
       MoveToBackground.moveTaskToBack();
     }
+
+    SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
   }
 
   static void handleNotificationCreated(
       ReceivedNotification receivedNotification) {
-    int ringtoneIndex =
-        int.parse((receivedNotification.payload?['ringtoneIndex']) ?? '0');
-    AlarmAudioPlayer.play(ringtoneIndex);
-
-    int scheduleId =
-        int.parse((receivedNotification.payload?['scheduleId']) ?? '-1');
-
-    List<Alarm> alarms = loadList("alarms");
-    int alarmIndex =
-        alarms.indexWhere((alarm) => alarm.activeSchedule.hasId(scheduleId));
-
-    // print('scheduleId: $scheduleId');
-    // print('alarms: ${encodeList(alarms)}');
-    // print('alarmIndex: $alarmIndex');
-    Alarm alarm = alarms[alarmIndex];
-
-    if (alarm.isRepeating) {
-      alarm.schedule();
-    } else {
-      alarm.disable();
-    }
-
-    alarms[alarmIndex] = alarm;
-    saveList("alarms", alarms);
-
     SettingsManager.notifyListeners("alarms");
 
     _fgbgType = AppVisibilityListener.state;
 
     print("AAAAAAAAAAAAA $_fgbgType");
+
+    SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
   }
 
   static Future<void> handleNotificationAction(
       ReceivedAction receivedAction) async {
+    print(
+        "Notification Action Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+
     switch (receivedAction.buttonKeyPressed) {
       case _snoozeActionKey:
-        await clearLockScreenFlags();
         break;
 
       case _dismissActionKey:
-        await clearLockScreenFlags();
-        dismissAlarm();
+        int scheduleId =
+            int.parse(receivedAction.payload?['scheduleId'] ?? "0");
+        print("DISMISS ALARM: $scheduleId");
+        dismissAlarm(scheduleId);
         break;
 
       default:
-        await setLockScreenFlags();
+        await LockScreenFlagManager.setLockScreenFlags();
         App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
           Routes.alarmNotificationRoute,
           (route) {

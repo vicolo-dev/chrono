@@ -1,5 +1,5 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/handle_alarm_trigger.dart';
+import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/types/schedule_type.dart';

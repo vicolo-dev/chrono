@@ -21,12 +21,17 @@ class AlarmScreen extends StatefulWidget {
 class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
   List<Alarm> _alarms = [];
 
+  void loadAlarms() {
+    setState(() {
+      _alarms = loadList('alarms');
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    SettingsManager.addOnChangeListener(
-        "alarms", () => setState(() => _alarms = loadList('alarms')));
-    setState(() => _alarms = loadList('alarms'));
+    SettingsManager.addOnChangeListener("alarms", loadAlarms);
+    loadAlarms();
   }
 
   @override
@@ -45,15 +50,15 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
   @override
   void didPush() async {
     print("didPush");
-    setState(() => _alarms = loadList('alarms'));
+    loadAlarms();
+
     // Route was pushed onto navigator and is now topmost route.
   }
 
   @override
   void didPopNext() async {
     print("didPopNext");
-    setState(() => _alarms = loadList('alarms'));
-
+    loadAlarms();
     // Covering route was popped off the navigator.
   }
 
