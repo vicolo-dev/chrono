@@ -15,8 +15,8 @@ import 'package:clock_app/settings/types/settings_manager.dart';
 void triggerAlarm(int num, Map<String, dynamic> params) async {
   await initializeAppDataDirectory();
   await SettingsManager.initialize();
-  await initializeAudioSession();
   await AlarmAudioPlayer.initialize();
+  await initializeAudioSession();
 
   // NotificationController.setListeners();
 

@@ -8,7 +8,7 @@ import Foundation
 import audio_session
 import awesome_notifications
 import just_audio
-import path_provider_macos
+import path_provider_foundation
 import shared_preferences_macos
 import sqflite
 

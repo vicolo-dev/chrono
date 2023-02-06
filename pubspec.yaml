@@ -59,6 +59,7 @@ dependencies:
   flutter_windowmanager: ^0.2.0
   flutter_fgbg: ^0.2.2
   move_to_background: ^1.0.2
+  disable_battery_optimization: ^1.1.0+1
 
 dev_dependencies:
   flutter_test:

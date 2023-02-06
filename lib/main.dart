@@ -35,9 +35,9 @@ void main() async {
   await initializeAppDataDirectory();
   await initializeSettings();
   await initializeDatabases();
-  await initializeAudioSession();
   await AndroidAlarmManager.initialize();
   await AlarmAudioPlayer.initialize();
+  await initializeAudioSession();
   await BootReceiver.initialize(handleBoot);
   await initializeNotifications();
   AppVisibilityListener.initialize();
