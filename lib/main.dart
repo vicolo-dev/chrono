@@ -85,7 +85,6 @@ class _AppState extends State<App> {
       title: 'Clock',
       theme: theme,
       initialRoute: Routes.rootRoute,
-      navigatorObservers: [routeObserver],
       onGenerateRoute: (settings) {
         Routes.setCurrentRoute(settings.name ?? Routes.rootRoute);
         switch (settings.name) {

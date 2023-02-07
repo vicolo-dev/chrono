@@ -40,6 +40,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
         actions: [
           TextButton(
               onPressed: () {
+                print("Setting changed: ${_alarm.settings.toJson()}");
                 Navigator.pop(context, _alarm);
               },
               child: const Text("Save"))

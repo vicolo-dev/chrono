@@ -26,6 +26,7 @@ class SelectSettingCard<T> extends StatelessWidget {
       onChange: (value) {
         setting.setValue(value);
         onChanged?.call();
+        print("${setting.name}: $value");
       },
       onSelect: setting.onSelectOption,
     );

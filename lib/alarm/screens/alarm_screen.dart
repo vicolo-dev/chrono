@@ -18,7 +18,7 @@ class AlarmScreen extends StatefulWidget {
   State<AlarmScreen> createState() => _AlarmScreenState();
 }
 
-class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
+class _AlarmScreenState extends State<AlarmScreen> {
   List<Alarm> _alarms = [];
 
   void loadAlarms() {
@@ -35,31 +35,9 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
-  }
-
-  @override
   void dispose() {
-    routeObserver.unsubscribe(this);
     SettingsManager.removeOnChangeListener("alarms");
     super.dispose();
-  }
-
-  @override
-  void didPush() async {
-    print("didPush");
-    loadAlarms();
-
-    // Route was pushed onto navigator and is now topmost route.
-  }
-
-  @override
-  void didPopNext() async {
-    print("didPopNext");
-    loadAlarms();
-    // Covering route was popped off the navigator.
   }
 
   _handleReorderAlarms(int oldIndex, int newIndex) {
@@ -100,6 +78,7 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
 
   _handleCustomizeAlarm(int index) async {
     Alarm? newAlarm = await _openCustomizeAlarmScreen(_alarms[index]);
+    print("newAlarm: ${newAlarm?.toJson()}");
 
     if (newAlarm == null) return;
 
