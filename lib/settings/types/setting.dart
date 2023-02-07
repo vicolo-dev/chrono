@@ -1,17 +1,41 @@
 import 'package:flutter/material.dart';
 
-abstract class SettingItem {}
-
-class SettingGroup implements SettingItem {
+abstract class SettingItem {
   String name;
+
+  SettingItem(this.name);
+
+  dynamic serialize();
+
+  void deserialize(dynamic value);
+}
+
+class SettingGroup extends SettingItem {
   String description;
   IconData icon;
   List<String> summarySettings;
 
   List<Setting> settings;
 
-  SettingGroup(this.name, this.settings, this.icon,
-      {this.summarySettings = const [], this.description = ""});
+  SettingGroup(String name, this.settings, this.icon,
+      {this.summarySettings = const [], this.description = ""})
+      : super(name);
+
+  @override
+  dynamic serialize() {
+    Map<String, dynamic> json = {};
+    for (var setting in settings) {
+      json[setting.name] = setting.serialize();
+    }
+    return json;
+  }
+
+  @override
+  void deserialize(dynamic value) {
+    for (var setting in settings) {
+      setting.deserialize(value[setting.name]);
+    }
+  }
 }
 
 class SettingEnableCondition {
@@ -21,16 +45,16 @@ class SettingEnableCondition {
   SettingEnableCondition(this.settingName, this.value);
 }
 
-abstract class Setting<T> implements SettingItem {
-  String name;
+abstract class Setting<T> extends SettingItem {
   String description;
   T _value;
   List<SettingEnableCondition> enableConditions;
   void Function(T)? onChange;
 
-  Setting(this.name, this.description, T defaultValue, this.onChange,
+  Setting(String name, this.description, T defaultValue, this.onChange,
       this.enableConditions)
-      : _value = defaultValue;
+      : _value = defaultValue,
+        super(name);
 
   void setValue(T value) {
     _value = value;
@@ -39,10 +63,12 @@ abstract class Setting<T> implements SettingItem {
 
   dynamic get value => _value;
 
+  @override
   dynamic serialize() {
     return _value;
   }
 
+  @override
   void deserialize(dynamic value) {
     _value = value;
   }

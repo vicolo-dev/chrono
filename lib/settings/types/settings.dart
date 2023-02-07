@@ -27,19 +27,15 @@ class Settings {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-    for (var setting in items) {
-      if (setting is Setting) {
-        json[setting.name] = setting.serialize();
-      }
+    for (var item in items) {
+      json[item.name] = item.serialize();
     }
     return json;
   }
 
   load(Map<String, dynamic> json) {
-    for (var setting in items) {
-      if (setting is Setting) {
-        setting.deserialize(json[setting.name]);
-      }
+    for (var item in items) {
+      item.deserialize(json[item.name]);
     }
   }
 }
