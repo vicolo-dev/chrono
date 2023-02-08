@@ -25,8 +25,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: ListView(
-        children: [...getSettingWidgets(appSettings)],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: ListView(
+          children: [...getSettingWidgets(appSettings)],
+        ),
       ),
     );
   }

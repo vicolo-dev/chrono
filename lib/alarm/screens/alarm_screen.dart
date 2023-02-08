@@ -9,6 +9,7 @@ import 'package:clock_app/common/widgets/list_footer.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
 
 class AlarmScreen extends StatefulWidget {
@@ -67,25 +68,42 @@ class _AlarmScreenState extends State<AlarmScreen> {
     saveList('alarms', _alarms);
   }
 
+  _showNextScheduleSnackBar(Alarm alarm) {
+    Future.delayed(Duration.zero).then((value) {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      Duration etaNextAlarm =
+          alarm.nextScheduleDateTime.difference(DateTime.now().toLocal());
+
+      int hours = etaNextAlarm.inHours;
+      int minutes = etaNextAlarm.inMinutes % 60;
+
+      minutes = minutes == 0 ? 1 : minutes;
+
+      String hourTextSuffix = hours <= 1 ? "hour" : "hours";
+      String minuteTextSuffix = minutes % 60 <= 1 ? "minute" : "minutes";
+
+      String hoursText = hours == 0 ? "" : "$hours $hourTextSuffix and ";
+      String minutesText = "$minutes $minuteTextSuffix";
+
+      SnackBar snackBar = SnackBar(
+        content: Text('Alarm will ring in $hoursText$minutesText'),
+        margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
+        shape: defaultShape,
+        elevation: 2,
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+  }
+
   _handleAddAlarm(Alarm alarm) {
     alarm.schedule();
     setState(() {
       _alarms.add(alarm);
     });
 
-    saveList('alarms', _alarms);
-  }
-
-  _handleCustomizeAlarm(int index) async {
-    Alarm? newAlarm = await _openCustomizeAlarmScreen(_alarms[index]);
-    print("newAlarm: ${newAlarm?.toJson()}");
-
-    if (newAlarm == null) return;
-
-    newAlarm.schedule();
-    setState(() {
-      _alarms[index] = newAlarm;
-    });
+    _showNextScheduleSnackBar(alarm);
 
     saveList('alarms', _alarms);
   }
@@ -96,6 +114,21 @@ class _AlarmScreenState extends State<AlarmScreen> {
       MaterialPageRoute(
           builder: (context) => CustomizeAlarmScreen(initialAlarm: alarm)),
     );
+  }
+
+  _handleCustomizeAlarm(int index) async {
+    Alarm? newAlarm = await _openCustomizeAlarmScreen(_alarms[index]);
+
+    if (newAlarm == null) return;
+
+    newAlarm.schedule();
+    setState(() {
+      _alarms[index] = newAlarm;
+    });
+
+    _showNextScheduleSnackBar(newAlarm);
+
+    saveList('alarms', _alarms);
   }
 
   @override

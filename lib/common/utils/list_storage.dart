@@ -10,7 +10,6 @@ List<T> loadList<T extends JsonSerializable>(String key) {
   File file = File(path.join(appDataDirectory, '$key.txt'));
   try {
     final String encodedList = file.readAsStringSync();
-    print(encodedList);
     return decodeList<T>(encodedList);
   } catch (e) {
     print(e);
@@ -25,8 +24,6 @@ Future<void> saveList<T extends JsonSerializable>(
   if (!file.existsSync()) {
     file.createSync();
   }
-  print('Saving list to ${file.path}...');
   String encodedList = encodeList(list);
-  print(encodedList);
   file.writeAsString(encodedList, mode: FileMode.writeOnly);
 }
