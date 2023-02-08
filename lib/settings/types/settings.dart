@@ -5,6 +5,10 @@ class Settings {
 
   Settings(this.items);
 
+  Settings copy() {
+    return Settings(items.map((item) => item.copy()).toList());
+  }
+
   Setting getSetting(String name) {
     return items
         .whereType<Setting>()
@@ -33,7 +37,7 @@ class Settings {
     return json;
   }
 
-  load(Map<String, dynamic> json) {
+  void load(Map<String, dynamic> json) {
     for (var item in items) {
       item.deserialize(json[item.name]);
     }

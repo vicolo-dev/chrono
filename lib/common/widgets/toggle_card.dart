@@ -43,8 +43,10 @@ class _ToggleCardState<T> extends State<ToggleCard<T>> {
           renderBorder: false,
           borderRadius: defaultBorderRadius,
           constraints: BoxConstraints(
-            minHeight: (MediaQuery.of(context).size.width - 40) / 7,
-            minWidth: (MediaQuery.of(context).size.width - 40) / 7,
+            minHeight: (MediaQuery.of(context).size.width - 40) /
+                widget.options.length,
+            minWidth: (MediaQuery.of(context).size.width - 40) /
+                widget.options.length,
           ),
           isSelected: widget.selectedItems,
           onPressed: widget.onChange,

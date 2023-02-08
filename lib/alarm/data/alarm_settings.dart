@@ -2,6 +2,7 @@ import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/alarm/types/schedule_type.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -13,7 +14,7 @@ List<SelectSettingOption<int>> getRingtoneOptions() {
       .toList();
 }
 
-List<SettingItem> alarmDefaultSettings = [
+Settings alarmDefaultSettings = Settings([
   SelectSetting<Type>(
     "Schedule Type",
     [
@@ -64,7 +65,7 @@ List<SettingItem> alarmDefaultSettings = [
         "Melody",
         "Vibration",
       ]),
-];
+]);
 
 
 // const Map<ScheduleTypeName, ScheduleType> scheduleTypes = {

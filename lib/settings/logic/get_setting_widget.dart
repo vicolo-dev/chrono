@@ -43,6 +43,7 @@ Widget? getSettingWidget(
     );
   } else if (item is Setting) {
     if (item.enableConditions.isNotEmpty) {
+      print("Conditions: ${item.enableConditions}");
       bool enabled = true;
       for (var condition in item.enableConditions) {
         Setting setting = settings.getSetting(condition.settingName);

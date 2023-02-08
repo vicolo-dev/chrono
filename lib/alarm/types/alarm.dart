@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 class Alarm extends JsonSerializable {
   bool _enabled = true;
   TimeOfDay _timeOfDay;
-  Settings _settings = Settings(alarmDefaultSettings);
+  Settings _settings = alarmDefaultSettings.copy();
 
   late List<AlarmSchedule> _schedules;
 
@@ -128,7 +128,7 @@ class Alarm extends JsonSerializable {
   Alarm.fromJson(Map<String, dynamic> json)
       : _timeOfDay = TimeOfDayUtils.fromJson(json['timeOfDay']),
         _enabled = json['enabled'],
-        _settings = Settings(alarmDefaultSettings) {
+        _settings = alarmDefaultSettings.copy() {
     _settings.load(json['settings']);
     _schedules = [
       OnceAlarmSchedule.fromJson(json['schedules'][0], _settings),

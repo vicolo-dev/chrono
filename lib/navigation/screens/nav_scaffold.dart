@@ -17,6 +17,8 @@ class _NavScaffoldState extends State<NavScaffold> {
   int _selectedTabIndex = 0;
 
   void _onTabSelected(int index) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
     setState(() {
       _selectedTabIndex = index;
     });
@@ -35,6 +37,7 @@ class _NavScaffoldState extends State<NavScaffold> {
         actions: [
           IconButton(
             onPressed: () {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
               Navigator.push(
                   context,
                   MaterialPageRoute(

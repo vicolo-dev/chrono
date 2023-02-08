@@ -5,6 +5,8 @@ abstract class SettingItem {
 
   SettingItem(this.name);
 
+  SettingItem copy();
+
   dynamic serialize();
 
   void deserialize(dynamic value);
@@ -15,11 +17,22 @@ class SettingGroup extends SettingItem {
   IconData icon;
   List<String> summarySettings;
 
-  List<Setting> settings;
+  List<SettingItem> settings;
 
   SettingGroup(String name, this.settings, this.icon,
       {this.summarySettings = const [], this.description = ""})
       : super(name);
+
+  @override
+  SettingGroup copy() {
+    return SettingGroup(
+      name,
+      settings.map((setting) => setting.copy()).toList(),
+      icon,
+      summarySettings: summarySettings,
+      description: description,
+    );
+  }
 
   @override
   dynamic serialize() {
@@ -82,6 +95,17 @@ class SwitchSetting extends Setting<bool> {
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
+
+  @override
+  SwitchSetting copy() {
+    return SwitchSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+    );
+  }
 }
 
 class NumberSetting extends Setting<double> {
@@ -92,6 +116,17 @@ class NumberSetting extends Setting<double> {
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
+
+  @override
+  NumberSetting copy() {
+    return NumberSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+    );
+  }
 }
 
 class ColorSetting extends Setting<Color> {
@@ -112,6 +147,17 @@ class ColorSetting extends Setting<Color> {
   void deserialize(dynamic value) {
     _value = Color(value);
   }
+
+  @override
+  ColorSetting copy() {
+    return ColorSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+    );
+  }
 }
 
 class StringSetting extends Setting<String> {
@@ -122,6 +168,17 @@ class StringSetting extends Setting<String> {
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
+
+  @override
+  StringSetting copy() {
+    return StringSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+    );
+  }
 }
 
 class SliderSetting extends Setting<double> {
@@ -137,6 +194,19 @@ class SliderSetting extends Setting<double> {
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
+
+  @override
+  SliderSetting copy() {
+    return SliderSetting(
+      name,
+      min,
+      max,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+    );
+  }
 }
 
 class SelectSetting<T> extends Setting<int> {
@@ -169,6 +239,19 @@ class SelectSetting<T> extends Setting<int> {
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
+
+  @override
+  SelectSetting<T> copy() {
+    return SelectSetting(
+      name,
+      _options,
+      defaultValue: _value,
+      onChange: onChange,
+      onSelect: onSelect,
+      description: description,
+      enableConditions: enableConditions,
+    );
+  }
 }
 
 class DynamicSelectSetting<T> extends SelectSetting<T> {
@@ -194,6 +277,19 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
           description: description,
           enableConditions: enableConditions,
         );
+
+  @override
+  DynamicSelectSetting<T> copy() {
+    return DynamicSelectSetting(
+      name,
+      optionsGetter,
+      onChange: onChange,
+      onSelect: onSelect,
+      description: description,
+      defaultValue: _value,
+      enableConditions: enableConditions,
+    );
+  }
 }
 
 class ToggleSetting<T> extends Setting<List<bool>> {
@@ -217,6 +313,17 @@ class ToggleSetting<T> extends Setting<List<bool>> {
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, List.generate(options.length, (index) => false),
             onChange, enableConditions);
+
+  @override
+  ToggleSetting<T> copy() {
+    return ToggleSetting(
+      name,
+      options,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+    );
+  }
 
   void toggle(int index) {
     _value[index] = !_value[index];
@@ -242,6 +349,17 @@ class DateTimeSetting extends Setting<DateTime> {
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
+
+  @override
+  DateTimeSetting copy() {
+    return DateTimeSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+    );
+  }
 }
 
 class ToggleSettingOption<T> {

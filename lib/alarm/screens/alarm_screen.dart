@@ -91,6 +91,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
         shape: defaultShape,
         elevation: 2,
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        dismissDirection: DismissDirection.none,
+        // width: MediaQuery.of(context).size.width - (64 + 16),
+        // behavior: SnackBarBehavior.floating,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -109,6 +112,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
   }
 
   Future<Alarm?> _openCustomizeAlarmScreen(Alarm alarm) async {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
     return await Navigator.push(
       context,
       MaterialPageRoute(
@@ -174,7 +179,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
           onReorder: _handleReorderAlarms,
         ),
         FAB(
-          onPressed: () => selectTime(_openCustomizeAlarmScreen),
+          onPressed: () {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            selectTime(_openCustomizeAlarmScreen);
+          },
         )
       ],
     );

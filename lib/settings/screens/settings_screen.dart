@@ -18,6 +18,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // List<City> _filteredCities = [];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
