@@ -25,6 +25,8 @@ class AlarmAudioPlayer {
   }
 
   static void stop() {
+    print("Is Player Playing: ${_player?.playing}");
+    print("Is Player Null: ${_player == null}");
     _player?.stop();
     _lastPlayedRingtoneIndex = -1;
   }

@@ -68,36 +68,38 @@ class AlarmNotificationManager {
     );
   }
 
-  static Future<void> dismissAlarm(int scheduleId) async {
+  static Future<void> dismissAlarm(int scheduleId,
+      {bool replace = false}) async {
     print("Dismiss Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
 
-    // print("android initializeL : ${await AndroidAlarmManager.initialize()}");
+    await AwesomeNotifications().cancel(_notificationId);
+    await AndroidForegroundService.stopForeground(_notificationId);
 
-    await AndroidAlarmManager.oneShotAfterDelay(
-      const Duration(seconds: 0),
-      scheduleId,
-      stopAlarm,
-      exact: true,
-      useRTC: true,
-      alarmClock: true,
-    );
+    if (!replace) {
+      await AndroidAlarmManager.oneShotAfterDelay(
+        const Duration(seconds: 0),
+        scheduleId,
+        stopAlarm,
+        exact: true,
+        useRTC: true,
+        alarmClock: true,
+      );
 
-    await SettingsManager.initialize();
-    await LockScreenFlagManager.clearLockScreenFlags();
+      await SettingsManager.initialize();
+      await LockScreenFlagManager.clearLockScreenFlags();
 
-    AwesomeNotifications().cancel(_notificationId);
-    AndroidForegroundService.stopForeground(_notificationId);
+      if (Routes.currentRoute == Routes.alarmNotificationRoute) {
+        App.navigatorKey.currentState?.pop();
+        Routes.setCurrentRoute(Routes.rootRoute);
+      }
 
-    if (Routes.currentRoute == Routes.alarmNotificationRoute) {
-      App.navigatorKey.currentState?.pop();
+      if (_fgbgType == FGBGType.background &&
+          AppVisibilityListener.state == FGBGType.foreground) {
+        MoveToBackground.moveTaskToBack();
+      }
+
+      SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
     }
-
-    if (_fgbgType == FGBGType.background &&
-        AppVisibilityListener.state == FGBGType.foreground) {
-      MoveToBackground.moveTaskToBack();
-    }
-
-    SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
   }
 
   static void handleNotificationCreated(
@@ -123,12 +125,15 @@ class AlarmNotificationManager {
       case _dismissActionKey:
         int scheduleId =
             int.parse(receivedAction.payload?['scheduleId'] ?? "0");
-        print("DISMISS ALARM: $scheduleId");
+        // print("DISMISS ALARM: $scheduleId");
         dismissAlarm(scheduleId);
         break;
 
       default:
         await LockScreenFlagManager.setLockScreenFlags();
+        if (Routes.currentRoute == Routes.alarmNotificationRoute) {
+          App.navigatorKey.currentState?.pop();
+        }
         App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
           Routes.alarmNotificationRoute,
           (route) {

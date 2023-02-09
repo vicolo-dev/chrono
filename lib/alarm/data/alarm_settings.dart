@@ -1,6 +1,5 @@
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/alarm/types/alarm_schedules.dart';
-import 'package:clock_app/alarm/types/schedule_type.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:flutter/material.dart';
@@ -66,21 +65,3 @@ Settings alarmDefaultSettings = Settings([
         "Vibration",
       ]),
 ]);
-
-
-// const Map<ScheduleTypeName, ScheduleType> scheduleTypes = {
-//   OnceSchedu:
-//       ScheduleType("Once", "Will ring at the next occurrence of the time."),
-//   ScheduleTypeName.daily: ScheduleType("Daily", "Will ring every day"),
-//   ScheduleTypeName.weekly: ScheduleType(
-//       "On Specific Week Days", "Will repeat on the specified week days"),
-//   ScheduleTypeName.dates:
-//       ScheduleType("On Specific Dates", "Will repeat on the specified dates"),
-//   ScheduleTypeName.range:
-//       ScheduleType("Date Range", "Will repeat during the specified date range"),
-// };
-  // ScheduleType("Once", "Will ring at the next occurrence of the time."),
-  // ScheduleType("Daily", "Will ring every day"),
-  // ScheduleType("On Specified Days", "Will repeat on the specified week days"),
-  // ScheduleType("Advanced", "Set your owns rules for the schedule"),
-

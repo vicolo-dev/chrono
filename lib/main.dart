@@ -43,15 +43,23 @@ void main() async {
   AppVisibilityListener.initialize();
   await LockScreenFlagManager.initialize();
 
-  String appDataDirectory = await getAppDataDirectoryPath();
+  // String appDataDirectory = await getAppDataDirectoryPath();
 
-  // log something to a file in the app's data directory
-  try {
-    print(
-        "FileContents: ${File('$appDataDirectory/log-dart.txt').readAsStringSync()}");
-  } catch (e) {
-    print("Error: $e");
+  // // log something to a file in the app's data directory
+  // try {
+  //   print(
+  //       "FileContents: ${File('$appDataDirectory/log-dart.txt').readAsStringSync()}");
+  // } catch (e) {
+  //   print("Error: $e");
+  // }
+
+  String appDataDirectory = await getAppDataDirectoryPath();
+  String path = '$appDataDirectory/ringing-alarm.txt';
+  File file = File(path);
+  if (!file.existsSync()) {
+    file.createSync();
   }
+  file.writeAsStringSync("", mode: FileMode.writeOnly);
 
   runApp(const App());
 

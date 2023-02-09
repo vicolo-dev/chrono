@@ -77,16 +77,16 @@ class _AlarmScreenState extends State<AlarmScreen> {
       int hours = etaNextAlarm.inHours;
       int minutes = etaNextAlarm.inMinutes % 60;
 
-      minutes = minutes == 0 ? 1 : minutes;
-
       String hourTextSuffix = hours <= 1 ? "hour" : "hours";
       String minuteTextSuffix = minutes % 60 <= 1 ? "minute" : "minutes";
 
       String hoursText = hours == 0 ? "" : "$hours $hourTextSuffix and ";
-      String minutesText = "$minutes $minuteTextSuffix";
+      String minutesText = minutes == 0
+          ? "in less than 1 minute"
+          : "$minutes $minuteTextSuffix from now";
 
       SnackBar snackBar = SnackBar(
-        content: Text('Alarm will ring in $hoursText$minutesText'),
+        content: Text('Alarm will ring $hoursText$minutesText'),
         margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
         shape: defaultShape,
         elevation: 2,

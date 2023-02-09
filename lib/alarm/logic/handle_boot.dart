@@ -17,22 +17,4 @@ void handleBoot() async {
       .writeAsStringSync(message, mode: FileMode.append);
 
   print(message);
-
-  // initializeSettings();
-
-  // List<Alarm> alarms = await loadList("alarms");
-
-  // alarms.where((alarm) => alarm.enabled).forEach((alarm) {
-  //   if (alarm.isRepeating) {
-  //     alarm.schedule();
-  //   } else {
-  //     DateTime nextScheduleDateTime =
-  //         alarm.activeSchedule.alarmRunners[0].nextScheduleDateTime;
-  //     if (nextScheduleDateTime.isBefore(DateTime.now())) {
-  //       alarm.disable();
-  //     }
-  //   }
-  // });
-
-  // saveList("alarms", alarms);
 }

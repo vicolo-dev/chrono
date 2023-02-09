@@ -17,9 +17,9 @@ class LockScreenFlagManager {
   }
 
   static Future<void> setLockScreenFlags() async {
-    print("Set Flags");
+    // print("Set Flags");
     if (_isLockScreenFlagsSet) {
-      print("Set Flags (Already Set)");
+      // print("Set Flags (Already Set)");
       return;
     }
     await FlutterWindowManager.addFlags(
@@ -34,9 +34,9 @@ class LockScreenFlagManager {
   }
 
   static Future<void> clearLockScreenFlags() async {
-    print("Clear Flags");
+    // print("Clear Flags");
     if (!_isLockScreenFlagsSet) {
-      print("Clear Flags (Already Cleared)");
+      // print("Clear Flags (Already Cleared)");
       return;
     }
     await FlutterWindowManager.clearFlags(
