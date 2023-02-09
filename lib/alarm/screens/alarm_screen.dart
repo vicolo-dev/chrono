@@ -11,6 +11,7 @@ import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({Key? key}) : super(key: key);
@@ -160,23 +161,25 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
     return Stack(
       children: [
-        ReorderableListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          proxyDecorator: reorderableListDecorator,
-          itemCount: _alarms.length,
-          itemBuilder: (BuildContext context, int index) {
-            return AlarmCard(
-              key: ValueKey(_alarms[index]),
-              alarm: _alarms[index],
-              onTap: () => _handleCustomizeAlarm(index),
-              onDelete: () => _handleDeleteAlarm(index),
-              onEnabledChange: (bool value) =>
-                  _handleEnableChangeAlarm(index, value),
-            );
-          },
-          footer:
-              const ListFooter(), // Allows the last item to not be covered by FAB
-          onReorder: _handleReorderAlarms,
+        SlidableAutoCloseBehavior(
+          child: ReorderableListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            proxyDecorator: reorderableListDecorator,
+            itemCount: _alarms.length,
+            itemBuilder: (BuildContext context, int index) {
+              return AlarmCard(
+                key: ValueKey(_alarms[index]),
+                alarm: _alarms[index],
+                onTap: () => _handleCustomizeAlarm(index),
+                onDelete: () => _handleDeleteAlarm(index),
+                onEnabledChange: (bool value) =>
+                    _handleEnableChangeAlarm(index, value),
+              );
+            },
+            footer:
+                const ListFooter(), // Allows the last item to not be covered by FAB
+            onReorder: _handleReorderAlarms,
+          ),
         ),
         FAB(
           onPressed: () {
