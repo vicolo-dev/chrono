@@ -24,6 +24,5 @@ Future<void> saveList<T extends JsonSerializable>(
     file.createSync();
   }
   String encodedList = encodeList(list);
-  print('Saving list to file: $encodedList');
   file.writeAsString(encodedList, mode: FileMode.writeOnly);
 }

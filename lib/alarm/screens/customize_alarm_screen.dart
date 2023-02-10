@@ -41,54 +41,56 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
             },
             child: const Text("Save"))
       ]),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Column(
-                children: [
-                  GestureDetector(
-                    child: ClockDisplay(
-                      dateTime: _alarm.timeOfDay.toDateTime(),
-                      horizontalAlignment: ElementAlignment.center,
-                    ),
-                    onTap: () async {
-                      TimePickerResult? timePickerResult =
-                          await showTimePickerDialog(
-                        context: context,
-                        initialTime: _alarm.timeOfDay,
-                        helpText: "Select Time",
-                        cancelText: "Cancel",
-                        confirmText: "Save",
-                      );
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      child: ClockDisplay(
+                        dateTime: _alarm.timeOfDay.toDateTime(),
+                        horizontalAlignment: ElementAlignment.center,
+                      ),
+                      onTap: () async {
+                        TimePickerResult? timePickerResult =
+                            await showTimePickerDialog(
+                          context: context,
+                          initialTime: _alarm.timeOfDay,
+                          helpText: "Select Time",
+                          cancelText: "Cancel",
+                          confirmText: "Save",
+                        );
 
-                      if (timePickerResult != null) {
-                        setState(() {
-                          _alarm.setTimeOfDay(timePickerResult.timeOfDay);
-                        });
-                      }
-                    },
-                  ),
-                  Text(
-                    getAlarmDescriptionText(_alarm),
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: ColorTheme.textColorTertiary,
-                        ),
-                  ),
-                ],
+                        if (timePickerResult != null) {
+                          setState(() {
+                            _alarm.setTimeOfDay(timePickerResult.timeOfDay);
+                          });
+                        }
+                      },
+                    ),
+                    Text(
+                      getAlarmDescriptionText(_alarm),
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            color: ColorTheme.textColorTertiary,
+                          ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            ...getSettingWidgets(
-              _alarm.settings,
-              onChanged: () {
-                setState(() {});
-              },
-            ),
-          ],
+              const SizedBox(height: 8),
+              ...getSettingWidgets(
+                _alarm.settings,
+                onChanged: () {
+                  setState(() {});
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

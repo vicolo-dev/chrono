@@ -5,7 +5,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
 
   @override
-  Size get preferredSize => const Size(0, 64);
+  Size get preferredSize => const Size(0, 56);
 
   const TopBar({
     super.key,
@@ -21,6 +21,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: AppBar(
+          toolbarHeight: preferredSize.height,
           title: title,
           actions: actions,
           elevation: 0,

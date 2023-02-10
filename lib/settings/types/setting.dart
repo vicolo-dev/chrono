@@ -313,8 +313,13 @@ class ToggleSetting<T> extends Setting<List<bool>> {
     void Function(List<bool>)? onChange,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
-  }) : super(name, description, List.generate(options.length, (index) => false),
-            onChange, enableConditions);
+  }) : super(
+          name,
+          description,
+          List.generate(options.length, (index) => index == 0),
+          onChange,
+          enableConditions,
+        );
 
   @override
   ToggleSetting<T> copy() {
@@ -328,6 +333,9 @@ class ToggleSetting<T> extends Setting<List<bool>> {
   }
 
   void toggle(int index) {
+    if (_value.where((option) => option == true).length == 1 && _value[index]) {
+      return;
+    }
     _value[index] = !_value[index];
     onChange?.call(_value);
   }

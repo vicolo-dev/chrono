@@ -65,7 +65,7 @@ void stopAlarm(int scheduleId, Map<String, dynamic> params) async {
   AlarmAudioPlayer.stop();
   ringingAlarmId = -1;
 
-  if (AlarmStopAction.snooze.toString() == params['action']) {
+  if (params['action'] == AlarmStopAction.snooze.toString()) {
     Alarm alarm = getAlarmByScheduleId(scheduleId);
     Duration snoozeDuration = Duration(minutes: alarm.snoozeLength.floor());
     scheduleSnoozeAlarm(scheduleId, snoozeDuration);
