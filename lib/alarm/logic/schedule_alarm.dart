@@ -1,15 +1,14 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
-import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/utils/date_time.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:intl/intl.dart';
 
-void scheduleAlarm(int id, DateTime startDate, int ringtoneIndex,
-    {Duration repeatInterval = Duration.zero}) {
-  cancelAlarm(id);
+void scheduleAlarm(int id, DateTime startDate, String ringtoneUri,
+    {Duration repeatInterval = Duration.zero}) async {
+  await cancelAlarm(id);
+  print(
+      "Alarm $id scheduled for ${DateFormat("yyyy MM dd hh mm").format(startDate)}");
   AndroidAlarmManager.oneShotAtTime(
     startDate,
     id,
@@ -22,12 +21,12 @@ void scheduleAlarm(int id, DateTime startDate, int ringtoneIndex,
     params: <String, String>{
       'scheduleId': id.toString(),
       'timeOfDay': startDate.toTimeOfDay().encode(),
-      'ringtoneIndex': ringtoneIndex.toString(),
-      'alarms': SettingsManager.preferences?.getString("alarms") ?? "",
+      'ringtoneUri': ringtoneUri,
     },
   );
 }
 
-void cancelAlarm(int id) {
-  AndroidAlarmManager.cancel(id);
+Future<void> cancelAlarm(int id) async {
+  print("Alarm $id cancelled");
+  await AndroidAlarmManager.cancel(id);
 }

@@ -1,6 +1,3 @@
-import 'package:clock_app/navigation/types/app_visibility.dart';
-import 'package:flutter/cupertino.dart';
-
 class Routes {
   static const String rootRoute = '/';
   static const String alarmNotificationRoute = '/alarm-notification-screen';

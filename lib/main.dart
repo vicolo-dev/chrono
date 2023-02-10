@@ -1,7 +1,6 @@
 import 'dart:core';
-import 'dart:developer';
 import 'dart:io';
-import 'dart:isolate';
+import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +12,6 @@ import 'package:timezone/data/latest_all.dart';
 import 'package:clock_app/alarm/logic/handle_boot.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/common/data/paths.dart';
-import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/logic/notifications.dart';
@@ -23,19 +21,17 @@ import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
-import 'package:clock_app/alarm/logic/alarm_storage.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  print("Main Isolate: ${Service.getIsolateID(Isolate.current)}");
 
   initializeTimeZones();
   await initializeAppDataDirectory();
   await initializeSettings();
   await initializeDatabases();
   await AndroidAlarmManager.initialize();
+  await RingtoneManager.initialize();
   await AlarmAudioPlayer.initialize();
   await initializeAudioSession();
   await BootReceiver.initialize(handleBoot);
@@ -62,8 +58,6 @@ void main() async {
   file.writeAsStringSync("", mode: FileMode.writeOnly);
 
   runApp(const App());
-
-  // subscription.cancel();
 }
 
 class App extends StatefulWidget {
@@ -80,8 +74,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     NotificationController.setListeners();
-    // AppVisibilityListener
-
     super.initState();
   }
 

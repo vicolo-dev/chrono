@@ -1,13 +1,10 @@
-import 'package:clock_app/alarm/data/alarm_settings.dart';
+import 'package:clock_app/alarm/data/alarm_settings_schema.dart';
 import 'package:clock_app/alarm/data/weekdays.dart';
-import 'package:clock_app/alarm/logic/schedule_type.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/alarm_schedules.dart';
-import 'package:clock_app/alarm/types/schedule_type.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:clock_app/settings/data/settings_data.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +12,7 @@ import 'package:flutter/material.dart';
 class Alarm extends JsonSerializable {
   bool _enabled = true;
   TimeOfDay _timeOfDay;
-  Settings _settings = alarmDefaultSettings.copy();
+  Settings _settings = alarmSettingsSchema.copy();
 
   late List<AlarmSchedule> _schedules;
 
@@ -24,14 +21,14 @@ class Alarm extends JsonSerializable {
   Settings get settings => _settings;
   String get label => _settings.getSetting("Label").value;
   Type get scheduleType => _settings.getSetting("Schedule Type").value;
-  int get ringtoneIndex => _settings.getSetting("Melody").value;
+  String get ringtoneUri => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibrate").value;
   AlarmSchedule get activeSchedule =>
       _schedules.firstWhere((schedule) => schedule.runtimeType == scheduleType);
   List<AlarmRunner> get activeAlarmRunners => activeSchedule.alarmRunners;
   bool get isRepeating => [
         RangeAlarmSchedule,
-        DatesAlarmSchedule,
+        DailyAlarmSchedule,
         WeeklyAlarmSchedule
       ].contains(scheduleType);
   DateTime get nextScheduleDateTime => activeSchedule.nextScheduleDateTime;
@@ -44,9 +41,6 @@ class Alarm extends JsonSerializable {
       DatesAlarmSchedule(_settings),
       RangeAlarmSchedule(_settings)
     ];
-    // (_settings.getSetting("Week Days") as ToggleSetting).onChange =
-    //     (weekdayStates) =>
-    //         getSchedule<WeeklyAlarmSchedule>().setWeekdays(weekdayStates);
   }
 
   Alarm.fromAlarm(Alarm alarm)
@@ -86,7 +80,7 @@ class Alarm extends JsonSerializable {
   void schedule() {
     for (var schedule in _schedules) {
       if (schedule.runtimeType == scheduleType) {
-        schedule.schedule(_timeOfDay, ringtoneIndex);
+        schedule.schedule(_timeOfDay, ringtoneUri);
       } else {
         schedule.cancel();
       }
@@ -128,7 +122,7 @@ class Alarm extends JsonSerializable {
   Alarm.fromJson(Map<String, dynamic> json)
       : _timeOfDay = TimeOfDayUtils.fromJson(json['timeOfDay']),
         _enabled = json['enabled'],
-        _settings = alarmDefaultSettings.copy() {
+        _settings = alarmSettingsSchema.copy() {
     _settings.load(json['settings']);
     _schedules = [
       OnceAlarmSchedule.fromJson(json['schedules'][0], _settings),

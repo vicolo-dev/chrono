@@ -4,7 +4,7 @@ class LockScreenFlagManager {
   static bool _isLockScreenFlagsSet = false;
 
   static Future<void> initialize() async {
-    print("Clear Flags");
+    // print("Clear Flags");
 
     await FlutterWindowManager.clearFlags(
         FlutterWindowManager.FLAG_DISMISS_KEYGUARD);

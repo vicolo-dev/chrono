@@ -4,7 +4,7 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
 class SelectSettingCard<T> extends StatelessWidget {
-  SelectSettingCard({
+  const SelectSettingCard({
     Key? key,
     required this.setting,
     this.summaryView = false,
@@ -26,7 +26,6 @@ class SelectSettingCard<T> extends StatelessWidget {
       onChange: (value) {
         setting.setValue(value);
         onChanged?.call();
-        print("${setting.name}: $value");
       },
       onSelect: setting.onSelectOption,
     );

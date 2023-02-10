@@ -15,6 +15,10 @@ Future<void> initializeAppDataDirectory() async {
 }
 
 String getAppDataDirectoryPathSync() {
+  if (_appDataDirectoryPath.isEmpty) {
+    throw Exception(
+        "App data directory path is not initialized. Call 'initializeAppDataDirectory()' first.");
+  }
   return _appDataDirectoryPath;
 }
 

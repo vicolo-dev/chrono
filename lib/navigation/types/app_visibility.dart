@@ -11,13 +11,13 @@ class AppVisibilityListener {
   static FGBGType get state => _state;
 
   static void setState(FGBGType type) {
-    print("GGGGGGGGGGGGGGGG $type");
+    print("FGBGType: $type");
     _state = type;
   }
 
   static void initialize() {
     print(
-        "CCCCCCCCCCC ${SettingsManager.preferences?.getBool("alarmRecentlyTriggered")}");
+        "Is Alarm Recently Triggered: ${SettingsManager.preferences?.getBool("alarmRecentlyTriggered")}");
     if (SettingsManager.preferences?.getBool("alarmRecentlyTriggered") ==
         true) {
       SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);

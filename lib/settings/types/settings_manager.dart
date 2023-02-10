@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsManager {
   static SharedPreferences? _preferences;
 
-  static Map<String, void Function()> _listeners = {};
+  static final Map<String, void Function()> _listeners = {};
 
   static SharedPreferences? get preferences {
     if (_preferences == null) {

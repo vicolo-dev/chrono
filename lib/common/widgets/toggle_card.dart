@@ -1,5 +1,3 @@
-import 'package:clock_app/alarm/data/weekdays.dart';
-import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/theme/border.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';

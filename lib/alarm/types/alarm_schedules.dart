@@ -1,10 +1,6 @@
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
-import 'package:clock_app/alarm/types/schedule_type.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
-import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +47,7 @@ abstract class AlarmSchedule extends JsonSerializable {
   AlarmSchedule(this.alarmSettings);
 
   List<AlarmRunner> get alarmRunners;
-  void schedule(TimeOfDay timeOfDay, int ringtoneIndex);
+  void schedule(TimeOfDay timeOfDay, String ringtoneUri);
   void cancel();
   bool hasId(int id);
 }
@@ -67,9 +63,9 @@ class OnceAlarmSchedule extends AlarmSchedule {
         super(alarmSettings);
 
   @override
-  void schedule(TimeOfDay timeOfDay, int ringtoneIndex) {
+  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
     DateTime alarmDate = getDailyAlarmDate(timeOfDay);
-    _alarmRunner.schedule(alarmDate, ringtoneIndex);
+    _alarmRunner.schedule(alarmDate, ringtoneUri);
   }
 
   @override
@@ -106,9 +102,9 @@ class DailyAlarmSchedule extends AlarmSchedule {
         super(alarmSettings);
 
   @override
-  void schedule(TimeOfDay timeOfDay, int ringtoneIndex) {
+  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
     DateTime alarmDate = getDailyAlarmDate(timeOfDay);
-    _alarmRunner.schedule(alarmDate, ringtoneIndex,
+    _alarmRunner.schedule(alarmDate, ringtoneUri,
         repeatInterval: const Duration(days: 1));
   }
 
@@ -153,7 +149,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
   WeeklyAlarmSchedule(Settings alarmSettings) : super(alarmSettings);
 
   @override
-  void schedule(TimeOfDay timeOfDay, int ringtoneIndex) {
+  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       weekdaySchedule.alarmRunner.cancel();
     }
@@ -171,7 +167,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
           getWeeklyAlarmDate(timeOfDay, weekdaySchedule.weekday);
       weekdaySchedule.alarmRunner.schedule(
         alarmDate,
-        ringtoneIndex,
+        ringtoneUri,
         repeatInterval: const Duration(days: 7),
       );
     }
@@ -231,7 +227,7 @@ range
  - start -> end  -> list of onetime
 }
 
-- off-days  -> send off days as params, don't show notif if today is off day
+- off-days  -> send off days as params, don't show notification if today is off day
 */
 
 class DatesAlarmSchedule extends AlarmSchedule {
@@ -259,7 +255,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  void schedule(TimeOfDay timeOfDay, int ringtoneIndex) {
+  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
     for (DateSchedule dateSchedule in _dateSchedules) {
       dateSchedule.alarmRunner.cancel();
     }
@@ -267,7 +263,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
     for (DateSchedule dateSchedule in _dateSchedules) {
       DateTime alarmDate =
           getDailyAlarmDate(timeOfDay, scheduledDate: dateSchedule.date);
-      dateSchedule.alarmRunner.schedule(alarmDate, ringtoneIndex);
+      dateSchedule.alarmRunner.schedule(alarmDate, ringtoneUri);
     }
   }
 
@@ -313,10 +309,10 @@ class RangeAlarmSchedule extends AlarmSchedule {
         super(alarmSettings);
 
   @override
-  void schedule(TimeOfDay timeOfDay, int ringtoneIndex) {
+  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
     DateTime alarmDate =
         getDailyAlarmDate(timeOfDay, scheduledDate: _startDate);
-    _alarmRunner.schedule(alarmDate, ringtoneIndex, repeatInterval: _interval);
+    _alarmRunner.schedule(alarmDate, ringtoneUri, repeatInterval: _interval);
   }
 
   @override

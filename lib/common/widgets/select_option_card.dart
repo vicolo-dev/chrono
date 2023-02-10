@@ -21,7 +21,8 @@ class SelectOptionCard extends StatelessWidget {
       onTap: () => onSelect(index),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: 16.0, vertical: choice.description != null ? 8.0 : 2.0),
+            horizontal: 16.0,
+            vertical: choice.description.isNotEmpty ? 8.0 : 2.0),
         child: Row(
           children: [
             Radio(

@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/settings/logic/initialize_settings.dart';
 
 @pragma('vm:entry-point')
 void handleBoot() async {
@@ -17,4 +17,21 @@ void handleBoot() async {
       .writeAsStringSync(message, mode: FileMode.append);
 
   print(message);
+
+  await initializeAppDataDirectory();
+  await RingtoneManager.initialize();
+
+  List<Alarm> alarms = loadList("alarms");
+
+  alarms.where((alarm) => alarm.enabled).forEach((alarm) {
+    if (alarm.isRepeating) {
+      alarm.schedule();
+    } else {
+      if (alarm.nextScheduleDateTime.isBefore(DateTime.now())) {
+        alarm.disable();
+      }
+    }
+  });
+
+  saveList("alarms", alarms);
 }

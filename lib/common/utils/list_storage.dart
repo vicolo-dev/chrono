@@ -12,8 +12,7 @@ List<T> loadList<T extends JsonSerializable>(String key) {
     final String encodedList = file.readAsStringSync();
     return decodeList<T>(encodedList);
   } catch (e) {
-    print(e);
-    return [];
+    throw Exception('Failed to load list from file: $e');
   }
 }
 

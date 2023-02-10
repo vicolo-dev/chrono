@@ -6,10 +6,7 @@ import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/data/alarm_notification_channel.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
-import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/main.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
@@ -41,7 +38,7 @@ class AlarmNotificationManager {
         body: timeOfDay.formatToString('h:mm a'),
         payload: {
           'scheduleId': params['scheduleId'],
-          'ringtoneIndex': params['ringtoneIndex'],
+          'ringtoneUri': params['ringtoneUri'],
         },
         category: NotificationCategory.Alarm,
         fullScreenIntent: true,
@@ -108,7 +105,7 @@ class AlarmNotificationManager {
 
     _fgbgType = AppVisibilityListener.state;
 
-    print("AAAAAAAAAAAAA $_fgbgType");
+    print("FGBGType on NotificationCreated: $_fgbgType");
 
     SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
   }

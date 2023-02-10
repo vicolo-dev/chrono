@@ -4,7 +4,6 @@ import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
-import 'package:clock_app/settings/data/settings_data.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +39,6 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
         actions: [
           TextButton(
               onPressed: () {
-                print("Setting changed: ${_alarm.settings.toJson()}");
                 Navigator.pop(context, _alarm);
               },
               child: const Text("Save"))

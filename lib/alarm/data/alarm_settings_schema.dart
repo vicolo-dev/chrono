@@ -1,19 +1,12 @@
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 import 'package:clock_app/alarm/types/alarm_schedules.dart';
+import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
-List<SelectSettingOption<int>> getRingtoneOptions() {
-  return AlarmAudioPlayer.ringtones
-      .asMap()
-      .entries
-      .map((entry) => SelectSettingOption<int>(entry.value.title, entry.key))
-      .toList();
-}
-
-Settings alarmDefaultSettings = Settings([
+Settings alarmSettingsSchema = Settings([
   SelectSetting<Type>(
     "Schedule Type",
     [
@@ -43,17 +36,20 @@ Settings alarmDefaultSettings = Settings([
   SettingGroup(
       "Sound and Vibration",
       [
-        DynamicSelectSetting<int>(
+        DynamicSelectSetting<String>(
           "Melody",
-          getRingtoneOptions,
-          onSelect: (index) {
-            if (AlarmAudioPlayer.lastPlayedRingtoneIndex == index) {
+          () => RingtoneManager.ringtones
+              .map((ringtone) =>
+                  SelectSettingOption(ringtone.title, ringtone.uri))
+              .toList(),
+          onSelect: (index, uri) {
+            if (RingtoneManager.lastPlayedRingtoneUri == uri) {
               AlarmAudioPlayer.stop();
             } else {
-              AlarmAudioPlayer.play(index, loopMode: LoopMode.off);
+              AlarmAudioPlayer.play(uri, loopMode: LoopMode.off);
             }
           },
-          onChange: (value) {
+          onChange: (index) {
             AlarmAudioPlayer.stop();
           },
         ),
