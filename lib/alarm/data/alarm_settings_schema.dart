@@ -60,4 +60,13 @@ Settings alarmSettingsSchema = Settings([
         "Melody",
         "Vibration",
       ]),
+  SettingGroup(
+      "Snooze",
+      [
+        SliderSetting("Length", 1, 30, 5, unit: "minutes"),
+      ],
+      Icons.snooze_rounded,
+      summarySettings: [
+        "Length",
+      ])
 ]);

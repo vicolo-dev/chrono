@@ -10,7 +10,7 @@ Future<void> initializeSettings() async {
 
   // Used to clear the preferences in case of a change in format of the data
   // Comment this out after the preferences are cleared
-  // preferences?.clear();
+  preferences?.clear();
 
   bool? firstLaunch = SettingsManager.preferences?.getBool('first_launch');
   if (firstLaunch == null) {

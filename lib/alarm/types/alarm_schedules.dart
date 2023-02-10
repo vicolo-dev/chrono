@@ -47,7 +47,7 @@ abstract class AlarmSchedule extends JsonSerializable {
   AlarmSchedule(this.alarmSettings);
 
   List<AlarmRunner> get alarmRunners;
-  void schedule(TimeOfDay timeOfDay, String ringtoneUri);
+  void schedule(TimeOfDay timeOfDay);
   void cancel();
   bool hasId(int id);
 }
@@ -63,9 +63,9 @@ class OnceAlarmSchedule extends AlarmSchedule {
         super(alarmSettings);
 
   @override
-  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
+  void schedule(TimeOfDay timeOfDay) {
     DateTime alarmDate = getDailyAlarmDate(timeOfDay);
-    _alarmRunner.schedule(alarmDate, ringtoneUri);
+    _alarmRunner.schedule(alarmDate);
   }
 
   @override
@@ -102,10 +102,9 @@ class DailyAlarmSchedule extends AlarmSchedule {
         super(alarmSettings);
 
   @override
-  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
+  void schedule(TimeOfDay timeOfDay) {
     DateTime alarmDate = getDailyAlarmDate(timeOfDay);
-    _alarmRunner.schedule(alarmDate, ringtoneUri,
-        repeatInterval: const Duration(days: 1));
+    _alarmRunner.schedule(alarmDate, repeatInterval: const Duration(days: 1));
   }
 
   @override
@@ -149,7 +148,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
   WeeklyAlarmSchedule(Settings alarmSettings) : super(alarmSettings);
 
   @override
-  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
+  void schedule(TimeOfDay timeOfDay) {
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       weekdaySchedule.alarmRunner.cancel();
     }
@@ -167,7 +166,6 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
           getWeeklyAlarmDate(timeOfDay, weekdaySchedule.weekday);
       weekdaySchedule.alarmRunner.schedule(
         alarmDate,
-        ringtoneUri,
         repeatInterval: const Duration(days: 7),
       );
     }
@@ -255,7 +253,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
+  void schedule(TimeOfDay timeOfDay) {
     for (DateSchedule dateSchedule in _dateSchedules) {
       dateSchedule.alarmRunner.cancel();
     }
@@ -263,7 +261,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
     for (DateSchedule dateSchedule in _dateSchedules) {
       DateTime alarmDate =
           getDailyAlarmDate(timeOfDay, scheduledDate: dateSchedule.date);
-      dateSchedule.alarmRunner.schedule(alarmDate, ringtoneUri);
+      dateSchedule.alarmRunner.schedule(alarmDate);
     }
   }
 
@@ -309,10 +307,10 @@ class RangeAlarmSchedule extends AlarmSchedule {
         super(alarmSettings);
 
   @override
-  void schedule(TimeOfDay timeOfDay, String ringtoneUri) {
+  void schedule(TimeOfDay timeOfDay) {
     DateTime alarmDate =
         getDailyAlarmDate(timeOfDay, scheduledDate: _startDate);
-    _alarmRunner.schedule(alarmDate, ringtoneUri, repeatInterval: _interval);
+    _alarmRunner.schedule(alarmDate, repeatInterval: _interval);
   }
 
   @override

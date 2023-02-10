@@ -1,4 +1,4 @@
-import 'package:clock_app/alarm/logic/alarm_storage.dart';
+import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_notification_manager.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
@@ -46,6 +46,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
               children: [
                 TextButton(
                   onPressed: () {
+                    AlarmNotificationManager.snoozeAlarm(widget.scheduleId);
                     // dismissAlarm(widget.id);
                     // Navigator.pop(context);
                   },

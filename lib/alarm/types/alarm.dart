@@ -23,6 +23,7 @@ class Alarm extends JsonSerializable {
   Type get scheduleType => _settings.getSetting("Schedule Type").value;
   String get ringtoneUri => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibrate").value;
+  double get snoozeLength => _settings.getSetting("Length").value;
   AlarmSchedule get activeSchedule =>
       _schedules.firstWhere((schedule) => schedule.runtimeType == scheduleType);
   List<AlarmRunner> get activeAlarmRunners => activeSchedule.alarmRunners;
@@ -80,7 +81,7 @@ class Alarm extends JsonSerializable {
   void schedule() {
     for (var schedule in _schedules) {
       if (schedule.runtimeType == scheduleType) {
-        schedule.schedule(_timeOfDay, ringtoneUri);
+        schedule.schedule(_timeOfDay);
       } else {
         schedule.cancel();
       }
@@ -110,6 +111,10 @@ class Alarm extends JsonSerializable {
   bool hasScheduleWithId(int scheduleId) {
     return _schedules.any((schedule) => schedule.hasId(scheduleId));
   }
+
+  // bool hasId(int scheduleId) {
+  //   return activeSchedule.hasId(scheduleId);
+  // }
 
   List<Weekday> getWeekdays() {
     return (getSetting("Week Days") as ToggleSetting<int>)

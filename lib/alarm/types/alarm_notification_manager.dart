@@ -6,6 +6,7 @@ import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/data/alarm_notification_channel.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/main.dart';
@@ -27,9 +28,7 @@ class AlarmNotificationManager {
 
   static FGBGType _fgbgType = FGBGType.foreground;
 
-  static void showNotification(Map<String, dynamic> params) {
-    TimeOfDay timeOfDay = TimeOfDayUtils.decode(params['timeOfDay']);
-
+  static void showNotification(int scheduleId, TimeOfDay timeOfDay) {
     AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: _notificationId,
@@ -37,8 +36,7 @@ class AlarmNotificationManager {
         title: 'Alarm Ringing...',
         body: timeOfDay.formatToString('h:mm a'),
         payload: {
-          'scheduleId': params['scheduleId'],
-          'ringtoneUri': params['ringtoneUri'],
+          'scheduleId': scheduleId.toString(),
         },
         category: NotificationCategory.Alarm,
         fullScreenIntent: true,
@@ -65,38 +63,42 @@ class AlarmNotificationManager {
     );
   }
 
-  static Future<void> dismissAlarm(int scheduleId,
-      {bool replace = false}) async {
-    print("Dismiss Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
-
+  static Future<void> removeNotification() async {
     await AwesomeNotifications().cancel(_notificationId);
     await AndroidForegroundService.stopForeground(_notificationId);
+  }
 
-    if (!replace) {
-      await AndroidAlarmManager.oneShotAfterDelay(
-        const Duration(seconds: 0),
-        scheduleId,
-        stopAlarm,
-        exact: true,
-        useRTC: true,
-        alarmClock: true,
-      );
+  static Future<void> closeNotification() async {
+    await removeNotification();
 
-      await SettingsManager.initialize();
-      await LockScreenFlagManager.clearLockScreenFlags();
+    await SettingsManager.initialize();
+    await LockScreenFlagManager.clearLockScreenFlags();
 
-      if (Routes.currentRoute == Routes.alarmNotificationRoute) {
-        App.navigatorKey.currentState?.pop();
-        Routes.setCurrentRoute(Routes.rootRoute);
-      }
-
-      if (_fgbgType == FGBGType.background &&
-          AppVisibilityListener.state == FGBGType.foreground) {
-        MoveToBackground.moveTaskToBack();
-      }
-
-      SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
+    if (Routes.currentRoute == Routes.alarmNotificationRoute) {
+      App.navigatorKey.currentState?.pop();
+      Routes.setCurrentRoute(Routes.rootRoute);
     }
+
+    if (_fgbgType == FGBGType.background &&
+        AppVisibilityListener.state == FGBGType.foreground) {
+      MoveToBackground.moveTaskToBack();
+    }
+
+    SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
+  }
+
+  static Future<void> snoozeAlarm(int scheduleId) async {
+    print("Snooze Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+
+    scheduleStopAlarm(scheduleId, AlarmStopAction.snooze);
+    closeNotification();
+  }
+
+  static Future<void> dismissAlarm(int scheduleId) async {
+    print("Dismiss Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+
+    scheduleStopAlarm(scheduleId, AlarmStopAction.dismiss);
+    closeNotification();
   }
 
   static void handleNotificationCreated(
@@ -117,6 +119,9 @@ class AlarmNotificationManager {
 
     switch (receivedAction.buttonKeyPressed) {
       case _snoozeActionKey:
+        int scheduleId =
+            int.parse(receivedAction.payload?['scheduleId'] ?? "0");
+        snoozeAlarm(scheduleId);
         break;
 
       case _dismissActionKey:

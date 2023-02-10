@@ -1,4 +1,5 @@
 import 'package:clock_app/navigation/data/tabs.dart';
+import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/screens/settings_screen.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +28,11 @@ class _NavScaffoldState extends State<NavScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: TopBar(
         title: Text(tabs[_selectedTabIndex].title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: ColorTheme.textColorSecondary,
                 )),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
         actions: [
           IconButton(
             onPressed: () {

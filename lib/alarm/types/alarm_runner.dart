@@ -13,10 +13,9 @@ class AlarmRunner extends JsonSerializable {
     _id = UniqueKey().hashCode;
   }
 
-  void schedule(DateTime dateTime, String ringtoneUri,
-      {Duration repeatInterval = Duration.zero}) {
+  void schedule(DateTime dateTime, {Duration repeatInterval = Duration.zero}) {
     _nextScheduleDateTime = dateTime;
-    scheduleAlarm(_id, dateTime, ringtoneUri, repeatInterval: repeatInterval);
+    scheduleAlarm(_id, dateTime, repeatInterval: repeatInterval);
   }
 
   AlarmRunner.fromJson(Map<String, dynamic> json)

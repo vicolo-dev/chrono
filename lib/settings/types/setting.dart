@@ -184,6 +184,7 @@ class StringSetting extends Setting<String> {
 class SliderSetting extends Setting<double> {
   double min;
   double max;
+  String unit;
 
   SliderSetting(
     String name,
@@ -192,6 +193,7 @@ class SliderSetting extends Setting<double> {
     double defaultValue, {
     void Function(double)? onChange,
     String description = "",
+    this.unit = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
 

@@ -4,6 +4,7 @@ import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
+import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
@@ -33,19 +34,13 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // title:
-        //     Text('Add Alarm', style: Theme.of(context).textTheme.titleMedium),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context, _alarm);
-              },
-              child: const Text("Save"))
-        ],
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
+      appBar: TopBar(actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context, _alarm);
+            },
+            child: const Text("Save"))
+      ]),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(

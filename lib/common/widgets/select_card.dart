@@ -129,11 +129,15 @@ class _SelectCardState<T> extends State<SelectCard<T>> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.title,
-                    style: Theme.of(context).textTheme.headlineMedium),
+                Text(
+                  widget.title,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
                 const SizedBox(height: 4.0),
-                Text(widget.choices[_currentSelectedIndex].title,
-                    style: Theme.of(context).textTheme.bodyMedium),
+                Text(
+                  widget.choices[_currentSelectedIndex].title,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ],
             ),
             const Spacer(),

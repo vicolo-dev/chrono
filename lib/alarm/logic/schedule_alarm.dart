@@ -4,14 +4,14 @@ import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:intl/intl.dart';
 
-void scheduleAlarm(int id, DateTime startDate, String ringtoneUri,
+Future<void> scheduleAlarm(int scheduleId, DateTime startDate,
     {Duration repeatInterval = Duration.zero}) async {
-  await cancelAlarm(id);
+  await cancelAlarm(scheduleId);
   print(
-      "Alarm $id scheduled for ${DateFormat("yyyy MM dd hh mm").format(startDate)}");
+      "Alarm $scheduleId scheduled for ${DateFormat("yyyy MM dd hh mm").format(startDate)}");
   AndroidAlarmManager.oneShotAtTime(
     startDate,
-    id,
+    scheduleId,
     triggerAlarm,
     allowWhileIdle: true,
     alarmClock: true,
@@ -19,14 +19,37 @@ void scheduleAlarm(int id, DateTime startDate, String ringtoneUri,
     wakeup: true,
     rescheduleOnReboot: true,
     params: <String, String>{
-      'scheduleId': id.toString(),
+      'scheduleId': scheduleId.toString(),
       'timeOfDay': startDate.toTimeOfDay().encode(),
-      'ringtoneUri': ringtoneUri,
     },
   );
 }
 
-Future<void> cancelAlarm(int id) async {
-  print("Alarm $id cancelled");
-  await AndroidAlarmManager.cancel(id);
+Future<void> cancelAlarm(int scheduleId) async {
+  print("Alarm $scheduleId cancelled");
+  await AndroidAlarmManager.cancel(scheduleId);
+}
+
+enum AlarmStopAction {
+  dismiss,
+  snooze,
+}
+
+Future<void> scheduleStopAlarm(
+    int scheduleId, AlarmStopAction alarmStopAction) async {
+  await AndroidAlarmManager.oneShotAfterDelay(
+    const Duration(seconds: 0),
+    scheduleId,
+    stopAlarm,
+    exact: true,
+    useRTC: true,
+    alarmClock: true,
+    params: <String, String>{
+      'action': alarmStopAction.toString(),
+    },
+  );
+}
+
+Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay) async {
+  await scheduleAlarm(scheduleId, DateTime.now().add(delay));
 }

@@ -89,7 +89,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
         margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
         shape: defaultShape,
         elevation: 2,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         dismissDirection: DismissDirection.none,
         // width: MediaQuery.of(context).size.width - (64 + 16),
         // behavior: SnackBarBehavior.floating,

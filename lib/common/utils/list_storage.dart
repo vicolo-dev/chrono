@@ -11,8 +11,8 @@ List<T> loadList<T extends JsonSerializable>(String key) {
   try {
     final String encodedList = file.readAsStringSync();
     return decodeList<T>(encodedList);
-  } catch (e) {
-    throw Exception('Failed to load list from file: $e');
+  } catch (error) {
+    throw Exception("Failed to load list from file '$key': $error");
   }
 }
 
@@ -24,5 +24,6 @@ Future<void> saveList<T extends JsonSerializable>(
     file.createSync();
   }
   String encodedList = encodeList(list);
+  print('Saving list to file: $encodedList');
   file.writeAsString(encodedList, mode: FileMode.writeOnly);
 }
