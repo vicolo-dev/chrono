@@ -25,7 +25,7 @@ class Settings {
         }
       }
 
-      return StringSetting("Error", "Setting not found");
+      throw Exception("Setting not found: $name");
     });
   }
 

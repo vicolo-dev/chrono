@@ -49,7 +49,7 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
     await AlarmAudioPlayer.initialize();
     await initializeAudioSession();
     Alarm alarm = getAlarmByScheduleId(scheduleId);
-    AlarmAudioPlayer.play(alarm.ringtoneUri);
+    AlarmAudioPlayer.play(alarm.ringtoneUri, vibrate: alarm.vibrate);
   } else {
     await AlarmNotificationManager.removeNotification();
   }

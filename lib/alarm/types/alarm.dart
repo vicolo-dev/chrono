@@ -22,7 +22,7 @@ class Alarm extends JsonSerializable {
   String get label => _settings.getSetting("Label").value;
   Type get scheduleType => _settings.getSetting("Schedule Type").value;
   String get ringtoneUri => _settings.getSetting("Melody").value;
-  bool get vibrate => _settings.getSetting("Vibrate").value;
+  bool get vibrate => _settings.getSetting("Vibration").value;
   double get snoozeLength => _settings.getSetting("Length").value;
   AlarmSchedule get activeSchedule =>
       _schedules.firstWhere((schedule) => schedule.runtimeType == scheduleType);

@@ -4,14 +4,17 @@ import 'package:vibration/vibration.dart';
 
 class AlarmAudioPlayer {
   static AudioPlayer? _player;
+  static bool _vibratorIsAvailable = false;
 
   static Future<void> initialize() async {
     _player ??= AudioPlayer();
+    _vibratorIsAvailable = (await Vibration.hasVibrator()) ?? false;
   }
 
-  static void play(String uri, {LoopMode loopMode = LoopMode.one}) async {
+  static void play(String uri,
+      {bool vibrate = false, LoopMode loopMode = LoopMode.one}) async {
     RingtoneManager.lastPlayedRingtoneUri = uri;
-    if ((await Vibration.hasVibrator())!) {
+    if (_vibratorIsAvailable && vibrate) {
       Vibration.vibrate(pattern: [500, 1000], repeat: 0);
     }
     await _player?.stop();
@@ -22,7 +25,7 @@ class AlarmAudioPlayer {
 
   static void stop() async {
     await _player?.stop();
-    if ((await Vibration.hasVibrator())!) {
+    if (_vibratorIsAvailable) {
       Vibration.cancel();
     }
     RingtoneManager.lastPlayedRingtoneUri = "";
