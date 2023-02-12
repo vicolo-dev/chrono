@@ -5,6 +5,8 @@ class City extends JsonSerializable {
   final String country;
   final String timezone;
 
+  String get id => "$name,$country";
+
   const City(this.name, this.country, this.timezone);
 
   factory City.fromJson(Map<String, dynamic> jsonData) {

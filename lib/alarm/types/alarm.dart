@@ -33,6 +33,7 @@ class Alarm extends JsonSerializable {
         WeeklyAlarmSchedule
       ].contains(scheduleType);
   DateTime get nextScheduleDateTime => activeSchedule.nextScheduleDateTime;
+  int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
 
   Alarm(this._timeOfDay) {
     _schedules = [

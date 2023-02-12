@@ -43,6 +43,7 @@ abstract class AlarmSchedule extends JsonSerializable {
   Settings alarmSettings;
 
   DateTime get nextScheduleDateTime;
+  int get currentAlarmRunnerId;
 
   AlarmSchedule(this.alarmSettings);
 
@@ -57,6 +58,9 @@ class OnceAlarmSchedule extends AlarmSchedule {
 
   @override
   DateTime get nextScheduleDateTime => _alarmRunner.nextScheduleDateTime;
+
+  @override
+  int get currentAlarmRunnerId => _alarmRunner.id;
 
   OnceAlarmSchedule(Settings alarmSettings)
       : _alarmRunner = AlarmRunner(),
@@ -97,6 +101,9 @@ class DailyAlarmSchedule extends AlarmSchedule {
   @override
   DateTime get nextScheduleDateTime => _alarmRunner.nextScheduleDateTime;
 
+  @override
+  int get currentAlarmRunnerId => _alarmRunner.id;
+
   DailyAlarmSchedule(Settings alarmSettings)
       : _alarmRunner = AlarmRunner(),
         super(alarmSettings);
@@ -133,17 +140,23 @@ class DailyAlarmSchedule extends AlarmSchedule {
 class WeeklyAlarmSchedule extends AlarmSchedule {
   List<WeekdaySchedule> _weekdaySchedules = [];
 
-  @override
-  DateTime get nextScheduleDateTime {
-    DateTime nextScheduleDateTime = DateTime.now().add(const Duration(days: 7));
+  WeekdaySchedule get nextWeekdaySchedule {
+    WeekdaySchedule nextWeekdaySchedule = _weekdaySchedules[0];
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       if (weekdaySchedule.alarmRunner.nextScheduleDateTime
-          .isBefore(nextScheduleDateTime)) {
-        nextScheduleDateTime = weekdaySchedule.alarmRunner.nextScheduleDateTime;
+          .isBefore(nextWeekdaySchedule.alarmRunner.nextScheduleDateTime)) {
+        nextWeekdaySchedule = weekdaySchedule;
       }
     }
-    return nextScheduleDateTime;
+    return nextWeekdaySchedule;
   }
+
+  @override
+  DateTime get nextScheduleDateTime =>
+      nextWeekdaySchedule.alarmRunner.nextScheduleDateTime;
+
+  @override
+  int get currentAlarmRunnerId => nextWeekdaySchedule.alarmRunner.id;
 
   WeeklyAlarmSchedule(Settings alarmSettings) : super(alarmSettings);
 
@@ -231,17 +244,23 @@ range
 class DatesAlarmSchedule extends AlarmSchedule {
   List<DateSchedule> _dateSchedules = [];
 
-  @override
-  DateTime get nextScheduleDateTime {
-    DateTime nextScheduleDateTime = DateTime.now().add(const Duration(days: 7));
+  DateSchedule get nextDateSchedule {
+    DateSchedule nextDateSchedule = _dateSchedules[0];
     for (DateSchedule dateSchedule in _dateSchedules) {
       if (dateSchedule.alarmRunner.nextScheduleDateTime
-          .isBefore(nextScheduleDateTime)) {
-        nextScheduleDateTime = dateSchedule.alarmRunner.nextScheduleDateTime;
+          .isBefore(nextDateSchedule.alarmRunner.nextScheduleDateTime)) {
+        nextDateSchedule = dateSchedule;
       }
     }
-    return nextScheduleDateTime;
+    return nextDateSchedule;
   }
+
+  @override
+  DateTime get nextScheduleDateTime =>
+      nextDateSchedule.alarmRunner.nextScheduleDateTime;
+
+  @override
+  int get currentAlarmRunnerId => nextDateSchedule.alarmRunner.id;
 
   DatesAlarmSchedule(Settings alarmSettings) : super(alarmSettings);
 
@@ -301,6 +320,9 @@ class RangeAlarmSchedule extends AlarmSchedule {
       _alarmRunner.nextScheduleDateTime.isBefore(_endDate)
           ? _alarmRunner.nextScheduleDateTime
           : _endDate;
+
+  @override
+  int get currentAlarmRunnerId => _alarmRunner.id;
 
   RangeAlarmSchedule(Settings alarmSettings)
       : _alarmRunner = AlarmRunner(),

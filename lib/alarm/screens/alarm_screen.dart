@@ -10,6 +10,7 @@ import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:great_list_view/great_list_view.dart';
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({Key? key}) : super(key: key);
@@ -20,6 +21,9 @@ class AlarmScreen extends StatefulWidget {
 
 class _AlarmScreenState extends State<AlarmScreen> {
   List<Alarm> _alarms = [];
+
+  final _scrollController = ScrollController();
+  final _controller = AnimatedListController();
 
   void loadAlarms() {
     setState(() {
@@ -40,23 +44,28 @@ class _AlarmScreenState extends State<AlarmScreen> {
     super.dispose();
   }
 
-  _handleReorderAlarms(int oldIndex, int newIndex) {
-    setState(() {
-      if (oldIndex < newIndex) {
-        newIndex -= 1;
-      }
-      final Alarm reorderedAlarm = _alarms.removeAt(oldIndex);
-      _alarms.insert(newIndex, reorderedAlarm);
-    });
+  bool _handleReorderAlarms(int oldIndex, int newIndex, Object? slot) {
+    _alarms.insert(newIndex, _alarms.removeAt(oldIndex));
     saveList('alarms', _alarms);
+    return true;
   }
 
   _handleDeleteAlarm(int index) {
     _alarms[index].disable();
-    setState(() {
-      _alarms.removeAt(index);
-    });
-
+    Alarm alarm = _alarms.removeAt(index);
+    _controller.notifyRemovedRange(
+      index,
+      1,
+      (context, index, data) => data.measuring
+          ? SizedBox(width: 64, height: 64)
+          : AlarmCard(
+              key: ValueKey(alarm),
+              alarm: alarm,
+              onTap: () => {},
+              onDelete: () => {},
+              onEnabledChange: (value) => {},
+            ),
+    );
     saveList('alarms', _alarms);
   }
 
@@ -101,9 +110,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   _handleAddAlarm(Alarm alarm) {
     alarm.schedule();
-    setState(() {
-      _alarms.add(alarm);
-    });
+    _alarms.add(alarm);
+    _controller.notifyInsertedRange(_alarms.length - 1, 1);
 
     _showNextScheduleSnackBar(alarm);
 
@@ -160,23 +168,39 @@ class _AlarmScreenState extends State<AlarmScreen> {
     return Stack(
       children: [
         SlidableAutoCloseBehavior(
-          child: ReorderableListView.builder(
+          child: AutomaticAnimatedListView<Alarm>(
+            list: _alarms,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            proxyDecorator: reorderableListDecorator,
-            itemCount: _alarms.length,
-            itemBuilder: (BuildContext context, int index) {
-              return AlarmCard(
-                key: ValueKey(_alarms[index]),
-                alarm: _alarms[index],
-                onTap: () => _handleCustomizeAlarm(index),
-                onDelete: () => _handleDeleteAlarm(index),
-                onEnabledChange: (bool value) =>
-                    _handleEnableChangeAlarm(index, value),
-              );
+            comparator: AnimatedListDiffListComparator<Alarm>(
+              sameItem: (a, b) => a.currentScheduleId == b.currentScheduleId,
+              sameContent: (a, b) => a.currentScheduleId == b.currentScheduleId,
+            ),
+            itemBuilder: (BuildContext context, alarm, data) {
+              int index = _alarms.indexWhere(
+                  (a) => a.currentScheduleId == alarm.currentScheduleId);
+              return data.measuring
+                  ? SizedBox(width: 64, height: 64)
+                  : AlarmCard(
+                      key: ValueKey(alarm),
+                      alarm: alarm,
+                      onTap: () => _handleCustomizeAlarm(index),
+                      onDelete: () => _handleDeleteAlarm(index),
+                      onEnabledChange: (bool value) =>
+                          _handleEnableChangeAlarm(index, value),
+                    );
             },
-            footer:
-                const ListFooter(), // Allows the last item to not be covered by FAB
-            onReorder: _handleReorderAlarms,
+            listController: _controller,
+            scrollController: _scrollController,
+            addLongPressReorderable: true,
+            reorderModel: AnimatedListReorderModel(
+              onReorderStart: (index, dx, dy) => true,
+              onReorderFeedback: (int index, int dropIndex, double offset,
+                      double dx, double dy) =>
+                  null,
+              onReorderMove: (int index, int dropIndex) => true,
+              onReorderComplete: _handleReorderAlarms,
+            ),
+            reorderDecorationBuilder: reorderableListDecorator,
           ),
         ),
         FAB(

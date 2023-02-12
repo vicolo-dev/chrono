@@ -13,6 +13,7 @@ import 'package:clock_app/theme/time_picker.dart';
 
 ThemeData theme = ThemeData(
   fontFamily: 'Rubik',
+  // canvasColor: Colors.transparent,
   textTheme: textTheme,
   cardTheme: cardTheme,
   colorScheme: colorScheme,

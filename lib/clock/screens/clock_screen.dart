@@ -1,3 +1,4 @@
+import 'package:clock_app/theme/border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -9,6 +10,7 @@ import 'package:clock_app/common/widgets/clock.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
+import 'package:great_list_view/great_list_view.dart';
 
 class ClockScreen extends StatefulWidget {
   const ClockScreen({Key? key}) : super(key: key);
@@ -20,6 +22,10 @@ class ClockScreen extends StatefulWidget {
 class _ClockScreenState extends State<ClockScreen> {
   List<City> _cities = [];
 
+  final _scrollController = ScrollController();
+  final _controller = AnimatedListController();
+  // late AnimatedListDiffListDispatcher<City> dispatcher;
+
   @override
   void initState() {
     super.initState();
@@ -27,33 +33,36 @@ class _ClockScreenState extends State<ClockScreen> {
   }
 
   _handleSearchReturn(dynamic city) {
-    setState(() {
-      if (city != null) {
-        _cities.add(city);
-      }
-    });
+    if (city != null) {
+      _cities.add(city);
+    }
+    _controller.notifyInsertedRange(_cities.length - 1, 1);
 
     saveList('favorite_cities', _cities);
   }
 
-  _handleDeleteCity(int index) {
-    setState(() {
-      _cities.removeAt(index);
-    });
+  _handleDeleteCity(City deletedCity) {
+    int index = _cities.indexWhere((city) => city.id == deletedCity.id);
+    _cities.removeAt(index);
+    _controller.notifyRemovedRange(
+      index,
+      1,
+      (context, index, data) => data.measuring
+          ? SizedBox(width: 64, height: 64)
+          : TimeZoneCard(
+              key: ValueKey(deletedCity),
+              city: deletedCity,
+              onDelete: () => {},
+            ),
+    );
 
     saveList('favorite_cities', _cities);
   }
 
-  _handleReorderCities(int oldIndex, int newIndex) {
-    setState(() {
-      if (oldIndex < newIndex) {
-        newIndex -= 1;
-      }
-      final City reorderedCity = _cities.removeAt(oldIndex);
-      _cities.insert(newIndex, reorderedCity);
-    });
-
+  bool _handleReorderCities(int oldIndex, int newIndex, Object? slow) {
+    _cities.insert(newIndex, _cities.removeAt(oldIndex));
     saveList('favorite_cities', _cities);
+    return true;
   }
 
   @override
@@ -70,22 +79,34 @@ class _ClockScreenState extends State<ClockScreen> {
         ),
         const SizedBox(height: 16),
         Expanded(
-          child: SlidableAutoCloseBehavior(
-            child: ReorderableListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              proxyDecorator: reorderableListDecorator,
-              itemCount: _cities.length,
-              itemBuilder: (BuildContext context, int index) {
-                return TimeZoneCard(
-                  key: ValueKey(_cities[index]),
-                  city: _cities[index],
-                  onDelete: () => _handleDeleteCity(index),
-                );
-              },
-              footer: const SizedBox(
-                  height: 64), // Allows the last item to not be covered by FAB
-              onReorder: _handleReorderCities,
+          child: AutomaticAnimatedListView<City>(
+            list: _cities,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            comparator: AnimatedListDiffListComparator<City>(
+              sameItem: (a, b) => a.id == b.id,
+              sameContent: (a, b) => a.id == b.id,
             ),
+            itemBuilder: (BuildContext context, city, data) {
+              return data.measuring
+                  ? SizedBox(width: 64, height: 64)
+                  : TimeZoneCard(
+                      key: ValueKey(city),
+                      city: city,
+                      onDelete: () => _handleDeleteCity(city),
+                    );
+            },
+            listController: _controller,
+            scrollController: _scrollController,
+            addLongPressReorderable: true,
+            reorderModel: AnimatedListReorderModel(
+              onReorderStart: (index, dx, dy) => true,
+              onReorderFeedback: (int index, int dropIndex, double offset,
+                      double dx, double dy) =>
+                  null,
+              onReorderMove: (int index, int dropIndex) => true,
+              onReorderComplete: _handleReorderCities,
+            ),
+            reorderDecorationBuilder: reorderableListDecorator,
           ),
         ),
       ]),
