@@ -1,6 +1,6 @@
-import 'package:clock_app/alarm/data/alarm_notification_data.dart';
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/alarm/types/alarm_notification_manager.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 class AlarmNotificationScreen extends StatefulWidget {
   const AlarmNotificationScreen({
     Key? key,
-    required this.alarm,
+    required this.scheduleId,
   }) : super(key: key);
 
-  final Alarm alarm;
+  final int scheduleId;
 
   @override
   State<AlarmNotificationScreen> createState() =>
@@ -20,9 +20,12 @@ class AlarmNotificationScreen extends StatefulWidget {
 }
 
 class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
+  late Alarm alarm;
+
   @override
   void initState() {
     super.initState();
+    alarm = getAlarmByScheduleId(widget.scheduleId);
   }
 
   @override
@@ -35,7 +38,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClockDisplay(
-              dateTime: widget.alarm.timeOfDay.toDateTime(),
+              dateTime: alarm.timeOfDay.toDateTime(),
               horizontalAlignment: ElementAlignment.center,
             ),
             Row(
@@ -43,17 +46,19 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
               children: [
                 TextButton(
                   onPressed: () {
+                    AlarmNotificationManager.snoozeAlarm(widget.scheduleId);
                     // dismissAlarm(widget.id);
                     // Navigator.pop(context);
                   },
-                  child: const Text(alarmSnoozeActionLabel),
+                  child: const Text(AlarmNotificationManager.snoozeActionLabel),
                 ),
                 TextButton(
                   onPressed: () {
-                    dismissAlarm();
+                    AlarmNotificationManager.dismissAlarm(widget.scheduleId);
                     // Navigator.pop(context);
                   },
-                  child: const Text(alarmDismissActionLabel),
+                  child:
+                      const Text(AlarmNotificationManager.dismissActionLabel),
                 ),
               ],
             ),

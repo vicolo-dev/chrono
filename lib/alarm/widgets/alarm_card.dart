@@ -30,9 +30,9 @@ class _AlarmCardState extends State<AlarmCard> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: InkWell(
-        onTap: widget.onTap,
-        child: Card(
+      child: Card(
+        child: InkWell(
+          onTap: widget.onTap,
           child: Slidable(
               groupTag: 'alarms',
               key: widget.key,

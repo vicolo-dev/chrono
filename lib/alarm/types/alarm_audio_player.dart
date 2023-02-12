@@ -1,27 +1,33 @@
-import 'package:flutter_system_ringtones/flutter_system_ringtones.dart';
+import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:vibration/vibration.dart';
 
 class AlarmAudioPlayer {
-  static final AudioPlayer _player = AudioPlayer();
-  static List<Ringtone> _ringtones = [];
-
-  static AudioPlayer get player => _player;
-  static List<Ringtone> get ringtones => _ringtones;
+  static AudioPlayer? _player;
+  static bool _vibratorIsAvailable = false;
 
   static Future<void> initialize() async {
-    _ringtones = await FlutterSystemRingtones.getAlarmSounds();
+    _player ??= AudioPlayer();
+    _vibratorIsAvailable = (await Vibration.hasVibrator()) ?? false;
   }
 
-  static void play(int ringtoneIndex,
-      {LoopMode loopMode = LoopMode.one}) async {
-    _player.stop();
-    await _player.setAudioSource(
-        AudioSource.uri(Uri.parse(ringtones[ringtoneIndex].uri)));
-    await _player.setLoopMode(loopMode);
-    _player.play();
+  static void play(String uri,
+      {bool vibrate = false, LoopMode loopMode = LoopMode.one}) async {
+    RingtoneManager.lastPlayedRingtoneUri = uri;
+    if (_vibratorIsAvailable && vibrate) {
+      Vibration.vibrate(pattern: [500, 1000], repeat: 0);
+    }
+    await _player?.stop();
+    await _player?.setAudioSource(AudioSource.uri(Uri.parse(uri)));
+    await _player?.setLoopMode(loopMode);
+    _player?.play();
   }
 
-  static void stop() {
-    _player.stop();
+  static void stop() async {
+    await _player?.stop();
+    if (_vibratorIsAvailable) {
+      Vibration.cancel();
+    }
+    RingtoneManager.lastPlayedRingtoneUri = "";
   }
 }

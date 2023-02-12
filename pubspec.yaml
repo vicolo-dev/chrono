@@ -32,6 +32,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_boot_receiver:
+    git:
+      url: https://github.com/AhsanSarwar45/flutter_boot_receiver.git
+      ref: master
+  # flutter_boot_receiver:
+  #   path: "../flutter_boot_receiver"
   intl: ^0.17.0
   timezone: ^0.9.1
   timer_builder: ^2.0.0
@@ -41,11 +47,26 @@ dependencies:
   flutter_slidable: ^2.0.0
   shared_preferences: ^2.0.0-nullsafety
   flutter_system_ringtones: ^0.0.6
-  android_alarm_manager_plus: ^2.1.0
+  android_alarm_manager_plus:
+    git:
+      url: https://github.com/AhsanSarwar45/android_alarm_manager_plus
+      ref: main
+  # android_alarm_manager_plus:
+  #   path: ../android_alarm_manager_plus
   just_audio: ^0.9.31
   awesome_notifications: ^0.7.4+1
   audio_session: ^0.1.13
-  awesome_select: ^6.0.0
+  flutter_windowmanager: ^0.2.0
+  flutter_fgbg: ^0.2.2
+  move_to_background: ^1.0.2
+  disable_battery_optimization: ^1.1.0+1
+  vibration: ^1.7.6
+  # great_list_view:
+  #   git:
+  #     url: https://github.com/AhsanSarwar45/great_list_view
+  #     ref: master
+  great_list_view:
+    path: ../great_list_view
 
 dev_dependencies:
   flutter_test:

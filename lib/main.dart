@@ -1,58 +1,61 @@
 import 'dart:core';
+import 'dart:io';
+import 'package:clock_app/audio/types/ringtone_manager.dart';
+import 'package:clock_app/common/logic/lock_screen_flags.dart';
+import 'package:flutter/material.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:audio_session/audio_session.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:clock_app/settings/logic/initialize_settings.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_boot_receiver/flutter_boot_receiver.dart';
 import 'package:timezone/data/latest_all.dart';
 
-import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/alarm/logic/handle_boot.dart';
+import 'package:clock_app/audio/logic/audio_session.dart';
+import 'package:clock_app/common/data/paths.dart';
+import 'package:clock_app/navigation/types/app_visibility.dart';
+import 'package:clock_app/navigation/types/routes.dart';
+import 'package:clock_app/notifications/logic/notifications.dart';
+import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
-import 'package:clock_app/alarm/data/alarm_notification_data.dart';
-import 'package:clock_app/alarm/data/alarm_notification_route.dart';
-import 'package:clock_app/alarm/logic/alarm_storage.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   initializeTimeZones();
+  await initializeAppDataDirectory();
   await initializeSettings();
   await initializeDatabases();
-  // const platform = MethodChannel("samples.flutter.dev/alarm");
-  // platform.invokeMethod('turnKeyguardOff');
-  final session = await AudioSession.instance;
-  await session.configure(const AudioSessionConfiguration(
-    avAudioSessionCategory: AVAudioSessionCategory.playback,
-    avAudioSessionCategoryOptions:
-        AVAudioSessionCategoryOptions.defaultToSpeaker,
-    androidAudioAttributes: AndroidAudioAttributes(
-      flags: AndroidAudioFlags.audibilityEnforced,
-      usage: AndroidAudioUsage.alarm,
-    ),
-  ));
-  AwesomeNotifications().isNotificationAllowed().then((allowed) {
-    if (!allowed) {
-      AwesomeNotifications().requestPermissionToSendNotifications(
-        permissions: [
-          // NotificationPermission.Sound,
-          NotificationPermission.Alert,
-          NotificationPermission.FullScreenIntent,
-        ],
-      );
-    }
-  });
   await AndroidAlarmManager.initialize();
+  await RingtoneManager.initialize();
   await AlarmAudioPlayer.initialize();
+  await initializeAudioSession();
+  await BootReceiver.initialize(handleBoot);
+  await initializeNotifications();
+  AppVisibilityListener.initialize();
+  await LockScreenFlagManager.initialize();
 
-  await AwesomeNotifications().initialize(null, [alarmNotificationChannel],
-      channelGroups: [alarmNotificationChannelGroup], debug: kDebugMode);
+  // String appDataDirectory = await getAppDataDirectoryPath();
+
+  // // log something to a file in the app's data directory
+  // try {
+  //   print(
+  //       "FileContents: ${File('$appDataDirectory/log-dart.txt').readAsStringSync()}");
+  // } catch (e) {
+  //   print("Error: $e");
+  // }
+
+  String appDataDirectory = await getAppDataDirectoryPath();
+  String path = '$appDataDirectory/ringing-alarm.txt';
+  File file = File(path);
+  if (!file.existsSync()) {
+    file.createSync();
+  }
+  file.writeAsStringSync("", mode: FileMode.writeOnly);
 
   runApp(const App());
 }
@@ -71,7 +74,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     NotificationController.setListeners();
-
     super.initState();
   }
 
@@ -82,21 +84,21 @@ class _AppState extends State<App> {
       debugShowCheckedModeBanner: false,
       title: 'Clock',
       theme: theme,
-      initialRoute: '/',
+      initialRoute: Routes.rootRoute,
       onGenerateRoute: (settings) {
+        Routes.setCurrentRoute(settings.name ?? Routes.rootRoute);
         switch (settings.name) {
-          case '/':
+          case Routes.rootRoute:
             return MaterialPageRoute(builder: (context) => const NavScaffold());
 
-          case alarmNotificationRoute:
+          case Routes.alarmNotificationRoute:
             return MaterialPageRoute(
               builder: (context) {
                 final ReceivedAction receivedAction =
                     settings.arguments as ReceivedAction;
                 int scheduleId =
                     int.parse((receivedAction.payload?['scheduleId'])!);
-                return AlarmNotificationScreen(
-                    alarm: getAlarmByScheduleId(scheduleId));
+                return AlarmNotificationScreen(scheduleId: scheduleId);
               },
             );
 

@@ -1,3 +1,4 @@
+import 'package:clock_app/theme/slider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/theme/radio.dart';
@@ -12,6 +13,7 @@ import 'package:clock_app/theme/time_picker.dart';
 
 ThemeData theme = ThemeData(
   fontFamily: 'Rubik',
+  // canvasColor: Colors.transparent,
   textTheme: textTheme,
   cardTheme: cardTheme,
   colorScheme: colorScheme,
@@ -22,5 +24,6 @@ ThemeData theme = ThemeData(
   inputDecorationTheme: inputTheme,
   scaffoldBackgroundColor: ColorTheme.backgroundColor,
   radioTheme: radioTheme,
+  sliderTheme: sliderTheme,
   // textButtonTheme: textButtonTheme,
 );

@@ -1,57 +1,75 @@
-import 'package:awesome_notifications/android_foreground_service.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:clock_app/alarm/data/alarm_notification_data.dart';
+import 'dart:developer';
+import 'dart:isolate';
+
+import 'package:clock_app/alarm/logic/schedule_alarm.dart';
+import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_audio_player.dart';
+import 'package:clock_app/alarm/types/alarm_notification_manager.dart';
+import 'package:clock_app/alarm/utils/alarm_id.dart';
+import 'package:clock_app/audio/logic/audio_session.dart';
+import 'package:clock_app/audio/types/ringtone_manager.dart';
+import 'package:clock_app/common/data/paths.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:clock_app/main.dart';
-import 'package:flutter/material.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
 
-@pragma('vm:entry-point')
-void ringAlarm(int num, Map<String, dynamic> params) async {
-  // print("Time of day : ${params['timeOfDay']}, num : $num");
-  TimeOfDay timeOfDay = TimeOfDayUtils.decode(params['timeOfDay']);
+int ringingAlarmId = -1;
 
-  AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: alarmNotificationId,
-      channelKey: alarmNotificationChannelKey,
-      title: 'Alarm Ringing...',
-      body: timeOfDay.formatToString('h:mm a'),
-      payload: {
-        'scheduleId': params['scheduleId'],
-        'ringtoneIndex': params['ringtoneIndex'],
-      },
-      category: NotificationCategory.Alarm,
-      fullScreenIntent: true,
-      autoDismissible: false,
-      wakeUpScreen: true,
-      locked: true,
-    ),
-    actionButtons: [
-      NotificationActionButton(
-        showInCompactView: true,
-        key: alarmSnoozeActionKey,
-        label: alarmSnoozeActionLabel,
-        actionType: ActionType.Default,
-        autoDismissible: true,
-      ),
-      NotificationActionButton(
-        showInCompactView: true,
-        key: alarmDismissActionKey,
-        label: alarmDismissActionLabel,
-        actionType: ActionType.Default,
-        autoDismissible: true,
-      ),
-    ],
-  );
+void handleAlarmScheduleOnTrigger(int scheduleId) {
+  List<Alarm> alarms = loadList("alarms");
+  int alarmIndex =
+      alarms.indexWhere((alarm) => alarm.hasScheduleWithId(scheduleId));
+  Alarm alarm = alarms[alarmIndex];
+
+  if (alarm.isRepeating) {
+    alarm.schedule();
+  } else {
+    alarm.disable();
+  }
+
+  alarms[alarmIndex] = alarm;
+  saveList("alarms", alarms);
 }
 
-void dismissAlarm() {
-  AlarmAudioPlayer.stop();
-  AwesomeNotifications().cancel(alarmNotificationId);
-  AndroidForegroundService.stopForeground(alarmNotificationId);
+@pragma('vm:entry-point')
+void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
+  await initializeAppDataDirectory();
+  await SettingsManager.initialize();
+  await RingtoneManager.initialize();
 
-  if (App.navigatorKey.currentState?.canPop() ?? false) {
-    App.navigatorKey.currentState?.pop();
+  handleAlarmScheduleOnTrigger(scheduleId);
+
+  print("Alarm triggered: $scheduleId");
+  print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+
+  SettingsManager.preferences?.setBool("alarmRecentlyTriggered", true);
+
+  print("ringingAlarmId: $ringingAlarmId");
+  if (ringingAlarmId == -1) {
+    await AlarmAudioPlayer.initialize();
+    await initializeAudioSession();
+    Alarm alarm = getAlarmByScheduleId(scheduleId);
+    AlarmAudioPlayer.play(alarm.ringtoneUri, vibrate: alarm.vibrate);
+  } else {
+    await AlarmNotificationManager.removeNotification();
+  }
+  AlarmNotificationManager.showNotification(
+      scheduleId, TimeOfDayUtils.decode(params['timeOfDay']));
+
+  ringingAlarmId = scheduleId;
+}
+
+@pragma('vm:entry-point')
+void stopAlarm(int scheduleId, Map<String, dynamic> params) async {
+  print("Alarm Stop Isolate: ${Service.getIsolateID(Isolate.current)}");
+  AlarmAudioPlayer.stop();
+  ringingAlarmId = -1;
+
+  if (params['action'] == AlarmStopAction.snooze.toString()) {
+    Alarm alarm = getAlarmByScheduleId(scheduleId);
+    Duration snoozeDuration = Duration(minutes: alarm.snoozeLength.floor());
+    scheduleSnoozeAlarm(scheduleId, snoozeDuration);
+  } else {
+    handleAlarmScheduleOnTrigger(scheduleId);
   }
 }
