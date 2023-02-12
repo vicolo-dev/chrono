@@ -1,4 +1,5 @@
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
+import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -20,47 +21,60 @@ class SettingGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void openSettingGroupScreen() {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return SettingGroupScreen(
+          settingsGroup: settingGroup,
+          settings: settings,
+        );
+      })).then((value) => onChanged?.call());
+    }
+
     Card summaryView = Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                children: [
-                  Text(
-                    settingGroup.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: ColorTheme.textColorSecondary,
-                        ),
-                  ),
-                  const Spacer(),
-                  const Icon(
-                    Icons.chevron_right_rounded,
-                    color: ColorTheme.textColorTertiary,
-                  )
-                ],
+      child: InkWell(
+        onTap: openSettingGroupScreen,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      settingGroup.name,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: ColorTheme.textColorSecondary,
+                          ),
+                    ),
+                    const Spacer(),
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      color: ColorTheme.textColorTertiary,
+                    )
+                  ],
+                ),
               ),
-            ),
-            ...getSettingWidgets(
-              settings,
-              settingItems: settingGroup.settings
-                  .where((setting) =>
-                      settingGroup.summarySettings.contains(setting.name))
-                  .toList(),
-              summaryView: true,
-              onChanged: onChanged,
-            )
-          ],
+              ...getSettingWidgets(
+                settings,
+                settingItems: settingGroup.settings
+                    .where((setting) =>
+                        settingGroup.summarySettings.contains(setting.name))
+                    .toList(),
+                summaryView: true,
+                onChanged: onChanged,
+              )
+            ],
+          ),
         ),
       ),
     );
 
     Card cardView = Card(
       child: InkWell(
+        onTap: openSettingGroupScreen,
         borderRadius: const BorderRadius.all(Radius.circular(16.0)),
         // onTap: onTap,
         child: Padding(

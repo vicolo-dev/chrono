@@ -54,6 +54,9 @@ Settings alarmSettingsSchema = Settings([
           },
         ),
         SwitchSetting("Vibration", false),
+        SliderSetting("Volume", 0, 100, 100, unit: "%"),
+        SwitchSetting("Rising Volume", false,
+            description: "Gradually increase volume over time"),
       ],
       Icons.volume_up,
       summarySettings: [

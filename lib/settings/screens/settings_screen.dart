@@ -12,9 +12,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // List<City> _favoriteCities = [];
-  // List<City> _filteredCities = [];
-
   @override
   void initState() {
     super.initState();

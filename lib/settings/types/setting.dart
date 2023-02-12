@@ -207,6 +207,7 @@ class SliderSetting extends Setting<double> {
       onChange: onChange,
       description: description,
       enableConditions: enableConditions,
+      unit: unit,
     );
   }
 }

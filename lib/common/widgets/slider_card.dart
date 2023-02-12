@@ -23,8 +23,20 @@ class SliderCard extends StatefulWidget {
 }
 
 class _SliderCardState extends State<SliderCard> {
+  Size calcTextSize(int length, TextStyle style) {
+    String text = '0' * length;
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+      textScaleFactor: WidgetsBinding.instance.window.textScaleFactor,
+    )..layout();
+    return textPainter.size;
+  }
+
   @override
   Widget build(BuildContext context) {
+    String valueString = '${widget.value.toStringAsFixed(0)} ${widget.unit}';
+    String maxValueString = '${widget.max.toStringAsFixed(0)} ${widget.unit}';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
@@ -37,13 +49,16 @@ class _SliderCardState extends State<SliderCard> {
           const SizedBox(height: 4.0),
           Row(
             children: [
-              Expanded(
-                flex: 3,
+              SizedBox(
+                width: calcTextSize(maxValueString.length,
+                        Theme.of(context).textTheme.bodyMedium!)
+                    .width,
                 child: Text(
-                  '${widget.value.toStringAsFixed(0)} ${'minutes'}',
+                  valueString,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
+              const SizedBox(width: 4),
               // const SizedBox(width: 8.0),
               Expanded(
                 flex: 7,

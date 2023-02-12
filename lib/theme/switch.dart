@@ -9,4 +9,5 @@ SwitchThemeData switchTheme = SwitchThemeData(
       states.contains(MaterialState.selected)
           ? colorScheme.primary.withOpacity(0.4)
           : null),
+  splashRadius: 0,
 );

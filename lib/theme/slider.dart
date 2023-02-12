@@ -18,6 +18,6 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
 }
 
 SliderThemeData sliderTheme = SliderThemeData(
-  trackShape: CustomTrackShape(),
+  // trackShape: CustomTrackShape(),
   overlayShape: SliderComponentShape.noOverlay,
 );
