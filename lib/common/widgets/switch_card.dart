@@ -19,20 +19,23 @@ class SwitchCard extends StatefulWidget {
 class _SwitchCardState extends State<SwitchCard> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        children: [
-          Text(
-            widget.name,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          const Spacer(),
-          Switch(
-            value: widget.value,
-            onChanged: widget.onChanged,
-          )
-        ],
+    return InkWell(
+      onTap: () => widget.onChanged?.call(!widget.value),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          children: [
+            Text(
+              widget.name,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const Spacer(),
+            Switch(
+              value: widget.value,
+              onChanged: widget.onChanged,
+            )
+          ],
+        ),
       ),
     );
   }
