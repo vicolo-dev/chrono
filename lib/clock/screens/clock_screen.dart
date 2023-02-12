@@ -47,7 +47,7 @@ class _ClockScreenState extends State<ClockScreen> {
       index,
       1,
       (context, index, data) => data.measuring
-          ? const SizedBox(width: 64, height: 64)
+          ? const SizedBox(height: 64)
           : TimeZoneCard(
               key: ValueKey(deletedCity),
               city: deletedCity,
@@ -88,7 +88,7 @@ class _ClockScreenState extends State<ClockScreen> {
               ),
               itemBuilder: (BuildContext context, city, data) {
                 return data.measuring
-                    ? const SizedBox(width: 64, height: 64)
+                    ? const SizedBox(height: 64)
                     : TimeZoneCard(
                         key: ValueKey(city),
                         city: city,

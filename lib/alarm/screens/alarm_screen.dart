@@ -50,29 +50,36 @@ class _AlarmScreenState extends State<AlarmScreen> {
     return true;
   }
 
+  getChangeWidgetBuilder(Alarm alarm) =>
+      (context, index, data) => data.measuring
+          ? const SizedBox(width: 64, height: 64)
+          : AlarmCard(
+              key: ValueKey(_alarms[index]),
+              alarm: _alarms[index],
+              onTap: () => {},
+              onDelete: () => {},
+              onEnabledChange: (value) => {},
+            );
+
   _handleDeleteAlarm(int index) {
     _alarms[index].disable();
     Alarm alarm = _alarms.removeAt(index);
     _controller.notifyRemovedRange(
       index,
       1,
-      (context, index, data) => data.measuring
-          ? SizedBox(width: 64, height: 64)
-          : AlarmCard(
-              key: ValueKey(alarm),
-              alarm: alarm,
-              onTap: () => {},
-              onDelete: () => {},
-              onEnabledChange: (value) => {},
-            ),
+      getChangeWidgetBuilder(alarm),
     );
     saveList('alarms', _alarms);
   }
 
   _handleEnableChangeAlarm(int index, bool value) {
-    setState(() {
-      _alarms[index].setIsEnabled(value);
-    });
+    _alarms[index].setIsEnabled(value);
+
+    _controller.notifyChangedRange(
+      index,
+      1,
+      getChangeWidgetBuilder(_alarms[index]),
+    );
     saveList('alarms', _alarms);
   }
 
@@ -134,9 +141,12 @@ class _AlarmScreenState extends State<AlarmScreen> {
     if (newAlarm == null) return;
 
     newAlarm.schedule();
-    setState(() {
-      _alarms[index] = newAlarm;
-    });
+    _alarms[index] = newAlarm;
+    _controller.notifyChangedRange(
+      index,
+      1,
+      getChangeWidgetBuilder(_alarms[index]),
+    );
 
     _showNextScheduleSnackBar(newAlarm);
 
