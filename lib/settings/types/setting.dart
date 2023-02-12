@@ -14,30 +14,42 @@ abstract class SettingItem {
 
 class SettingGroup extends SettingItem {
   String description;
-  IconData icon;
+  IconData? icon;
   List<String> summarySettings;
 
-  List<SettingItem> settings;
+  List<SettingItem> settingItems;
 
-  SettingGroup(String name, this.settings, this.icon,
-      {this.summarySettings = const [], this.description = ""})
+  SettingGroup(String name, this.settingItems,
+      {this.icon, this.summarySettings = const [], this.description = ""})
       : super(name);
 
   @override
   SettingGroup copy() {
     return SettingGroup(
       name,
-      settings.map((setting) => setting.copy()).toList(),
-      icon,
+      settingItems.map((setting) => setting.copy()).toList(),
+      icon: icon,
       summarySettings: summarySettings,
       description: description,
     );
   }
 
+  List<Setting> get settings {
+    List<Setting> allSettings = [];
+    for (var item in settingItems) {
+      if (item is Setting) {
+        allSettings.add(item);
+      } else if (item is SettingGroup) {
+        allSettings.addAll(item.settings);
+      }
+    }
+    return allSettings;
+  }
+
   @override
   dynamic serialize() {
     Map<String, dynamic> json = {};
-    for (var setting in settings) {
+    for (var setting in settingItems) {
       json[setting.name] = setting.serialize();
     }
     return json;
@@ -45,7 +57,7 @@ class SettingGroup extends SettingItem {
 
   @override
   void deserialize(dynamic value) {
-    for (var setting in settings) {
+    for (var setting in settingItems) {
       setting.deserialize(value[setting.name]);
     }
   }

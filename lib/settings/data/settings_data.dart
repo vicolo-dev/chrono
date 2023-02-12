@@ -20,7 +20,7 @@ List<SettingItem> settingsItems = [
       //   description: "12 or 24 hour time",
       // ),
     ],
-    FluxIcons.settings,
+    icon: FluxIcons.settings,
     description: "Set app wide settings like time format",
   ),
   SettingGroup(
@@ -37,7 +37,7 @@ List<SettingItem> settingsItems = [
         // ),
         ColorSetting("Accent Color", const Color.fromARGB(255, 9, 163, 184)),
       ],
-      FluxIcons.settings,
+      icon: FluxIcons.settings,
       description: "Set themes, colors and change layout"),
 ];
 

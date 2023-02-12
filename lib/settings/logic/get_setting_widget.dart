@@ -15,14 +15,20 @@ List<Widget> getSettingWidgets(
   Settings settings, {
   List<SettingItem>? settingItems,
   bool summaryView = false,
+  bool showExpandedView = false,
   VoidCallback? onChanged,
 }) {
   List<SettingItem> items = settingItems ?? settings.items;
 
   List<Widget> widgets = [];
   for (var item in items) {
-    Widget? widget = getSettingWidget(settings, item,
-        summaryView: summaryView, onChanged: onChanged);
+    Widget? widget = getSettingWidget(
+      settings,
+      item,
+      summaryView: summaryView,
+      onChanged: onChanged,
+      showExpandedView: showExpandedView,
+    );
     if (widget != null) {
       widgets.add(widget);
     }
@@ -34,6 +40,7 @@ Widget? getSettingWidget(
   Settings settings,
   SettingItem item, {
   bool summaryView = false,
+  bool showExpandedView = false,
   VoidCallback? onChanged,
 }) {
   if (item is SettingGroup) {
@@ -41,6 +48,7 @@ Widget? getSettingWidget(
       settings: settings,
       settingGroup: item,
       onChanged: onChanged,
+      showExpandedView: showExpandedView,
     );
   } else if (item is Setting) {
     if (item.enableConditions.isNotEmpty) {

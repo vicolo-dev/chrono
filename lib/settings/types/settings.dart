@@ -16,7 +16,7 @@ class Settings {
       // search in groups
       List<SettingGroup> groups = items.whereType<SettingGroup>().toList();
       for (var group in groups) {
-        List<Setting> settings = group.settings
+        List<Setting> settings = group.settingItems
             .whereType<Setting>()
             .where((element) => element.name == name)
             .toList();

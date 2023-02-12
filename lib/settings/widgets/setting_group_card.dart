@@ -9,15 +9,17 @@ class SettingGroupCard extends StatelessWidget {
   final SettingGroup settingGroup;
   final Settings settings;
   final VoidCallback? onChanged;
+  final bool showExpandedView;
 
   // final VoidCallback onTap;
 
-  const SettingGroupCard(
-      {Key? key,
-      required this.settingGroup,
-      required this.settings,
-      this.onChanged})
-      : super(key: key);
+  const SettingGroupCard({
+    Key? key,
+    required this.settingGroup,
+    required this.settings,
+    this.onChanged,
+    this.showExpandedView = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +74,38 @@ class SettingGroupCard extends StatelessWidget {
       ),
     );
 
+    Card expandedView = Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    settingGroup.name,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: ColorTheme.textColorSecondary,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            ...getSettingWidgets(
+              settings,
+              settingItems: settingGroup.settingItems,
+              summaryView: true,
+              onChanged: onChanged,
+            )
+          ],
+        ),
+      ),
+    );
+
     Card cardView = Card(
       child: InkWell(
         onTap: openSettingGroupScreen,
@@ -108,6 +142,10 @@ class SettingGroupCard extends StatelessWidget {
       ),
     );
 
-    return settingGroup.summarySettings.isNotEmpty ? summaryView : cardView;
+    return showExpandedView
+        ? expandedView
+        : settingGroup.summarySettings.isNotEmpty
+            ? summaryView
+            : cardView;
   }
 }

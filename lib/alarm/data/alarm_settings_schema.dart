@@ -36,29 +36,34 @@ Settings alarmSettingsSchema = Settings([
   SettingGroup(
       "Sound and Vibration",
       [
-        DynamicSelectSetting<String>(
-          "Melody",
-          () => RingtoneManager.ringtones
-              .map((ringtone) =>
-                  SelectSettingOption(ringtone.title, ringtone.uri))
-              .toList(),
-          onSelect: (index, uri) {
-            if (RingtoneManager.lastPlayedRingtoneUri == uri) {
-              AlarmAudioPlayer.stop();
-            } else {
-              AlarmAudioPlayer.play(uri, loopMode: LoopMode.off);
-            }
-          },
-          onChange: (index) {
-            AlarmAudioPlayer.stop();
-          },
+        SettingGroup(
+          "Sound",
+          [
+            DynamicSelectSetting<String>(
+              "Melody",
+              () => RingtoneManager.ringtones
+                  .map((ringtone) =>
+                      SelectSettingOption(ringtone.title, ringtone.uri))
+                  .toList(),
+              onSelect: (index, uri) {
+                if (RingtoneManager.lastPlayedRingtoneUri == uri) {
+                  AlarmAudioPlayer.stop();
+                } else {
+                  AlarmAudioPlayer.play(uri, loopMode: LoopMode.off);
+                }
+              },
+              onChange: (index) {
+                AlarmAudioPlayer.stop();
+              },
+            ),
+            SliderSetting("Volume", 0, 100, 100, unit: "%"),
+            SwitchSetting("Rising Volume", false,
+                description: "Gradually increase volume over time"),
+          ],
         ),
         SwitchSetting("Vibration", false),
-        SliderSetting("Volume", 0, 100, 100, unit: "%"),
-        SwitchSetting("Rising Volume", false,
-            description: "Gradually increase volume over time"),
       ],
-      Icons.volume_up,
+      icon: Icons.volume_up,
       summarySettings: [
         "Melody",
         "Vibration",
@@ -68,7 +73,7 @@ Settings alarmSettingsSchema = Settings([
       [
         SliderSetting("Length", 1, 30, 5, unit: "minutes"),
       ],
-      Icons.snooze_rounded,
+      icon: Icons.snooze_rounded,
       summarySettings: [
         "Length",
       ])

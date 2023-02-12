@@ -53,12 +53,9 @@ class _SliderCardState extends State<SliderCard> {
                 width: calcTextSize(maxValueString.length,
                         Theme.of(context).textTheme.bodyMedium!)
                     .width,
-                child: Text(
-                  valueString,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
+                child: Text(valueString,
+                    style: Theme.of(context).textTheme.bodyMedium),
               ),
-              const SizedBox(width: 4),
               // const SizedBox(width: 8.0),
               Expanded(
                 flex: 7,
@@ -69,6 +66,7 @@ class _SliderCardState extends State<SliderCard> {
                   max: widget.max,
                 ),
               ),
+              const SizedBox(width: 10),
               // const Spacer(),
             ],
           )
