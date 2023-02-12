@@ -277,9 +277,11 @@ packages:
   great_list_view:
     dependency: "direct main"
     description:
-      path: "../great_list_view"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: "0fe7d48ef88e6ab0edfab9b03e097737ec96398a"
+      url: "https://github.com/AhsanSarwar45/great_list_view"
+    source: git
     version: "0.2.3"
   html:
     dependency: transitive

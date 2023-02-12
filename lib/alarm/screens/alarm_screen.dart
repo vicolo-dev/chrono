@@ -201,6 +201,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
               onReorderComplete: _handleReorderAlarms,
             ),
             reorderDecorationBuilder: reorderableListDecorator,
+            footer: const SizedBox(height: 64),
           ),
         ),
         FAB(

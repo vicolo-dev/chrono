@@ -1,6 +1,7 @@
-import 'package:clock_app/theme/border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+
+import 'package:great_list_view/great_list_view.dart';
 
 import 'package:clock_app/clock/screens/search_city_screen.dart';
 import 'package:clock_app/clock/types/city.dart';
@@ -10,7 +11,6 @@ import 'package:clock_app/common/widgets/clock.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
-import 'package:great_list_view/great_list_view.dart';
 
 class ClockScreen extends StatefulWidget {
   const ClockScreen({Key? key}) : super(key: key);
@@ -24,7 +24,6 @@ class _ClockScreenState extends State<ClockScreen> {
 
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
-  // late AnimatedListDiffListDispatcher<City> dispatcher;
 
   @override
   void initState() {
@@ -48,7 +47,7 @@ class _ClockScreenState extends State<ClockScreen> {
       index,
       1,
       (context, index, data) => data.measuring
-          ? SizedBox(width: 64, height: 64)
+          ? const SizedBox(width: 64, height: 64)
           : TimeZoneCard(
               key: ValueKey(deletedCity),
               city: deletedCity,
@@ -79,34 +78,37 @@ class _ClockScreenState extends State<ClockScreen> {
         ),
         const SizedBox(height: 16),
         Expanded(
-          child: AutomaticAnimatedListView<City>(
-            list: _cities,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            comparator: AnimatedListDiffListComparator<City>(
-              sameItem: (a, b) => a.id == b.id,
-              sameContent: (a, b) => a.id == b.id,
+          child: SlidableAutoCloseBehavior(
+            child: AutomaticAnimatedListView<City>(
+              list: _cities,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              comparator: AnimatedListDiffListComparator<City>(
+                sameItem: (a, b) => a.id == b.id,
+                sameContent: (a, b) => a.id == b.id,
+              ),
+              itemBuilder: (BuildContext context, city, data) {
+                return data.measuring
+                    ? const SizedBox(width: 64, height: 64)
+                    : TimeZoneCard(
+                        key: ValueKey(city),
+                        city: city,
+                        onDelete: () => _handleDeleteCity(city),
+                      );
+              },
+              listController: _controller,
+              scrollController: _scrollController,
+              addLongPressReorderable: true,
+              reorderModel: AnimatedListReorderModel(
+                onReorderStart: (index, dx, dy) => true,
+                onReorderFeedback: (int index, int dropIndex, double offset,
+                        double dx, double dy) =>
+                    null,
+                onReorderMove: (int index, int dropIndex) => true,
+                onReorderComplete: _handleReorderCities,
+              ),
+              reorderDecorationBuilder: reorderableListDecorator,
+              footer: const SizedBox(height: 64),
             ),
-            itemBuilder: (BuildContext context, city, data) {
-              return data.measuring
-                  ? SizedBox(width: 64, height: 64)
-                  : TimeZoneCard(
-                      key: ValueKey(city),
-                      city: city,
-                      onDelete: () => _handleDeleteCity(city),
-                    );
-            },
-            listController: _controller,
-            scrollController: _scrollController,
-            addLongPressReorderable: true,
-            reorderModel: AnimatedListReorderModel(
-              onReorderStart: (index, dx, dy) => true,
-              onReorderFeedback: (int index, int dropIndex, double offset,
-                      double dx, double dy) =>
-                  null,
-              onReorderMove: (int index, int dropIndex) => true,
-              onReorderComplete: _handleReorderCities,
-            ),
-            reorderDecorationBuilder: reorderableListDecorator,
           ),
         ),
       ]),
