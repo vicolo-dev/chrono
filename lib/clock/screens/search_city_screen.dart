@@ -31,7 +31,7 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
           } else {
             _db
                 ?.rawQuery(
-                    "SELECT * FROM Timezones WHERE CONCAT_WS('', City, Country) LIKE '%${_filter.text}%' LIMIT 10")
+                    "SELECT * FROM Timezones WHERE City || Country LIKE '%${_filter.text}%' LIMIT 10")
                 .then((results) {
               _filteredCities = results
                   .map((result) => City(
