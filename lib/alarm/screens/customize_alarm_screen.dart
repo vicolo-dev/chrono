@@ -85,7 +85,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
               const SizedBox(height: 8),
               ...getSettingWidgets(
                 _alarm.settings,
-                onChanged: () {
+                checkDependentEnableConditions: () {
                   setState(() {});
                 },
               ),

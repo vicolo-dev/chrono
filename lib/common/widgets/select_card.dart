@@ -1,5 +1,5 @@
 import 'package:clock_app/common/types/select_choice.dart';
-import 'package:clock_app/common/widgets/select_option_card.dart';
+import 'package:clock_app/common/widgets/select_bottom_sheet.dart';
 import 'package:clock_app/theme/border.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +41,7 @@ class _SelectCardState<T> extends State<SelectCard<T>> {
       await showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
+        enableDrag: true,
         shape:
             const RoundedRectangleBorder(borderRadius: defaultTopBorderRadius),
         builder: (BuildContext context) {
@@ -53,63 +54,12 @@ class _SelectCardState<T> extends State<SelectCard<T>> {
                 });
               }
 
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 12.0),
-                    SizedBox(
-                      height: 4.0,
-                      width: 48,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                            borderRadius: defaultBorderRadius,
-                            color: ColorTheme.textColorTertiary),
-                      ),
-                    ),
-                    const SizedBox(height: 12.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                    color: ColorTheme.textColorSecondary),
-                          ),
-                          if (widget.description != null)
-                            const SizedBox(height: 8.0),
-                          if (widget.description != null)
-                            Text(
-                              widget.description!,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                      color: ColorTheme.textColorSecondary),
-                            ),
-                        ],
-                      ),
-                    ),
-                    Flexible(
-                      child: ListView.builder(
-                        itemCount: widget.choices.length,
-                        itemBuilder: (context, index) {
-                          return SelectOptionCard(
-                            index: index,
-                            choice: widget.choices[index],
-                            selectedIndex: _currentSelectedIndex,
-                            onSelect: handleSelect,
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
+              return SelectBottomSheet(
+                title: widget.title,
+                description: widget.description,
+                choices: widget.choices,
+                currentSelectedIndex: _currentSelectedIndex,
+                onSelect: handleSelect,
               );
             },
           );

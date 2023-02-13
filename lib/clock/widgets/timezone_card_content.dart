@@ -58,7 +58,6 @@ class TimezoneCardContent extends StatelessWidget {
           Clock(
             timezoneLocation: timezoneLocation,
             scale: 0.3,
-            timeFormat: TimeFormat.h12,
             color: textColor,
           ),
         ],

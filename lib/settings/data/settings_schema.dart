@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +11,15 @@ List<SettingItem> settingsItems = [
   SettingGroup(
     "General",
     [
-      // SelectSetting(
-      //   "Time Format",
-      //   [
-      //     SettingOption("12 hour"),
-      //     SettingOption("24 hour"),
-      //     SettingOption("System")
-      //   ],
-      //   description: "12 or 24 hour time",
-      // ),
+      SelectSetting<TimeFormat>(
+        "Time Format",
+        [
+          SelectSettingOption("12 Hours", TimeFormat.h12),
+          SelectSettingOption("24 Hours", TimeFormat.h24),
+          SelectSettingOption("Device Settings", TimeFormat.device),
+        ],
+        description: "12 or 24 hour time",
+      ),
     ],
     icon: FluxIcons.settings,
     description: "Set app wide settings like time format",

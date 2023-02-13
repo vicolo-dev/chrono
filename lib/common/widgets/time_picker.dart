@@ -2525,7 +2525,6 @@ class _TimePickerDialogState extends State<TimePickerDialog>
       ),
       child: AnimatedContainer(
         width: dialogSize.width,
-        height: dialogSize.height,
         duration: _kDialogSizeAnimationDuration,
         curve: Curves.easeIn,
         child: picker,

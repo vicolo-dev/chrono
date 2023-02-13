@@ -14,9 +14,9 @@ bool defaultFilter(SettingItem setting) {
 List<Widget> getSettingWidgets(
   Settings settings, {
   List<SettingItem>? settingItems,
-  bool summaryView = false,
+  bool showSummaryView = false,
   bool showExpandedView = false,
-  VoidCallback? onChanged,
+  VoidCallback? checkDependentEnableConditions,
 }) {
   List<SettingItem> items = settingItems ?? settings.items;
 
@@ -25,8 +25,8 @@ List<Widget> getSettingWidgets(
     Widget? widget = getSettingWidget(
       settings,
       item,
-      summaryView: summaryView,
-      onChanged: onChanged,
+      showSummaryView: showSummaryView,
+      checkDependentEnableConditions: checkDependentEnableConditions,
       showExpandedView: showExpandedView,
     );
     if (widget != null) {
@@ -39,15 +39,15 @@ List<Widget> getSettingWidgets(
 Widget? getSettingWidget(
   Settings settings,
   SettingItem item, {
-  bool summaryView = false,
+  bool showSummaryView = false,
   bool showExpandedView = false,
-  VoidCallback? onChanged,
+  VoidCallback? checkDependentEnableConditions,
 }) {
   if (item is SettingGroup) {
     return SettingGroupCard(
       settings: settings,
       settingGroup: item,
-      onChanged: onChanged,
+      checkDependentEnableConditions: checkDependentEnableConditions,
       showExpandedView: showExpandedView,
     );
   } else if (item is Setting) {
@@ -69,30 +69,39 @@ Widget? getSettingWidget(
         .enableConditions
         .any((condition) => condition.settingName == item.name));
 
-    onChanged = changesEnableConditions ? onChanged : null;
+    onChanged(dynamic value) {
+      if (changesEnableConditions) {
+        checkDependentEnableConditions?.call();
+      }
+      if (settings.settingListeners.containsKey(item.name)) {
+        for (var listener in settings.settingListeners[item.name]!) {
+          listener(value);
+        }
+      }
+    }
 
     if (item is SelectSetting) {
       return SelectSettingCard(
         setting: item,
-        summaryView: summaryView,
+        showSummaryView: showSummaryView,
         onChanged: onChanged,
       );
     } else if (item is SwitchSetting) {
       return SwitchSettingCard(
         setting: item,
-        summaryView: summaryView,
+        showSummaryView: showSummaryView,
         onChanged: onChanged,
       );
     } else if (item is ToggleSetting) {
       return ToggleSettingCard(
         setting: item,
-        summaryView: summaryView,
+        showSummaryView: showSummaryView,
         onChanged: onChanged,
       );
     } else if (item is SliderSetting) {
       return SliderSettingCard(
         setting: item,
-        summaryView: summaryView,
+        showSummaryView: showSummaryView,
         onChanged: onChanged,
       );
     }

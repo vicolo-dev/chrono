@@ -3,42 +3,46 @@ import 'package:clock_app/settings/types/setting.dart';
 class Settings {
   List<SettingItem> items;
 
-  Settings(this.items);
+  final Map<String, List<void Function(dynamic)>> _settingListeners;
+
+  final List<Setting> _settings = [];
+
+  Settings(this.items) : _settingListeners = {} {
+    for (var item in items) {
+      if (item is Setting) {
+        settings.add(item);
+      } else if (item is SettingGroup) {
+        settings.addAll(item.settings);
+      }
+    }
+  }
+
+  Map<String, List<void Function(dynamic)>> get settingListeners =>
+      _settingListeners;
+
+  List<Setting> get settings => _settings;
+
+  void addSettingListener(String settingName, void Function(dynamic) listener) {
+    if (!_settingListeners.containsKey(settingName)) {
+      _settingListeners[settingName] = [];
+    }
+
+    _settingListeners[settingName]?.add(listener);
+  }
+
+  void removeSettingListener(
+      String settingName, void Function(dynamic) listener) {
+    if (_settingListeners.containsKey(settingName)) {
+      _settingListeners[settingName]?.remove(listener);
+    }
+  }
 
   Settings copy() {
     return Settings(items.map((item) => item.copy()).toList());
   }
 
-  List<Setting> get settings {
-    List<Setting> allSettings = [];
-    for (var item in items) {
-      if (item is Setting) {
-        allSettings.add(item);
-      } else if (item is SettingGroup) {
-        allSettings.addAll(item.settings);
-      }
-    }
-    return allSettings;
-  }
-
   Setting getSetting(String name) {
-    return items
-        .whereType<Setting>()
-        .firstWhere((element) => element.name == name, orElse: () {
-      // search in groups
-      List<SettingGroup> groups = items.whereType<SettingGroup>().toList();
-      for (var group in groups) {
-        List<Setting> settings = group.settingItems
-            .whereType<Setting>()
-            .where((element) => element.name == name)
-            .toList();
-        if (settings.isNotEmpty) {
-          return settings.first;
-        }
-      }
-
-      throw Exception("Setting not found: $name");
-    });
+    return settings.firstWhere((setting) => setting.name == name);
   }
 
   Map<String, dynamic> toJson() {

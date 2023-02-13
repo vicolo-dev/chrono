@@ -113,10 +113,6 @@ class Alarm extends JsonSerializable {
     return _schedules.any((schedule) => schedule.hasId(scheduleId));
   }
 
-  // bool hasId(int scheduleId) {
-  //   return activeSchedule.hasId(scheduleId);
-  // }
-
   List<Weekday> getWeekdays() {
     return (getSetting("Week Days") as ToggleSetting<int>)
         .selected

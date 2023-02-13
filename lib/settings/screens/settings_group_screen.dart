@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
-import 'package:clock_app/settings/data/settings_data.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
@@ -31,17 +31,19 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
         title: Text(widget.settingsGroup.name,
             style: Theme.of(context).textTheme.titleMedium),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: ListView(
-          children: [
-            ...getSettingWidgets(
-              widget.settings,
-              settingItems: widget.settingsGroup.settingItems,
-              onChanged: () => setState(() {}),
-              showExpandedView: true,
-            )
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              ...getSettingWidgets(
+                widget.settings,
+                settingItems: widget.settingsGroup.settingItems,
+                checkDependentEnableConditions: () => setState(() {}),
+                showExpandedView: true,
+              )
+            ],
+          ),
         ),
       ),
     );

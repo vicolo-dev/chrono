@@ -6,13 +6,13 @@ class ToggleSettingCard<T> extends StatefulWidget {
   const ToggleSettingCard(
       {Key? key,
       required this.setting,
-      this.summaryView = false,
+      this.showSummaryView = false,
       this.onChanged})
       : super(key: key);
 
   final ToggleSetting setting;
-  final bool summaryView;
-  final VoidCallback? onChanged;
+  final bool showSummaryView;
+  final void Function(T)? onChanged;
 
   @override
   State<ToggleSettingCard<T>> createState() => _ToggleSettingCardState<T>();
@@ -33,10 +33,10 @@ class _ToggleSettingCardState<T> extends State<ToggleSettingCard<T>> {
           widget.setting.toggle(value);
         });
 
-        widget.onChanged?.call();
+        widget.onChanged?.call(widget.setting.value);
       },
     );
 
-    return widget.summaryView ? toggleCard : Card(child: toggleCard);
+    return widget.showSummaryView ? toggleCard : Card(child: toggleCard);
   }
 }

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class SettingGroupCard extends StatelessWidget {
   final SettingGroup settingGroup;
   final Settings settings;
-  final VoidCallback? onChanged;
+  final VoidCallback? checkDependentEnableConditions;
   final bool showExpandedView;
 
   // final VoidCallback onTap;
@@ -17,7 +17,7 @@ class SettingGroupCard extends StatelessWidget {
     Key? key,
     required this.settingGroup,
     required this.settings,
-    this.onChanged,
+    this.checkDependentEnableConditions,
     this.showExpandedView = false,
   }) : super(key: key);
 
@@ -29,10 +29,10 @@ class SettingGroupCard extends StatelessWidget {
           settingsGroup: settingGroup,
           settings: settings,
         );
-      })).then((value) => onChanged?.call());
+      })).then((value) => checkDependentEnableConditions?.call());
     }
 
-    Card summaryView = Card(
+    Card showSummaryView = Card(
       child: InkWell(
         onTap: openSettingGroupScreen,
         child: Padding(
@@ -66,8 +66,8 @@ class SettingGroupCard extends StatelessWidget {
                     .where((setting) =>
                         settingGroup.summarySettings.contains(setting.name))
                     .toList(),
-                summaryView: true,
-                onChanged: onChanged,
+                showSummaryView: true,
+                checkDependentEnableConditions: checkDependentEnableConditions,
               )
             ],
           ),
@@ -99,8 +99,8 @@ class SettingGroupCard extends StatelessWidget {
             ...getSettingWidgets(
               settings,
               settingItems: settingGroup.settingItems,
-              summaryView: true,
-              onChanged: onChanged,
+              showSummaryView: true,
+              checkDependentEnableConditions: checkDependentEnableConditions,
             )
           ],
         ),
@@ -125,7 +125,7 @@ class SettingGroupCard extends StatelessWidget {
                   children: [
                     Text(
                       settingGroup.name,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
                     const SizedBox(height: 4),
                     if (settingGroup.description.isNotEmpty)
@@ -146,7 +146,7 @@ class SettingGroupCard extends StatelessWidget {
     return showExpandedView
         ? expandedView
         : settingGroup.summarySettings.isNotEmpty
-            ? summaryView
+            ? showSummaryView
             : cardView;
   }
 }

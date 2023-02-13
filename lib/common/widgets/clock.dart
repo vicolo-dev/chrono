@@ -14,7 +14,6 @@ class Clock extends StatelessWidget {
     this.scale = 1,
     this.shouldShowDate = false,
     this.shouldShowSeconds = false,
-    this.timeFormat = TimeFormat.h12,
     this.color,
     this.timezoneLocation,
     this.horizontalAlignment = ElementAlignment.start,
@@ -23,7 +22,6 @@ class Clock extends StatelessWidget {
   final ElementAlignment horizontalAlignment;
   final double scale;
   final bool shouldShowDate;
-  final TimeFormat timeFormat;
   final bool shouldShowSeconds;
   final Color? color;
   final timezone.Location? timezoneLocation;
@@ -40,7 +38,6 @@ class Clock extends StatelessWidget {
           dateTime = DateTime.now();
         }
         return ClockDisplay(
-          timeFormat: timeFormat,
           scale: scale,
           shouldShowDate: shouldShowDate,
           color: color,

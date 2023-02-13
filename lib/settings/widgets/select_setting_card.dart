@@ -7,12 +7,12 @@ class SelectSettingCard<T> extends StatefulWidget {
   const SelectSettingCard({
     Key? key,
     required this.setting,
-    this.summaryView = false,
+    this.showSummaryView = false,
     this.onChanged,
   }) : super(key: key);
   final SelectSetting<T> setting;
-  final VoidCallback? onChanged;
-  final bool summaryView;
+  final void Function(T)? onChanged;
+  final bool showSummaryView;
 
   @override
   State<SelectSettingCard<T>> createState() => _SelectSettingCardState<T>();
@@ -32,11 +32,11 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
         setState(() {
           widget.setting.setValue(value);
         });
-        widget.onChanged?.call();
+        widget.onChanged?.call(widget.setting.value);
       },
       onSelect: widget.setting.onSelectOption,
     );
 
-    return widget.summaryView ? selectWidget : Card(child: selectWidget);
+    return widget.showSummaryView ? selectWidget : Card(child: selectWidget);
   }
 }

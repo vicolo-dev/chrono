@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 
 class SliderSettingCard extends StatefulWidget {
   final SliderSetting setting;
-  final bool summaryView;
-  final VoidCallback? onChanged;
+  final bool showSummaryView;
+  final void Function(double)? onChanged;
 
   const SliderSettingCard({
     Key? key,
     required this.setting,
-    this.summaryView = false,
+    this.showSummaryView = false,
     this.onChanged,
   }) : super(key: key);
 
@@ -31,10 +31,10 @@ class _SliderSettingCardState extends State<SliderSettingCard> {
         setState(() {
           widget.setting.setValue(value);
         });
-        widget.onChanged?.call();
+        widget.onChanged?.call(widget.setting.value);
       },
     );
 
-    return widget.summaryView ? sliderCard : Card(child: sliderCard);
+    return widget.showSummaryView ? sliderCard : Card(child: sliderCard);
   }
 }
