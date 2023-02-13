@@ -9,6 +9,18 @@ class Settings {
     return Settings(items.map((item) => item.copy()).toList());
   }
 
+  List<Setting> get settings {
+    List<Setting> allSettings = [];
+    for (var item in items) {
+      if (item is Setting) {
+        allSettings.add(item);
+      } else if (item is SettingGroup) {
+        allSettings.addAll(item.settings);
+      }
+    }
+    return allSettings;
+  }
+
   Setting getSetting(String name) {
     return items
         .whereType<Setting>()

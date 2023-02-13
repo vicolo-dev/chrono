@@ -3,7 +3,7 @@ import 'package:clock_app/common/widgets/select_card.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
-class SelectSettingCard<T> extends StatelessWidget {
+class SelectSettingCard<T> extends StatefulWidget {
   const SelectSettingCard({
     Key? key,
     required this.setting,
@@ -15,21 +15,28 @@ class SelectSettingCard<T> extends StatelessWidget {
   final bool summaryView;
 
   @override
+  State<SelectSettingCard<T>> createState() => _SelectSettingCardState<T>();
+}
+
+class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
+  @override
   Widget build(BuildContext context) {
     SelectCard selectWidget = SelectCard<T>(
-      selectedIndex: setting.selectedIndex,
-      title: setting.name,
-      choices: setting.options
+      selectedIndex: widget.setting.selectedIndex,
+      title: widget.setting.name,
+      choices: widget.setting.options
           .map((option) =>
               SelectChoice(title: option.name, description: option.description))
           .toList(),
       onChange: (value) {
-        setting.setValue(value);
-        onChanged?.call();
+        setState(() {
+          widget.setting.setValue(value);
+        });
+        widget.onChanged?.call();
       },
-      onSelect: setting.onSelectOption,
+      onSelect: widget.setting.onSelectOption,
     );
 
-    return summaryView ? selectWidget : Card(child: selectWidget);
+    return widget.summaryView ? selectWidget : Card(child: selectWidget);
   }
 }

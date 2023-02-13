@@ -2,7 +2,7 @@ import 'package:clock_app/common/widgets/slider_card.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
-class SliderSettingCard extends StatelessWidget {
+class SliderSettingCard extends StatefulWidget {
   final SliderSetting setting;
   final bool summaryView;
   final VoidCallback? onChanged;
@@ -15,19 +15,26 @@ class SliderSettingCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<SliderSettingCard> createState() => _SliderSettingCardState();
+}
+
+class _SliderSettingCardState extends State<SliderSettingCard> {
+  @override
   Widget build(BuildContext context) {
     SliderCard sliderCard = SliderCard(
-      name: setting.name,
-      value: setting.value,
-      min: setting.min,
-      max: setting.max,
-      unit: setting.unit,
+      name: widget.setting.name,
+      value: widget.setting.value,
+      min: widget.setting.min,
+      max: widget.setting.max,
+      unit: widget.setting.unit,
       onChanged: (value) {
-        setting.setValue(value);
-        onChanged?.call();
+        setState(() {
+          widget.setting.setValue(value);
+        });
+        widget.onChanged?.call();
       },
     );
 
-    return summaryView ? sliderCard : Card(child: sliderCard);
+    return widget.summaryView ? sliderCard : Card(child: sliderCard);
   }
 }

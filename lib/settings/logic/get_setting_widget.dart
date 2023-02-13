@@ -64,6 +64,13 @@ Widget? getSettingWidget(
         return null;
       }
     }
+
+    bool changesEnableConditions = settings.settings.any((setting) => setting
+        .enableConditions
+        .any((condition) => condition.settingName == item.name));
+
+    onChanged = changesEnableConditions ? onChanged : null;
+
     if (item is SelectSetting) {
       return SelectSettingCard(
         setting: item,

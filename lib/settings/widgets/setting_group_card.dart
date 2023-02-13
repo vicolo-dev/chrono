@@ -47,9 +47,10 @@ class SettingGroupCard extends StatelessWidget {
                   children: [
                     Text(
                       settingGroup.name,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: ColorTheme.textColorSecondary,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                color: ColorTheme.accentColor,
+                              ),
                     ),
                     const Spacer(),
                     const Icon(
@@ -88,8 +89,8 @@ class SettingGroupCard extends StatelessWidget {
                 children: [
                   Text(
                     settingGroup.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: ColorTheme.textColorSecondary,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          color: ColorTheme.accentColor,
                         ),
                   ),
                 ],
@@ -124,7 +125,7 @@ class SettingGroupCard extends StatelessWidget {
                   children: [
                     Text(
                       settingGroup.name,
-                      style: Theme.of(context).textTheme.displaySmall,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 4),
                     if (settingGroup.description.isNotEmpty)
