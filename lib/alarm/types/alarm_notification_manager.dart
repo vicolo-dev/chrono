@@ -103,8 +103,6 @@ class AlarmNotificationManager {
 
   static void handleNotificationCreated(
       ReceivedNotification receivedNotification) {
-    SettingsManager.notifyListeners("alarms");
-
     _fgbgType = AppVisibilityListener.state;
 
     print("FGBGType on NotificationCreated: $_fgbgType");

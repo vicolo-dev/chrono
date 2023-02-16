@@ -1,3 +1,4 @@
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -21,14 +22,29 @@ class ClockScreen extends StatefulWidget {
 
 class _ClockScreenState extends State<ClockScreen> {
   List<City> _cities = [];
+  bool shouldShowSeconds = false;
 
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
+
+  void setShowSeconds(dynamic value) {
+    setState(() {
+      shouldShowSeconds = value;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     setState(() => _cities = loadList('favorite_cities'));
+    setShowSeconds(appSettings.getSetting("Show Seconds").value);
+    appSettings.addSettingListener("Show Seconds", setShowSeconds);
+  }
+
+  @override
+  void dispose() {
+    appSettings.removeSettingListener("Show Seconds", setShowSeconds);
+    super.dispose();
   }
 
   _handleSearchReturn(dynamic city) {
@@ -68,11 +84,11 @@ class _ClockScreenState extends State<ClockScreen> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Column(children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Clock(
             shouldShowDate: true,
-            shouldShowSeconds: true,
+            shouldShowSeconds: shouldShowSeconds,
             horizontalAlignment: ElementAlignment.center,
           ),
         ),

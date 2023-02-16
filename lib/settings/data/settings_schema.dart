@@ -20,6 +20,7 @@ List<SettingItem> settingsItems = [
         ],
         description: "12 or 24 hour time",
       ),
+      SwitchSetting("Show Seconds", true),
     ],
     icon: FluxIcons.settings,
     description: "Set app wide settings like time format",

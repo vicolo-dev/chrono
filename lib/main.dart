@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:io';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
+import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
@@ -85,6 +86,7 @@ class _AppState extends State<App> {
       title: 'Clock',
       theme: theme,
       initialRoute: Routes.rootRoute,
+      navigatorObservers: [routeObserver],
       onGenerateRoute: (settings) {
         Routes.setCurrentRoute(settings.name ?? Routes.rootRoute);
         switch (settings.name) {

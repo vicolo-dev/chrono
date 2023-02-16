@@ -1,10 +1,12 @@
 import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
+import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,7 @@ class AlarmScreen extends StatefulWidget {
   State<AlarmScreen> createState() => _AlarmScreenState();
 }
 
-class _AlarmScreenState extends State<AlarmScreen> {
+class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
   List<Alarm> _alarms = [];
 
   final _scrollController = ScrollController();
@@ -28,19 +30,35 @@ class _AlarmScreenState extends State<AlarmScreen> {
     setState(() {
       _alarms = loadList('alarms');
     });
+
+    _controller.notifyChangedRange(
+      0,
+      _alarms.length,
+      getChangeWidgetBuilder(),
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    SettingsManager.addOnChangeListener("alarms", loadAlarms);
-    loadAlarms();
+    _alarms = loadList('alarms');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
   }
 
   @override
   void dispose() {
-    SettingsManager.removeOnChangeListener("alarms");
+    routeObserver.unsubscribe(this);
     super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    loadAlarms();
   }
 
   bool _handleReorderAlarms(int oldIndex, int newIndex, Object? slot) {
@@ -49,24 +67,39 @@ class _AlarmScreenState extends State<AlarmScreen> {
     return true;
   }
 
-  getChangeWidgetBuilder(Alarm alarm) =>
+  getAlarmChangeWidgetBuilder(Alarm alarm) =>
       (context, index, data) => data.measuring
           ? const SizedBox(width: 64, height: 64)
           : AlarmCard(
-              key: ValueKey(_alarms[index]),
-              alarm: _alarms[index],
+              key: ValueKey(alarm),
+              alarm: alarm,
               onTap: () => {},
               onDelete: () => {},
+              onDuplicate: () => {},
               onEnabledChange: (value) => {},
             );
 
-  _handleDeleteAlarm(int index) {
+  getChangeWidgetBuilder() => (context, index, data) => data.measuring
+      ? const SizedBox(width: 64, height: 64)
+      : AlarmCard(
+          key: ValueKey(_alarms[index]),
+          alarm: _alarms[index],
+          onTap: () => {},
+          onDelete: () => {},
+          onDuplicate: () => {},
+          onEnabledChange: (value) => {},
+        );
+
+  _handleDeleteAlarm(Alarm deletedAlarm) {
+    print(_alarms);
+    int index = _alarms.indexWhere(
+        (alarm) => alarm.currentScheduleId == deletedAlarm.currentScheduleId);
     _alarms[index].disable();
-    Alarm alarm = _alarms.removeAt(index);
+    _alarms.removeAt(index);
     _controller.notifyRemovedRange(
       index,
       1,
-      getChangeWidgetBuilder(alarm),
+      getAlarmChangeWidgetBuilder(deletedAlarm),
     );
     saveList('alarms', _alarms);
   }
@@ -77,7 +110,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _controller.notifyChangedRange(
       index,
       1,
-      getChangeWidgetBuilder(_alarms[index]),
+      getAlarmChangeWidgetBuilder(_alarms[index]),
     );
     saveList('alarms', _alarms);
   }
@@ -114,10 +147,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
     });
   }
 
-  _handleAddAlarm(Alarm alarm) {
+  _handleAddAlarm(Alarm alarm, {int index = -1}) {
     alarm.schedule();
     _alarms.add(alarm);
-    _controller.notifyInsertedRange(_alarms.length - 1, 1);
+    if (index == -1) index = _alarms.length - 1;
+    _controller.notifyInsertedRange(index, 1);
 
     _showNextScheduleSnackBar(alarm);
 
@@ -144,7 +178,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _controller.notifyChangedRange(
       index,
       1,
-      getChangeWidgetBuilder(_alarms[index]),
+      getAlarmChangeWidgetBuilder(_alarms[index]),
     );
 
     _showNextScheduleSnackBar(newAlarm);
@@ -184,7 +218,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
               sameItem: (a, b) => a.currentScheduleId == b.currentScheduleId,
               sameContent: (a, b) => a.currentScheduleId == b.currentScheduleId,
             ),
-            itemBuilder: (BuildContext context, alarm, data) {
+            itemBuilder: (BuildContext context, Alarm alarm, data) {
               int index = _alarms.indexWhere(
                   (a) => a.currentScheduleId == alarm.currentScheduleId);
               return data.measuring
@@ -193,11 +227,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       key: ValueKey(alarm),
                       alarm: alarm,
                       onTap: () => _handleCustomizeAlarm(index),
-                      onDelete: () => _handleDeleteAlarm(index),
+                      onDelete: () => _handleDeleteAlarm(alarm),
+                      onDuplicate: () => _handleAddAlarm(Alarm.fromAlarm(alarm),
+                          index: index + 1),
                       onEnabledChange: (bool value) =>
                           _handleEnableChangeAlarm(index, value),
                     );
             },
+            // animator: DefaultAnimatedListAnimator,
             listController: _controller,
             scrollController: _scrollController,
             addLongPressReorderable: true,

@@ -8,16 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class AlarmCard extends StatefulWidget {
-  const AlarmCard(
-      {Key? key,
-      required this.alarm,
-      required this.onDelete,
-      required this.onEnabledChange,
-      required this.onTap})
-      : super(key: key);
+  const AlarmCard({
+    Key? key,
+    required this.alarm,
+    required this.onDelete,
+    required this.onEnabledChange,
+    required this.onTap,
+    required this.onDuplicate,
+  }) : super(key: key);
 
   final Alarm alarm;
   final VoidCallback onDelete;
+  final VoidCallback onDuplicate;
   final VoidCallback onTap;
   final void Function(bool) onEnabledChange;
 
@@ -36,7 +38,28 @@ class _AlarmCardState extends State<AlarmCard> {
           child: Slidable(
               groupTag: 'alarms',
               key: widget.key,
-              startActionPane: getDeleteActionPane(widget.onDelete, context),
+              startActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                // extentRatio: Platform == 0.25,
+                children: [
+                  CustomSlidableAction(
+                    onPressed: (context) => widget.onDuplicate(),
+                    backgroundColor: Color.fromARGB(255, 73, 100, 254),
+                    foregroundColor: Colors.white,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.delete),
+                        Text('Duplicate',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(color: Colors.white)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               endActionPane: getDeleteActionPane(widget.onDelete, context),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
