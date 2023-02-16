@@ -10,8 +10,15 @@ import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:great_list_view/great_list_view.dart';
+
+typedef AlarmCardBuilder = Widget Function(
+  BuildContext context,
+  int index,
+  AnimatedWidgetBuilderData data,
+);
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({Key? key}) : super(key: key);
@@ -25,6 +32,9 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
 
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
+
+  int _getAlarmIndex(Alarm alarm) => _alarms.indexWhere(
+      (element) => element.currentScheduleId == alarm.currentScheduleId);
 
   void loadAlarms() {
     setState(() {
@@ -67,7 +77,7 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
     return true;
   }
 
-  getAlarmChangeWidgetBuilder(Alarm alarm) =>
+  AlarmCardBuilder getAlarmChangeWidgetBuilder(Alarm alarm) =>
       (context, index, data) => data.measuring
           ? const SizedBox(width: 64, height: 64)
           : AlarmCard(
@@ -79,21 +89,11 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
               onEnabledChange: (value) => {},
             );
 
-  getChangeWidgetBuilder() => (context, index, data) => data.measuring
-      ? const SizedBox(width: 64, height: 64)
-      : AlarmCard(
-          key: ValueKey(_alarms[index]),
-          alarm: _alarms[index],
-          onTap: () => {},
-          onDelete: () => {},
-          onDuplicate: () => {},
-          onEnabledChange: (value) => {},
-        );
+  AlarmCardBuilder getChangeWidgetBuilder() => (context, index, data) =>
+      getAlarmChangeWidgetBuilder(_alarms[index])(context, index, data);
 
   _handleDeleteAlarm(Alarm deletedAlarm) {
-    print(_alarms);
-    int index = _alarms.indexWhere(
-        (alarm) => alarm.currentScheduleId == deletedAlarm.currentScheduleId);
+    int index = _getAlarmIndex(deletedAlarm);
     _alarms[index].disable();
     _alarms.removeAt(index);
     _controller.notifyRemovedRange(
@@ -104,14 +104,55 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
     saveList('alarms', _alarms);
   }
 
-  _handleEnableChangeAlarm(int index, bool value) {
+  _handleEnableChangeAlarm(Alarm alarm, bool value) {
+    int index = _getAlarmIndex(alarm);
     _alarms[index].setIsEnabled(value);
 
     _controller.notifyChangedRange(
       index,
       1,
-      getAlarmChangeWidgetBuilder(_alarms[index]),
+      getAlarmChangeWidgetBuilder(alarm),
     );
+    saveList('alarms', _alarms);
+  }
+
+  _handleAddAlarm(Alarm alarm, {int index = -1}) {
+    if (index == -1) index = _alarms.length;
+    alarm.schedule();
+    _alarms.insert(index, alarm);
+    _controller.notifyInsertedRange(index, 1);
+
+    _showNextScheduleSnackBar(alarm);
+
+    saveList('alarms', _alarms);
+  }
+
+  Future<Alarm?> _openCustomizeAlarmScreen(Alarm alarm) async {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
+    return await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CustomizeAlarmScreen(initialAlarm: alarm)),
+    );
+  }
+
+  _handleCustomizeAlarm(Alarm alarm) async {
+    int index = _getAlarmIndex(alarm);
+    Alarm? newAlarm = await _openCustomizeAlarmScreen(alarm);
+
+    if (newAlarm == null) return;
+
+    newAlarm.schedule();
+    _alarms[index] = newAlarm;
+    _controller.notifyChangedRange(
+      index,
+      1,
+      getAlarmChangeWidgetBuilder(alarm),
+    );
+
+    _showNextScheduleSnackBar(newAlarm);
+
     saveList('alarms', _alarms);
   }
 
@@ -147,47 +188,10 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
     });
   }
 
-  _handleAddAlarm(Alarm alarm, {int index = -1}) {
-    alarm.schedule();
-    _alarms.add(alarm);
-    if (index == -1) index = _alarms.length - 1;
-    _controller.notifyInsertedRange(index, 1);
-
-    _showNextScheduleSnackBar(alarm);
-
-    saveList('alarms', _alarms);
-  }
-
-  Future<Alarm?> _openCustomizeAlarmScreen(Alarm alarm) async {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-    return await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => CustomizeAlarmScreen(initialAlarm: alarm)),
-    );
-  }
-
-  _handleCustomizeAlarm(int index) async {
-    Alarm? newAlarm = await _openCustomizeAlarmScreen(_alarms[index]);
-
-    if (newAlarm == null) return;
-
-    newAlarm.schedule();
-    _alarms[index] = newAlarm;
-    _controller.notifyChangedRange(
-      index,
-      1,
-      getAlarmChangeWidgetBuilder(_alarms[index]),
-    );
-
-    _showNextScheduleSnackBar(newAlarm);
-
-    saveList('alarms', _alarms);
-  }
-
   @override
   Widget build(BuildContext context) {
+    timeDilation = 0.75;
+
     Future<void> selectTime(Future<Alarm?> Function(Alarm) onCustomize) async {
       final TimePickerResult? timePickerResult = await showTimePickerDialog(
         context: context,
@@ -219,19 +223,17 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
               sameContent: (a, b) => a.currentScheduleId == b.currentScheduleId,
             ),
             itemBuilder: (BuildContext context, Alarm alarm, data) {
-              int index = _alarms.indexWhere(
-                  (a) => a.currentScheduleId == alarm.currentScheduleId);
               return data.measuring
-                  ? SizedBox(width: 64, height: 64)
+                  ? const SizedBox(width: 64, height: 64)
                   : AlarmCard(
                       key: ValueKey(alarm),
                       alarm: alarm,
-                      onTap: () => _handleCustomizeAlarm(index),
+                      onTap: () => _handleCustomizeAlarm(alarm),
                       onDelete: () => _handleDeleteAlarm(alarm),
                       onDuplicate: () => _handleAddAlarm(Alarm.fromAlarm(alarm),
-                          index: index + 1),
+                          index: _getAlarmIndex(alarm) + 1),
                       onEnabledChange: (bool value) =>
-                          _handleEnableChangeAlarm(index, value),
+                          _handleEnableChangeAlarm(alarm, value),
                     );
             },
             // animator: DefaultAnimatedListAnimator,

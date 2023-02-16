@@ -28,7 +28,7 @@ class _NavScaffoldState extends State<NavScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopBar(
+      appBar: AppTopBar(
         title: Text(tabs[_selectedTabIndex].title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: ColorTheme.textColorSecondary,

@@ -44,7 +44,7 @@ class _AlarmCardState extends State<AlarmCard> {
                 children: [
                   CustomSlidableAction(
                     onPressed: (context) => widget.onDuplicate(),
-                    backgroundColor: Color.fromARGB(255, 73, 100, 254),
+                    backgroundColor: ColorTheme.accentColor,
                     foregroundColor: Colors.white,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

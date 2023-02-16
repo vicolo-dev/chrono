@@ -87,11 +87,15 @@ class SettingGroupCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    settingGroup.name,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: ColorTheme.accentColor,
-                        ),
+                  Hero(
+                    tag: settingGroup.name,
+                    child: Text(
+                      settingGroup.name,
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                color: ColorTheme.accentColor,
+                              ),
+                    ),
                   ),
                 ],
               ),

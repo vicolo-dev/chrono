@@ -34,7 +34,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopBar(actions: [
+      appBar: AppTopBar(actions: [
         TextButton(
             onPressed: () {
               Navigator.pop(context, _alarm);

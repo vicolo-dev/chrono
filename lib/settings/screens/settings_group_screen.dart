@@ -27,9 +27,12 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopBar(
-        title: Text(widget.settingsGroup.name,
-            style: Theme.of(context).textTheme.titleMedium),
+      appBar: AppTopBar(
+        title: Hero(
+          tag: widget.settingsGroup.name,
+          child: Text(widget.settingsGroup.name,
+              style: Theme.of(context).textTheme.titleMedium),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

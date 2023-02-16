@@ -40,12 +40,10 @@ class DateSchedule extends JsonSerializable {
 }
 
 abstract class AlarmSchedule extends JsonSerializable {
-  Settings alarmSettings;
-
   DateTime get nextScheduleDateTime;
   int get currentAlarmRunnerId;
 
-  AlarmSchedule(this.alarmSettings);
+  AlarmSchedule();
 
   List<AlarmRunner> get alarmRunners;
   void schedule(TimeOfDay timeOfDay);
@@ -62,9 +60,9 @@ class OnceAlarmSchedule extends AlarmSchedule {
   @override
   int get currentAlarmRunnerId => _alarmRunner.id;
 
-  OnceAlarmSchedule(Settings alarmSettings)
+  OnceAlarmSchedule()
       : _alarmRunner = AlarmRunner(),
-        super(alarmSettings);
+        super();
 
   @override
   void schedule(TimeOfDay timeOfDay) {
@@ -82,9 +80,9 @@ class OnceAlarmSchedule extends AlarmSchedule {
         'alarmRunner': _alarmRunner.toJson(),
       };
 
-  OnceAlarmSchedule.fromJson(Map<String, dynamic> json, Settings alarmSettings)
+  OnceAlarmSchedule.fromJson(Map<String, dynamic> json)
       : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
-        super(alarmSettings);
+        super();
 
   @override
   bool hasId(int id) {
@@ -104,9 +102,9 @@ class DailyAlarmSchedule extends AlarmSchedule {
   @override
   int get currentAlarmRunnerId => _alarmRunner.id;
 
-  DailyAlarmSchedule(Settings alarmSettings)
+  DailyAlarmSchedule()
       : _alarmRunner = AlarmRunner(),
-        super(alarmSettings);
+        super();
 
   @override
   void schedule(TimeOfDay timeOfDay) {
@@ -124,9 +122,9 @@ class DailyAlarmSchedule extends AlarmSchedule {
         'alarmRunner': _alarmRunner.toJson(),
       };
 
-  DailyAlarmSchedule.fromJson(Map<String, dynamic> json, Settings alarmSettings)
+  DailyAlarmSchedule.fromJson(Map<String, dynamic> json)
       : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
-        super(alarmSettings);
+        super();
 
   @override
   bool hasId(int id) {
@@ -139,6 +137,7 @@ class DailyAlarmSchedule extends AlarmSchedule {
 
 class WeeklyAlarmSchedule extends AlarmSchedule {
   List<WeekdaySchedule> _weekdaySchedules = [];
+  final ToggleSetting<int> _weekdaySetting;
 
   WeekdaySchedule get nextWeekdaySchedule {
     WeekdaySchedule nextWeekdaySchedule = _weekdaySchedules[0];
@@ -158,7 +157,9 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
   @override
   int get currentAlarmRunnerId => nextWeekdaySchedule.alarmRunner.id;
 
-  WeeklyAlarmSchedule(Settings alarmSettings) : super(alarmSettings);
+  WeeklyAlarmSchedule(Setting weekdaySetting)
+      : _weekdaySetting = weekdaySetting as ToggleSetting<int>,
+        super();
 
   @override
   void schedule(TimeOfDay timeOfDay) {
@@ -166,10 +167,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
       weekdaySchedule.alarmRunner.cancel();
     }
 
-    List<int> weekdays =
-        (alarmSettings.getSetting("Week Days") as ToggleSetting<int>)
-            .selected
-            .toList();
+    List<int> weekdays = _weekdaySetting.selected.toList();
 
     _weekdaySchedules =
         weekdays.map((weekday) => WeekdaySchedule(weekday)).toList();
@@ -197,11 +195,12 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
       };
 
   WeeklyAlarmSchedule.fromJson(
-      Map<String, dynamic> json, Settings alarmSettings)
+      Map<String, dynamic> json, Setting weekdaySetting)
       : _weekdaySchedules = (json['weekdaySchedules'] as List)
             .map((e) => WeekdaySchedule.fromJson(e))
             .toList(),
-        super(alarmSettings);
+        _weekdaySetting = weekdaySetting as ToggleSetting<int>,
+        super();
 
   @override
   bool hasId(int id) {
@@ -262,7 +261,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
   @override
   int get currentAlarmRunnerId => nextDateSchedule.alarmRunner.id;
 
-  DatesAlarmSchedule(Settings alarmSettings) : super(alarmSettings);
+  DatesAlarmSchedule() : super();
 
   @override
   void cancel() {
@@ -289,11 +288,11 @@ class DatesAlarmSchedule extends AlarmSchedule {
         'dateSchedules': _dateSchedules.map((e) => e.toJson()).toList(),
       };
 
-  DatesAlarmSchedule.fromJson(Map<String, dynamic> json, Settings alarmSettings)
+  DatesAlarmSchedule.fromJson(Map<String, dynamic> json)
       : _dateSchedules = (json['dateSchedules'] as List)
             .map((e) => DateSchedule.fromJson(e))
             .toList(),
-        super(alarmSettings);
+        super();
 
   @override
   bool hasId(int id) {
@@ -324,9 +323,9 @@ class RangeAlarmSchedule extends AlarmSchedule {
   @override
   int get currentAlarmRunnerId => _alarmRunner.id;
 
-  RangeAlarmSchedule(Settings alarmSettings)
+  RangeAlarmSchedule()
       : _alarmRunner = AlarmRunner(),
-        super(alarmSettings);
+        super();
 
   @override
   void schedule(TimeOfDay timeOfDay) {
@@ -348,12 +347,12 @@ class RangeAlarmSchedule extends AlarmSchedule {
         'interval': _interval.inMilliseconds,
       };
 
-  RangeAlarmSchedule.fromJson(Map<String, dynamic> json, Settings alarmSettings)
+  RangeAlarmSchedule.fromJson(Map<String, dynamic> json)
       : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
         _startDate = DateTime.parse(json['startDate']),
         _endDate = DateTime.parse(json['endDate']),
         _interval = Duration(milliseconds: json['interval']),
-        super(alarmSettings);
+        super();
 
   @override
   bool hasId(int id) {

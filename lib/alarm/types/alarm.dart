@@ -9,6 +9,16 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:flutter/material.dart';
 
+List<AlarmSchedule> createSchedules(Settings settings) {
+  return [
+    OnceAlarmSchedule(),
+    DailyAlarmSchedule(),
+    WeeklyAlarmSchedule(settings.getSetting("Week Days")),
+    DatesAlarmSchedule(),
+    RangeAlarmSchedule()
+  ];
+}
+
 class Alarm extends JsonSerializable {
   bool _enabled = true;
   TimeOfDay _timeOfDay;
@@ -36,20 +46,15 @@ class Alarm extends JsonSerializable {
   int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
 
   Alarm(this._timeOfDay) {
-    _schedules = [
-      OnceAlarmSchedule(_settings),
-      DailyAlarmSchedule(_settings),
-      WeeklyAlarmSchedule(_settings),
-      DatesAlarmSchedule(_settings),
-      RangeAlarmSchedule(_settings)
-    ];
+    _schedules = createSchedules(_settings);
   }
 
   Alarm.fromAlarm(Alarm alarm)
       : _enabled = alarm._enabled,
         _timeOfDay = alarm._timeOfDay,
-        _schedules = alarm._schedules,
-        _settings = alarm._settings;
+        _settings = alarm._settings.copy() {
+    _schedules = createSchedules(_settings);
+  }
 
   T getSchedule<T extends AlarmSchedule>() {
     return _schedules.whereType<T>().first;
@@ -127,11 +132,12 @@ class Alarm extends JsonSerializable {
         _settings = alarmSettingsSchema.copy() {
     _settings.load(json['settings']);
     _schedules = [
-      OnceAlarmSchedule.fromJson(json['schedules'][0], _settings),
-      DailyAlarmSchedule.fromJson(json['schedules'][1], _settings),
-      WeeklyAlarmSchedule.fromJson(json['schedules'][2], _settings),
-      DatesAlarmSchedule.fromJson(json['schedules'][3], _settings),
-      RangeAlarmSchedule.fromJson(json['schedules'][4], _settings),
+      OnceAlarmSchedule.fromJson(json['schedules'][0]),
+      DailyAlarmSchedule.fromJson(json['schedules'][1]),
+      WeeklyAlarmSchedule.fromJson(
+          json['schedules'][2], _settings.getSetting("Week Days")),
+      DatesAlarmSchedule.fromJson(json['schedules'][3]),
+      RangeAlarmSchedule.fromJson(json['schedules'][4]),
     ];
   }
 

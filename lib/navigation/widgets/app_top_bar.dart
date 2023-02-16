@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class TopBar extends StatelessWidget implements PreferredSizeWidget {
+class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;
   final List<Widget>? actions;
 
   @override
   Size get preferredSize => const Size(0, 56);
 
-  const TopBar({
+  const AppTopBar({
     super.key,
     this.title,
     this.actions,
