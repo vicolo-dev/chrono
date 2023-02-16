@@ -14,21 +14,26 @@ import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
 
 int ringingAlarmId = -1;
+bool isAlarmUpdating = false;
 
 @pragma('vm:entry-point')
 void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
+  print("ringingAlarmId: $ringingAlarmId");
+  print("Alarm triggered: $scheduleId");
+  print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+
   await initializeAppDataDirectory();
   await SettingsManager.initialize();
   await RingtoneManager.initialize();
 
-  var updateStatus = updateAlarms();
-
-  print("Alarm triggered: $scheduleId");
-  print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+  if (!isAlarmUpdating) {
+    isAlarmUpdating = true;
+    await updateAlarms();
+    isAlarmUpdating = false;
+  }
 
   SettingsManager.preferences?.setBool("alarmRecentlyTriggered", true);
 
-  print("ringingAlarmId: $ringingAlarmId");
   if (ringingAlarmId == -1) {
     await AlarmAudioPlayer.initialize();
     await initializeAudioSession();
@@ -37,7 +42,7 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
   } else {
     await AlarmNotificationManager.removeNotification();
   }
-  await updateStatus;
+
   AlarmNotificationManager.showNotification(
       scheduleId, TimeOfDayUtils.decode(params['timeOfDay']));
 
