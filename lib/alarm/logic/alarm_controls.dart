@@ -12,6 +12,8 @@ import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/timer/types/timer.dart';
+import 'package:clock_app/timer/utils/timer_id.dart';
 
 int ringingAlarmId = -1;
 bool isAlarmUpdating = false;
@@ -22,29 +24,50 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
   print("Alarm triggered: $scheduleId");
   print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
 
+  AlarmType alarmType = AlarmType.values.firstWhere(
+    (element) => element.toString() == params['type'],
+  );
+
   await initializeAppDataDirectory();
   await SettingsManager.initialize();
   await RingtoneManager.initialize();
 
-  if (!isAlarmUpdating) {
-    isAlarmUpdating = true;
-    await updateAlarms();
-    isAlarmUpdating = false;
+  if (alarmType == AlarmType.alarm) {
+    if (!isAlarmUpdating) {
+      isAlarmUpdating = true;
+      await updateAlarms();
+      isAlarmUpdating = false;
+    }
   }
 
-  SettingsManager.preferences?.setBool("alarmRecentlyTriggered", true);
+  SettingsManager.preferences
+      ?.setBool("fullScreenNotificationRecentlyShown", true);
 
   if (ringingAlarmId == -1) {
     await RingtonePlayer.initialize();
     await initializeAudioSession();
-    Alarm alarm = getAlarmByScheduleId(scheduleId);
-    RingtonePlayer.play(alarm.ringtoneUri, vibrate: alarm.vibrate);
+
+    String ringtoneUri = '';
+    bool vibrate = false;
+    if (alarmType == AlarmType.alarm) {
+      Alarm alarm = getAlarmByScheduleId(scheduleId);
+      ringtoneUri = alarm.ringtoneUri;
+      vibrate = alarm.vibrate;
+    } else if (alarmType == AlarmType.timer) {
+      Timer timer = getTimerById(scheduleId);
+      ringtoneUri = RingtoneManager.ringtones[0].uri;
+      vibrate = true;
+    }
+    RingtonePlayer.play(ringtoneUri, vibrate: vibrate);
   } else {
-    await AlarmNotificationManager.removeNotification();
+    await AlarmNotificationManager.removeNotification(alarmType);
   }
 
-  AlarmNotificationManager.showNotification(
-      scheduleId, TimeOfDayUtils.decode(params['timeOfDay']));
+  AlarmNotificationManager.showFullScreenNotification(
+    alarmType,
+    scheduleId,
+    TimeOfDayUtils.decode(params['timeOfDay']).formatToString('h:mm a'),
+  );
 
   ringingAlarmId = scheduleId;
 }
@@ -54,12 +77,22 @@ void stopAlarm(int scheduleId, Map<String, dynamic> params) async {
   print("Alarm Stop Isolate: ${Service.getIsolateID(Isolate.current)}");
   RingtonePlayer.stop();
 
+  AlarmType type = AlarmType.values.firstWhere(
+    (element) => element.toString() == params['type'],
+  );
+
   if (params['action'] == AlarmStopAction.snooze.toString()) {
-    Alarm alarm = getAlarmByScheduleId(scheduleId);
-    Duration snoozeDuration = Duration(minutes: alarm.snoozeLength.floor());
-    scheduleSnoozeAlarm(scheduleId, snoozeDuration);
+    Duration snoozeDuration = const Duration(minutes: 1);
+    if (type == AlarmType.alarm) {
+      Alarm alarm = getAlarmByScheduleId(scheduleId);
+      snoozeDuration = Duration(minutes: alarm.snoozeLength.floor());
+    }
+
+    scheduleSnoozeAlarm(scheduleId, snoozeDuration, type);
   } else {
-    updateAlarms();
+    if (type == AlarmType.alarm) {
+      updateAlarms();
+    }
   }
   ringingAlarmId = -1;
 }

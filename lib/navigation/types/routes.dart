@@ -1,6 +1,7 @@
 class Routes {
   static const String rootRoute = '/';
   static const String alarmNotificationRoute = '/alarm-notification-screen';
+  static const String timerNotificationRoute = '/timer-notification-screen';
 
   static String _currentRoute = rootRoute;
 

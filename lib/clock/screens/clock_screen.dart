@@ -74,7 +74,8 @@ class _ClockScreenState extends State<ClockScreen> {
     saveList('favorite_cities', _cities);
   }
 
-  bool _handleReorderCities(int oldIndex, int newIndex, Object? slow) {
+  bool _handleReorderCities(int oldIndex, int newIndex, Object? slot) {
+    if (newIndex >= _cities.length) return false;
     _cities.insert(newIndex, _cities.removeAt(oldIndex));
     saveList('favorite_cities', _cities);
     return true;

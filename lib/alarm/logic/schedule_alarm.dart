@@ -4,8 +4,17 @@ import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:intl/intl.dart';
 
-Future<void> scheduleAlarm(int scheduleId, DateTime startDate,
-    {Duration repeatInterval = Duration.zero}) async {
+enum AlarmType {
+  alarm,
+  timer,
+}
+
+Future<void> scheduleAlarm(
+  int scheduleId,
+  DateTime startDate, {
+  Duration repeatInterval = Duration.zero,
+  AlarmType type = AlarmType.alarm,
+}) async {
   await cancelAlarm(scheduleId);
 
   AndroidAlarmManager.oneShotAtTime(
@@ -20,6 +29,7 @@ Future<void> scheduleAlarm(int scheduleId, DateTime startDate,
     params: <String, String>{
       'scheduleId': scheduleId.toString(),
       'timeOfDay': startDate.toTimeOfDay().encode(),
+      'type': type.toString(),
     },
   );
 }
@@ -33,8 +43,8 @@ enum AlarmStopAction {
   snooze,
 }
 
-Future<void> scheduleStopAlarm(
-    int scheduleId, AlarmStopAction alarmStopAction) async {
+Future<void> scheduleStopAlarm(int scheduleId, AlarmStopAction alarmStopAction,
+    {AlarmType type = AlarmType.alarm}) async {
   await AndroidAlarmManager.oneShotAfterDelay(
     const Duration(seconds: 0),
     scheduleId,
@@ -44,10 +54,12 @@ Future<void> scheduleStopAlarm(
     alarmClock: true,
     params: <String, String>{
       'action': alarmStopAction.toString(),
+      'type': type.toString(),
     },
   );
 }
 
-Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay) async {
-  await scheduleAlarm(scheduleId, DateTime.now().add(delay));
+Future<void> scheduleSnoozeAlarm(
+    int scheduleId, Duration delay, AlarmType type) async {
+  await scheduleAlarm(scheduleId, DateTime.now().add(delay), type: type);
 }

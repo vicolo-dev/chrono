@@ -87,6 +87,7 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
       getAlarmChangeWidgetBuilder(_alarms[index])(context, index, data);
 
   bool _handleReorderAlarms(int oldIndex, int newIndex, Object? slot) {
+    if (newIndex >= _alarms.length) return false;
     _alarms.insert(newIndex, _alarms.removeAt(oldIndex));
     saveList('alarms', _alarms);
     return true;

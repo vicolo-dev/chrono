@@ -17,26 +17,62 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:move_to_background/move_to_background.dart';
 
-class AlarmNotificationManager {
-  static const _notificationId = 0;
+class FullScreenNotificationData {
+  int id;
+  final String title;
+  final Map<String, String?>? payload;
+  final String snoozeActionLabel;
+  final String dismissActionLabel;
+  final String route;
 
+  FullScreenNotificationData({
+    required this.id,
+    required this.title,
+    this.payload,
+    required this.snoozeActionLabel,
+    required this.dismissActionLabel,
+    required this.route,
+  });
+}
+
+Map<AlarmType, FullScreenNotificationData> alarmNotificationData = {
+  AlarmType.alarm: FullScreenNotificationData(
+    id: 0,
+    title: "Alarm Ringing",
+    snoozeActionLabel: "Snooze",
+    dismissActionLabel: "Dismiss",
+    route: Routes.alarmNotificationRoute,
+  ),
+  AlarmType.timer: FullScreenNotificationData(
+    id: 1,
+    title: "Time's Up",
+    snoozeActionLabel: "Add 1 Minute",
+    dismissActionLabel: "Stop",
+    route: Routes.timerNotificationRoute,
+  ),
+};
+
+class AlarmNotificationManager {
   static const String _snoozeActionKey = "snooze";
   static const String _dismissActionKey = "dismiss";
 
-  static const String snoozeActionLabel = "Snooze";
-  static const String dismissActionLabel = "Dismiss";
-
   static FGBGType _fgbgType = FGBGType.foreground;
 
-  static void showNotification(int scheduleId, TimeOfDay timeOfDay) {
+  static void showFullScreenNotification(
+    AlarmType type,
+    int scheduleId,
+    String body,
+  ) {
+    FullScreenNotificationData data = alarmNotificationData[type]!;
     AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: _notificationId,
+        id: data.id,
         channelKey: alarmNotificationChannelKey,
-        title: 'Alarm Ringing...',
-        body: timeOfDay.formatToString('h:mm a'),
+        title: data.title,
+        body: body,
         payload: {
-          'scheduleId': scheduleId.toString(),
+          "scheduleId": scheduleId.toString(),
+          "type": type.toString(),
         },
         category: NotificationCategory.Alarm,
         fullScreenIntent: true,
@@ -48,14 +84,14 @@ class AlarmNotificationManager {
         NotificationActionButton(
           showInCompactView: true,
           key: _snoozeActionKey,
-          label: snoozeActionLabel,
+          label: data.snoozeActionLabel,
           actionType: ActionType.SilentAction,
           autoDismissible: true,
         ),
         NotificationActionButton(
           showInCompactView: true,
           key: _dismissActionKey,
-          label: dismissActionLabel,
+          label: data.dismissActionLabel,
           actionType: ActionType.SilentAction,
           autoDismissible: true,
         ),
@@ -63,18 +99,22 @@ class AlarmNotificationManager {
     );
   }
 
-  static Future<void> removeNotification() async {
-    await AwesomeNotifications().cancel(_notificationId);
-    await AndroidForegroundService.stopForeground(_notificationId);
+  static Future<void> removeNotification(AlarmType type) async {
+    FullScreenNotificationData data = alarmNotificationData[type]!;
+
+    await AwesomeNotifications().cancel(data.id);
+    await AndroidForegroundService.stopForeground(data.id);
   }
 
-  static Future<void> closeNotification() async {
-    await removeNotification();
+  static Future<void> closeNotification(AlarmType type) async {
+    await removeNotification(type);
 
     await SettingsManager.initialize();
     await LockScreenFlagManager.clearLockScreenFlags();
 
-    if (Routes.currentRoute == Routes.alarmNotificationRoute) {
+    FullScreenNotificationData data = alarmNotificationData[type]!;
+
+    if (Routes.currentRoute == data.route) {
       App.navigatorKey.currentState?.pop();
       Routes.setCurrentRoute(Routes.rootRoute);
     }
@@ -84,61 +124,58 @@ class AlarmNotificationManager {
       MoveToBackground.moveTaskToBack();
     }
 
-    SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
+    SettingsManager.preferences
+        ?.setBool("fullScreenNotificationRecentlyShown", false);
   }
 
-  static Future<void> snoozeAlarm(int scheduleId) async {
-    print("Snooze Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
-
-    scheduleStopAlarm(scheduleId, AlarmStopAction.snooze);
-    closeNotification();
+  static Future<void> snoozeAlarm(int scheduleId, AlarmType type) async {
+    scheduleStopAlarm(scheduleId, AlarmStopAction.snooze, type: type);
+    closeNotification(type);
   }
 
-  static Future<void> dismissAlarm(int scheduleId) async {
-    print("Dismiss Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
-
-    scheduleStopAlarm(scheduleId, AlarmStopAction.dismiss);
-    closeNotification();
+  static Future<void> dismissAlarm(int scheduleId, AlarmType type) async {
+    scheduleStopAlarm(scheduleId, AlarmStopAction.dismiss, type: type);
+    closeNotification(type);
   }
 
   static void handleNotificationCreated(
       ReceivedNotification receivedNotification) {
     _fgbgType = AppVisibilityListener.state;
-
-    print("FGBGType on NotificationCreated: $_fgbgType");
-
-    SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
+    SettingsManager.preferences
+        ?.setBool("fullScreenNotificationRecentlyShown", false);
   }
 
   static Future<void> handleNotificationAction(
       ReceivedAction receivedAction) async {
-    print(
-        "Notification Action Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+    int notificationId =
+        int.parse(receivedAction.payload?['notificationId'] ?? "0");
+    AlarmType type = AlarmType.values.firstWhere(
+        (element) => element.toString() == receivedAction.payload?['type']);
+
+    FullScreenNotificationData data = alarmNotificationData[type]!;
 
     switch (receivedAction.buttonKeyPressed) {
       case _snoozeActionKey:
         int scheduleId =
             int.parse(receivedAction.payload?['scheduleId'] ?? "0");
-        snoozeAlarm(scheduleId);
+        snoozeAlarm(scheduleId, type);
         break;
 
       case _dismissActionKey:
         int scheduleId =
             int.parse(receivedAction.payload?['scheduleId'] ?? "0");
-        // print("DISMISS ALARM: $scheduleId");
-        dismissAlarm(scheduleId);
+        dismissAlarm(scheduleId, type);
         break;
 
       default:
         await LockScreenFlagManager.setLockScreenFlags();
-        if (Routes.currentRoute == Routes.alarmNotificationRoute) {
+        if (Routes.currentRoute == data.route) {
           App.navigatorKey.currentState?.pop();
         }
         App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
-          Routes.alarmNotificationRoute,
+          data.route,
           (route) {
-            return (route.settings.name != Routes.alarmNotificationRoute) ||
-                route.isFirst;
+            return (route.settings.name != data.route) || route.isFirst;
           },
           arguments: receivedAction,
         );

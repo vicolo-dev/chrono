@@ -13,11 +13,15 @@ class TimeDuration {
         minutes = ((seconds % 3600) / 60).floor(),
         seconds = (seconds % 3600) % 60;
 
+  Duration get toDuration =>
+      Duration(hours: hours, minutes: minutes, seconds: seconds);
+
   @override
   String toString() {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(minutes);
-    String twoDigitSeconds = twoDigits(seconds);
-    return "${hours > 0 ? '${twoDigits(hours)}:' : ''}$twoDigitMinutes:$twoDigitSeconds";
+    // String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String hoursString = hours > 0 ? '${hours}h ' : '';
+    String minutesString = minutes > 0 ? '${minutes}m ' : '';
+    String secondsString = seconds > 0 ? '${seconds}s' : '';
+    return "$hoursString$minutesString$secondsString";
   }
 }

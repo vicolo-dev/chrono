@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
+import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
@@ -101,6 +102,17 @@ class _AppState extends State<App> {
                 int scheduleId =
                     int.parse((receivedAction.payload?['scheduleId'])!);
                 return AlarmNotificationScreen(scheduleId: scheduleId);
+              },
+            );
+
+          case Routes.timerNotificationRoute:
+            return MaterialPageRoute(
+              builder: (context) {
+                final ReceivedAction receivedAction =
+                    settings.arguments as ReceivedAction;
+                int scheduleId =
+                    int.parse((receivedAction.payload?['scheduleId'])!);
+                return TimerNotificationScreen(scheduleId: scheduleId);
               },
             );
 

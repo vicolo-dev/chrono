@@ -86,7 +86,7 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
             handleLabelOffset: 6,
             divisions: 8,
             snapDivisions: 24,
-            fillColor: Colors.grey.shade400,
+            fillColor: Color.fromARGB(255, 207, 206, 206),
           ),
         ),
       ],

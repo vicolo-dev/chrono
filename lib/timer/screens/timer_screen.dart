@@ -67,6 +67,7 @@ class _TimerScreenState extends State<TimerScreen> {
       getTimerChangeWidgetBuilder(_timers[index])(context, index, data);
 
   bool _handleReorderTimers(int oldIndex, int newIndex, Object? slot) {
+    if (newIndex >= _timers.length) return false;
     _timers.insert(newIndex, _timers.removeAt(oldIndex));
     saveList('timers', _timers);
     return true;
@@ -74,7 +75,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
   _handleDeleteTimer(Timer deletedTimer) {
     int index = _getTimerIndex(deletedTimer);
-    // _timers[index].disable();
+    _timers[index].stop();
     _timers.removeAt(index);
     _controller.notifyRemovedRange(
       index,
@@ -170,7 +171,9 @@ class _TimerScreenState extends State<TimerScreen> {
         onPressed: () async {
           TimeDuration? timeDuration = await showDurationPicker(context);
           if (timeDuration == null) return;
-          _handleAddTimer(Timer(timeDuration));
+          Timer timer = Timer(timeDuration);
+          timer.start();
+          _handleAddTimer(timer);
         },
       )
     ]);

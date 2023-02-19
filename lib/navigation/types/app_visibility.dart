@@ -17,10 +17,12 @@ class AppVisibilityListener {
 
   static void initialize() {
     print(
-        "Is Alarm Recently Triggered: ${SettingsManager.preferences?.getBool("alarmRecentlyTriggered")}");
-    if (SettingsManager.preferences?.getBool("alarmRecentlyTriggered") ==
+        "Is Alarm Recently Triggered: ${SettingsManager.preferences?.getBool("fullScreenNotificationRecentlyShown")}");
+    if (SettingsManager.preferences
+            ?.getBool("fullScreenNotificationRecentlyShown") ==
         true) {
-      SettingsManager.preferences?.setBool("alarmRecentlyTriggered", false);
+      SettingsManager.preferences
+          ?.setBool("fullScreenNotificationRecentlyShown", false);
     } else {
       setState(FGBGType.foreground);
     }
