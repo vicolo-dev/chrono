@@ -71,12 +71,6 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
     loadAlarms();
   }
 
-  bool _handleReorderAlarms(int oldIndex, int newIndex, Object? slot) {
-    _alarms.insert(newIndex, _alarms.removeAt(oldIndex));
-    saveList('alarms', _alarms);
-    return true;
-  }
-
   AlarmCardBuilder getAlarmChangeWidgetBuilder(Alarm alarm) =>
       (context, index, data) => data.measuring
           ? const SizedBox(width: 64, height: 64)
@@ -91,6 +85,12 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
 
   AlarmCardBuilder getChangeWidgetBuilder() => (context, index, data) =>
       getAlarmChangeWidgetBuilder(_alarms[index])(context, index, data);
+
+  bool _handleReorderAlarms(int oldIndex, int newIndex, Object? slot) {
+    _alarms.insert(newIndex, _alarms.removeAt(oldIndex));
+    saveList('alarms', _alarms);
+    return true;
+  }
 
   _handleDeleteAlarm(Alarm deletedAlarm) {
     int index = _getAlarmIndex(deletedAlarm);
@@ -174,11 +174,14 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
           : "$minutes $minuteTextSuffix from now";
 
       SnackBar snackBar = SnackBar(
-        content: Text('Alarm will ring $hoursText$minutesText'),
+        content: Container(
+            alignment: Alignment.centerLeft,
+            height: 28,
+            child: Text('Alarm will ring $hoursText$minutesText')),
         margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
         shape: defaultShape,
         elevation: 2,
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        // padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         dismissDirection: DismissDirection.none,
         // width: MediaQuery.of(context).size.width - (64 + 16),
         // behavior: SnackBarBehavior.floating,

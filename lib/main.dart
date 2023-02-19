@@ -22,7 +22,7 @@ import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
-import 'package:clock_app/alarm/types/alarm_audio_player.dart';
+import 'package:clock_app/audio/types/ringtone_player.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ void main() async {
   await initializeDatabases();
   await AndroidAlarmManager.initialize();
   await RingtoneManager.initialize();
-  await AlarmAudioPlayer.initialize();
+  await RingtonePlayer.initialize();
   await initializeAudioSession();
   await BootReceiver.initialize(handleBoot);
   await initializeNotifications();

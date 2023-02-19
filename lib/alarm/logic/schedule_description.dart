@@ -14,7 +14,7 @@ bool weekdaysContainsAll(List<Weekday> alarmWeekdays, List<String> names) {
   return names.every((name) => weekdaysContains(alarmWeekdays, name));
 }
 
-String getAlarmDescriptionText(Alarm alarm) {
+String getAlarmScheduleDescription(Alarm alarm) {
   if (alarm.enabled == false) {
     return 'Not scheduled';
   }

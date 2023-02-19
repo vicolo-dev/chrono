@@ -9,7 +9,7 @@ import 'package:clock_app/navigation/types/tab.dart';
 final List<Tab> tabs = [
   Tab(title: 'Alarm', icon: FluxIcons.alarm, widget: const AlarmScreen()),
   Tab(title: 'Clock', icon: FluxIcons.clock, widget: const ClockScreen()),
-  Tab(title: 'Timer', icon: FluxIcons.timer, widget: const TimerTab()),
+  Tab(title: 'Timer', icon: FluxIcons.timer, widget: const TimerScreen()),
   Tab(
       title: 'Stopwatch',
       icon: FluxIcons.stopwatch,

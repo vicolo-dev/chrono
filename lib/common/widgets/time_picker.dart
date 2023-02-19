@@ -141,14 +141,12 @@ class _TimePickerHeader extends StatelessWidget {
       use24HourDials: use24HourDials,
     );
 
-    final EdgeInsets padding;
     double? width;
     final Widget controls;
 
     switch (orientation) {
       case Orientation.portrait:
         // Keep width null because in portrait we don't cap the width.
-        padding = const EdgeInsets.symmetric(horizontal: 24.0);
         controls = Column(
           children: <Widget>[
             // const SizedBox(height: 8.0),
@@ -199,7 +197,6 @@ class _TimePickerHeader extends StatelessWidget {
         break;
       case Orientation.landscape:
         width = _kTimePickerHeaderLandscapeWidth;
-        padding = const EdgeInsets.symmetric(horizontal: 24.0);
         controls = Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -241,16 +238,17 @@ class _TimePickerHeader extends StatelessWidget {
 
     return Container(
       width: width,
-      padding: padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const SizedBox(height: 8.0),
           _TitleBar(
               helpText: helpText,
               entryMode: entryMode,
               handleEntryModeToggle: handleEntryModeToggle),
-          controls,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: controls,
+          ),
         ],
       ),
     );
@@ -271,33 +269,37 @@ class _TitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          helpText ?? MaterialLocalizations.of(context).timePickerDialHelpText,
-          style: TimePickerTheme.of(context).helpTextStyle ??
-              Theme.of(context).textTheme.overline,
-        ),
-        const Spacer(),
-        if (entryMode.value == TimePickerEntryMode.dial ||
-            entryMode.value == TimePickerEntryMode.input)
-          IconButton(
-            color: TimePickerTheme.of(context).entryModeIconColor ??
-                Theme.of(context).colorScheme.onSurface.withOpacity(
-                      Theme.of(context).colorScheme.brightness ==
-                              Brightness.dark
-                          ? 1.0
-                          : 0.6,
-                    ),
-            onPressed: handleEntryModeToggle,
-            icon: Icon(entryMode.value == TimePickerEntryMode.dial
-                ? Icons.keyboard
-                : Icons.access_time),
-            tooltip: entryMode.value == TimePickerEntryMode.dial
-                ? MaterialLocalizations.of(context).inputTimeModeButtonLabel
-                : MaterialLocalizations.of(context).dialModeButtonLabel,
+    return Padding(
+      padding: const EdgeInsets.only(left: 24.0, right: 12.0, top: 8.0),
+      child: Row(
+        children: [
+          Text(
+            helpText ??
+                MaterialLocalizations.of(context).timePickerDialHelpText,
+            style: TimePickerTheme.of(context).helpTextStyle ??
+                Theme.of(context).textTheme.labelSmall,
           ),
-      ],
+          const Spacer(),
+          if (entryMode.value == TimePickerEntryMode.dial ||
+              entryMode.value == TimePickerEntryMode.input)
+            IconButton(
+              color: TimePickerTheme.of(context).entryModeIconColor ??
+                  Theme.of(context).colorScheme.onSurface.withOpacity(
+                        Theme.of(context).colorScheme.brightness ==
+                                Brightness.dark
+                            ? 1.0
+                            : 0.6,
+                      ),
+              onPressed: handleEntryModeToggle,
+              icon: Icon(entryMode.value == TimePickerEntryMode.dial
+                  ? Icons.keyboard
+                  : Icons.access_time),
+              tooltip: entryMode.value == TimePickerEntryMode.dial
+                  ? MaterialLocalizations.of(context).inputTimeModeButtonLabel
+                  : MaterialLocalizations.of(context).dialModeButtonLabel,
+            ),
+        ],
+      ),
     );
   }
 }
@@ -1570,125 +1572,126 @@ class _TimePickerInputState extends State<_TimePickerInput>
         TimePickerTheme.of(context).hourMinuteTextStyle ??
             theme.textTheme.headline2!;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _TitleBar(
-              helpText: widget.helpText,
-              entryMode: widget.entryMode,
-              handleEntryModeToggle: widget.handleEntryModeToggle),
-          // const SizedBox(height: 16.0),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              if (!use24HourDials &&
-                  timeOfDayFormat ==
-                      TimeOfDayFormat.a_space_h_colon_mm) ...<Widget>[
-                _DayPeriodControl(
-                  selectedTime: _selectedTime.value,
-                  orientation: Orientation.portrait,
-                  onChanged: _handleDayPeriodChanged,
-                ),
-                const SizedBox(width: 12.0),
-              ],
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // Hour/minutes should not change positions in RTL locales.
-                  textDirection: TextDirection.ltr,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const SizedBox(height: 8.0),
-                          _HourTextField(
-                            restorationId: 'hour_text_field',
-                            selectedTime: _selectedTime.value,
-                            style: hourMinuteStyle,
-                            autofocus: widget.autofocusHour,
-                            validator: _validateHour,
-                            onSavedSubmitted: _handleHourSavedSubmitted,
-                            onChanged: _handleHourChanged,
-                            hourLabelText: widget.hourLabelText,
-                          ),
-                          const SizedBox(height: 8.0),
-                          if (!hourHasError.value && !minuteHasError.value)
-                            ExcludeSemantics(
-                              child: Text(
-                                widget.hourLabelText ??
-                                    MaterialLocalizations.of(context)
-                                        .timePickerHourLabel,
-                                style: theme.textTheme.caption,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _TitleBar(
+            helpText: widget.helpText,
+            entryMode: widget.entryMode,
+            handleEntryModeToggle: widget.handleEntryModeToggle),
+        // const SizedBox(height: 16.0),
+        Padding(
+            padding:
+                const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                if (!use24HourDials &&
+                    timeOfDayFormat ==
+                        TimeOfDayFormat.a_space_h_colon_mm) ...<Widget>[
+                  _DayPeriodControl(
+                    selectedTime: _selectedTime.value,
+                    orientation: Orientation.portrait,
+                    onChanged: _handleDayPeriodChanged,
+                  ),
+                  const SizedBox(width: 12.0),
+                ],
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // Hour/minutes should not change positions in RTL locales.
+                    textDirection: TextDirection.ltr,
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            const SizedBox(height: 8.0),
+                            _HourTextField(
+                              restorationId: 'hour_text_field',
+                              selectedTime: _selectedTime.value,
+                              style: hourMinuteStyle,
+                              autofocus: widget.autofocusHour,
+                              validator: _validateHour,
+                              onSavedSubmitted: _handleHourSavedSubmitted,
+                              onChanged: _handleHourChanged,
+                              hourLabelText: widget.hourLabelText,
                             ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8.0),
-                      height: _kTimePickerHeaderControlHeight,
-                      child: _StringFragment(timeOfDayFormat: timeOfDayFormat),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const SizedBox(height: 8.0),
-                          _MinuteTextField(
-                            restorationId: 'minute_text_field',
-                            selectedTime: _selectedTime.value,
-                            style: hourMinuteStyle,
-                            autofocus: widget.autofocusMinute,
-                            validator: _validateMinute,
-                            onSavedSubmitted: _handleMinuteSavedSubmitted,
-                            minuteLabelText: widget.minuteLabelText,
-                          ),
-                          const SizedBox(height: 8.0),
-                          if (!hourHasError.value && !minuteHasError.value)
-                            ExcludeSemantics(
-                              child: Text(
-                                widget.minuteLabelText ??
-                                    MaterialLocalizations.of(context)
-                                        .timePickerMinuteLabel,
-                                style: theme.textTheme.caption,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                            const SizedBox(height: 8.0),
+                            if (!hourHasError.value && !minuteHasError.value)
+                              ExcludeSemantics(
+                                child: Text(
+                                  widget.hourLabelText ??
+                                      MaterialLocalizations.of(context)
+                                          .timePickerHourLabel,
+                                  style: theme.textTheme.caption,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      Container(
+                        margin: const EdgeInsets.only(top: 8.0),
+                        height: _kTimePickerHeaderControlHeight,
+                        child:
+                            _StringFragment(timeOfDayFormat: timeOfDayFormat),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            const SizedBox(height: 8.0),
+                            _MinuteTextField(
+                              restorationId: 'minute_text_field',
+                              selectedTime: _selectedTime.value,
+                              style: hourMinuteStyle,
+                              autofocus: widget.autofocusMinute,
+                              validator: _validateMinute,
+                              onSavedSubmitted: _handleMinuteSavedSubmitted,
+                              minuteLabelText: widget.minuteLabelText,
+                            ),
+                            const SizedBox(height: 8.0),
+                            if (!hourHasError.value && !minuteHasError.value)
+                              ExcludeSemantics(
+                                child: Text(
+                                  widget.minuteLabelText ??
+                                      MaterialLocalizations.of(context)
+                                          .timePickerMinuteLabel,
+                                  style: theme.textTheme.caption,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              if (!use24HourDials &&
-                  timeOfDayFormat !=
-                      TimeOfDayFormat.a_space_h_colon_mm) ...<Widget>[
-                const SizedBox(width: 12.0),
-                _DayPeriodControl(
-                  selectedTime: _selectedTime.value,
-                  orientation: Orientation.portrait,
-                  onChanged: _handleDayPeriodChanged,
-                ),
+                if (!use24HourDials &&
+                    timeOfDayFormat !=
+                        TimeOfDayFormat.a_space_h_colon_mm) ...<Widget>[
+                  const SizedBox(width: 12.0),
+                  _DayPeriodControl(
+                    selectedTime: _selectedTime.value,
+                    orientation: Orientation.portrait,
+                    onChanged: _handleDayPeriodChanged,
+                  ),
+                ],
               ],
-            ],
-          ),
-          if (hourHasError.value || minuteHasError.value)
-            Text(
-              widget.errorInvalidText ??
-                  MaterialLocalizations.of(context).invalidTimeLabel,
-              style: theme.textTheme.bodyText2!
-                  .copyWith(color: theme.colorScheme.error),
-            )
-          else
-            const SizedBox(height: 2.0),
-        ],
-      ),
+            )),
+        if (hourHasError.value || minuteHasError.value)
+          Text(
+            widget.errorInvalidText ??
+                MaterialLocalizations.of(context).invalidTimeLabel,
+            style: theme.textTheme.bodyText2!
+                .copyWith(color: theme.colorScheme.error),
+          )
+        else
+          const SizedBox(height: 2.0),
+      ],
     );
   }
 }
@@ -2343,21 +2346,6 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                 ?.copyWith(color: ColorTheme.textColorTertiary),
           ),
         ),
-        // if (_entryMode.value == TimePickerEntryMode.dial ||
-        //     _entryMode.value == TimePickerEntryMode.input)
-        //   IconButton(
-        //     color: TimePickerTheme.of(context).entryModeIconColor ??
-        //         theme.colorScheme.onSurface.withOpacity(
-        //           theme.colorScheme.brightness == Brightness.dark ? 1.0 : 0.6,
-        //         ),
-        //     onPressed: _handleEntryModeToggle,
-        //     icon: Icon(_entryMode.value == TimePickerEntryMode.dial
-        //         ? Icons.keyboard
-        //         : Icons.access_time),
-        //     tooltip: _entryMode.value == TimePickerEntryMode.dial
-        //         ? MaterialLocalizations.of(context).inputTimeModeButtonLabel
-        //         : MaterialLocalizations.of(context).dialModeButtonLabel,
-        //   ),
         Expanded(
           child: Container(
             alignment: AlignmentDirectional.centerEnd,
@@ -2367,18 +2355,6 @@ class _TimePickerDialogState extends State<TimePickerDialog>
               spacing: 8,
               overflowAlignment: OverflowBarAlignment.end,
               children: <Widget>[
-                // for (DialogAction action
-                //     in widget.dialogActions ?? <DialogAction>[])
-                //   TextButton(
-                //     onPressed: action.onPressed,
-                //     child: Text(
-                //       action.label,
-                //       style: Theme.of(context)
-                //           .textTheme
-                //           .labelMedium
-                //           ?.copyWith(color: ColorTheme.accentColor),
-                //     ),
-                //   ),
                 if (!widget.useSimple)
                   TextButton(
                     onPressed: () => _handleOk(isCustomize: true),

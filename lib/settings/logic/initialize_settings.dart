@@ -17,6 +17,7 @@ Future<void> initializeSettings() async {
     preferences?.setBool('first_launch', false);
     initializeDefaultFavoriteCities();
     saveList<Alarm>('alarms', []);
+    saveList<Alarm>('timers', []);
 
     // for (SettingGroup group in settings) {
     //   for (Setting setting in group.settings) {

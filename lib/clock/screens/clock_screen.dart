@@ -36,7 +36,7 @@ class _ClockScreenState extends State<ClockScreen> {
   @override
   void initState() {
     super.initState();
-    setState(() => _cities = loadList('favorite_cities'));
+    _cities = loadList('favorite_cities');
     setShowSeconds(appSettings.getSetting("Show Seconds").value);
     appSettings.addSettingListener("Show Seconds", setShowSeconds);
   }

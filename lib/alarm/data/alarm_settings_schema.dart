@@ -1,4 +1,4 @@
-import 'package:clock_app/alarm/types/alarm_audio_player.dart';
+import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -47,13 +47,13 @@ Settings alarmSettingsSchema = Settings([
                   .toList(),
               onSelect: (index, uri) {
                 if (RingtoneManager.lastPlayedRingtoneUri == uri) {
-                  AlarmAudioPlayer.stop();
+                  RingtonePlayer.stop();
                 } else {
-                  AlarmAudioPlayer.play(uri, loopMode: LoopMode.off);
+                  RingtonePlayer.play(uri, loopMode: LoopMode.off);
                 }
               },
               onChange: (index) {
-                AlarmAudioPlayer.stop();
+                RingtonePlayer.stop();
               },
             ),
             SliderSetting("Volume", 0, 100, 100, unit: "%"),

@@ -7,8 +7,7 @@ import 'package:intl/intl.dart';
 Future<void> scheduleAlarm(int scheduleId, DateTime startDate,
     {Duration repeatInterval = Duration.zero}) async {
   await cancelAlarm(scheduleId);
-  print(
-      "Alarm $scheduleId scheduled for ${DateFormat("yyyy MM dd hh mm").format(startDate)}");
+
   AndroidAlarmManager.oneShotAtTime(
     startDate,
     scheduleId,
@@ -26,7 +25,6 @@ Future<void> scheduleAlarm(int scheduleId, DateTime startDate,
 }
 
 Future<void> cancelAlarm(int scheduleId) async {
-  print("Alarm $scheduleId cancelled");
   await AndroidAlarmManager.cancel(scheduleId);
 }
 

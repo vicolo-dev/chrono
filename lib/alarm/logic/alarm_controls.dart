@@ -4,7 +4,7 @@ import 'dart:isolate';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/types/alarm_audio_player.dart';
+import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/alarm/types/alarm_notification_manager.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
@@ -35,10 +35,10 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
   SettingsManager.preferences?.setBool("alarmRecentlyTriggered", true);
 
   if (ringingAlarmId == -1) {
-    await AlarmAudioPlayer.initialize();
+    await RingtonePlayer.initialize();
     await initializeAudioSession();
     Alarm alarm = getAlarmByScheduleId(scheduleId);
-    AlarmAudioPlayer.play(alarm.ringtoneUri, vibrate: alarm.vibrate);
+    RingtonePlayer.play(alarm.ringtoneUri, vibrate: alarm.vibrate);
   } else {
     await AlarmNotificationManager.removeNotification();
   }
@@ -52,8 +52,7 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
 @pragma('vm:entry-point')
 void stopAlarm(int scheduleId, Map<String, dynamic> params) async {
   print("Alarm Stop Isolate: ${Service.getIsolateID(Isolate.current)}");
-  AlarmAudioPlayer.stop();
-  ringingAlarmId = -1;
+  RingtonePlayer.stop();
 
   if (params['action'] == AlarmStopAction.snooze.toString()) {
     Alarm alarm = getAlarmByScheduleId(scheduleId);
@@ -62,4 +61,5 @@ void stopAlarm(int scheduleId, Map<String, dynamic> params) async {
   } else {
     updateAlarms();
   }
+  ringingAlarmId = -1;
 }

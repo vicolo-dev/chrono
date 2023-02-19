@@ -1,4 +1,4 @@
-import 'package:clock_app/alarm/logic/alarm_description.dart';
+import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
@@ -74,7 +74,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                       },
                     ),
                     Text(
-                      getAlarmDescriptionText(_alarm),
+                      getAlarmScheduleDescription(_alarm),
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(
                             color: ColorTheme.textColorTertiary,
                           ),

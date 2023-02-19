@@ -1,4 +1,4 @@
-import 'package:clock_app/alarm/logic/alarm_description.dart';
+import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
@@ -38,28 +38,8 @@ class _AlarmCardState extends State<AlarmCard> {
           child: Slidable(
               groupTag: 'alarms',
               key: widget.key,
-              startActionPane: ActionPane(
-                motion: const ScrollMotion(),
-                // extentRatio: Platform == 0.25,
-                children: [
-                  CustomSlidableAction(
-                    onPressed: (context) => widget.onDuplicate(),
-                    backgroundColor: ColorTheme.accentColor,
-                    foregroundColor: Colors.white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.delete),
-                        Text('Duplicate',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall
-                                ?.copyWith(color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              startActionPane:
+                  getDuplicateActionPane(widget.onDuplicate, context),
               endActionPane: getDeleteActionPane(widget.onDelete, context),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -83,7 +63,7 @@ class _AlarmCardState extends State<AlarmCard> {
                     Row(
                       children: [
                         Text(
-                          getAlarmDescriptionText(widget.alarm),
+                          getAlarmScheduleDescription(widget.alarm),
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: widget.alarm.enabled
