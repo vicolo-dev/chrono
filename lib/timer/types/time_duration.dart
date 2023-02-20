@@ -4,6 +4,8 @@ class TimeDuration {
   int seconds;
 
   int get inSeconds => hours * 3600 + minutes * 60 + seconds;
+  static TimeDuration get zero =>
+      TimeDuration(hours: 0, minutes: 0, seconds: 0);
 
   TimeDuration(
       {required this.hours, required this.minutes, required this.seconds});

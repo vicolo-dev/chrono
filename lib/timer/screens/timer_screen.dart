@@ -1,6 +1,7 @@
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/fab.dart';
+import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -25,13 +26,13 @@ class TimerScreen extends StatefulWidget {
   State<TimerScreen> createState() => _TimerScreenState();
 }
 
-class _TimerScreenState extends State<TimerScreen> {
-  List<Timer> _timers = [];
+class _TimerScreenState extends State<TimerScreen> with RouteAware {
+  List<ClockTimer> _timers = [];
 
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
 
-  int _getTimerIndex(Timer timer) =>
+  int _getTimerIndex(ClockTimer timer) =>
       _timers.indexWhere((element) => element.id == timer.id);
 
   void loadTimers() {
@@ -52,7 +53,24 @@ class _TimerScreenState extends State<TimerScreen> {
     _timers = loadList('timers');
   }
 
-  TimerCardBuilder getTimerChangeWidgetBuilder(Timer timer) =>
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    loadTimers();
+  }
+
+  TimerCardBuilder getTimerChangeWidgetBuilder(ClockTimer timer) =>
       (context, index, data) => data.measuring
           ? const SizedBox(width: 64, height: 64)
           : TimerCard(
@@ -73,9 +91,9 @@ class _TimerScreenState extends State<TimerScreen> {
     return true;
   }
 
-  _handleDeleteTimer(Timer deletedTimer) {
+  _handleDeleteTimer(ClockTimer deletedTimer) {
     int index = _getTimerIndex(deletedTimer);
-    _timers[index].stop();
+    _timers[index].reset();
     _timers.removeAt(index);
     _controller.notifyRemovedRange(
       index,
@@ -85,7 +103,7 @@ class _TimerScreenState extends State<TimerScreen> {
     saveList('timers', _timers);
   }
 
-  _handleAddTimer(Timer timer, {int index = -1}) {
+  _handleAddTimer(ClockTimer timer, {int index = -1}) {
     if (index == -1) index = _timers.length;
     // timer.schedule();
     _timers.insert(index, timer);
@@ -129,14 +147,14 @@ class _TimerScreenState extends State<TimerScreen> {
       Column(children: [
         Expanded(
           child: SlidableAutoCloseBehavior(
-            child: AutomaticAnimatedListView<Timer>(
+            child: AutomaticAnimatedListView<ClockTimer>(
               list: _timers,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              comparator: AnimatedListDiffListComparator<Timer>(
+              comparator: AnimatedListDiffListComparator<ClockTimer>(
                 sameItem: (a, b) => a.id == b.id,
                 sameContent: (a, b) => a.id == b.id,
               ),
-              itemBuilder: (BuildContext context, Timer timer, data) {
+              itemBuilder: (BuildContext context, ClockTimer timer, data) {
                 return data.measuring
                     ? const SizedBox(width: 64, height: 64)
                     : TimerCard(
@@ -145,7 +163,7 @@ class _TimerScreenState extends State<TimerScreen> {
                         onTap: () => {},
                         onDelete: () => _handleDeleteTimer(timer),
                         onDuplicate: () => _handleAddTimer(
-                            Timer.fromTimer(timer),
+                            ClockTimer.fromTimer(timer),
                             index: _getTimerIndex(timer) + 1),
                       );
               },
@@ -171,7 +189,7 @@ class _TimerScreenState extends State<TimerScreen> {
         onPressed: () async {
           TimeDuration? timeDuration = await showDurationPicker(context);
           if (timeDuration == null) return;
-          Timer timer = Timer(timeDuration);
+          ClockTimer timer = ClockTimer(timeDuration);
           timer.start();
           _handleAddTimer(timer);
         },

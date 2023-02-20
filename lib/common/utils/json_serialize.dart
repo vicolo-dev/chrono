@@ -7,7 +7,7 @@ import 'package:clock_app/timer/types/timer.dart';
 final fromJsonFactories = <Type, Function>{
   Alarm: (Map<String, dynamic> json) => Alarm.fromJson(json),
   City: (Map<String, dynamic> json) => City.fromJson(json),
-  Timer: (Map<String, dynamic> json) => Timer.fromJson(json),
+  ClockTimer: (Map<String, dynamic> json) => ClockTimer.fromJson(json),
 };
 
 abstract class JsonSerializable {

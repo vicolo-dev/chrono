@@ -1,6 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/data/alarm_notification_channel.dart';
-import 'package:clock_app/alarm/types/alarm_notification_manager.dart';
+import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 
 class NotificationController {
   static void setListeners() {

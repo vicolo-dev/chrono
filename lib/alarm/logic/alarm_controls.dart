@@ -5,18 +5,20 @@ import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
-import 'package:clock_app/alarm/types/alarm_notification_manager.dart';
+import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
 
 int ringingAlarmId = -1;
 bool isAlarmUpdating = false;
+bool isTimerUpdating = false;
 
 @pragma('vm:entry-point')
 void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
@@ -38,6 +40,12 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
       await updateAlarms();
       isAlarmUpdating = false;
     }
+  } else if (alarmType == AlarmType.timer) {
+    if (!isTimerUpdating) {
+      isTimerUpdating = true;
+      await updateTimers();
+      isTimerUpdating = false;
+    }
   }
 
   SettingsManager.preferences
@@ -54,7 +62,7 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
       ringtoneUri = alarm.ringtoneUri;
       vibrate = alarm.vibrate;
     } else if (alarmType == AlarmType.timer) {
-      Timer timer = getTimerById(scheduleId);
+      ClockTimer timer = getTimerById(scheduleId);
       ringtoneUri = RingtoneManager.ringtones[0].uri;
       vibrate = true;
     }
@@ -92,6 +100,8 @@ void stopAlarm(int scheduleId, Map<String, dynamic> params) async {
   } else {
     if (type == AlarmType.alarm) {
       updateAlarms();
+    } else if (type == AlarmType.timer) {
+      updateTimers();
     }
   }
   ringingAlarmId = -1;
