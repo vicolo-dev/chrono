@@ -33,13 +33,12 @@ class _TimerCardState extends State<TimerCard> {
   void updateTimer() {
     setState(() {
       timer?.cancel();
-      timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-        print('update timer ${widget.timer.state.toString()}');
-        if (widget.timer.state == TimerState.running) {
+      if (widget.timer.state == TimerState.running) {
+        timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+          print('update timer ${widget.timer.state.toString()}');
           valueNotifier.value = widget.timer.remainingSeconds.toDouble();
-          print("updated");
-        }
-      });
+        });
+      }
     });
   }
 
