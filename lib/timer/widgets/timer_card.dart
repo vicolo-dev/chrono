@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:clock_app/theme/color.dart';
+import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -28,6 +29,8 @@ class TimerCard extends StatefulWidget {
 class _TimerCardState extends State<TimerCard> {
   late ValueNotifier<double> valueNotifier;
 
+  late int remainingSeconds;
+
   Timer? timer;
 
   void updateTimer() {
@@ -35,7 +38,6 @@ class _TimerCardState extends State<TimerCard> {
       timer?.cancel();
       if (widget.timer.state == TimerState.running) {
         timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-          print('update timer ${widget.timer.state.toString()}');
           valueNotifier.value = widget.timer.remainingSeconds.toDouble();
         });
       }
@@ -47,6 +49,12 @@ class _TimerCardState extends State<TimerCard> {
   void initState() {
     super.initState();
     valueNotifier = ValueNotifier(widget.timer.duration.inSeconds.toDouble());
+    remainingSeconds = widget.timer.remainingSeconds;
+    valueNotifier.addListener(() {
+      setState(() {
+        remainingSeconds = valueNotifier.value.toInt();
+      });
+    });
     updateTimer();
   }
 
@@ -73,9 +81,29 @@ class _TimerCardState extends State<TimerCard> {
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      Text(
-                        widget.timer.duration.toString(),
-                        style: Theme.of(context).textTheme.displayMedium,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${widget.timer.duration.toString()} timer',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall
+                                ?.copyWith(
+                                  color: ColorTheme.textColorTertiary,
+                                ),
+                          ),
+                          Text(
+                            TimeDuration.fromSeconds(remainingSeconds)
+                                .toTimeString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium
+                                ?.copyWith(
+                                  fontSize: 48,
+                                ),
+                          ),
+                        ],
                       ),
                       Spacer(),
                       CircularProgressBar(
@@ -89,7 +117,6 @@ class _TimerCardState extends State<TimerCard> {
                         onGetCenterWidget: (value) {
                           return GestureDetector(
                             onTap: () {
-                              print('tap');
                               setState(() {
                                 widget.timer.toggleStart();
                               });

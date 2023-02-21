@@ -48,7 +48,6 @@ class ClockTimer extends JsonSerializable {
     _secondsRemainingOnPause = _secondsRemainingOnPause -
         DateTime.now().difference(_startTime).toTimeDuration().inSeconds;
     _state = TimerState.paused;
-    print(_secondsRemainingOnPause);
   }
 
   void reset() {
@@ -82,5 +81,7 @@ class ClockTimer extends JsonSerializable {
         _startTime = DateTime.parse(json['startTime']),
         _state =
             TimerState.values.firstWhere((e) => e.toString() == json['state']),
-        _id = json['id'];
+        _id = json['id'] {
+    // print('TimerState.values: ${_state}');
+  }
 }

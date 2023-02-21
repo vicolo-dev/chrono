@@ -20,10 +20,19 @@ class TimeDuration {
 
   @override
   String toString() {
-    // String twoDigits(int n) => n.toString().padLeft(2, "0");
     String hoursString = hours > 0 ? '${hours}h ' : '';
     String minutesString = minutes > 0 ? '${minutes}m ' : '';
     String secondsString = seconds > 0 ? '${seconds}s' : '';
+    return "$hoursString$minutesString$secondsString";
+  }
+
+  String toTimeString() {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String hoursString = hours > 0 ? '$hours:' : '';
+    String minutesString =
+        minutes > 0 ? (hours > 0 ? '${twoDigits(minutes)}:' : '$minutes:') : '';
+    String secondsString =
+        (hours > 0 || minutes > 0) ? twoDigits(seconds) : '$seconds';
     return "$hoursString$minutesString$secondsString";
   }
 }

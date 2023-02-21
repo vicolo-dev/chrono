@@ -20,7 +20,7 @@ const TextTheme textTheme = TextTheme(
     color: ColorTheme.textColor,
   ),
   displayLarge: TextStyle(
-    fontSize: 72,
+    fontSize: 60,
     fontVariations: FontVariations.bold,
     color: ColorTheme.textColor,
   ),
