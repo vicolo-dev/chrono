@@ -76,9 +76,10 @@ class _TimerScreenState extends State<TimerScreen> with RouteAware {
           : TimerCard(
               key: ValueKey(timer),
               timer: timer,
-              onTap: () => {},
-              onDelete: () => {},
-              onDuplicate: () => {},
+              onTap: () {},
+              onDelete: () {},
+              onDuplicate: () {},
+              onToggleState: () {},
             );
 
   TimerCardBuilder getChangeWidgetBuilder() => (context, index, data) =>
@@ -91,7 +92,7 @@ class _TimerScreenState extends State<TimerScreen> with RouteAware {
     return true;
   }
 
-  _handleDeleteTimer(ClockTimer deletedTimer) {
+  void _handleDeleteTimer(ClockTimer deletedTimer) {
     int index = _getTimerIndex(deletedTimer);
     _timers[index].reset();
     _timers.removeAt(index);
@@ -103,12 +104,23 @@ class _TimerScreenState extends State<TimerScreen> with RouteAware {
     saveList('timers', _timers);
   }
 
-  _handleAddTimer(ClockTimer timer, {int index = -1}) {
+  void _handleAddTimer(ClockTimer timer, {int index = -1}) {
     if (index == -1) index = _timers.length;
     // timer.schedule();
     _timers.insert(index, timer);
     _controller.notifyInsertedRange(index, 1);
 
+    saveList('timers', _timers);
+  }
+
+  void _handleToggleState(ClockTimer timer) {
+    int index = _getTimerIndex(timer);
+    _timers[index].toggleState();
+    _controller.notifyChangedRange(
+      index,
+      1,
+      getTimerChangeWidgetBuilder(timer),
+    );
     saveList('timers', _timers);
   }
 
@@ -165,6 +177,7 @@ class _TimerScreenState extends State<TimerScreen> with RouteAware {
                         onDuplicate: () => _handleAddTimer(
                             ClockTimer.fromTimer(timer),
                             index: _getTimerIndex(timer) + 1),
+                        onToggleState: () => _handleToggleState(timer),
                       );
               },
               // animator: DefaultAnimatedListAnimator,

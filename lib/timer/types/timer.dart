@@ -17,9 +17,10 @@ class ClockTimer extends JsonSerializable {
 
   int get id => _id;
   TimeDuration get duration => _duration;
-  int get remainingSeconds =>
-      _secondsRemainingOnPause -
-      DateTime.now().difference(_startTime).toTimeDuration().inSeconds;
+  int get remainingSeconds => _state == TimerState.running
+      ? _secondsRemainingOnPause -
+          DateTime.now().difference(_startTime).toTimeDuration().inSeconds
+      : _secondsRemainingOnPause;
   TimerState get state => _state;
 
   ClockTimer(this._duration)
@@ -41,6 +42,7 @@ class ClockTimer extends JsonSerializable {
         _id, DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),
         type: AlarmType.timer);
     _state = TimerState.running;
+    print("started");
   }
 
   void pause() {
@@ -56,7 +58,7 @@ class ClockTimer extends JsonSerializable {
     _secondsRemainingOnPause = _duration.inSeconds;
   }
 
-  void toggleStart() {
+  void toggleState() {
     if (state == TimerState.running) {
       pause();
     } else {
