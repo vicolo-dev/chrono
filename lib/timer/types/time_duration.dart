@@ -27,6 +27,7 @@ class TimeDuration {
   }
 
   String toTimeString() {
+    if (inSeconds == 0) return "0";
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String hoursString = hours > 0 ? '$hours:' : '';
     String minutesString =

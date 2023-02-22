@@ -49,7 +49,7 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
                 TextButton(
                   onPressed: () {
                     AlarmNotificationManager.snoozeAlarm(
-                        widget.scheduleId, AlarmType.timer);
+                        widget.scheduleId, ScheduledNotificationType.timer);
                     // dismissAlarm(widget.id);
                     // Navigator.pop(context);
                   },
@@ -58,7 +58,7 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
                 TextButton(
                   onPressed: () {
                     AlarmNotificationManager.dismissAlarm(
-                        widget.scheduleId, AlarmType.timer);
+                        widget.scheduleId, ScheduledNotificationType.timer);
                     // Navigator.pop(context);
                   },
                   child: const Text("Stop"),

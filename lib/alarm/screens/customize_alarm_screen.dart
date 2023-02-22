@@ -1,5 +1,7 @@
 import 'package:clock_app/alarm/logic/schedule_description.dart';
+import 'package:clock_app/alarm/logic/time_of_day_icon.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/alarm/types/time_of_day_icon.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
@@ -33,6 +35,8 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    TimeOfDayIcon timeOfDayIcon = getTimeOfDayIcon(_alarm.timeOfDay);
+
     return Scaffold(
       appBar: AppTopBar(actions: [
         TextButton(
@@ -73,11 +77,25 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                         }
                       },
                     ),
-                    Text(
-                      getAlarmScheduleDescription(_alarm),
-                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                            color: ColorTheme.textColorTertiary,
-                          ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          timeOfDayIcon.icon,
+                          color: timeOfDayIcon.color,
+                          size: 28,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          getAlarmScheduleDescription(_alarm),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall
+                              ?.copyWith(
+                                color: ColorTheme.textColorTertiary,
+                              ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

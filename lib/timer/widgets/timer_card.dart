@@ -38,10 +38,8 @@ class _TimerCardState extends State<TimerCard> {
   void updateTimer() {
     setState(() {
       timer?.cancel();
-      print(widget.timer.toJson());
-      print("timer state: ${widget.timer.state}");
       if (widget.timer.state == TimerState.running) {
-        timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+        timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
           valueNotifier.value = widget.timer.remainingSeconds.toDouble();
         });
       }
@@ -109,7 +107,7 @@ class _TimerCardState extends State<TimerCard> {
                           ),
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       CircularProgressBar(
                         size: 64,
                         valueNotifier: valueNotifier,
@@ -138,7 +136,7 @@ class _TimerCardState extends State<TimerCard> {
                           );
                         },
                         progressColors: const [Colors.cyan],
-                        backColor: Colors.black.withOpacity(0.4),
+                        backColor: Colors.black.withOpacity(0.25),
                       ),
                     ],
                   ))),

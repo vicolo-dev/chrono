@@ -1,5 +1,6 @@
 import 'package:clock_app/alarm/data/time_of_day_icons.dart';
 import 'package:clock_app/alarm/logic/schedule_description.dart';
+import 'package:clock_app/alarm/logic/time_of_day_icon.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
@@ -33,8 +34,7 @@ class AlarmCard extends StatefulWidget {
 class _AlarmCardState extends State<AlarmCard> {
   @override
   Widget build(BuildContext context) {
-    TimeOfDayIcon timeOfDayIcon = timeOfDayIcons.firstWhere((icon) =>
-        widget.alarm.timeOfDay.isBetween(icon.startTime, icon.endTime));
+    TimeOfDayIcon timeOfDayIcon = getTimeOfDayIcon(widget.alarm.timeOfDay);
     return SizedBox(
       width: double.infinity,
       child: Card(

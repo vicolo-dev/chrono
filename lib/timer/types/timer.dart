@@ -40,7 +40,7 @@ class ClockTimer extends JsonSerializable {
     _startTime = DateTime.now();
     scheduleAlarm(
         _id, DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),
-        type: AlarmType.timer);
+        type: ScheduledNotificationType.timer);
     _state = TimerState.running;
     print("started");
   }

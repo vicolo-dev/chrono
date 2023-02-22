@@ -89,7 +89,7 @@ class _AppState extends State<App> {
       initialRoute: Routes.rootRoute,
       navigatorObservers: [routeObserver],
       onGenerateRoute: (settings) {
-        Routes.setCurrentRoute(settings.name ?? Routes.rootRoute);
+        Routes.push(settings.name ?? Routes.rootRoute);
         switch (settings.name) {
           case Routes.rootRoute:
             return MaterialPageRoute(builder: (context) => const NavScaffold());

@@ -49,7 +49,7 @@ Settings alarmSettingsSchema = Settings([
                 if (RingtoneManager.lastPlayedRingtoneUri == uri) {
                   RingtonePlayer.stop();
                 } else {
-                  RingtonePlayer.play(uri, loopMode: LoopMode.off);
+                  RingtonePlayer.playUri(uri, loopMode: LoopMode.off);
                 }
               },
               onChange: (index) {

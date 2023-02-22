@@ -4,7 +4,7 @@ import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:intl/intl.dart';
 
-enum AlarmType {
+enum ScheduledNotificationType {
   alarm,
   timer,
 }
@@ -13,14 +13,14 @@ Future<void> scheduleAlarm(
   int scheduleId,
   DateTime startDate, {
   Duration repeatInterval = Duration.zero,
-  AlarmType type = AlarmType.alarm,
+  ScheduledNotificationType type = ScheduledNotificationType.alarm,
 }) async {
   await cancelAlarm(scheduleId);
 
   AndroidAlarmManager.oneShotAtTime(
     startDate,
     scheduleId,
-    triggerAlarm,
+    triggerScheduledNotification,
     allowWhileIdle: true,
     alarmClock: true,
     exact: true,
@@ -44,11 +44,11 @@ enum AlarmStopAction {
 }
 
 Future<void> scheduleStopAlarm(int scheduleId, AlarmStopAction alarmStopAction,
-    {AlarmType type = AlarmType.alarm}) async {
+    {ScheduledNotificationType type = ScheduledNotificationType.alarm}) async {
   await AndroidAlarmManager.oneShotAfterDelay(
     const Duration(seconds: 0),
     scheduleId,
-    stopAlarm,
+    stopScheduledNotification,
     exact: true,
     useRTC: true,
     alarmClock: true,
@@ -60,6 +60,6 @@ Future<void> scheduleStopAlarm(int scheduleId, AlarmStopAction alarmStopAction,
 }
 
 Future<void> scheduleSnoozeAlarm(
-    int scheduleId, Duration delay, AlarmType type) async {
+    int scheduleId, Duration delay, ScheduledNotificationType type) async {
   await scheduleAlarm(scheduleId, DateTime.now().add(delay), type: type);
 }

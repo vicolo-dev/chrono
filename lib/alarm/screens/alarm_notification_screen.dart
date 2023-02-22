@@ -48,7 +48,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
                 TextButton(
                   onPressed: () {
                     AlarmNotificationManager.snoozeAlarm(
-                        widget.scheduleId, AlarmType.alarm);
+                        widget.scheduleId, ScheduledNotificationType.alarm);
                     // dismissAlarm(widget.id);
                     // Navigator.pop(context);
                   },
@@ -57,7 +57,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
                 TextButton(
                   onPressed: () {
                     AlarmNotificationManager.dismissAlarm(
-                        widget.scheduleId, AlarmType.alarm);
+                        widget.scheduleId, ScheduledNotificationType.alarm);
                     // Navigator.pop(context);
                   },
                   child: const Text("Dismiss"),

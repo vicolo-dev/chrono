@@ -1,30 +1,60 @@
+import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
+import 'package:clock_app/timer/types/timer.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
 
 class RingtonePlayer {
-  static AudioPlayer? _player;
+  static AudioPlayer? _alarmPlayer;
+  static AudioPlayer? _timerPlayer;
+  static AudioPlayer? activePlayer;
   static bool _vibratorIsAvailable = false;
 
   static Future<void> initialize() async {
-    _player ??= AudioPlayer();
+    _alarmPlayer ??= AudioPlayer();
+    _timerPlayer ??= AudioPlayer();
     _vibratorIsAvailable = (await Vibration.hasVibrator()) ?? false;
   }
 
-  static void play(String ringtoneUri,
+  static void playUri(String ringtoneUri,
+      {bool vibrate = false, LoopMode loopMode = LoopMode.one}) async {
+    activePlayer = _alarmPlayer;
+    _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
+  }
+
+  static void playAlarm(Alarm alarm, {LoopMode loopMode = LoopMode.one}) async {
+    activePlayer = _alarmPlayer;
+    _play(alarm.ringtoneUri, vibrate: alarm.vibrate, loopMode: LoopMode.one);
+  }
+
+  static void playTimer(ClockTimer timer,
+      {LoopMode loopMode = LoopMode.one}) async {
+    activePlayer = _timerPlayer;
+    _play(RingtoneManager.ringtones[0].uri,
+        vibrate: true, loopMode: LoopMode.one);
+  }
+
+  static void _play(String ringtoneUri,
       {bool vibrate = false, LoopMode loopMode = LoopMode.one}) async {
     RingtoneManager.lastPlayedRingtoneUri = ringtoneUri;
     if (_vibratorIsAvailable && vibrate) {
       Vibration.vibrate(pattern: [500, 1000], repeat: 0);
     }
-    await _player?.stop();
-    await _player?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
-    await _player?.setLoopMode(loopMode);
-    _player?.play();
+    await activePlayer?.stop();
+    await activePlayer?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
+    await activePlayer?.setLoopMode(loopMode);
+    activePlayer?.play();
+  }
+
+  static void pause() async {
+    await activePlayer?.pause();
+    if (_vibratorIsAvailable) {
+      Vibration.cancel();
+    }
   }
 
   static void stop() async {
-    await _player?.stop();
+    await activePlayer?.stop();
     if (_vibratorIsAvailable) {
       Vibration.cancel();
     }
