@@ -8,6 +8,7 @@ import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -95,8 +96,11 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
 
   _handleDeleteAlarm(Alarm deletedAlarm) {
     int index = _getAlarmIndex(deletedAlarm);
-    _alarms[index].disable();
-    _alarms.removeAt(index);
+    setState(() {
+      _alarms[index].disable();
+      _alarms.removeAt(index);
+    });
+
     _controller.notifyRemovedRange(
       index,
       1,
@@ -120,7 +124,7 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
   _handleAddAlarm(Alarm alarm, {int index = -1}) {
     if (index == -1) index = _alarms.length;
     alarm.schedule();
-    _alarms.insert(index, alarm);
+    setState(() => _alarms.insert(index, alarm));
     _controller.notifyInsertedRange(index, 1);
 
     _showNextScheduleSnackBar(alarm);
@@ -218,6 +222,20 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
 
     return Stack(
       children: [
+        _alarms.isEmpty
+            ? SizedBox(
+                height: double.infinity,
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    "No alarms created",
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          color: ColorTheme.textColorTertiary,
+                        ),
+                  ),
+                ),
+              )
+            : Container(),
         SlidableAutoCloseBehavior(
           child: AutomaticAnimatedListView<Alarm>(
             list: _alarms,

@@ -94,8 +94,10 @@ class _TimerScreenState extends State<TimerScreen> with RouteAware {
 
   void _handleDeleteTimer(ClockTimer deletedTimer) {
     int index = _getTimerIndex(deletedTimer);
-    _timers[index].reset();
-    _timers.removeAt(index);
+    setState(() {
+      _timers[index].reset();
+      _timers.removeAt(index);
+    });
     _controller.notifyRemovedRange(
       index,
       1,
@@ -106,8 +108,9 @@ class _TimerScreenState extends State<TimerScreen> with RouteAware {
 
   void _handleAddTimer(ClockTimer timer, {int index = -1}) {
     if (index == -1) index = _timers.length;
-    // timer.schedule();
-    _timers.insert(index, timer);
+    setState(() {
+      _timers.insert(index, timer);
+    });
     _controller.notifyInsertedRange(index, 1);
 
     saveList('timers', _timers);
@@ -156,6 +159,20 @@ class _TimerScreenState extends State<TimerScreen> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
+      _timers.isEmpty
+          ? SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+              child: Center(
+                child: Text(
+                  "No timers created",
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        color: ColorTheme.textColorTertiary,
+                      ),
+                ),
+              ),
+            )
+          : Container(),
       Column(children: [
         Expanded(
           child: SlidableAutoCloseBehavior(

@@ -1,4 +1,5 @@
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -49,16 +50,20 @@ class _ClockScreenState extends State<ClockScreen> {
 
   _handleSearchReturn(dynamic city) {
     if (city != null) {
-      _cities.add(city);
+      setState(() {
+        _cities.add(city);
+      });
+      _controller.notifyInsertedRange(_cities.length - 1, 1);
     }
-    _controller.notifyInsertedRange(_cities.length - 1, 1);
 
     saveList('favorite_cities', _cities);
   }
 
   _handleDeleteCity(City deletedCity) {
     int index = _cities.indexWhere((city) => city.id == deletedCity.id);
-    _cities.removeAt(index);
+    setState(() {
+      _cities.removeAt(index);
+    });
     _controller.notifyRemovedRange(
       index,
       1,
@@ -94,6 +99,19 @@ class _ClockScreenState extends State<ClockScreen> {
           ),
         ),
         const SizedBox(height: 16),
+        _cities.isEmpty
+            ? Expanded(
+                flex: 1,
+                child: Center(
+                  child: Text(
+                    "No cities added",
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          color: ColorTheme.textColorTertiary,
+                        ),
+                  ),
+                ),
+              )
+            : Container(),
         Expanded(
           child: SlidableAutoCloseBehavior(
             child: AutomaticAnimatedListView<City>(
