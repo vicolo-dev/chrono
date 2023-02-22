@@ -145,6 +145,7 @@ class _TimerKnobState extends State<TimerKnob> {
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,
+      onTapUp: _onTapUp,
       child: CustomPaint(
         size: widget.size,
         painter: _TimerKnobPainter(
@@ -160,6 +161,11 @@ class _TimerKnobState extends State<TimerKnob> {
     );
   }
 
+  void _onTapUp(TapUpDetails tapUpDetails) {
+    _updateAngle(tapUpDetails.localPosition, snapToMajor: true);
+    widget.onChanged(_currentDuration);
+  }
+
   void _onPanStart(DragStartDetails details) {
     _updateAngle(details.localPosition);
   }
@@ -173,15 +179,18 @@ class _TimerKnobState extends State<TimerKnob> {
     widget.onChanged(_currentDuration);
   }
 
-  void _updateAngle(Offset position) {
+  void _updateAngle(Offset position, {bool snapToMajor = false}) {
     final center = Offset(
       (context.size?.width)! / 2,
       (context.size?.height)! / 2,
     );
     double angle = (position - center).direction;
 
+    double snapDivisions =
+        snapToMajor ? widget.divisions : widget.snapDivisions;
+
     //round the angle to the nearest 6 degrees
-    final snapAngle = (math.pi * 2) / widget.snapDivisions;
+    final snapAngle = (math.pi * 2) / snapDivisions;
     angle = (angle / snapAngle).round() * snapAngle;
 
     setState(() {
@@ -235,10 +244,6 @@ class _TimerKnobPainter extends CustomPainter {
       // ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0;
 
-    final markerLinePaint = Paint()
-      ..color = Colors.grey
-      ..strokeWidth = 1.0;
-
     final knobCirclePaint = Paint()
       ..color = ColorTheme.accentColor
       ..style = PaintingStyle.fill
@@ -252,15 +257,13 @@ class _TimerKnobPainter extends CustomPainter {
     for (double i = 0; i < math.pi * 2; i += markerAngleDelta) {
       int num = ((i / markerAngleDelta) * (maxValue / divisions)).round();
       final textSpan = TextSpan(
-        text: '${num}',
+        text: '$num',
         style: const TextStyle(
           color: Colors.black,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           fontFamily: 'Rubik',
         ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () => print('Tap Here onTap'),
       );
 
       final textPainter = TextPainter(
