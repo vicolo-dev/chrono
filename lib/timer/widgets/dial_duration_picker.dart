@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -258,6 +259,8 @@ class _TimerKnobPainter extends CustomPainter {
           fontWeight: FontWeight.w500,
           fontFamily: 'Rubik',
         ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () => print('Tap Here onTap'),
       );
 
       final textPainter = TextPainter(

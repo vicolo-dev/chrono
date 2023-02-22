@@ -4,7 +4,7 @@ import 'dart:isolate';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:clock_app/alarm/data/alarm_notification_channel.dart';
+import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';

@@ -1,5 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:clock_app/alarm/data/alarm_notification_channel.dart';
+import 'package:clock_app/notifications/data/notification_channel.dart';
 
 Future<void> initializeNotifications() async {
   AwesomeNotifications().isNotificationAllowed().then((allowed) {

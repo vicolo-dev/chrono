@@ -4,6 +4,17 @@ import 'package:intl/intl.dart';
 extension TimeOfDayUtils on TimeOfDay {
   double toHours() => hour + minute / 60.0;
 
+  bool isBetween(TimeOfDay start, TimeOfDay end) {
+    double time = toHours();
+    double startTime = start.toHours();
+    double endTime = end.toHours();
+    if (startTime < endTime) {
+      return time >= startTime && time <= endTime;
+    } else {
+      return time >= startTime || time <= endTime;
+    }
+  }
+
   String formatToString(String format) =>
       DateFormat(format).format(toDateTime());
 

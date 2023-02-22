@@ -1,8 +1,11 @@
+import 'package:clock_app/alarm/data/time_of_day_icons.dart';
 import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/alarm/types/time_of_day_icon.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock_display.dart';
 import 'package:clock_app/common/widgets/delete_action_pane.dart';
+import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -30,6 +33,8 @@ class AlarmCard extends StatefulWidget {
 class _AlarmCardState extends State<AlarmCard> {
   @override
   Widget build(BuildContext context) {
+    TimeOfDayIcon timeOfDayIcon = timeOfDayIcons.firstWhere((icon) =>
+        widget.alarm.timeOfDay.isBetween(icon.startTime, icon.endTime));
     return SizedBox(
       width: double.infinity,
       child: Card(
@@ -43,33 +48,66 @@ class _AlarmCardState extends State<AlarmCard> {
               endActionPane: getDeleteActionPane(widget.onDelete, context),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
+                child: Row(
                   children: [
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ClockDisplay(
-                            dateTime: widget.alarm.timeOfDay.toDateTime(),
-                            scale: 0.6,
-                            color: widget.alarm.enabled
-                                ? null
-                                : ColorTheme.textColorTertiary),
-                        const Spacer(),
-                        Switch(
-                          value: widget.alarm.enabled,
-                          onChanged: widget.onEnabledChange,
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          getAlarmScheduleDescription(widget.alarm),
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        Row(
+                          children: [
+                            Text("Label",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      color: widget.alarm.enabled
+                                          ? ColorTheme.textColorSecondary
+                                          : ColorTheme.textColorTertiary,
+                                    )),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            ClockDisplay(
+                                dateTime: widget.alarm.timeOfDay.toDateTime(),
+                                scale: 0.6,
+                                color: widget.alarm.enabled
+                                    ? null
+                                    : ColorTheme.textColorTertiary),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              timeOfDayIcon.icon,
+                              color: widget.alarm.enabled
+                                  ? timeOfDayIcon.color
+                                  : ColorTheme.textColorTertiary,
+                              size: 24,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              getAlarmScheduleDescription(widget.alarm),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
                                     color: widget.alarm.enabled
                                         ? ColorTheme.textColorSecondary
                                         : ColorTheme.textColorTertiary,
                                   ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    const Spacer(),
+                    Column(
+                      children: [
+                        // const SizedBox(width: 8),
+                        Switch(
+                          value: widget.alarm.enabled,
+                          onChanged: widget.onEnabledChange,
                         ),
                       ],
                     )
