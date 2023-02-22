@@ -12,10 +12,10 @@ import 'package:flutter/material.dart';
 class TimerNotificationScreen extends StatefulWidget {
   const TimerNotificationScreen({
     Key? key,
-    required this.scheduleId,
+    required this.scheduleIds,
   }) : super(key: key);
 
-  final int scheduleId;
+  final List<int> scheduleIds;
 
   @override
   State<TimerNotificationScreen> createState() =>
@@ -23,12 +23,9 @@ class TimerNotificationScreen extends StatefulWidget {
 }
 
 class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
-  late ClockTimer timer;
-
   @override
   void initState() {
     super.initState();
-    timer = getTimerById(widget.scheduleId);
   }
 
   @override
@@ -40,8 +37,21 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              timer.duration.toString(),
+            Container(
+              height: 200,
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                children: [
+                  for (int id in widget.scheduleIds)
+                    Card(
+                        child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              getTimerById(id).duration.toString(),
+                              style: Theme.of(context).textTheme.displayMedium,
+                            )))
+                ],
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -49,19 +59,17 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
                 TextButton(
                   onPressed: () {
                     AlarmNotificationManager.snoozeAlarm(
-                        widget.scheduleId, ScheduledNotificationType.timer);
-                    // dismissAlarm(widget.id);
-                    // Navigator.pop(context);
+                        widget.scheduleIds[0], ScheduledNotificationType.timer);
                   },
                   child: const Text("Add 1 Minute"),
                 ),
                 TextButton(
                   onPressed: () {
                     AlarmNotificationManager.dismissAlarm(
-                        widget.scheduleId, ScheduledNotificationType.timer);
-                    // Navigator.pop(context);
+                        widget.scheduleIds[0], ScheduledNotificationType.timer);
                   },
-                  child: const Text("Stop"),
+                  child: Text(
+                      "Stop ${widget.scheduleIds.length > 1 ? "All" : ""}"),
                 ),
               ],
             ),

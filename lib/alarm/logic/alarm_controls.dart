@@ -42,13 +42,14 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
 
   RingtonePlayer.playAlarm(getAlarmByScheduleId(scheduleId));
 
+  ringingAlarmId = scheduleId;
+
   AlarmNotificationManager.showFullScreenNotification(
     ScheduledNotificationType.alarm,
-    scheduleId,
+    [ringingAlarmId],
+    "Alarm Ringing...",
     TimeOfDayUtils.decode(params['timeOfDay']).formatToString('h:mm a'),
   );
-
-  ringingAlarmId = scheduleId;
 }
 
 void triggerTimer(int scheduleId, Map<String, dynamic> params) async {
@@ -70,15 +71,17 @@ void triggerTimer(int scheduleId, Map<String, dynamic> params) async {
         ScheduledNotificationType.timer);
   }
 
-  RingtonePlayer.playTimer(getTimerById(scheduleId));
+  ClockTimer timer = getTimerById(scheduleId);
+
+  RingtonePlayer.playTimer(timer);
+
+  ringingTimerIds.add(scheduleId);
 
   AlarmNotificationManager.showFullScreenNotification(
-    ScheduledNotificationType.timer,
-    scheduleId,
-    TimeOfDayUtils.decode(params['timeOfDay']).formatToString('h:mm a'),
-  );
-
-  ringingTimerIds = [scheduleId];
+      ScheduledNotificationType.timer,
+      ringingTimerIds,
+      "Time's Up!",
+      "${ringingTimerIds.length} Timer${ringingTimerIds.length > 1 ? 's' : ''}");
 }
 
 @pragma('vm:entry-point')
@@ -146,27 +149,9 @@ void stopScheduledNotification(
     (element) => element.toString() == params['type'],
   );
 
-  if (params['action'] == AlarmStopAction.snooze.toString()) {
-    Duration snoozeDuration = const Duration(minutes: 1);
-    if (type == ScheduledNotificationType.alarm) {
-      Alarm alarm = getAlarmByScheduleId(scheduleId);
-      snoozeDuration = Duration(minutes: alarm.snoozeLength.floor());
-    }
-
-    scheduleSnoozeAlarm(scheduleId, snoozeDuration, type);
-  } else {
-    if (type == ScheduledNotificationType.alarm) {
-      updateAlarms();
-      if (ringingTimerIds.isNotEmpty) {
-        RingtonePlayer.playTimer(getTimerById(ringingTimerIds.first));
-      }
-      ringingAlarmId = -1;
-    } else if (type == ScheduledNotificationType.timer) {
-      updateTimers();
-      if (ringingAlarmId != -1) {
-        RingtonePlayer.playAlarm(getAlarmByScheduleId(ringingAlarmId));
-      }
-      ringingTimerIds = [];
-    }
+  if (type == ScheduledNotificationType.alarm) {
+    stopAlarm(scheduleId, params);
+  } else if (type == ScheduledNotificationType.timer) {
+    stopTimer(scheduleId, params);
   }
 }

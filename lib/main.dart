@@ -41,16 +41,6 @@ void main() async {
   AppVisibilityListener.initialize();
   await LockScreenFlagManager.initialize();
 
-  // String appDataDirectory = await getAppDataDirectoryPath();
-
-  // // log something to a file in the app's data directory
-  // try {
-  //   print(
-  //       "FileContents: ${File('$appDataDirectory/log-dart.txt').readAsStringSync()}");
-  // } catch (e) {
-  //   print("Error: $e");
-  // }
-
   String appDataDirectory = await getAppDataDirectoryPath();
   String path = '$appDataDirectory/ringing-alarm.txt';
   File file = File(path);
@@ -97,22 +87,17 @@ class _AppState extends State<App> {
           case Routes.alarmNotificationRoute:
             return MaterialPageRoute(
               builder: (context) {
-                final ReceivedAction receivedAction =
-                    settings.arguments as ReceivedAction;
-                int scheduleId =
-                    int.parse((receivedAction.payload?['scheduleId'])!);
-                return AlarmNotificationScreen(scheduleId: scheduleId);
+                final List<int> scheduleIds = settings.arguments as List<int>;
+                return AlarmNotificationScreen(scheduleId: scheduleIds[0]);
               },
             );
 
           case Routes.timerNotificationRoute:
             return MaterialPageRoute(
               builder: (context) {
-                final ReceivedAction receivedAction =
-                    settings.arguments as ReceivedAction;
-                int scheduleId =
-                    int.parse((receivedAction.payload?['scheduleId'])!);
-                return TimerNotificationScreen(scheduleId: scheduleId);
+                final List<int> scheduleIds = settings.arguments as List<int>;
+                print(scheduleIds);
+                return TimerNotificationScreen(scheduleIds: scheduleIds);
               },
             );
 

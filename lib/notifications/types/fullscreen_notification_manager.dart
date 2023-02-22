@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
@@ -12,16 +15,12 @@ import 'package:move_to_background/move_to_background.dart';
 
 class FullScreenNotificationData {
   int id;
-  final String title;
-  final Map<String, String?>? payload;
   final String snoozeActionLabel;
   final String dismissActionLabel;
   final String route;
 
   FullScreenNotificationData({
     required this.id,
-    required this.title,
-    this.payload,
     required this.snoozeActionLabel,
     required this.dismissActionLabel,
     required this.route,
@@ -32,14 +31,12 @@ Map<ScheduledNotificationType, FullScreenNotificationData>
     alarmNotificationData = {
   ScheduledNotificationType.alarm: FullScreenNotificationData(
     id: 0,
-    title: "Alarm Ringing",
     snoozeActionLabel: "Snooze",
     dismissActionLabel: "Dismiss",
     route: Routes.alarmNotificationRoute,
   ),
   ScheduledNotificationType.timer: FullScreenNotificationData(
     id: 1,
-    title: "Time's Up",
     snoozeActionLabel: "Add 1 Minute",
     dismissActionLabel: "Stop",
     route: Routes.timerNotificationRoute,
@@ -54,7 +51,8 @@ class AlarmNotificationManager {
 
   static void showFullScreenNotification(
     ScheduledNotificationType type,
-    int scheduleId,
+    List<int> scheduleIds,
+    String title,
     String body,
   ) {
     FullScreenNotificationData data = alarmNotificationData[type]!;
@@ -62,10 +60,10 @@ class AlarmNotificationManager {
       content: NotificationContent(
         id: data.id,
         channelKey: alarmNotificationChannelKey,
-        title: data.title,
+        title: title,
         body: body,
         payload: {
-          "scheduleId": scheduleId.toString(),
+          "scheduleIds": json.encode(scheduleIds),
           "type": type.toString(),
         },
         category: NotificationCategory.Alarm,
@@ -74,22 +72,32 @@ class AlarmNotificationManager {
         wakeUpScreen: true,
         locked: true,
       ),
-      actionButtons: [
-        NotificationActionButton(
-          showInCompactView: true,
-          key: _snoozeActionKey,
-          label: data.snoozeActionLabel,
-          actionType: ActionType.SilentAction,
-          autoDismissible: true,
-        ),
-        NotificationActionButton(
-          showInCompactView: true,
-          key: _dismissActionKey,
-          label: data.dismissActionLabel,
-          actionType: ActionType.SilentAction,
-          autoDismissible: true,
-        ),
-      ],
+      actionButtons: scheduleIds.length == 1
+          ? [
+              NotificationActionButton(
+                showInCompactView: true,
+                key: _snoozeActionKey,
+                label: data.snoozeActionLabel,
+                actionType: ActionType.SilentAction,
+                autoDismissible: true,
+              ),
+              NotificationActionButton(
+                showInCompactView: true,
+                key: _dismissActionKey,
+                label: data.dismissActionLabel,
+                actionType: ActionType.SilentAction,
+                autoDismissible: true,
+              ),
+            ]
+          : [
+              NotificationActionButton(
+                showInCompactView: true,
+                key: _dismissActionKey,
+                label: '${data.dismissActionLabel} All',
+                actionType: ActionType.SilentAction,
+                autoDismissible: true,
+              ),
+            ],
     );
   }
 
@@ -146,17 +154,18 @@ class AlarmNotificationManager {
 
     FullScreenNotificationData data = alarmNotificationData[type]!;
 
+    List<int> scheduleIds =
+        (json.decode(receivedAction.payload?['scheduleIds'] ?? "[0]")
+                as List<dynamic>)
+            .cast<int>();
+
     switch (receivedAction.buttonKeyPressed) {
       case _snoozeActionKey:
-        int scheduleId =
-            int.parse(receivedAction.payload?['scheduleId'] ?? "0");
-        snoozeAlarm(scheduleId, type);
+        snoozeAlarm(scheduleIds[0], type);
         break;
 
       case _dismissActionKey:
-        int scheduleId =
-            int.parse(receivedAction.payload?['scheduleId'] ?? "0");
-        dismissAlarm(scheduleId, type);
+        dismissAlarm(scheduleIds[0], type);
         break;
 
       default:
@@ -170,7 +179,7 @@ class AlarmNotificationManager {
           (route) {
             return (route.settings.name != data.route) || route.isFirst;
           },
-          arguments: receivedAction,
+          arguments: scheduleIds,
         );
         break;
     }
