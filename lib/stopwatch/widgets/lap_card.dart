@@ -1,10 +1,24 @@
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:flutter/material.dart';
 
-class LapCard extends StatelessWidget {
-  const LapCard({super.key, required this.lap});
+class LapCard extends StatefulWidget {
+  const LapCard({super.key, required this.lap, this.onInit});
 
   final Lap lap;
+  final VoidCallback? onInit;
+
+  @override
+  State<LapCard> createState() => _LapCardState();
+}
+
+class _LapCardState extends State<LapCard> {
+  @override
+  void initState() {
+    print("eeyup");
+
+    super.initState();
+    widget.onInit?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,15 +27,15 @@ class LapCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          Text('${lap.lapNumber}'),
+          Text('${widget.lap.number}'),
           SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(lap.lapTime.toTimeString(showMilliseconds: true),
+              Text(widget.lap.lapTime.toTimeString(showMilliseconds: true),
                   style: Theme.of(context).textTheme.displaySmall),
               Text(
-                  'Elapsed Time: ${lap.elapsedTime.toTimeString(showMilliseconds: true)}'),
+                  'Elapsed Time: ${widget.lap.elapsedTime.toTimeString(showMilliseconds: true)}'),
             ],
           ),
         ],

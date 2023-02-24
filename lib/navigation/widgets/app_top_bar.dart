@@ -19,7 +19,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
       // You can set the size here, but it's left to zeros in order to expand based on its child.
       preferredSize: preferredSize,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: AppBar(
           toolbarHeight: preferredSize.height,
           title: title,
