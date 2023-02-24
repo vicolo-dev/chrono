@@ -13,5 +13,5 @@ final List<Tab> tabs = [
   Tab(
       title: 'Stopwatch',
       icon: FluxIcons.stopwatch,
-      widget: const StopwatchTab()),
+      widget: const StopwatchScreen()),
 ];

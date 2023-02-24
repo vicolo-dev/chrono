@@ -39,7 +39,7 @@ class _TimerCardState extends State<TimerCard> {
     setState(() {
       timer?.cancel();
       if (widget.timer.state == TimerState.running) {
-        timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+        timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
           valueNotifier.value = widget.timer.remainingSeconds.toDouble();
         });
       }
