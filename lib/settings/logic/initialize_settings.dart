@@ -2,6 +2,8 @@ import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/stopwatch/types/stopwatch.dart';
+import 'package:clock_app/timer/types/timer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> initializeSettings() async {
@@ -10,14 +12,15 @@ Future<void> initializeSettings() async {
 
   // Used to clear the preferences in case of a change in format of the data
   // Comment this out after the preferences are cleared
-  // preferences?.clear();
+  preferences?.clear();
 
   bool? firstLaunch = SettingsManager.preferences?.getBool('first_launch');
   if (firstLaunch == null) {
     preferences?.setBool('first_launch', false);
     initializeDefaultFavoriteCities();
     saveList<Alarm>('alarms', []);
-    saveList<Alarm>('timers', []);
+    saveList<ClockTimer>('timers', []);
+    saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
 
     // for (SettingGroup group in settings) {
     //   for (Setting setting in group.settings) {

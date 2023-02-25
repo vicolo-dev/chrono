@@ -17,7 +17,7 @@ class _LapCardState extends State<LapCard> {
     print("eeyup");
 
     super.initState();
-    widget.onInit?.call();
+    // widget.onInit?.call();
   }
 
   @override

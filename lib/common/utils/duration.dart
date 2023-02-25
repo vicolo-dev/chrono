@@ -5,5 +5,6 @@ extension DurationUtils on Duration {
         hours: inHours,
         minutes: inMinutes % 60,
         seconds: inSeconds % 60,
+        milliseconds: inMilliseconds % 1000,
       );
 }

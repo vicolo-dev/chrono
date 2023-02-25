@@ -1,11 +1,10 @@
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
+import 'package:clock_app/common/types/timer_state.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/duration.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
-
-enum TimerState { stopped, running, paused }
 
 class ClockTimer extends JsonSerializable {
   final TimeDuration _duration;
@@ -21,6 +20,7 @@ class ClockTimer extends JsonSerializable {
       ? _secondsRemainingOnPause -
           DateTime.now().difference(_startTime).toTimeDuration().inSeconds
       : _secondsRemainingOnPause;
+  bool get isRunning => _state == TimerState.running;
   TimerState get state => _state;
 
   ClockTimer(this._duration)
@@ -42,7 +42,6 @@ class ClockTimer extends JsonSerializable {
         _id, DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),
         type: ScheduledNotificationType.timer);
     _state = TimerState.running;
-    print("started");
   }
 
   void pause() {
@@ -83,7 +82,5 @@ class ClockTimer extends JsonSerializable {
         _startTime = DateTime.parse(json['startTime']),
         _state =
             TimerState.values.firstWhere((e) => e.toString() == json['state']),
-        _id = json['id'] {
-    // print('TimerState.values: ${_state}');
-  }
+        _id = json['id'];
 }

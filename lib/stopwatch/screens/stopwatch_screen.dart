@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
+import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/stopwatch/widgets/lap_card.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
@@ -19,42 +21,15 @@ class StopwatchScreen extends StatefulWidget {
 }
 
 class _StopwatchScreenState extends State<StopwatchScreen> {
-  Stopwatch _stopwatch = Stopwatch();
-  List<Lap> _laps = [];
+  late final ClockStopwatch _stopwatch;
 
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
 
-  void toggleStart() {
-    if (_stopwatch.isRunning) {
-      _stopwatch.stop();
-    } else {
-      _stopwatch.start();
-    }
-  }
-
-  void _handleReset() {
-    List<Lap> lapsCopy = List<Lap>.from(_laps);
-    setState(() {
-      _stopwatch.stop();
-      _stopwatch.reset();
-      _laps = [];
-    });
-    _controller.notifyChangedRange(
-      0,
-      _laps.length,
-      (context, index, data) => data.measuring
-          ? const SizedBox(height: 64)
-          : LapCard(
-              key: ValueKey(lapsCopy[index]),
-              lap: lapsCopy[index],
-            ),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
+    _stopwatch = loadList<ClockStopwatch>('stopwatches').first;
   }
 
   @override
@@ -62,21 +37,46 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     super.dispose();
   }
 
-  void _handleAddLap() {
-    int elapsedMilliseconds = _stopwatch.elapsedMilliseconds;
-
+  void _handleReset() {
+    List<Lap> lapsCopy = List<Lap>.from(_stopwatch.laps);
     setState(() {
-      _laps.add(Lap(
-          elapsedTime: TimeDuration.fromMilliseconds(elapsedMilliseconds),
-          number: _laps.length + 1,
-          lapTime: TimeDuration.fromMilliseconds(elapsedMilliseconds -
-              (_laps.isNotEmpty ? _laps.last.elapsedTime.inMilliseconds : 0))));
+      _stopwatch.pause();
+      _stopwatch.reset();
     });
-    _controller.notifyInsertedRange(_laps.length - 1, 1);
+    _controller.notifyChangedRange(
+      0,
+      _stopwatch.laps.length,
+      (context, index, data) => data.measuring
+          ? const SizedBox(height: 64)
+          : LapCard(
+              key: ValueKey(lapsCopy[index]),
+              lap: lapsCopy[index],
+            ),
+    );
+    saveList('stopwatches', [_stopwatch]);
+  }
+
+  void _handleAddLap() {
+    setState(() {
+      _stopwatch.addLap();
+    });
+    _controller.notifyInsertedRange(_stopwatch.laps.length - 1, 1);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 250), curve: Curves.easeIn);
+      // executes after build
+    });
+    saveList('stopwatches', [_stopwatch]);
+  }
+
+  void _handleToggleState() {
+    _stopwatch.toggleState();
+    setState(() {});
+    saveList('stopwatches', [_stopwatch]);
   }
 
   void _scrollToBottom(Lap lap) {
-    if (lap.number != _laps.length) return;
+    if (lap.number != _stopwatch.laps.length) return;
     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
         duration: Duration(milliseconds: 250), curve: Curves.easeIn);
   }
@@ -105,7 +105,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
             SizedBox(height: 16),
             Expanded(
               child: AutomaticAnimatedListView<Lap>(
-                list: _laps,
+                list: _stopwatch.laps,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 comparator: AnimatedListDiffListComparator<Lap>(
                   sameItem: (a, b) => a.number == b.number,
@@ -125,27 +125,24 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                 },
                 listController: _controller,
                 scrollController: _scrollController,
-                footer: const SizedBox(height: 64),
+                footer: const SizedBox(height: 136),
               ),
             ),
           ],
         ),
         FAB(
-          onPressed: () {
-            toggleStart();
-            setState(() {});
-          },
+          onPressed: _handleToggleState,
           icon: _stopwatch.isRunning
               ? Icons.pause_rounded
               : Icons.play_arrow_rounded,
         ),
-        if (_stopwatch.elapsedMilliseconds > 0)
+        if (_stopwatch.isStarted)
           FAB(
             index: 1,
             onPressed: _handleAddLap,
             icon: Icons.flag_rounded,
           ),
-        if (_stopwatch.elapsedMilliseconds > 0)
+        if (_stopwatch.isStarted)
           FAB(
             index: 2,
             onPressed: _handleReset,

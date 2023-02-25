@@ -1,4 +1,6 @@
-class TimeDuration {
+import 'package:clock_app/common/utils/json_serialize.dart';
+
+class TimeDuration extends JsonSerializable {
   int hours;
   int minutes;
   int seconds;
@@ -54,4 +56,18 @@ class TimeDuration {
         showMilliseconds ? '.${twoDigits(milliseconds)}' : '';
     return "$hoursString$minutesString$secondsString$millisecondsString";
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'hours': hours,
+        'minutes': minutes,
+        'seconds': seconds,
+        'milliseconds': milliseconds,
+      };
+
+  TimeDuration.fromJson(Map<String, dynamic> json)
+      : hours = json['hours'],
+        minutes = json['minutes'],
+        seconds = json['seconds'],
+        milliseconds = json['milliseconds'];
 }
