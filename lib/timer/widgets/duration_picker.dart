@@ -18,7 +18,10 @@ Future<TimeDuration?> showDurationPicker(BuildContext context) {
             titlePadding: const EdgeInsets.only(left: 16, right: 16, top: 16),
             title: Text('Select Duration',
                 style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: ColorTheme.textColorSecondary,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.6),
                     )),
             content: Builder(
               builder: (context) {
@@ -50,20 +53,19 @@ Future<TimeDuration?> showDurationPicker(BuildContext context) {
             actions: <Widget>[
               TextButton(
                 child: Text('Cancel',
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelMedium
-                        ?.copyWith(color: ColorTheme.textColorTertiary)),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onBackground
+                            .withOpacity(0.6))),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
                 child: Text('Save',
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelMedium
-                        ?.copyWith(color: ColorTheme.accentColor)),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary)),
                 onPressed: () {
                   Navigator.of(context).pop(duration);
                 },

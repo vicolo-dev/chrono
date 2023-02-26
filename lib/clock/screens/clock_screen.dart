@@ -1,4 +1,6 @@
 import 'package:clock_app/clock/widgets/timezone_card.dart';
+import 'package:clock_app/main.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/common/types/list_controller.dart';
@@ -51,6 +53,14 @@ class _ClockScreenState extends State<ClockScreen> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Column(children: [
+        TextButton(
+          child: Text("light"),
+          onPressed: () => App.setColorScheme(context, lightColorScheme),
+        ),
+        TextButton(
+          child: Text("dark"),
+          onPressed: () => App.setColorScheme(context, darkColorScheme),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Clock(

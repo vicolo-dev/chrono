@@ -1,3 +1,4 @@
+import 'package:clock_app/main.dart';
 import 'package:flutter/material.dart';
 
 class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
@@ -23,8 +24,14 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
         child: AppBar(
           toolbarHeight: preferredSize.height,
           title: title,
-          actions: actions,
+          actions: [...?actions],
           elevation: 0,
+          iconTheme: IconThemeData(
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
+          ),
+          titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
           backgroundColor: Colors.transparent,
         ),
       ),

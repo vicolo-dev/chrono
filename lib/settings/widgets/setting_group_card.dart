@@ -49,13 +49,16 @@ class SettingGroupCard extends StatelessWidget {
                       settingGroup.name,
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                color: ColorTheme.accentColor,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                     ),
                     const Spacer(),
-                    const Icon(
+                    Icon(
                       Icons.chevron_right_rounded,
-                      color: ColorTheme.textColorTertiary,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.6),
                     )
                   ],
                 ),
@@ -93,7 +96,7 @@ class SettingGroupCard extends StatelessWidget {
                       settingGroup.name,
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                color: ColorTheme.accentColor,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                     ),
                   ),
@@ -121,7 +124,8 @@ class SettingGroupCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(settingGroup.icon, color: ColorTheme.textColor),
+              Icon(settingGroup.icon,
+                  color: Theme.of(context).colorScheme.onBackground),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -140,7 +144,8 @@ class SettingGroupCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.arrow_right, color: ColorTheme.textColor),
+              Icon(Icons.arrow_right,
+                  color: Theme.of(context).colorScheme.onBackground),
             ],
           ),
         ),

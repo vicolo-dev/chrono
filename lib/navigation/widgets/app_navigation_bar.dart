@@ -23,7 +23,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
       padding:
           const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0, top: 0),
       child: Card(
-        elevation: Theme.of(context).cardTheme.elevation! * 2,
+        elevation: (Theme.of(context).cardTheme.elevation ?? 1) * 2,
         child: BottomNavBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -36,7 +36,8 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
           ],
           currentIndex: widget.selectedTabIndex,
           selectedItemColor: Theme.of(context).colorScheme.primary,
-          unselectedItemColor: ColorTheme.textColorTertiary,
+          unselectedItemColor:
+              Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
           showUnselectedLabels: false,
           selectedLabelStyle: Theme.of(context).textTheme.titleSmall,
           unselectedLabelStyle: Theme.of(context).textTheme.titleSmall,

@@ -116,7 +116,8 @@ class _ClockDisplayState extends State<ClockDisplay> {
             fontSize: 16 * widget.scale,
             height: 1,
             dateTime: widget.dateTime,
-            color: widget.color ?? ColorTheme.textColorSecondary,
+            color: widget.color ??
+                Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
           ),
       ],
     );

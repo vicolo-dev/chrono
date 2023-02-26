@@ -70,7 +70,10 @@ class _TimerCardState extends State<TimerCard> {
                 Text(
                   '${widget.timer.duration.toString()} timer',
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: ColorTheme.textColorTertiary,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onBackground
+                            .withOpacity(0.6),
                       ),
                 ),
                 Text(
@@ -97,14 +100,17 @@ class _TimerCardState extends State<TimerCard> {
                     updateTimer();
                   },
                   child: widget.timer.isRunning
-                      ? const Icon(
+                      ? Icon(
                           Icons.pause_rounded,
-                          color: ColorTheme.accentColor,
+                          color: Theme.of(context).colorScheme.primary,
                           size: 32,
                         )
-                      : const Icon(
+                      : Icon(
                           Icons.play_arrow_rounded,
-                          color: ColorTheme.textColorSecondary,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.6),
                           size: 32,
                         ),
                 );

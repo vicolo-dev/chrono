@@ -34,7 +34,7 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
         });
         widget.onChanged?.call(widget.setting.value);
       },
-      onSelect: widget.setting.onSelectOption,
+      onSelect: (index) => widget.setting.onSelectOption(context, index),
     );
 
     return widget.showSummaryView ? selectWidget : Card(child: selectWidget);

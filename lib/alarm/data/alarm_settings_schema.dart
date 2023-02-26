@@ -45,7 +45,7 @@ Settings alarmSettingsSchema = Settings([
                   .map((ringtone) =>
                       SelectSettingOption(ringtone.title, ringtone.uri))
                   .toList(),
-              onSelect: (index, uri) {
+              onSelect: (context, index, uri) {
                 if (RingtoneManager.lastPlayedRingtoneUri == uri) {
                   RingtonePlayer.stop();
                 } else {

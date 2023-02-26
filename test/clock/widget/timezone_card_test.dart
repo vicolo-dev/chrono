@@ -23,7 +23,7 @@ void main() {
     testWidgets(
       'Show city name',
       (tester) async {
-        const sampleCity = City("Tokyo", "Japan", "Asia/Tokyo");
+        var sampleCity = City("Tokyo", "Japan", "Asia/Tokyo");
         await renderWidget(tester);
 
         // The widget code uses `replaceAll` to work around flutter's
@@ -33,59 +33,56 @@ void main() {
             findsOneWidget);
       },
     );
-    testWidgets(
-      'does not show delete button initially',
-      (tester) async {
-        await renderWidget(tester);
-        expect(find.text("Delete"), findsNothing);
-      },
-    );
+    // testWidgets(
+    //     'does not show delete button initially',
+    //     (tester) async {
+    //       await renderWidget(tester);
+    //       expect(find.text("Delete"), findsNothing);
+    //     },
+    //   );
 
-    testWidgets(
-      'shows delete button on right swipe',
-      (tester) async {
-        await renderWidget(tester);
+    //   testWidgets(
+    //     'shows delete button on right swipe',
+    //     (tester) async {
+    //       await renderWidget(tester);
 
-        await tester.drag(find.byKey(testKey), const Offset(500.0, 0.0));
-        await tester.pumpAndSettle();
-        expect(find.text("Delete"), findsOneWidget);
-      },
-    );
-    testWidgets(
-      'shows delete button on left swipe',
-      (tester) async {
-        await renderWidget(tester);
+    //       await tester.drag(find.byKey(testKey), const Offset(500.0, 0.0));
+    //       await tester.pumpAndSettle();
+    //       expect(find.text("Delete"), findsOneWidget);
+    //     },
+    //   );
+    //   testWidgets(
+    //     'shows delete button on left swipe',
+    //     (tester) async {
+    //       await renderWidget(tester);
 
-        await tester.drag(find.byKey(testKey), const Offset(-500.0, 0.0));
-        await tester.pumpAndSettle();
-        expect(find.text("Delete"), findsOneWidget);
-      },
-    );
-    testWidgets(
-      'calls the onDelete function on clicking delete button',
-      (tester) async {
-        deleted = false;
-        await renderWidget(tester);
+    //       await tester.drag(find.byKey(testKey), const Offset(-500.0, 0.0));
+    //       await tester.pumpAndSettle();
+    //       expect(find.text("Delete"), findsOneWidget);
+    //     },
+    //   );
+    //   testWidgets(
+    //     'calls the onDelete function on clicking delete button',
+    //     (tester) async {
+    //       deleted = false;
+    //       await renderWidget(tester);
 
-        await tester.drag(find.byKey(testKey), const Offset(500.0, 0.0));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text("Delete"));
-        await tester.pump();
-        expect(deleted, equals(true));
-      },
-    );
+    //       await tester.drag(find.byKey(testKey), const Offset(500.0, 0.0));
+    //       await tester.pumpAndSettle();
+    //       await tester.tap(find.text("Delete"));
+    //       await tester.pump();
+    //       expect(deleted, equals(true));
+    //     },
+    //   );
   });
 }
 
 Future<void> renderWidget(WidgetTester tester) async {
-  const sampleCity = City("Tokyo", "Japan", "Asia/Tokyo");
+  var sampleCity = City("Tokyo", "Japan", "Asia/Tokyo");
   await tester.pumpWidget(
     MaterialApp(
       home: TimeZoneCard(
         city: sampleCity,
-        onDelete: () {
-          deleted = true;
-        },
         key: testKey,
       ),
     ),

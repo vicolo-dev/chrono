@@ -47,7 +47,9 @@ class TimeZoneSearchCard extends StatelessWidget {
               title: city.name,
               subtitle: city.country,
               timezoneLocation: timezoneLocation,
-              textColor: disabled ? ColorTheme.textColorTertiary : null,
+              textColor: disabled
+                  ? Theme.of(context).colorScheme.onBackground.withOpacity(0.6)
+                  : null,
             ),
           )),
     );

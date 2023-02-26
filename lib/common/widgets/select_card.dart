@@ -91,9 +91,10 @@ class _SelectCardState<T> extends State<SelectCard<T>> {
               ],
             ),
             const Spacer(),
-            const Icon(
+            Icon(
               Icons.arrow_drop_down_rounded,
-              color: ColorTheme.textColorTertiary,
+              color:
+                  Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
             ),
           ],
         ),

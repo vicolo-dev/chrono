@@ -31,7 +31,10 @@ class _NavScaffoldState extends State<NavScaffold> {
       appBar: AppTopBar(
         title: Text(tabs[_selectedTabIndex].title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: ColorTheme.textColorSecondary,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onBackground
+                      .withOpacity(0.6),
                 )),
         actions: [
           IconButton(
@@ -43,7 +46,7 @@ class _NavScaffoldState extends State<NavScaffold> {
                       builder: (context) => const SettingsScreen()));
             },
             icon: const Icon(FluxIcons.settings, semanticLabel: "Settings"),
-            color: ColorTheme.textColorSecondary,
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:clock_app/theme/font.dart';
 import 'package:clock_app/theme/slider.dart';
 import 'package:flutter/material.dart';
 
@@ -11,19 +12,38 @@ import 'package:clock_app/theme/snackbar.dart';
 import 'package:clock_app/theme/switch.dart';
 import 'package:clock_app/theme/time_picker.dart';
 
-ThemeData theme = ThemeData(
+ThemeData defaultTheme = ThemeData(
   fontFamily: 'Rubik',
   // canvasColor: Colors.transparent,
-  textTheme: textTheme,
+  textTheme: textTheme.apply(
+    bodyColor: lightColorScheme.onBackground,
+    displayColor: lightColorScheme.onBackground,
+  ),
   cardTheme: cardTheme,
-  colorScheme: colorScheme,
+  colorScheme: lightColorScheme,
   timePickerTheme: timePickerTheme,
   dialogTheme: dialogTheme,
   switchTheme: switchTheme,
   snackBarTheme: snackBarTheme,
   inputDecorationTheme: inputTheme,
-  scaffoldBackgroundColor: ColorTheme.backgroundColor,
   radioTheme: radioTheme,
   sliderTheme: sliderTheme,
   // textButtonTheme: textButtonTheme,
 );
+
+// ThemeData theme2 = ThemeData(
+//   fontFamily: 'Rubik',
+//   // canvasColor: Colors.transparent,
+//   textTheme: textTheme,
+//   cardTheme: cardTheme,
+//   colorScheme: colorScheme,
+//   timePickerTheme: timePickerTheme,
+//   dialogTheme: dialogTheme,
+//   switchTheme: switchTheme,
+//   snackBarTheme: snackBarTheme,
+//   inputDecorationTheme: inputTheme,
+//   scaffoldBackgroundColor: ColorTheme.backgroundColor,
+//   radioTheme: radioTheme,
+//   sliderTheme: sliderTheme,
+//   // textButtonTheme: textButtonTheme,
+// );

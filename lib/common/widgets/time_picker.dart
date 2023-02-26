@@ -603,8 +603,8 @@ class _DayPeriodControl extends StatelessWidget {
     final Color textColor =
         MaterialStateColor.resolveWith((Set<MaterialState> states) {
       return states.contains(MaterialState.selected)
-          ? ColorTheme.textColorSecondary
-          : ColorTheme.textColorTertiary;
+          ? Theme.of(context).colorScheme.onBackground.withOpacity(0.8)
+          : Theme.of(context).colorScheme.onBackground.withOpacity(0.6);
     });
     final Color backgroundColor = timePickerTheme.dayPeriodColor ??
         MaterialStateColor.resolveWith((Set<MaterialState> states) {
@@ -2340,10 +2340,11 @@ class _TimePickerDialogState extends State<TimePickerDialog>
           onPressed: _handleCancel,
           child: Text(
             "Cancel",
-            style: Theme.of(context)
-                .textTheme
-                .labelMedium
-                ?.copyWith(color: ColorTheme.textColorTertiary),
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context)
+                    .colorScheme
+                    .onBackground
+                    .withOpacity(0.6)),
           ),
         ),
         Expanded(
@@ -2360,20 +2361,16 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                     onPressed: () => _handleOk(isCustomize: true),
                     child: Text(
                       "Customize",
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          ?.copyWith(color: ColorTheme.accentColor),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                 TextButton(
                   onPressed: _handleOk,
                   child: Text(
                     widget.confirmText ?? localizations.okButtonLabel,
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelMedium
-                        ?.copyWith(color: ColorTheme.accentColor),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary),
                   ),
                 ),
               ],

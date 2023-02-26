@@ -226,7 +226,7 @@ class SliderSetting extends Setting<double> {
 
 class SelectSetting<T> extends Setting<int> {
   final List<SelectSettingOption<T>> _options;
-  void Function(int, T)? onSelect;
+  void Function(BuildContext, int, T)? onSelect;
 
   List<SelectSettingOption<T>> get options => _options;
   int get selectedIndex => _value;
@@ -241,8 +241,8 @@ class SelectSetting<T> extends Setting<int> {
     return options[index].value;
   }
 
-  void onSelectOption(int index) {
-    onSelect?.call(index, options[index].value);
+  void onSelectOption(BuildContext context, int index) {
+    onSelect?.call(context, index, options[index].value);
   }
 
   SelectSetting(
@@ -279,7 +279,7 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
     String name,
     this.optionsGetter, {
     void Function(int index)? onChange,
-    void Function(int index, T value)? onSelect,
+    void Function(BuildContext, int index, T value)? onSelect,
     int defaultValue = 0,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],

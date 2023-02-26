@@ -149,14 +149,14 @@ class _TimerKnobState extends State<TimerKnob> {
       child: CustomPaint(
         size: widget.size,
         painter: _TimerKnobPainter(
-          _angle,
-          radius,
-          widget.handleLabel,
-          widget.handleLabelOffset,
-          widget.divisions,
-          widget.fillColor,
-          widget.maxValue,
-        ),
+            _angle,
+            radius,
+            widget.handleLabel,
+            widget.handleLabelOffset,
+            widget.divisions,
+            widget.fillColor,
+            widget.maxValue,
+            Theme.of(context).colorScheme.primary),
       ),
     );
   }
@@ -222,6 +222,7 @@ class _TimerKnobPainter extends CustomPainter {
   final double handleLabelOffset;
   final double divisions;
   final Color fillColor;
+  final Color knobColor;
   final double maxValue;
 
   _TimerKnobPainter(
@@ -232,6 +233,7 @@ class _TimerKnobPainter extends CustomPainter {
     this.divisions,
     this.fillColor,
     this.maxValue,
+    this.knobColor,
   );
 
   @override
@@ -245,7 +247,7 @@ class _TimerKnobPainter extends CustomPainter {
       ..strokeWidth = 4.0;
 
     final knobCirclePaint = Paint()
-      ..color = ColorTheme.accentColor
+      ..color = knobColor
       ..style = PaintingStyle.fill
       ..strokeWidth = 4.0;
 

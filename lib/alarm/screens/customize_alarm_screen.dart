@@ -92,7 +92,10 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                               .textTheme
                               .displaySmall
                               ?.copyWith(
-                                color: ColorTheme.textColorTertiary,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onBackground
+                                    .withOpacity(0.6),
                               ),
                         ),
                       ],

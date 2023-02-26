@@ -41,7 +41,7 @@ void main() {
 }
 
 Future<City> renderWidget(WidgetTester tester) async {
-  const sampleCity = City("Tokyo", "Japan", "Asia/Tokyo");
+  var sampleCity = City("Tokyo", "Japan", "Asia/Tokyo");
 
   await tester.pumpWidget(
     MaterialApp(

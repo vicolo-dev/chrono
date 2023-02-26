@@ -36,8 +36,8 @@ class _ToggleCardState<T> extends State<ToggleCard<T>> {
       children: [
         // if (name != null) Text(name!),
         ToggleButtons(
-          fillColor: ColorTheme.accentColor,
-          selectedColor: Colors.white,
+          fillColor: Theme.of(context).colorScheme.primary,
+          selectedColor: Theme.of(context).colorScheme.onPrimary,
           renderBorder: false,
           borderRadius: defaultBorderRadius,
           constraints: BoxConstraints(

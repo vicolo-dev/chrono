@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/icons/flux_icons.dart';
+import 'package:clock_app/main.dart';
 import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/settings/types/setting.dart';
@@ -28,15 +30,16 @@ List<SettingItem> settingsItems = [
   SettingGroup(
       "Appearance",
       [
-        // SelectSetting(
-        //   "Theme",
-        //   [
-        //     SettingOption("Light"),
-        //     SettingOption("Dark"),
-        //     SettingOption("Amoled"),
-        //     SettingOption("System"),
-        //   ],
-        // ),
+        SelectSetting<ColorScheme>(
+          "Color Scheme",
+          [
+            SelectSettingOption("Light", lightColorScheme),
+            SelectSettingOption("Dark", darkColorScheme),
+          ],
+          onSelect: (context, index, colorScheme) {
+            App.setColorScheme(context, colorScheme);
+          },
+        ),
         ColorSetting("Accent Color", const Color.fromARGB(255, 9, 163, 184)),
       ],
       icon: FluxIcons.settings,

@@ -10,16 +10,15 @@ ActionPane getDeleteActionPane(VoidCallback onDelete, BuildContext context) =>
         CustomSlidableAction(
           onPressed: (context) => onDelete(),
           backgroundColor: const Color(0xFFFE4A49),
-          foregroundColor: Colors.white,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.delete),
               Text('Delete',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: Colors.white)),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      )),
             ],
           ),
         ),
@@ -33,17 +32,16 @@ ActionPane getDuplicateActionPane(
       children: [
         CustomSlidableAction(
           onPressed: (context) => onDuplicate(),
-          backgroundColor: ColorTheme.accentColor,
-          foregroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.delete),
               Text('Duplicate',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: Colors.white)),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      )),
             ],
           ),
         ),

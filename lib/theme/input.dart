@@ -14,18 +14,18 @@ InputDecorationTheme inputTheme = InputDecorationTheme(
   ),
   errorBorder: OutlineInputBorder(
     borderRadius: defaultBorderRadius,
-    borderSide: BorderSide(color: colorScheme.error, width: 2.0),
+    borderSide: BorderSide(color: lightColorScheme.error, width: 2.0),
   ),
   focusedBorder: OutlineInputBorder(
     borderRadius: defaultBorderRadius,
-    borderSide: BorderSide(color: colorScheme.primary, width: 2.0),
+    borderSide: BorderSide(color: lightColorScheme.primary, width: 2.0),
   ),
   focusedErrorBorder: OutlineInputBorder(
     borderRadius: defaultBorderRadius,
-    borderSide: BorderSide(color: colorScheme.error, width: 2.0),
+    borderSide: BorderSide(color: lightColorScheme.error, width: 2.0),
   ),
   hintStyle: textTheme.displaySmall
-      ?.copyWith(color: colorScheme.onSurface.withOpacity(0.36)),
+      ?.copyWith(color: lightColorScheme.onSurface.withOpacity(0.36)),
   errorStyle: const TextStyle(fontSize: 0.0, height: 0.0),
   border: const OutlineInputBorder(borderRadius: defaultBorderRadius),
 );

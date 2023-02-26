@@ -37,8 +37,14 @@ class _AlarmCardState extends State<AlarmCard> {
                   Text("Label",
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: widget.alarm.enabled
-                                ? ColorTheme.textColorSecondary
-                                : ColorTheme.textColorTertiary,
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .onBackground
+                                    .withOpacity(0.8)
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onBackground
+                                    .withOpacity(0.6),
                           )),
                 ],
               ),
@@ -49,7 +55,10 @@ class _AlarmCardState extends State<AlarmCard> {
                       scale: 0.6,
                       color: widget.alarm.enabled
                           ? null
-                          : ColorTheme.textColorTertiary),
+                          : Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.6)),
                 ],
               ),
               Row(
@@ -58,7 +67,10 @@ class _AlarmCardState extends State<AlarmCard> {
                     timeOfDayIcon.icon,
                     color: widget.alarm.enabled
                         ? timeOfDayIcon.color
-                        : ColorTheme.textColorTertiary,
+                        : Theme.of(context)
+                            .colorScheme
+                            .onBackground
+                            .withOpacity(0.6),
                     size: 24,
                   ),
                   const SizedBox(width: 8),
@@ -66,8 +78,14 @@ class _AlarmCardState extends State<AlarmCard> {
                     getAlarmScheduleDescription(widget.alarm),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: widget.alarm.enabled
-                              ? ColorTheme.textColorSecondary
-                              : ColorTheme.textColorTertiary,
+                              ? Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.8)
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.6),
                         ),
                   ),
                 ],

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 TextButtonThemeData textButtonTheme = TextButtonThemeData(
   style: TextButton.styleFrom(
-    textStyle: const TextStyle(
+    textStyle: TextStyle(
       fontSize: 32,
       fontVariations: FontVariations.extraBold,
-      color: ColorTheme.textColor,
+      // color: Theme.of(context).colorScheme.onBackground,
     ),
   ),
 );

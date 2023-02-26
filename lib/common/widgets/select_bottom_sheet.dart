@@ -24,57 +24,65 @@ class SelectBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.7,
-      child: Column(
-        children: [
-          const SizedBox(height: 12.0),
-          SizedBox(
-            height: 4.0,
-            width: 48,
-            child: Container(
-              decoration: const BoxDecoration(
-                  borderRadius: defaultBorderRadius,
-                  color: ColorTheme.textColorTertiary),
+      child: Container(
+        color: Theme.of(context).colorScheme.background,
+        child: Column(
+          children: [
+            const SizedBox(height: 12.0),
+            SizedBox(
+              height: 4.0,
+              width: 48,
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: defaultBorderRadius,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.6)),
+              ),
             ),
-          ),
-          const SizedBox(height: 12.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: ColorTheme.textColorSecondary),
-                ),
-                if (description != null) const SizedBox(height: 8.0),
-                if (description != null)
+            const SizedBox(height: 12.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    description!,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: ColorTheme.textColorSecondary),
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onBackground
+                            .withOpacity(0.6)),
                   ),
-              ],
+                  if (description != null) const SizedBox(height: 8.0),
+                  if (description != null)
+                    Text(
+                      description!,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.6)),
+                    ),
+                ],
+              ),
             ),
-          ),
-          Flexible(
-            child: ListView.builder(
-              itemCount: choices.length,
-              itemBuilder: (context, index) {
-                return SelectOptionCard(
-                  index: index,
-                  choice: choices[index],
-                  selectedIndex: currentSelectedIndex,
-                  onSelect: onSelect,
-                );
-              },
-            ),
-          )
-        ],
+            Flexible(
+              child: ListView.builder(
+                itemCount: choices.length,
+                itemBuilder: (context, index) {
+                  return SelectOptionCard(
+                    index: index,
+                    choice: choices[index],
+                    selectedIndex: currentSelectedIndex,
+                    onSelect: onSelect,
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

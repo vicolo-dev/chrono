@@ -9,7 +9,7 @@ final NotificationChannel alarmNotificationChannel = NotificationChannel(
   channelKey: alarmNotificationChannelKey,
   channelName: 'Clock',
   channelDescription: 'Notification channel for clock alarms and timers',
-  defaultColor: ColorTheme.accentColor,
+  defaultColor: lightColorScheme.primary,
   locked: true,
   importance: NotificationImportance.Max,
   playSound: false,

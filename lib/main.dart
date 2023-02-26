@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
+import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -60,13 +61,34 @@ class App extends StatefulWidget {
 
   @override
   State<App> createState() => _AppState();
+
+  static void setColorScheme(BuildContext context, ColorScheme colorScheme) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setColorScheme(colorScheme);
+  }
 }
 
 class _AppState extends State<App> {
+  ThemeData _theme = defaultTheme;
+
   @override
   void initState() {
     NotificationController.setListeners();
     super.initState();
+  }
+
+  setColorScheme(ColorScheme colorScheme) {
+    setState(() {
+      _theme = _theme.copyWith(
+        colorScheme: colorScheme,
+        scaffoldBackgroundColor: colorScheme.background,
+        cardColor: colorScheme.surface,
+        textTheme: _theme.textTheme.apply(
+          bodyColor: colorScheme.onBackground,
+          displayColor: colorScheme.onBackground,
+        ),
+      );
+    });
   }
 
   @override
@@ -75,7 +97,7 @@ class _AppState extends State<App> {
       navigatorKey: App.navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Clock',
-      theme: theme,
+      theme: _theme,
       initialRoute: Routes.rootRoute,
       navigatorObservers: [routeObserver],
       onGenerateRoute: (settings) {
@@ -96,7 +118,6 @@ class _AppState extends State<App> {
             return MaterialPageRoute(
               builder: (context) {
                 final List<int> scheduleIds = settings.arguments as List<int>;
-                print(scheduleIds);
                 return TimerNotificationScreen(scheduleIds: scheduleIds);
               },
             );

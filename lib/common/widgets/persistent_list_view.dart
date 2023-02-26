@@ -68,18 +68,17 @@ class _PersistentListViewState<Item extends ListItem>
   @override
   void didPopNext() {
     if (widget.reloadOnPop) {
+      print("popped");
       loadItems();
     }
   }
 
   void loadItems() {
     if (widget.saveTag.isNotEmpty) {
-      setState(() {
-        _items = loadList<Item>(widget.saveTag);
+      widget.listController.changeItems((List<Item> items) {
+        items = loadList<Item>(widget.saveTag);
       });
     }
-
-    widget.listController.changeItems((List<Item> items) {});
   }
 
   void saveItems() {

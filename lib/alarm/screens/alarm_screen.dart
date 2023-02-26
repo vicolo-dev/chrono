@@ -53,6 +53,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _listController.changeItems((alarms) {
       alarms[index] = newAlarm;
     });
+    print("customizee");
 
     _showNextScheduleSnackBar(newAlarm);
   }
@@ -106,7 +107,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
         if (timePickerResult.isCustomize) {
           alarm = await onCustomize(alarm) ?? alarm;
         }
-
+        print("add item");
         _listController.addItem(alarm);
       }
     }
@@ -122,7 +123,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
           ),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
           onAddItem: (alarm) {
-            alarm = alarm;
+            print("added");
             alarm.schedule();
             _showNextScheduleSnackBar(alarm);
           },

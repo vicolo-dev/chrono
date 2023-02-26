@@ -25,7 +25,10 @@ class FAB extends StatelessWidget {
           onTap: onPressed,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Icon(icon, color: Colors.white),
+            child: Icon(
+              icon,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
         ),
       ),
