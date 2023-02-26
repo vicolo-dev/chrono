@@ -61,11 +61,16 @@ class ClockStopwatch extends JsonSerializable {
   }
 
   void addLap() {
-    laps.add(Lap(
-        elapsedTime: TimeDuration.fromMilliseconds(elapsedMilliseconds),
-        number: _laps.length + 1,
-        lapTime: TimeDuration.fromMilliseconds(elapsedMilliseconds -
-            (_laps.isNotEmpty ? _laps.last.elapsedTime.inMilliseconds : 0))));
+    _laps.add(getLap());
+  }
+
+  Lap getLap() {
+    return Lap(
+      elapsedTime: TimeDuration.fromMilliseconds(elapsedMilliseconds),
+      number: _laps.length + 1,
+      lapTime: TimeDuration.fromMilliseconds(elapsedMilliseconds -
+          (_laps.isNotEmpty ? _laps.first.elapsedTime.inMilliseconds : 0)),
+    );
   }
 
   @override

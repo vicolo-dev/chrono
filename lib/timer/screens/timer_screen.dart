@@ -1,17 +1,14 @@
-import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
+import 'package:flutter/material.dart';
+
+import 'package:great_list_view/great_list_view.dart';
+
+import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/widgets/fab.dart';
-import 'package:clock_app/navigation/data/route_observer.dart';
-import 'package:clock_app/theme/color.dart';
+import 'package:clock_app/common/widgets/persistent_list_view.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/widgets/duration_picker.dart';
-import 'package:clock_app/timer/widgets/time_input_field.dart';
 import 'package:clock_app/timer/widgets/timer_card.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:great_list_view/great_list_view.dart';
 
 typedef TimerCardBuilder = Widget Function(
   BuildContext context,
@@ -26,105 +23,21 @@ class TimerScreen extends StatefulWidget {
   State<TimerScreen> createState() => _TimerScreenState();
 }
 
-class _TimerScreenState extends State<TimerScreen> with RouteAware {
-  List<ClockTimer> _timers = [];
-
-  final _scrollController = ScrollController();
-  final _controller = AnimatedListController();
-
-  int _getTimerIndex(ClockTimer timer) =>
-      _timers.indexWhere((element) => element.id == timer.id);
-
-  void loadTimers() {
-    setState(() {
-      _timers = loadList('timers');
-    });
-
-    _controller.notifyChangedRange(
-      0,
-      _timers.length,
-      getChangeWidgetBuilder(),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _timers = loadList('timers');
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
-  }
-
-  @override
-  void dispose() {
-    routeObserver.unsubscribe(this);
-    super.dispose();
-  }
-
-  @override
-  void didPopNext() {
-    loadTimers();
-  }
-
-  TimerCardBuilder getTimerChangeWidgetBuilder(ClockTimer timer) =>
-      (context, index, data) => data.measuring
-          ? const SizedBox(width: 64, height: 64)
-          : TimerCard(
-              key: ValueKey(timer),
-              timer: timer,
-              onTap: () {},
-              onDelete: () {},
-              onDuplicate: () {},
-              onToggleState: () {},
-            );
-
-  TimerCardBuilder getChangeWidgetBuilder() => (context, index, data) =>
-      getTimerChangeWidgetBuilder(_timers[index])(context, index, data);
-
-  bool _handleReorderTimers(int oldIndex, int newIndex, Object? slot) {
-    if (newIndex >= _timers.length) return false;
-    _timers.insert(newIndex, _timers.removeAt(oldIndex));
-    saveList('timers', _timers);
-    return true;
-  }
+class _TimerScreenState extends State<TimerScreen> {
+  final _listController = ListController<ClockTimer>();
 
   void _handleDeleteTimer(ClockTimer deletedTimer) {
-    int index = _getTimerIndex(deletedTimer);
-    setState(() {
-      _timers[index].reset();
-      _timers.removeAt(index);
+    int index = _listController.getItemIndex(deletedTimer);
+    _listController.changeItems((timers) {
+      timers[index].reset();
     });
-    _controller.notifyRemovedRange(
-      index,
-      1,
-      getTimerChangeWidgetBuilder(deletedTimer),
-    );
-    saveList('timers', _timers);
-  }
-
-  void _handleAddTimer(ClockTimer timer, {int index = -1}) {
-    if (index == -1) index = _timers.length;
-    setState(() {
-      _timers.insert(index, timer);
-    });
-    _controller.notifyInsertedRange(index, 1);
-
-    saveList('timers', _timers);
   }
 
   void _handleToggleState(ClockTimer timer) {
-    int index = _getTimerIndex(timer);
-    _timers[index].toggleState();
-    _controller.notifyChangedRange(
-      index,
-      1,
-      getTimerChangeWidgetBuilder(timer),
-    );
-    saveList('timers', _timers);
+    int index = _listController.getItemIndex(timer);
+    _listController.changeItems((timers) {
+      timers[index].toggleState();
+    });
   }
 
   // Future<Timer?> _openCustomizeTimerScreen(Timer timer) async {
@@ -159,59 +72,20 @@ class _TimerScreenState extends State<TimerScreen> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      _timers.isEmpty
-          ? SizedBox(
-              height: double.infinity,
-              width: double.infinity,
-              child: Center(
-                child: Text(
-                  "No timers created",
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: ColorTheme.textColorTertiary,
-                      ),
-                ),
-              ),
-            )
-          : Container(),
       Column(children: [
         Expanded(
-          child: SlidableAutoCloseBehavior(
-            child: AutomaticAnimatedListView<ClockTimer>(
-              list: _timers,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              comparator: AnimatedListDiffListComparator<ClockTimer>(
-                sameItem: (a, b) => a.id == b.id,
-                sameContent: (a, b) => a.id == b.id,
-              ),
-              itemBuilder: (BuildContext context, ClockTimer timer, data) {
-                return data.measuring
-                    ? const SizedBox(width: 64, height: 64)
-                    : TimerCard(
-                        key: ValueKey(timer),
-                        timer: timer,
-                        onTap: () => {},
-                        onDelete: () => _handleDeleteTimer(timer),
-                        onDuplicate: () => _handleAddTimer(
-                            ClockTimer.fromTimer(timer),
-                            index: _getTimerIndex(timer) + 1),
-                        onToggleState: () => _handleToggleState(timer),
-                      );
-              },
-              // animator: DefaultAnimatedListAnimator,
-              listController: _controller,
-              scrollController: _scrollController,
-              addLongPressReorderable: true,
-              reorderModel: AnimatedListReorderModel(
-                onReorderStart: (index, dx, dy) => true,
-                onReorderFeedback: (int index, int dropIndex, double offset,
-                        double dx, double dy) =>
-                    null,
-                onReorderMove: (int index, int dropIndex) => true,
-                onReorderComplete: _handleReorderTimers,
-              ),
-              reorderDecorationBuilder: reorderableListDecorator,
-              footer: const SizedBox(height: 64),
+          child: PersistentListView<ClockTimer>(
+            saveTag: 'timers',
+            listController: _listController,
+            itemBuilder: (timer) => TimerCard(
+              key: ValueKey(timer),
+              timer: timer,
+              onToggleState: () => _handleToggleState(timer),
             ),
+            onDeleteItem: _handleDeleteTimer,
+            duplicateItem: (alarm) => ClockTimer.fromTimer(alarm),
+            placeholderText: "No timers created",
+            reloadOnPop: true,
           ),
         ),
       ]),
@@ -221,7 +95,7 @@ class _TimerScreenState extends State<TimerScreen> with RouteAware {
           if (timeDuration == null) return;
           ClockTimer timer = ClockTimer(timeDuration);
           timer.start();
-          _handleAddTimer(timer);
+          _listController.addItem(timer);
         },
       )
     ]);

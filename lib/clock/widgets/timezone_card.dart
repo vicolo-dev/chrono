@@ -11,7 +11,6 @@ class TimeZoneCard extends StatelessWidget {
   TimeZoneCard({
     Key? key,
     required this.city,
-    required this.onDelete,
   }) : super(key: key) {
     timezoneLocation = timezone.getLocation(city.timezone);
     offset = (timezoneLocation.currentTimeZone.offset -
@@ -22,7 +21,6 @@ class TimeZoneCard extends StatelessWidget {
   late final timezone.Location timezoneLocation;
   late final double offset;
   final City city;
-  final VoidCallback onDelete;
 
   String formatTimeOffset(double n) {
     return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 1);
@@ -49,20 +47,10 @@ class TimeZoneCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Card(
-        child: Slidable(
-            groupTag: 'cities',
-            // key: key,
-            startActionPane: getDeleteActionPane(onDelete, context),
-            endActionPane: getDeleteActionPane(onDelete, context),
-            child: TimezoneCardContent(
-              title: city.name,
-              subtitle: getOffsetDescription(),
-              timezoneLocation: timezoneLocation,
-            )),
-      ),
+    return TimezoneCardContent(
+      title: city.name,
+      subtitle: getOffsetDescription(),
+      timezoneLocation: timezoneLocation,
     );
   }
 }

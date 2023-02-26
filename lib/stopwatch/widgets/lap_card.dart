@@ -22,8 +22,7 @@ class _LapCardState extends State<LapCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        child: Padding(
+    return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
@@ -40,6 +39,6 @@ class _LapCardState extends State<LapCard> {
           ),
         ],
       ),
-    ));
+    );
   }
 }

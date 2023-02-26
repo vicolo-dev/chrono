@@ -1,17 +1,19 @@
-import 'dart:async';
+import 'package:clock_app/common/types/list_controller.dart';
+import 'package:clock_app/common/widgets/custom_list_view.dart';
+import 'package:clock_app/common/widgets/persistent_list_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+
+import 'package:great_list_view/great_list_view.dart';
+import 'package:timer_builder/timer_builder.dart';
 
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/fab.dart';
+import 'package:clock_app/common/widgets/list_item_measurer.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/stopwatch/widgets/lap_card.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:great_list_view/great_list_view.dart';
-import 'package:timer_builder/timer_builder.dart';
 
 class StopwatchScreen extends StatefulWidget {
   const StopwatchScreen({Key? key}) : super(key: key);
@@ -21,10 +23,9 @@ class StopwatchScreen extends StatefulWidget {
 }
 
 class _StopwatchScreenState extends State<StopwatchScreen> {
-  late final ClockStopwatch _stopwatch;
+  final _listController = ListController<Lap>();
 
-  final _scrollController = ScrollController();
-  final _controller = AnimatedListController();
+  late final ClockStopwatch _stopwatch;
 
   @override
   void initState() {
@@ -32,53 +33,24 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     _stopwatch = loadList<ClockStopwatch>('stopwatches').first;
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void _handleReset() {
-    List<Lap> lapsCopy = List<Lap>.from(_stopwatch.laps);
     setState(() {
       _stopwatch.pause();
       _stopwatch.reset();
     });
-    _controller.notifyChangedRange(
-      0,
-      _stopwatch.laps.length,
-      (context, index, data) => data.measuring
-          ? const SizedBox(height: 64)
-          : LapCard(
-              key: ValueKey(lapsCopy[index]),
-              lap: lapsCopy[index],
-            ),
-    );
     saveList('stopwatches', [_stopwatch]);
   }
 
   void _handleAddLap() {
-    setState(() {
-      _stopwatch.addLap();
-    });
-    _controller.notifyInsertedRange(_stopwatch.laps.length - 1, 1);
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 250), curve: Curves.easeIn);
-      // executes after build
-    });
+    _listController.addItem(_stopwatch.getLap());
     saveList('stopwatches', [_stopwatch]);
   }
 
   void _handleToggleState() {
-    _stopwatch.toggleState();
-    setState(() {});
+    setState(() {
+      _stopwatch.toggleState();
+    });
     saveList('stopwatches', [_stopwatch]);
-  }
-
-  void _scrollToBottom(Lap lap) {
-    if (lap.number != _stopwatch.laps.length) return;
-    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 250), curve: Curves.easeIn);
   }
 
   @override
@@ -99,33 +71,21 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                     TimeDuration.fromMilliseconds(
                             _stopwatch.elapsedMilliseconds)
                         .toTimeString(showMilliseconds: true),
-                    style: TextStyle(fontSize: 48.0)),
+                    style: const TextStyle(fontSize: 48.0)),
               );
             }),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
-              child: AutomaticAnimatedListView<Lap>(
-                list: _stopwatch.laps,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                comparator: AnimatedListDiffListComparator<Lap>(
-                  sameItem: (a, b) => a.number == b.number,
-                  sameContent: (a, b) => a.number == b.number,
+              child: CustomListView<Lap>(
+                items: _stopwatch.laps,
+                listController: _listController,
+                itemBuilder: (lap) => LapCard(
+                  key: ValueKey(lap),
+                  lap: lap,
                 ),
-                itemBuilder: (BuildContext context, lap, data) {
-                  return data.measuring
-                      ? const SizedBox(height: 64)
-                      : LapCard(
-                          key: ValueKey(lap),
-                          lap: lap,
-                          onInit: () => _scrollToBottom(lap),
-                        );
-                },
-                initialScrollOffsetCallback: (c) {
-                  return 0;
-                },
-                listController: _controller,
-                scrollController: _scrollController,
-                footer: const SizedBox(height: 136),
+                placeholderText: "No laps yet",
+                isDeleteEnabled: false,
+                isDuplicateEnabled: false,
               ),
             ),
           ],

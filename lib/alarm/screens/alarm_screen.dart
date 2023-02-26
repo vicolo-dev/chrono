@@ -1,18 +1,14 @@
 import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
+import 'package:clock_app/common/types/list_controller.dart';
+import 'package:clock_app/common/widgets/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
+import 'package:clock_app/common/widgets/persistent_list_view.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
-import 'package:clock_app/navigation/data/route_observer.dart';
-import 'package:clock_app/settings/types/settings_manager.dart';
-import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:great_list_view/great_list_view.dart';
 
 typedef AlarmCardBuilder = Widget Function(
@@ -28,108 +24,12 @@ class AlarmScreen extends StatefulWidget {
   State<AlarmScreen> createState() => _AlarmScreenState();
 }
 
-class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
-  List<Alarm> _alarms = [];
-
-  final _scrollController = ScrollController();
-  final _controller = AnimatedListController();
-
-  int _getAlarmIndex(Alarm alarm) => _alarms.indexWhere(
-      (element) => element.currentScheduleId == alarm.currentScheduleId);
-
-  void loadAlarms() {
-    setState(() {
-      _alarms = loadList('alarms');
-    });
-
-    _controller.notifyChangedRange(
-      0,
-      _alarms.length,
-      getChangeWidgetBuilder(),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _alarms = loadList('alarms');
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
-  }
-
-  @override
-  void dispose() {
-    routeObserver.unsubscribe(this);
-    super.dispose();
-  }
-
-  @override
-  void didPopNext() {
-    loadAlarms();
-  }
-
-  AlarmCardBuilder getAlarmChangeWidgetBuilder(Alarm alarm) =>
-      (context, index, data) => data.measuring
-          ? const SizedBox(width: 64, height: 64)
-          : AlarmCard(
-              key: ValueKey(alarm),
-              alarm: alarm,
-              onTap: () => {},
-              onDelete: () => {},
-              onDuplicate: () => {},
-              onEnabledChange: (value) => {},
-            );
-
-  AlarmCardBuilder getChangeWidgetBuilder() => (context, index, data) =>
-      getAlarmChangeWidgetBuilder(_alarms[index])(context, index, data);
-
-  bool _handleReorderAlarms(int oldIndex, int newIndex, Object? slot) {
-    if (newIndex >= _alarms.length) return false;
-    _alarms.insert(newIndex, _alarms.removeAt(oldIndex));
-    saveList('alarms', _alarms);
-    return true;
-  }
-
-  _handleDeleteAlarm(Alarm deletedAlarm) {
-    int index = _getAlarmIndex(deletedAlarm);
-    setState(() {
-      _alarms[index].disable();
-      _alarms.removeAt(index);
-    });
-
-    _controller.notifyRemovedRange(
-      index,
-      1,
-      getAlarmChangeWidgetBuilder(deletedAlarm),
-    );
-    saveList('alarms', _alarms);
-  }
+class _AlarmScreenState extends State<AlarmScreen> {
+  final _listController = ListController<Alarm>();
 
   _handleEnableChangeAlarm(Alarm alarm, bool value) {
-    int index = _getAlarmIndex(alarm);
-    _alarms[index].setIsEnabled(value);
-
-    _controller.notifyChangedRange(
-      index,
-      1,
-      getAlarmChangeWidgetBuilder(alarm),
-    );
-    saveList('alarms', _alarms);
-  }
-
-  _handleAddAlarm(Alarm alarm, {int index = -1}) {
-    if (index == -1) index = _alarms.length;
-    alarm.schedule();
-    setState(() => _alarms.insert(index, alarm));
-    _controller.notifyInsertedRange(index, 1);
-
-    _showNextScheduleSnackBar(alarm);
-
-    saveList('alarms', _alarms);
+    int index = _listController.getItemIndex(alarm);
+    _listController.changeItems((alarms) => alarms[index].setIsEnabled(value));
   }
 
   Future<Alarm?> _openCustomizeAlarmScreen(Alarm alarm) async {
@@ -143,22 +43,18 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
   }
 
   _handleCustomizeAlarm(Alarm alarm) async {
-    int index = _getAlarmIndex(alarm);
+    int index = _listController.getItemIndex(alarm);
     Alarm? newAlarm = await _openCustomizeAlarmScreen(alarm);
 
     if (newAlarm == null) return;
 
     newAlarm.schedule();
-    _alarms[index] = newAlarm;
-    _controller.notifyChangedRange(
-      index,
-      1,
-      getAlarmChangeWidgetBuilder(alarm),
-    );
+
+    _listController.changeItems((alarms) {
+      alarms[index] = newAlarm;
+    });
 
     _showNextScheduleSnackBar(newAlarm);
-
-    saveList('alarms', _alarms);
   }
 
   _showNextScheduleSnackBar(Alarm alarm) {
@@ -186,10 +82,7 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
         margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
         shape: defaultShape,
         elevation: 2,
-        // padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         dismissDirection: DismissDirection.none,
-        // width: MediaQuery.of(context).size.width - (64 + 16),
-        // behavior: SnackBarBehavior.floating,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -198,8 +91,6 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 0.75;
-
     Future<void> selectTime(Future<Alarm?> Function(Alarm) onCustomize) async {
       final TimePickerResult? timePickerResult = await showTimePickerDialog(
         context: context,
@@ -216,63 +107,31 @@ class _AlarmScreenState extends State<AlarmScreen> with RouteAware {
           alarm = await onCustomize(alarm) ?? alarm;
         }
 
-        _handleAddAlarm(alarm);
+        _listController.addItem(alarm);
       }
     }
 
     return Stack(
       children: [
-        _alarms.isEmpty
-            ? SizedBox(
-                height: double.infinity,
-                width: double.infinity,
-                child: Center(
-                  child: Text(
-                    "No alarms created",
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: ColorTheme.textColorTertiary,
-                        ),
-                  ),
-                ),
-              )
-            : Container(),
-        SlidableAutoCloseBehavior(
-          child: AutomaticAnimatedListView<Alarm>(
-            list: _alarms,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            comparator: AnimatedListDiffListComparator<Alarm>(
-              sameItem: (a, b) => a.currentScheduleId == b.currentScheduleId,
-              sameContent: (a, b) => a.currentScheduleId == b.currentScheduleId,
-            ),
-            itemBuilder: (BuildContext context, Alarm alarm, data) {
-              return data.measuring
-                  ? const SizedBox(width: 64, height: 64)
-                  : AlarmCard(
-                      key: ValueKey(alarm),
-                      alarm: alarm,
-                      onTap: () => _handleCustomizeAlarm(alarm),
-                      onDelete: () => _handleDeleteAlarm(alarm),
-                      onDuplicate: () => _handleAddAlarm(Alarm.fromAlarm(alarm),
-                          index: _getAlarmIndex(alarm) + 1),
-                      onEnabledChange: (bool value) =>
-                          _handleEnableChangeAlarm(alarm, value),
-                    );
-            },
-            // animator: DefaultAnimatedListAnimator,
-            listController: _controller,
-            scrollController: _scrollController,
-            addLongPressReorderable: true,
-            reorderModel: AnimatedListReorderModel(
-              onReorderStart: (index, dx, dy) => true,
-              onReorderFeedback: (int index, int dropIndex, double offset,
-                      double dx, double dy) =>
-                  null,
-              onReorderMove: (int index, int dropIndex) => true,
-              onReorderComplete: _handleReorderAlarms,
-            ),
-            reorderDecorationBuilder: reorderableListDecorator,
-            footer: const SizedBox(height: 64),
+        PersistentListView<Alarm>(
+          saveTag: 'alarms',
+          listController: _listController,
+          itemBuilder: (alarm) => AlarmCard(
+            alarm: alarm,
+            onEnabledChange: (value) => _handleEnableChangeAlarm(alarm, value),
           ),
+          onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
+          onAddItem: (alarm) {
+            alarm = alarm;
+            alarm.schedule();
+            _showNextScheduleSnackBar(alarm);
+          },
+          onDeleteItem: (alarm) => setState(() {
+            (alarm).disable();
+          }),
+          duplicateItem: (alarm) => Alarm.fromAlarm(alarm),
+          placeholderText: "No alarms created",
+          reloadOnPop: true,
         ),
         FAB(
           onPressed: () {

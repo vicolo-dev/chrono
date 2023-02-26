@@ -1,12 +1,12 @@
-import 'package:clock_app/alarm/logic/schedule_alarm.dart';
-import 'package:clock_app/common/types/timer_state.dart';
-import 'package:clock_app/common/utils/date_time.dart';
-import 'package:clock_app/common/utils/duration.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
-import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
-class ClockTimer extends JsonSerializable {
+import 'package:clock_app/alarm/logic/schedule_alarm.dart';
+import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/types/timer_state.dart';
+import 'package:clock_app/common/utils/duration.dart';
+import 'package:clock_app/timer/types/time_duration.dart';
+
+class ClockTimer extends ListItem {
   final TimeDuration _duration;
   int _secondsRemainingOnPause;
   DateTime _startTime;
@@ -14,6 +14,7 @@ class ClockTimer extends JsonSerializable {
   final int _id;
   bool vibrate = true;
 
+  @override
   int get id => _id;
   TimeDuration get duration => _duration;
   int get remainingSeconds => _state == TimerState.running
