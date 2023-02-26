@@ -1,8 +1,8 @@
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:flutter/material.dart';
 
-class SelectOptionCard extends StatelessWidget {
-  const SelectOptionCard({
+class SelectTextOptionCard extends StatelessWidget {
+  const SelectTextOptionCard({
     Key? key,
     required this.selectedIndex,
     required this.choice,
@@ -11,7 +11,7 @@ class SelectOptionCard extends StatelessWidget {
   }) : super(key: key);
 
   final int selectedIndex;
-  final SelectChoice choice;
+  final SelectTextChoice choice;
   final int index;
   final void Function(int) onSelect;
 
@@ -44,6 +44,41 @@ class SelectOptionCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class SelectColorOptionCard extends StatelessWidget {
+  const SelectColorOptionCard({
+    Key? key,
+    required this.selectedIndex,
+    required this.choice,
+    required this.index,
+    required this.onSelect,
+  }) : super(key: key);
+
+  final int selectedIndex;
+  final SelectColorChoice choice;
+  final int index;
+  final void Function(int) onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => onSelect(index),
+      child: Container(
+          width: 64.0,
+          height: 64.0,
+          decoration: BoxDecoration(
+            color: choice.color,
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: InkWell(
+            onTap: () => onSelect(index),
+            child: selectedIndex == index
+                ? const Icon(Icons.check, color: Colors.white)
+                : null,
+          )),
     );
   }
 }

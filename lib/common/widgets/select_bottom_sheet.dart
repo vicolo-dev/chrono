@@ -1,7 +1,6 @@
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/select_option_card.dart';
 import 'package:clock_app/theme/border.dart';
-import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class SelectBottomSheet extends StatelessWidget {
@@ -69,17 +68,35 @@ class SelectBottomSheet extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: ListView.builder(
-                itemCount: choices.length,
-                itemBuilder: (context, index) {
-                  return SelectOptionCard(
-                    index: index,
-                    choice: choices[index],
-                    selectedIndex: currentSelectedIndex,
-                    onSelect: onSelect,
-                  );
-                },
-              ),
+              child: choices[0].runtimeType == SelectTextChoice
+                  ? ListView.builder(
+                      itemCount: choices.length,
+                      itemBuilder: (context, index) {
+                        return SelectTextOptionCard(
+                          index: index,
+                          choice: choices[index] as SelectTextChoice,
+                          selectedIndex: currentSelectedIndex,
+                          onSelect: onSelect,
+                        );
+                      })
+                  : GridView.builder(
+                      itemCount: choices.length,
+                      padding: EdgeInsets.all(16.0),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 5,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                      ),
+                      itemBuilder: (context, index) {
+                        return SelectColorOptionCard(
+                          index: index,
+                          choice: choices[index] as SelectColorChoice,
+                          selectedIndex: currentSelectedIndex,
+                          onSelect: onSelect,
+                        );
+                      },
+                    ),
             )
           ],
         ),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 TimePickerThemeData timePickerTheme = TimePickerThemeData(
   hourMinuteShape: defaultShape,
   dayPeriodShape: defaultShape,
-  dialBackgroundColor: Colors.grey.shade200,
+  // dialBackgroundColor: Colors.grey.shade200,
   helpTextStyle: textTheme.displaySmall?.copyWith(
       // color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
       ),

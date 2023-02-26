@@ -614,7 +614,7 @@ class _DayPeriodControl extends StatelessWidget {
           // visible.
           return states.contains(MaterialState.selected)
               ? colorScheme.primary.withOpacity(isDark ? 0.24 : 0.12)
-              : Colors.grey.shade200;
+              : Theme.of(context).colorScheme.onSurface.withOpacity(0.12);
         });
     final bool amSelected = selectedTime.period == DayPeriod.am;
     final Set<MaterialState> amStates = amSelected
@@ -1337,8 +1337,8 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TimePickerThemeData pickerTheme = TimePickerTheme.of(context);
-    final Color backgroundColor = pickerTheme.dialBackgroundColor ??
-        themeData.colorScheme.onBackground.withOpacity(0.12);
+    final Color backgroundColor =
+        themeData.colorScheme.onBackground.withOpacity(0.1);
     final Color accentColor =
         pickerTheme.dialHandColor ?? themeData.colorScheme.primary;
     final Color primaryLabelColor = MaterialStateProperty.resolveAs(
@@ -1867,7 +1867,9 @@ class _HourMinuteTextFieldState extends State<_HourMinuteTextField>
         : (focusNode.hasFocus ? null : _formattedValue);
     inputDecoration = inputDecoration.copyWith(
       hintText: hintText,
-      fillColor: focusNode.hasFocus ? Colors.transparent : Colors.grey.shade200,
+      fillColor: focusNode.hasFocus
+          ? Colors.transparent
+          : Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
     );
 
     return SizedBox(

@@ -35,12 +35,31 @@ List<SettingItem> settingsItems = [
           [
             SelectSettingOption("Light", lightColorScheme),
             SelectSettingOption("Dark", darkColorScheme),
+            SelectSettingOption("Amoled", amoledColorScheme),
           ],
           onSelect: (context, index, colorScheme) {
             App.setColorScheme(context, colorScheme);
           },
         ),
-        ColorSetting("Accent Color", const Color.fromARGB(255, 9, 163, 184)),
+        SelectSetting<Color>(
+          "Accent Color",
+          [
+            SelectSettingOption("Cyan", Colors.cyan),
+            SelectSettingOption("Red", Colors.red),
+            SelectSettingOption("Green", Colors.green),
+            SelectSettingOption("Blue", Colors.blue),
+            SelectSettingOption("Yellow", Colors.yellow),
+            SelectSettingOption("Orange", Colors.orange),
+            SelectSettingOption("Purple", Colors.purple),
+            SelectSettingOption("Pink", Colors.pink),
+            SelectSettingOption("Teal", Colors.teal),
+            SelectSettingOption("Lime", Colors.lime),
+            SelectSettingOption("Indigo", Colors.indigo),
+          ],
+          onSelect: (context, index, color) {
+            App.setAccentColor(context, color);
+          },
+        )
       ],
       icon: FluxIcons.settings,
       description: "Set themes, colors and change layout"),

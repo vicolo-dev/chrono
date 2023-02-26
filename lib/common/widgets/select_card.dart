@@ -12,12 +12,14 @@ class SelectCard<T> extends StatefulWidget {
     this.description,
     required this.choices,
     required this.onChange,
+    this.type = SelectType.text,
     this.onSelect,
   }) : super(key: key);
 
   final int selectedIndex;
   final String title;
   final String? description;
+  final SelectType type;
   final List<SelectChoice> choices;
   final void Function(int index) onChange;
   final Function(int index)? onSelect;
@@ -25,6 +27,8 @@ class SelectCard<T> extends StatefulWidget {
   @override
   State<SelectCard<T>> createState() => _SelectCardState<T>();
 }
+
+enum SelectType { color, text }
 
 class _SelectCardState<T> extends State<SelectCard<T>> {
   late int _currentSelectedIndex;
@@ -84,18 +88,35 @@ class _SelectCardState<T> extends State<SelectCard<T>> {
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 4.0),
-                Text(
-                  widget.choices[_currentSelectedIndex].title,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
+                if (widget.choices[_currentSelectedIndex].runtimeType ==
+                    SelectTextChoice)
+                  Text(
+                    (widget.choices[_currentSelectedIndex] as SelectTextChoice)
+                        .title,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
               ],
             ),
             const Spacer(),
-            Icon(
-              Icons.arrow_drop_down_rounded,
-              color:
-                  Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
-            ),
+            widget.choices[_currentSelectedIndex].runtimeType ==
+                    SelectTextChoice
+                ? Icon(
+                    Icons.arrow_drop_down_rounded,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.6),
+                  )
+                : Container(
+                    width: 36.0,
+                    height: 36.0,
+                    decoration: BoxDecoration(
+                      color: (widget.choices[_currentSelectedIndex]
+                              as SelectColorChoice)
+                          .color,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                  )
           ],
         ),
       ),

@@ -66,6 +66,11 @@ class App extends StatefulWidget {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
     state.setColorScheme(colorScheme);
   }
+
+  static void setAccentColor(BuildContext context, Color color) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setAccentColor(color);
+  }
 }
 
 class _AppState extends State<App> {
@@ -83,12 +88,26 @@ class _AppState extends State<App> {
         colorScheme: colorScheme,
         scaffoldBackgroundColor: colorScheme.background,
         cardColor: colorScheme.surface,
+        dialogBackgroundColor: colorScheme.surface,
         textTheme: _theme.textTheme.apply(
           bodyColor: colorScheme.onBackground,
           displayColor: colorScheme.onBackground,
         ),
+        snackBarTheme: _theme.snackBarTheme.copyWith(
+          backgroundColor: colorScheme.primary,
+          contentTextStyle: _theme.snackBarTheme.contentTextStyle!.apply(
+            color: colorScheme.onSurface,
+          ),
+        ),
       );
     });
+  }
+
+  setAccentColor(Color color) {
+    setColorScheme(_theme.colorScheme.copyWith(
+      primary: color,
+      secondary: color,
+    ));
   }
 
   @override

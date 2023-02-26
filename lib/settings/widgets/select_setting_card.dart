@@ -25,8 +25,10 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
       selectedIndex: widget.setting.selectedIndex,
       title: widget.setting.name,
       choices: widget.setting.options
-          .map((option) =>
-              SelectChoice(title: option.name, description: option.description))
+          .map((option) => widget.setting.isColor
+              ? SelectColorChoice(color: option.value as Color)
+              : SelectTextChoice(
+                  title: option.name, description: option.description))
           .toList(),
       onChange: (value) {
         setState(() {

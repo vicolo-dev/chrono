@@ -45,7 +45,8 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
             handleLabelOffset: 5,
             divisions: 12,
             snapDivisions: 60,
-            fillColor: Colors.grey.shade200,
+            fillColor:
+                Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
           ),
         ),
         Positioned(
@@ -66,7 +67,8 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
             handleLabelOffset: 7,
             divisions: 12,
             snapDivisions: 60,
-            fillColor: Colors.grey.shade300,
+            fillColor:
+                Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
           ),
         ),
         Positioned(
@@ -87,7 +89,8 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
             handleLabelOffset: 6,
             divisions: 8,
             snapDivisions: 24,
-            fillColor: Color.fromARGB(255, 207, 206, 206),
+            fillColor:
+                Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
           ),
         ),
       ],
@@ -149,14 +152,16 @@ class _TimerKnobState extends State<TimerKnob> {
       child: CustomPaint(
         size: widget.size,
         painter: _TimerKnobPainter(
-            _angle,
-            radius,
-            widget.handleLabel,
-            widget.handleLabelOffset,
-            widget.divisions,
-            widget.fillColor,
-            widget.maxValue,
-            Theme.of(context).colorScheme.primary),
+          angle: _angle,
+          radius: radius,
+          handleLabel: widget.handleLabel,
+          handleLabelOffset: widget.handleLabelOffset,
+          divisions: widget.divisions,
+          fillColor: widget.fillColor,
+          maxValue: widget.maxValue,
+          knobColor: Theme.of(context).colorScheme.primary,
+          textColor: Theme.of(context).colorScheme.onPrimary,
+        ),
       ),
     );
   }
@@ -223,18 +228,20 @@ class _TimerKnobPainter extends CustomPainter {
   final double divisions;
   final Color fillColor;
   final Color knobColor;
+  final Color textColor;
   final double maxValue;
 
-  _TimerKnobPainter(
-    this.angle,
-    this.radius,
-    this.handleLabel,
-    this.handleLabelOffset,
-    this.divisions,
-    this.fillColor,
-    this.maxValue,
-    this.knobColor,
-  );
+  _TimerKnobPainter({
+    required this.angle,
+    required this.radius,
+    required this.handleLabel,
+    required this.handleLabelOffset,
+    required this.divisions,
+    required this.fillColor,
+    required this.maxValue,
+    required this.knobColor,
+    required this.textColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -260,8 +267,8 @@ class _TimerKnobPainter extends CustomPainter {
       int num = ((i / markerAngleDelta) * (maxValue / divisions)).round();
       final textSpan = TextSpan(
         text: '$num',
-        style: const TextStyle(
-          color: Colors.black,
+        style: TextStyle(
+          color: textColor,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           fontFamily: 'Rubik',

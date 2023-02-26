@@ -53,14 +53,6 @@ class _ClockScreenState extends State<ClockScreen> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Column(children: [
-        TextButton(
-          child: Text("light"),
-          onPressed: () => App.setColorScheme(context, lightColorScheme),
-        ),
-        TextButton(
-          child: Text("dark"),
-          onPressed: () => App.setColorScheme(context, darkColorScheme),
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Clock(

@@ -33,3 +33,17 @@ ColorScheme darkColorScheme = const ColorScheme(
   onSecondary: Colors.white,
   onBackground: Color.fromARGB(255, 245, 245, 245),
 );
+
+ColorScheme amoledColorScheme = const ColorScheme(
+  background: Color.fromARGB(255, 0, 0, 0),
+  error: Color.fromARGB(255, 194, 64, 64),
+  secondary: Colors.cyan,
+  brightness: Brightness.light,
+  onError: Colors.white,
+  onPrimary: Colors.white,
+  surface: Color.fromARGB(255, 34, 34, 34),
+  primary: Colors.cyan,
+  onSurface: Color.fromARGB(255, 233, 233, 233),
+  onSecondary: Colors.white,
+  onBackground: Color.fromARGB(255, 245, 245, 245),
+);
