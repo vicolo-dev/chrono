@@ -16,7 +16,7 @@ class SearchCityScreen extends StatefulWidget {
 }
 
 class _SearchCityScreenState extends State<SearchCityScreen> {
-  final TextEditingController _filter = TextEditingController();
+  final TextEditingController _filterController = TextEditingController();
 
   List<City> _favoriteCities = [];
   List<City> _filteredCities = [];
@@ -24,15 +24,15 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
   bool _isDatabaseLoaded = false;
 
   _SearchCityScreenState() {
-    _filter.addListener(() async {
+    _filterController.addListener(() async {
       setState(() {
         if (_isDatabaseLoaded) {
-          if (_filter.text.isEmpty) {
+          if (_filterController.text.isEmpty) {
             _filteredCities = [];
           } else {
             _db
                 ?.rawQuery(
-                    "SELECT * FROM Timezones WHERE City || Country LIKE '%${_filter.text}%' LIMIT 10")
+                    "SELECT * FROM Timezones WHERE City || Country LIKE '%${_filterController.text}%' LIMIT 10")
                 .then((results) {
               _filteredCities = results
                   .map((result) => City(
@@ -71,7 +71,7 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
       appBar: AppTopBar(
         title: TextField(
           autofocus: true,
-          controller: _filter,
+          controller: _filterController,
           decoration: InputDecoration(
             border: InputBorder.none,
             focusedBorder:

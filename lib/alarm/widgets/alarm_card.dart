@@ -32,22 +32,23 @@ class _AlarmCardState extends State<AlarmCard> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Text("Label",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: widget.alarm.enabled
-                                ? Theme.of(context)
-                                    .colorScheme
-                                    .onBackground
-                                    .withOpacity(0.8)
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .onBackground
-                                    .withOpacity(0.6),
-                          )),
-                ],
-              ),
+              if (widget.alarm.label.isNotEmpty)
+                Row(
+                  children: [
+                    Text(widget.alarm.label,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: widget.alarm.enabled
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .onBackground
+                                      .withOpacity(0.8)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .onBackground
+                                      .withOpacity(0.6),
+                            )),
+                  ],
+                ),
               Row(
                 children: [
                   ClockDisplay(

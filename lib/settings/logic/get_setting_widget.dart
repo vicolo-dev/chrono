@@ -3,6 +3,7 @@ import 'package:clock_app/settings/types/settings.dart';
 import 'package:clock_app/settings/widgets/select_setting_card.dart';
 import 'package:clock_app/settings/widgets/setting_group_card.dart';
 import 'package:clock_app/settings/widgets/slider_setting_card.dart';
+import 'package:clock_app/settings/widgets/string_setting_card.dart';
 import 'package:clock_app/settings/widgets/switch_setting_card.dart';
 import 'package:clock_app/settings/widgets/toggle_setting_card.dart';
 import 'package:flutter/material.dart';
@@ -100,6 +101,12 @@ Widget? getSettingWidget(
       );
     } else if (item is SliderSetting) {
       return SliderSettingCard(
+        setting: item,
+        showSummaryView: showSummaryView,
+        onChanged: onChanged,
+      );
+    } else if (item is StringSetting) {
+      return StringSettingCard(
         setting: item,
         showSummaryView: showSummaryView,
         onChanged: onChanged,

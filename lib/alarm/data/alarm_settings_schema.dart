@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 Settings alarmSettingsSchema = Settings([
+  StringSetting("Label", ""),
   SelectSetting<Type>(
     "Schedule Type",
     [
