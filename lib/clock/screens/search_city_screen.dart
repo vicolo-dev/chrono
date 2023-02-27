@@ -1,3 +1,4 @@
+import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
@@ -67,7 +68,7 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppTopBar(
         title: TextField(
           autofocus: true,
           controller: _filter,
@@ -82,8 +83,6 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
           textAlignVertical: TextAlignVertical.center,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

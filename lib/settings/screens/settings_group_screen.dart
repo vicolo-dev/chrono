@@ -44,7 +44,8 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
                 settingItems: widget.settingsGroup.settingItems,
                 checkDependentEnableConditions: () => setState(() {}),
                 showExpandedView: true,
-              )
+              ),
+              const SizedBox(height: 16),
             ],
           ),
         ),

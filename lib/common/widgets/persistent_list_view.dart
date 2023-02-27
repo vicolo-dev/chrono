@@ -68,7 +68,6 @@ class _PersistentListViewState<Item extends ListItem>
   @override
   void didPopNext() {
     if (widget.reloadOnPop) {
-      print("popped");
       loadItems();
     }
   }

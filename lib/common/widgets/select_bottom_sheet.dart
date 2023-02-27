@@ -33,7 +33,7 @@ class SelectBottomSheet extends StatelessWidget {
               width: 48,
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: defaultBorderRadius,
+                    borderRadius: BorderRadius.circular(64),
                     color: Theme.of(context)
                         .colorScheme
                         .onBackground

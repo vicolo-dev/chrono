@@ -1,3 +1,4 @@
+import 'package:clock_app/common/widgets/card.dart';
 import 'package:clock_app/common/widgets/slider_card.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
@@ -29,12 +30,14 @@ class _SliderSettingCardState extends State<SliderSettingCard> {
       unit: widget.setting.unit,
       onChanged: (value) {
         setState(() {
-          widget.setting.setValue(value);
+          widget.setting.setValue(context, value);
         });
         widget.onChanged?.call(widget.setting.value);
       },
     );
 
-    return widget.showSummaryView ? sliderCard : Card(child: sliderCard);
+    return widget.showSummaryView
+        ? sliderCard
+        : CardContainer(child: sliderCard);
   }
 }

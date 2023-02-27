@@ -28,6 +28,7 @@ ActionPane getDuplicateActionPane(
         VoidCallback onDuplicate, BuildContext context) =>
     ActionPane(
       motion: const ScrollMotion(),
+
       // extentRatio: Platform == 0.25,
       children: [
         CustomSlidableAction(

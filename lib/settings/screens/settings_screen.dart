@@ -30,6 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             children: [
               ...getSettingWidgets(appSettings),
+              const SizedBox(height: 16),
             ],
           ),
         ),

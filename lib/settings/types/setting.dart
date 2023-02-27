@@ -74,16 +74,16 @@ abstract class Setting<T> extends SettingItem {
   String description;
   T _value;
   List<SettingEnableCondition> enableConditions;
-  void Function(T)? onChange;
+  void Function(BuildContext context, T)? onChange;
 
   Setting(String name, this.description, T defaultValue, this.onChange,
       this.enableConditions)
       : _value = defaultValue,
         super(name);
 
-  void setValue(T value) {
+  void setValue(BuildContext context, T value) {
     _value = value;
-    onChange?.call(value);
+    onChange?.call(context, value);
   }
 
   dynamic get value => _value;
@@ -103,7 +103,7 @@ class SwitchSetting extends Setting<bool> {
   SwitchSetting(
     String name,
     bool defaultValue, {
-    void Function(bool)? onChange,
+    void Function(BuildContext, bool)? onChange,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
@@ -124,7 +124,7 @@ class NumberSetting extends Setting<double> {
   NumberSetting(
     String name,
     double defaultValue, {
-    void Function(double)? onChange,
+    void Function(BuildContext, double)? onChange,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
@@ -145,7 +145,7 @@ class ColorSetting extends Setting<Color> {
   ColorSetting(
     String name,
     Color defaultValue, {
-    void Function(Color)? onChange,
+    void Function(BuildContext, Color)? onChange,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
@@ -176,7 +176,7 @@ class StringSetting extends Setting<String> {
   StringSetting(
     String name,
     String defaultValue, {
-    void Function(String)? onChange,
+    void Function(BuildContext, String)? onChange,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
@@ -203,7 +203,7 @@ class SliderSetting extends Setting<double> {
     this.min,
     this.max,
     double defaultValue, {
-    void Function(double)? onChange,
+    void Function(BuildContext context, double)? onChange,
     String description = "",
     this.unit = "",
     List<SettingEnableCondition> enableConditions = const [],
@@ -249,7 +249,7 @@ class SelectSetting<T> extends Setting<int> {
   SelectSetting(
     String name,
     this._options, {
-    void Function(int)? onChange,
+    void Function(BuildContext, int)? onChange,
     this.onSelect,
     int defaultValue = 0,
     String description = "",
@@ -279,7 +279,7 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
   DynamicSelectSetting(
     String name,
     this.optionsGetter, {
-    void Function(int index)? onChange,
+    void Function(BuildContext, int index)? onChange,
     void Function(BuildContext, int index, T value)? onSelect,
     int defaultValue = 0,
     String description = "",
@@ -324,7 +324,7 @@ class ToggleSetting<T> extends Setting<List<bool>> {
   ToggleSetting(
     String name,
     this.options, {
-    void Function(List<bool>)? onChange,
+    void Function(BuildContext, List<bool>)? onChange,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(
@@ -346,12 +346,12 @@ class ToggleSetting<T> extends Setting<List<bool>> {
     );
   }
 
-  void toggle(int index) {
+  void toggle(BuildContext context, int index) {
     if (_value.where((option) => option == true).length == 1 && _value[index]) {
       return;
     }
     _value[index] = !_value[index];
-    onChange?.call(_value);
+    onChange?.call(context, _value);
   }
 
   @override
@@ -369,7 +369,7 @@ class DateTimeSetting extends Setting<DateTime> {
   DateTimeSetting(
     String name,
     DateTime defaultValue, {
-    void Function(DateTime)? onChange,
+    void Function(BuildContext, DateTime)? onChange,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);

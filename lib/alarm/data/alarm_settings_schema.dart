@@ -52,7 +52,7 @@ Settings alarmSettingsSchema = Settings([
                   RingtonePlayer.playUri(uri, loopMode: LoopMode.off);
                 }
               },
-              onChange: (index) {
+              onChange: (context, index) {
                 RingtonePlayer.stop();
               },
             ),

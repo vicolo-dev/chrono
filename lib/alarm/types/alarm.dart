@@ -67,8 +67,8 @@ class Alarm extends ListItem {
     return _settings.getSetting(name);
   }
 
-  void setSetting(String name, dynamic value) {
-    _settings.getSetting(name).setValue(value);
+  void setSetting(BuildContext context, String name, dynamic value) {
+    _settings.getSetting(name).setValue(context, value);
   }
 
   void toggle() {

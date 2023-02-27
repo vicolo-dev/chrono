@@ -39,7 +39,6 @@ class _ToggleCardState<T> extends State<ToggleCard<T>> {
           fillColor: Theme.of(context).colorScheme.primary,
           selectedColor: Theme.of(context).colorScheme.onPrimary,
           renderBorder: false,
-          borderRadius: defaultBorderRadius,
           constraints: BoxConstraints(
             minHeight: (MediaQuery.of(context).size.width - 40) /
                 widget.options.length,

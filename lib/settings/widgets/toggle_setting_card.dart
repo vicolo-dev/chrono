@@ -1,3 +1,4 @@
+import 'package:clock_app/common/widgets/card.dart';
 import 'package:clock_app/common/widgets/toggle_card.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
@@ -30,13 +31,15 @@ class _ToggleSettingCardState<T> extends State<ToggleSettingCard<T>> {
           .toList(),
       onChange: (value) {
         setState(() {
-          widget.setting.toggle(value);
+          widget.setting.toggle(context, value);
         });
 
         widget.onChanged?.call(widget.setting.value);
       },
     );
 
-    return widget.showSummaryView ? toggleCard : Card(child: toggleCard);
+    return widget.showSummaryView
+        ? toggleCard
+        : CardContainer(child: toggleCard);
   }
 }

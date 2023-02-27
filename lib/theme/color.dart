@@ -46,4 +46,5 @@ ColorScheme amoledColorScheme = const ColorScheme(
   onSurface: Color.fromARGB(255, 233, 233, 233),
   onSecondary: Colors.white,
   onBackground: Color.fromARGB(255, 245, 245, 245),
+  inverseSurface: Color.fromRGBO(0, 0, 0, 0.5),
 );

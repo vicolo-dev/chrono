@@ -160,7 +160,7 @@ class _TimerKnobState extends State<TimerKnob> {
           fillColor: widget.fillColor,
           maxValue: widget.maxValue,
           knobColor: Theme.of(context).colorScheme.primary,
-          textColor: Theme.of(context).colorScheme.onPrimary,
+          textColor: Theme.of(context).colorScheme.onBackground,
         ),
       ),
     );

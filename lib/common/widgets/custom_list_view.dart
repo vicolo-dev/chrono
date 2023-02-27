@@ -141,7 +141,6 @@ class _CustomListViewState<Item extends ListItem>
 
     if (index == -1) index = 0;
     setState(() => widget.items.insert(index, item));
-    print('inserted at $index');
     _controller.notifyInsertedRange(index, 1);
     stopwatch.start();
     _scrollToIndex(index);

@@ -1,4 +1,5 @@
 import 'package:clock_app/common/types/select_choice.dart';
+import 'package:clock_app/common/widgets/card.dart';
 import 'package:clock_app/common/widgets/select_card.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
@@ -32,13 +33,15 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
           .toList(),
       onChange: (value) {
         setState(() {
-          widget.setting.setValue(value);
+          widget.setting.setValue(context, value);
         });
         widget.onChanged?.call(widget.setting.value);
       },
       onSelect: (index) => widget.setting.onSelectOption(context, index),
     );
 
-    return widget.showSummaryView ? selectWidget : Card(child: selectWidget);
+    return widget.showSummaryView
+        ? selectWidget
+        : CardContainer(child: selectWidget);
   }
 }

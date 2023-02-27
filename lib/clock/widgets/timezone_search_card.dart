@@ -1,4 +1,5 @@
 import 'package:clock_app/clock/widgets/timezone_card_content.dart';
+import 'package:clock_app/common/widgets/card.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
@@ -23,12 +24,10 @@ class TimeZoneSearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double defaultCardElevation = Theme.of(context).cardTheme.elevation ?? 1;
     return SizedBox(
       width: double.infinity,
-      child: Card(
-          surfaceTintColor: disabled ? Colors.pink : null,
-          elevation: disabled ? defaultCardElevation : defaultCardElevation * 2,
+      child: CardContainer(
+          elevationMultiplier: disabled ? 0.5 : 1,
           child: InkWell(
             onTap: () {
               ScaffoldMessenger.of(context).removeCurrentSnackBar();

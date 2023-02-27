@@ -1,3 +1,4 @@
+import 'package:clock_app/common/widgets/card.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
 import 'package:clock_app/navigation/widgets/nav_bar.dart';
 import 'package:clock_app/navigation/widgets/nav_bar_item.dart';
@@ -22,8 +23,8 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
     return Padding(
       padding:
           const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0, top: 0),
-      child: Card(
-        elevation: (Theme.of(context).cardTheme.elevation ?? 1) * 2,
+      child: CardContainer(
+        elevationMultiplier: 2,
         child: BottomNavBar(
           backgroundColor: Colors.transparent,
           elevation: 0,

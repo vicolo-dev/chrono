@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:isolate';
-
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
@@ -89,7 +86,7 @@ void triggerScheduledNotification(
     int scheduleId, Map<String, dynamic> params) async {
   print("ringingAlarmId: $ringingAlarmId");
   print("Alarm triggered: $scheduleId");
-  print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+  // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
 
   ScheduledNotificationType notificationType =
       ScheduledNotificationType.values.firstWhere(
@@ -142,7 +139,7 @@ void stopTimer(int scheduleId, Map<String, dynamic> params) async {
 @pragma('vm:entry-point')
 void stopScheduledNotification(
     int scheduleId, Map<String, dynamic> params) async {
-  print("Alarm Stop Isolate: ${Service.getIsolateID(Isolate.current)}");
+  // print("Alarm Stop Isolate: ${Service.getIsolateID(Isolate.current)}");
   RingtonePlayer.stop();
 
   ScheduledNotificationType type = ScheduledNotificationType.values.firstWhere(

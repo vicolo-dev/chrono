@@ -1,3 +1,4 @@
+import 'package:clock_app/common/widgets/card.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:clock_app/settings/types/settings.dart';
@@ -32,7 +33,7 @@ class SettingGroupCard extends StatelessWidget {
       })).then((value) => checkDependentEnableConditions?.call());
     }
 
-    Card showSummaryView = Card(
+    CardContainer showSummaryView = CardContainer(
       child: InkWell(
         onTap: openSettingGroupScreen,
         child: Padding(
@@ -78,7 +79,7 @@ class SettingGroupCard extends StatelessWidget {
       ),
     );
 
-    Card expandedView = Card(
+    CardContainer expandedView = CardContainer(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Column(
@@ -114,7 +115,7 @@ class SettingGroupCard extends StatelessWidget {
       ),
     );
 
-    Card cardView = Card(
+    CardContainer cardView = CardContainer(
       child: InkWell(
         onTap: openSettingGroupScreen,
         borderRadius: const BorderRadius.all(Radius.circular(16.0)),

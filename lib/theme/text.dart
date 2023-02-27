@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/theme/font.dart';
 
-TextTheme textTheme = TextTheme(
+TextTheme textTheme = const TextTheme(
   titleLarge: TextStyle(
     fontSize: 32,
     fontVariations: FontVariations.semiBold,

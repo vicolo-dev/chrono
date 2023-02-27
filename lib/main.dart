@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/theme/color.dart';
+import 'package:clock_app/theme/shadow.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -71,6 +73,31 @@ class App extends StatefulWidget {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
     state.setAccentColor(color);
   }
+
+  static void setCardRadius(BuildContext context, double radius) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setCardRadius(radius);
+  }
+
+  static void setCardElevation(BuildContext context, double elevation) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setCardElevation(elevation);
+  }
+
+  static void setShadowColor(BuildContext context, Color color) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setShadowColor(color);
+  }
+
+  static void setShadowOpacity(BuildContext context, double opacity) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setShadowOpacity(opacity);
+  }
+
+  static void setShadowBlurRadius(BuildContext context, double radius) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setShadowBlurRadius(radius);
+  }
 }
 
 class _AppState extends State<App> {
@@ -108,6 +135,79 @@ class _AppState extends State<App> {
       primary: color,
       secondary: color,
     ));
+    setShadowColor(appSettings.getSetting("Use Accent Color").value
+        ? _theme.colorScheme.primary
+        : Colors.black);
+  }
+
+  setCardRadius(double radius) {
+    setState(() {
+      RoundedRectangleBorder shape = RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radius),
+      );
+      _theme = _theme.copyWith(
+        cardTheme: _theme.cardTheme.copyWith(shape: shape),
+        bottomSheetTheme: _theme.bottomSheetTheme.copyWith(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(radius),
+            ),
+          ),
+        ),
+        timePickerTheme: _theme.timePickerTheme.copyWith(
+          shape: shape,
+          dayPeriodShape: shape,
+          hourMinuteShape: shape,
+        ),
+        toggleButtonsTheme: _theme.toggleButtonsTheme.copyWith(
+          borderRadius: BorderRadius.circular(radius),
+        ),
+      );
+    });
+  }
+
+  setCardElevation(double elevation) {
+    setState(() {
+      _theme = _theme.copyWith(extensions: [
+        _theme.extension<ShadowStyle>()?.copyWith(
+                  elevation: elevation,
+                ) ??
+            const ShadowStyle(),
+      ]);
+    });
+  }
+
+  setShadowColor(Color color) {
+    setState(() {
+      _theme = _theme.copyWith(extensions: [
+        _theme.extension<ShadowStyle>()?.copyWith(
+                  color: color,
+                ) ??
+            const ShadowStyle(),
+      ]);
+    });
+  }
+
+  setShadowOpacity(double opacity) {
+    setState(() {
+      _theme = _theme.copyWith(extensions: [
+        _theme.extension<ShadowStyle>()?.copyWith(
+                  opacity: opacity,
+                ) ??
+            const ShadowStyle(),
+      ]);
+    });
+  }
+
+  setShadowBlurRadius(double blurRadius) {
+    setState(() {
+      _theme = _theme.copyWith(extensions: [
+        _theme.extension<ShadowStyle>()?.copyWith(
+                  blurRadius: blurRadius,
+                ) ??
+            const ShadowStyle(),
+      ]);
+    });
   }
 
   @override

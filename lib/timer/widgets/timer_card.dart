@@ -115,7 +115,7 @@ class _TimerCardState extends State<TimerCard> {
                         ),
                 );
               },
-              progressColors: const [Colors.cyan],
+              progressColors: [Theme.of(context).colorScheme.primary],
               backColor: Colors.black.withOpacity(0.15),
             ),
           ],

@@ -36,7 +36,12 @@ class ClockStopwatch extends JsonSerializable {
         _id = UniqueKey().hashCode;
 
   void start() {
-    _startTime = DateTime.now();
+    if (_state == TimerState.stopped) {
+      _startTime = DateTime.now();
+    } else if (_state == TimerState.paused) {
+      _startTime = DateTime.now()
+          .subtract(Duration(milliseconds: _elapsedMillisecondsOnPause));
+    }
     _state = TimerState.running;
   }
 

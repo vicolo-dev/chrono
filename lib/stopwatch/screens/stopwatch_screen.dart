@@ -86,6 +86,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                 placeholderText: "No laps yet",
                 isDeleteEnabled: false,
                 isDuplicateEnabled: false,
+                isReorderable: false,
               ),
             ),
           ],

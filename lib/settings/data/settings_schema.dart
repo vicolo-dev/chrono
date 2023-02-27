@@ -30,36 +30,74 @@ List<SettingItem> settingsItems = [
   SettingGroup(
       "Appearance",
       [
-        SelectSetting<ColorScheme>(
-          "Color Scheme",
+        SettingGroup(
+          "Color",
           [
-            SelectSettingOption("Light", lightColorScheme),
-            SelectSettingOption("Dark", darkColorScheme),
-            SelectSettingOption("Amoled", amoledColorScheme),
+            SelectSetting<ColorScheme>(
+              "Color Scheme",
+              [
+                SelectSettingOption("Light", lightColorScheme),
+                SelectSettingOption("Dark", darkColorScheme),
+                SelectSettingOption("Amoled", amoledColorScheme),
+              ],
+              onSelect: (context, index, colorScheme) {
+                App.setColorScheme(
+                    context,
+                    colorScheme.copyWith(
+                      primary: Theme.of(context).colorScheme.primary,
+                      secondary: Theme.of(context).colorScheme.secondary,
+                    ));
+              },
+            ),
+            SelectSetting<Color>(
+              "Accent Color",
+              [
+                SelectSettingOption("Cyan", Colors.cyan),
+                SelectSettingOption("Red", Colors.red),
+                SelectSettingOption("Green", Colors.green),
+                SelectSettingOption("Blue", Colors.blue),
+                SelectSettingOption("Yellow", Colors.yellow),
+                SelectSettingOption("Orange", Colors.orange),
+                SelectSettingOption("Purple", Colors.purple),
+                SelectSettingOption("Pink", Colors.pink),
+                SelectSettingOption("Teal", Colors.teal),
+                SelectSettingOption("Lime", Colors.lime),
+                SelectSettingOption("Indigo", Colors.indigo),
+              ],
+              onSelect: (context, index, color) {
+                App.setAccentColor(context, color);
+              },
+            ),
           ],
-          onSelect: (context, index, colorScheme) {
-            App.setColorScheme(context, colorScheme);
-          },
         ),
-        SelectSetting<Color>(
-          "Accent Color",
+        SettingGroup(
+          "Shapes",
           [
-            SelectSettingOption("Cyan", Colors.cyan),
-            SelectSettingOption("Red", Colors.red),
-            SelectSettingOption("Green", Colors.green),
-            SelectSettingOption("Blue", Colors.blue),
-            SelectSettingOption("Yellow", Colors.yellow),
-            SelectSettingOption("Orange", Colors.orange),
-            SelectSettingOption("Purple", Colors.purple),
-            SelectSettingOption("Pink", Colors.pink),
-            SelectSettingOption("Teal", Colors.teal),
-            SelectSettingOption("Lime", Colors.lime),
-            SelectSettingOption("Indigo", Colors.indigo),
+            SliderSetting("Corner Roundness", 0, 36, 16,
+                onChange: (context, radius) {
+              App.setCardRadius(context, radius);
+            }),
           ],
-          onSelect: (context, index, color) {
-            App.setAccentColor(context, color);
-          },
-        )
+        ),
+        SettingGroup("Shadows", [
+          SwitchSetting(
+            "Use Accent Color",
+            false,
+            onChange: (context, value) {
+              App.setShadowColor(context,
+                  value ? Theme.of(context).colorScheme.primary : Colors.black);
+            },
+          ),
+          SliderSetting("Elevation", 0, 20, 1, onChange: (context, elevation) {
+            App.setCardElevation(context, elevation);
+          }),
+          SliderSetting("Opacity", 0, 100, 50, onChange: (context, opacity) {
+            App.setShadowOpacity(context, opacity / 100);
+          }),
+          SliderSetting("Blur", 0, 20, 2, onChange: (context, blur) {
+            App.setShadowBlurRadius(context, blur);
+          }),
+        ])
       ],
       icon: FluxIcons.settings,
       description: "Set themes, colors and change layout"),

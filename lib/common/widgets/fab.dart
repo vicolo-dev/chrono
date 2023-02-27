@@ -1,3 +1,4 @@
+import 'package:clock_app/common/widgets/card.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -15,11 +16,8 @@ class FAB extends StatelessWidget {
     return Positioned(
       bottom: 0,
       right: 16 + (index * 64),
-      child: Card(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
-        elevation: 4,
+      child: CardContainer(
+        elevationMultiplier: 2,
         color: Theme.of(context).colorScheme.primary,
         child: InkWell(
           onTap: onPressed,

@@ -1,3 +1,4 @@
+import 'package:clock_app/common/widgets/card.dart';
 import 'package:clock_app/common/widgets/switch_card.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +27,14 @@ class _SwitchSettingCardState extends State<SwitchSettingCard> {
       value: widget.setting.value,
       onChanged: (value) {
         setState(() {
-          widget.setting.setValue(value);
+          widget.setting.setValue(context, value);
         });
         widget.onChanged?.call(widget.setting.value);
       },
     );
 
-    return widget.showSummaryView ? switchCard : Card(child: switchCard);
+    return widget.showSummaryView
+        ? switchCard
+        : CardContainer(child: switchCard);
   }
 }
