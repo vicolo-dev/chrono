@@ -76,12 +76,13 @@ class _CustomListViewState<Item extends ListItem>
     }
   }
 
-  void _changeItem(ItemChangerCallback<Item> callback) {
+  void _changeItem(ItemChangerCallback<Item> callback, bool callOnModifyList) {
     setState(() {
       callback(widget.items);
     });
     _notifyChangeList();
-    widget.onModifyList?.call();
+
+    if (callOnModifyList) widget.onModifyList?.call();
   }
 
   void _notifyChangeList() {

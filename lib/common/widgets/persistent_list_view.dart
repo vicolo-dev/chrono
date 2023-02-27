@@ -76,7 +76,7 @@ class _PersistentListViewState<Item extends ListItem>
     if (widget.saveTag.isNotEmpty) {
       widget.listController.changeItems((List<Item> items) {
         items = loadList<Item>(widget.saveTag);
-      });
+      }, callOnModifyList: false);
     }
   }
 
