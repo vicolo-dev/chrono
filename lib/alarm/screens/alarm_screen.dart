@@ -50,10 +50,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
     newAlarm.schedule();
 
-    _listController.changeItems((alarms) {
-      alarms[index] = newAlarm;
-    });
-    print("customizee");
+    _listController.changeItems((alarms) => alarms[index] = newAlarm);
 
     _showNextScheduleSnackBar(newAlarm);
   }

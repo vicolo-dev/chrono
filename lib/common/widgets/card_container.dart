@@ -1,5 +1,4 @@
 import 'package:clock_app/theme/shadow.dart';
-import 'package:clock_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
@@ -8,12 +7,14 @@ class CardContainer extends StatelessWidget {
       required this.child,
       this.elevationMultiplier = 1,
       this.color,
-      this.margin});
+      this.margin,
+      this.onTap});
 
   final Widget child;
   final double elevationMultiplier;
   final Color? color;
   final EdgeInsetsGeometry? margin;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,16 @@ class CardContainer extends StatelessWidget {
           ),
         ],
       ),
-      child: child,
+      child: onTap == null
+          ? child
+          : Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: Theme.of(context).toggleButtonsTheme.borderRadius,
+                child: child,
+              ),
+            ),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:clock_app/clock/widgets/timezone_card_content.dart';
-import 'package:clock_app/common/widgets/card.dart';
+import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
@@ -27,30 +27,29 @@ class TimeZoneSearchCard extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: CardContainer(
-          elevationMultiplier: disabled ? 0.5 : 1,
-          child: InkWell(
-            onTap: () {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        elevationMultiplier: disabled ? 0.5 : 1,
+        onTap: () {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
-              if (disabled) {
-                const snackBar = SnackBar(
-                  content: Text('This city is already in your favorites.'),
-                );
+          if (disabled) {
+            const snackBar = SnackBar(
+              content: Text('This city is already in your favorites.'),
+            );
 
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              } else {
-                onTap();
-              }
-            },
-            child: TimezoneCardContent(
-              title: city.name,
-              subtitle: city.country,
-              timezoneLocation: timezoneLocation,
-              textColor: disabled
-                  ? Theme.of(context).colorScheme.onBackground.withOpacity(0.6)
-                  : null,
-            ),
-          )),
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          } else {
+            onTap();
+          }
+        },
+        child: TimezoneCardContent(
+          title: city.name,
+          subtitle: city.country,
+          timezoneLocation: timezoneLocation,
+          textColor: disabled
+              ? Theme.of(context).colorScheme.onBackground.withOpacity(0.6)
+              : null,
+        ),
+      ),
     );
   }
 }

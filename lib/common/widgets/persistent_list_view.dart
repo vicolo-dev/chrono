@@ -1,5 +1,6 @@
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/custom_list_view.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
@@ -74,9 +75,15 @@ class _PersistentListViewState<Item extends ListItem>
 
   void loadItems() {
     if (widget.saveTag.isNotEmpty) {
-      widget.listController.changeItems((List<Item> items) {
-        items = loadList<Item>(widget.saveTag);
-      }, callOnModifyList: false);
+      widget.listController.changeItems(
+        (List<Item> items) {
+          List<Item> newList = loadList<Item>(widget.saveTag);
+          items.clear();
+          items.addAll(newList);
+          // print(encodeList(items));
+        },
+        callOnModifyList: false,
+      );
     }
   }
 

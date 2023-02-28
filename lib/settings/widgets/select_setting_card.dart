@@ -1,5 +1,5 @@
 import 'package:clock_app/common/types/select_choice.dart';
-import 'package:clock_app/common/widgets/card.dart';
+import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/select_card.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';

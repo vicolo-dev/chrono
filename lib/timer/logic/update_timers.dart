@@ -17,6 +17,8 @@ Future<void> updateTimer(int scheduleId) async {
 Future<void> updateTimers() async {
   List<ClockTimer> timers = loadList("timers");
 
+  print(timers);
+
   timers.where((timer) => timer.remainingSeconds <= 0).forEach((timer) {
     timer.reset();
   });

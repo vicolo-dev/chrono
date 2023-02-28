@@ -12,6 +12,7 @@ import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
+import 'package:get_storage/get_storage.dart';
 
 int ringingAlarmId = -1;
 List<int> ringingTimerIds = [];
@@ -25,8 +26,7 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
     isAlarmUpdating = false;
   }
 
-  SettingsManager.preferences
-      ?.setBool("fullScreenNotificationRecentlyShown", true);
+  GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
   if (ringingTimerIds.isNotEmpty) {
     RingtonePlayer.pause();
@@ -56,8 +56,7 @@ void triggerTimer(int scheduleId, Map<String, dynamic> params) async {
     isTimerUpdating = false;
   }
 
-  SettingsManager.preferences
-      ?.setBool("fullScreenNotificationRecentlyShown", true);
+  GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
   if (ringingAlarmId != -1) {
     RingtonePlayer.pause();
@@ -94,7 +93,7 @@ void triggerScheduledNotification(
   );
 
   await initializeAppDataDirectory();
-  await SettingsManager.initialize();
+  await GetStorage.init();
   await RingtoneManager.initialize();
   await RingtonePlayer.initialize();
   await initializeAudioSession();

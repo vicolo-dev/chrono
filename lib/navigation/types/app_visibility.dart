@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AppVisibilityListener {
   static StreamSubscription<FGBGType>? subscription;
@@ -17,12 +18,10 @@ class AppVisibilityListener {
 
   static void initialize() {
     print(
-        "Is Alarm Recently Triggered: ${SettingsManager.preferences?.getBool("fullScreenNotificationRecentlyShown")}");
-    if (SettingsManager.preferences
-            ?.getBool("fullScreenNotificationRecentlyShown") ==
+        "Is Alarm Recently Triggered: ${GetStorage().read<bool>("fullScreenNotificationRecentlyShown")}");
+    if (GetStorage().read<bool>("fullScreenNotificationRecentlyShown") ==
         true) {
-      SettingsManager.preferences
-          ?.setBool("fullScreenNotificationRecentlyShown", false);
+      GetStorage().write("fullScreenNotificationRecentlyShown", false);
     } else {
       setState(FGBGType.foreground);
     }

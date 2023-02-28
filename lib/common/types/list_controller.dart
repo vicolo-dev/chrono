@@ -1,4 +1,4 @@
-typedef ItemChangerCallback<T> = void Function(List<T> items);
+typedef ItemChangerCallback<T> = void Function(List<T> item);
 typedef ItemChanger<T> = void Function(ItemChangerCallback<T>, bool);
 
 class ListController<T> {
@@ -8,7 +8,7 @@ class ListController<T> {
 
   ListController();
 
-  void setChangeItem(ItemChanger<T> changeItems) {
+  void setChangeItems(ItemChanger<T> changeItems) {
     _changeItems = changeItems;
   }
 

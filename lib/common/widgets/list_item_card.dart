@@ -1,4 +1,4 @@
-import 'package:clock_app/common/widgets/card.dart';
+import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/delete_action_pane.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -57,10 +57,8 @@ class _ListItemCardState<T> extends State<ListItemCard<T>> {
     return SizedBox(
       width: double.infinity,
       child: CardContainer(
-        child: InkWell(
-          onTap: widget.onTap,
-          child: innerWidget,
-        ),
+        onTap: widget.onTap,
+        child: innerWidget,
       ),
     );
   }

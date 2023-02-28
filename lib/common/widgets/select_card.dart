@@ -75,50 +75,54 @@ class _SelectCardState<T> extends State<SelectCard<T>> {
       });
     }
 
-    return InkWell(
-      onTap: showSelect,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.title,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 4.0),
-                if (widget.choices[_currentSelectedIndex].runtimeType ==
-                    SelectTextChoice)
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: showSelect,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    (widget.choices[_currentSelectedIndex] as SelectTextChoice)
-                        .title,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    widget.title,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
-              ],
-            ),
-            const Spacer(),
-            widget.choices[_currentSelectedIndex].runtimeType ==
-                    SelectTextChoice
-                ? Icon(
-                    Icons.arrow_drop_down_rounded,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.6),
-                  )
-                : Container(
-                    width: 36.0,
-                    height: 36.0,
-                    decoration: BoxDecoration(
-                      color: (widget.choices[_currentSelectedIndex]
-                              as SelectColorChoice)
-                          .color,
-                      borderRadius: BorderRadius.circular(12.0),
+                  const SizedBox(height: 4.0),
+                  if (widget.choices[_currentSelectedIndex].runtimeType ==
+                      SelectTextChoice)
+                    Text(
+                      (widget.choices[_currentSelectedIndex]
+                              as SelectTextChoice)
+                          .title,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                  )
-          ],
+                ],
+              ),
+              const Spacer(),
+              widget.choices[_currentSelectedIndex].runtimeType ==
+                      SelectTextChoice
+                  ? Icon(
+                      Icons.arrow_drop_down_rounded,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.6),
+                    )
+                  : Container(
+                      width: 36.0,
+                      height: 36.0,
+                      decoration: BoxDecoration(
+                        color: (widget.choices[_currentSelectedIndex]
+                                as SelectColorChoice)
+                            .color,
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    )
+            ],
+          ),
         ),
       ),
     );

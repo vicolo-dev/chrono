@@ -11,6 +11,7 @@ import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:move_to_background/move_to_background.dart';
 
 class FullScreenNotificationData {
@@ -111,7 +112,7 @@ class AlarmNotificationManager {
   static Future<void> closeNotification(ScheduledNotificationType type) async {
     await removeNotification(type);
 
-    await SettingsManager.initialize();
+    await GetStorage.init();
     await LockScreenFlagManager.clearLockScreenFlags();
 
     if (Routes.currentRoute == alarmNotificationData[type]?.route) {
@@ -122,9 +123,7 @@ class AlarmNotificationManager {
         AppVisibilityListener.state == FGBGType.foreground) {
       MoveToBackground.moveTaskToBack();
     }
-
-    SettingsManager.preferences
-        ?.setBool("fullScreenNotificationRecentlyShown", false);
+    GetStorage().write("fullScreenNotificationRecentlyShown", false);
   }
 
   static Future<void> snoozeAlarm(
@@ -142,8 +141,7 @@ class AlarmNotificationManager {
   static void handleNotificationCreated(
       ReceivedNotification receivedNotification) {
     _fgbgTypeWhenCreated = AppVisibilityListener.state;
-    SettingsManager.preferences
-        ?.setBool("fullScreenNotificationRecentlyShown", false);
+    GetStorage().write("fullScreenNotificationRecentlyShown", false);
   }
 
   static Future<void> handleNotificationAction(

@@ -68,22 +68,25 @@ class _InputCardState<T> extends State<InputCard<T>> {
       // });
     }
 
-    return InkWell(
-      onTap: showSelect,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-        child: Row(
-          children: [
-            Text(
-              widget.title,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const Spacer(),
-            Text(
-              widget.value.isNotEmpty ? widget.value : widget.hintText,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: showSelect,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          child: Row(
+            children: [
+              Text(
+                widget.title,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const Spacer(),
+              Text(
+                widget.value.isNotEmpty ? widget.value : widget.hintText,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ),
         ),
       ),
     );

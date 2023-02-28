@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -17,10 +19,17 @@ class ClockTimer extends ListItem {
   @override
   int get id => _id;
   TimeDuration get duration => _duration;
-  int get remainingSeconds => _state == TimerState.running
-      ? _secondsRemainingOnPause -
-          DateTime.now().difference(_startTime).toTimeDuration().inSeconds
-      : _secondsRemainingOnPause;
+  int get remainingSeconds {
+    if (isRunning) {
+      return math.max(
+          _secondsRemainingOnPause -
+              DateTime.now().difference(_startTime).toTimeDuration().inSeconds,
+          0);
+    } else {
+      return _secondsRemainingOnPause;
+    }
+  }
+
   bool get isRunning => _state == TimerState.running;
   TimerState get state => _state;
 

@@ -3,6 +3,7 @@ import 'package:clock_app/clock/widgets/timezone_card.dart';
 import 'package:flutter/material.dart';
 import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:timezone/data/latest_all.dart' as timezone_db;
 
 import 'package:flutter_test/flutter_test.dart';
@@ -15,7 +16,7 @@ void main() {
     setUp(
       () async {
         timezone_db.initializeTimeZones();
-        SettingsManager.initialize();
+        await GetStorage.init();
         await initializeDatabases();
       },
     );

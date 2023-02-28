@@ -1,4 +1,4 @@
-import 'package:clock_app/common/widgets/card.dart';
+import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -19,14 +19,12 @@ class FAB extends StatelessWidget {
       child: CardContainer(
         elevationMultiplier: 2,
         color: Theme.of(context).colorScheme.primary,
-        child: InkWell(
-          onTap: onPressed,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Icon(
-              icon,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Icon(
+            icon,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
       ),

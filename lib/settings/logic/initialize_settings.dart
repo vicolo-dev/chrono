@@ -4,19 +4,20 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/timer/types/timer.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> initializeSettings() async {
-  await SettingsManager.initialize();
-  SharedPreferences? preferences = SettingsManager.preferences;
-
+  // await SettingsManager.initialize();
+  await GetStorage.init();
   // Used to clear the preferences in case of a change in format of the data
   // Comment this out after the preferences are cleared
-  preferences?.clear();
+  // GetStorage().erase();
 
-  bool? firstLaunch = SettingsManager.preferences?.getBool('first_launch');
+  bool? firstLaunch = GetStorage().read('first_launch');
   if (firstLaunch == null) {
-    preferences?.setBool('first_launch', false);
+    GetStorage().write('first_launch', true);
+
     initializeDefaultFavoriteCities();
     saveList<Alarm>('alarms', []);
     saveList<ClockTimer>('timers', []);

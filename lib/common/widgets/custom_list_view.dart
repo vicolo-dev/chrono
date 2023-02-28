@@ -1,5 +1,6 @@
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/list_item_card.dart';
@@ -62,7 +63,7 @@ class _CustomListViewState<Item extends ListItem>
   @override
   void initState() {
     super.initState();
-    widget.listController.setChangeItem(_changeItem);
+    widget.listController.setChangeItems(_changeItems);
     widget.listController.setAddItem(_handleAddItem);
     widget.listController.setGetItemIndex(_getItemIndex);
   }
@@ -76,7 +77,7 @@ class _CustomListViewState<Item extends ListItem>
     }
   }
 
-  void _changeItem(ItemChangerCallback<Item> callback, bool callOnModifyList) {
+  void _changeItems(ItemChangerCallback<Item> callback, bool callOnModifyList) {
     setState(() {
       callback(widget.items);
     });
