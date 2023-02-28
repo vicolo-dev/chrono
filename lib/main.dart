@@ -2,10 +2,13 @@ import 'dart:core';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:ui';
+import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/theme/shadow.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
@@ -45,6 +48,17 @@ void main() async {
   await initializeNotifications();
   AppVisibilityListener.initialize();
   await LockScreenFlagManager.initialize();
+
+  ReceivePort receivePort = ReceivePort();
+  IsolateNameServer.registerPortWithName(receivePort.sendPort, updatePortName);
+  receivePort.listen((message) {
+    print("Main Isolate Received: $message");
+    if (message == "updateAlarms") {
+      SettingsManager.notifyListeners("alarms");
+    } else if (message == "updateTimers") {
+      SettingsManager.notifyListeners("timers");
+    }
+  });
 
   String appDataDirectory = await getAppDataDirectoryPath();
   String path = '$appDataDirectory/ringing-alarm.txt';

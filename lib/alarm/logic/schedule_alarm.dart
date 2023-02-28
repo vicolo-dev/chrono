@@ -43,22 +43,6 @@ enum AlarmStopAction {
   snooze,
 }
 
-Future<void> scheduleStopAlarm(int scheduleId, AlarmStopAction alarmStopAction,
-    {ScheduledNotificationType type = ScheduledNotificationType.alarm}) async {
-  await AndroidAlarmManager.oneShotAfterDelay(
-    const Duration(seconds: 0),
-    scheduleId,
-    stopScheduledNotification,
-    exact: true,
-    useRTC: true,
-    alarmClock: true,
-    params: <String, String>{
-      'action': alarmStopAction.toString(),
-      'type': type.toString(),
-    },
-  );
-}
-
 Future<void> scheduleSnoozeAlarm(
     int scheduleId, Duration delay, ScheduledNotificationType type) async {
   await scheduleAlarm(scheduleId, DateTime.now().add(delay), type: type);

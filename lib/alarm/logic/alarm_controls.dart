@@ -1,3 +1,6 @@
+import 'dart:isolate';
+import 'dart:ui';
+
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
@@ -13,6 +16,9 @@ import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
 import 'package:get_storage/get_storage.dart';
 
+const String stopAlarmPortName = "13";
+const String updatePortName = "d";
+
 int ringingAlarmId = -1;
 List<int> ringingTimerIds = [];
 bool isAlarmUpdating = false;
@@ -22,6 +28,8 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
   if (!isAlarmUpdating) {
     isAlarmUpdating = true;
     await updateAlarms();
+    SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
+    sendPort?.send("updateAlarms");
     isAlarmUpdating = false;
   }
 
@@ -52,6 +60,8 @@ void triggerTimer(int scheduleId, Map<String, dynamic> params) async {
   if (!isTimerUpdating) {
     isTimerUpdating = true;
     await updateTimers();
+    SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
+    sendPort?.send("updateTimers");
     isTimerUpdating = false;
   }
 
@@ -91,6 +101,14 @@ void triggerScheduledNotification(
     (element) => element.toString() == params['type'],
   );
 
+  ReceivePort receivePort = ReceivePort();
+  IsolateNameServer.registerPortWithName(
+      receivePort.sendPort, stopAlarmPortName);
+  receivePort.listen((message) {
+    print("${message[0]} - ${message[1]} - ${message[2]}");
+    stopScheduledNotification(message);
+  });
+
   await initializeAppDataDirectory();
   await GetStorage.init();
   await RingtoneManager.initialize();
@@ -104,8 +122,8 @@ void triggerScheduledNotification(
   }
 }
 
-void stopAlarm(int scheduleId, Map<String, dynamic> params) async {
-  if (params['action'] == AlarmStopAction.snooze.toString()) {
+void stopAlarm(int scheduleId, AlarmStopAction action) async {
+  if (action == AlarmStopAction.snooze) {
     Alarm alarm = getAlarmByScheduleId(scheduleId);
     Duration snoozeDuration = Duration(minutes: alarm.snoozeLength.floor());
 
@@ -120,8 +138,8 @@ void stopAlarm(int scheduleId, Map<String, dynamic> params) async {
   ringingAlarmId = -1;
 }
 
-void stopTimer(int scheduleId, Map<String, dynamic> params) async {
-  if (params['action'] == AlarmStopAction.snooze.toString()) {
+void stopTimer(int scheduleId, AlarmStopAction action) async {
+  if (action == AlarmStopAction.snooze) {
     Duration snoozeDuration = const Duration(minutes: 1);
     scheduleSnoozeAlarm(
         scheduleId, snoozeDuration, ScheduledNotificationType.timer);
@@ -134,19 +152,21 @@ void stopTimer(int scheduleId, Map<String, dynamic> params) async {
   ringingTimerIds = [];
 }
 
-@pragma('vm:entry-point')
-void stopScheduledNotification(
-    int scheduleId, Map<String, dynamic> params) async {
-  // print("Alarm Stop Isolate: ${Service.getIsolateID(Isolate.current)}");
+void stopScheduledNotification(List<dynamic> message) {
+  int scheduleId = message[0];
   RingtonePlayer.stop();
-
-  ScheduledNotificationType type = ScheduledNotificationType.values.firstWhere(
-    (element) => element.toString() == params['type'],
+  AlarmStopAction action = AlarmStopAction.values.firstWhere(
+    (element) => element.toString() == message[2],
   );
 
-  if (type == ScheduledNotificationType.alarm) {
-    stopAlarm(scheduleId, params);
-  } else if (type == ScheduledNotificationType.timer) {
-    stopTimer(scheduleId, params);
+  ScheduledNotificationType notificationType =
+      ScheduledNotificationType.values.firstWhere(
+    (element) => element.toString() == message[1],
+  );
+
+  if (notificationType == ScheduledNotificationType.alarm) {
+    stopAlarm(scheduleId, action);
+  } else if (notificationType == ScheduledNotificationType.timer) {
+    stopTimer(scheduleId, action);
   }
 }

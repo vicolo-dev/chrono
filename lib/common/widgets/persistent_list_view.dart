@@ -69,12 +69,12 @@ class _PersistentListViewState<Item extends ListItem>
     super.dispose();
   }
 
-  @override
-  void didPopNext() {
-    if (widget.reloadOnPop) {
-      loadItems();
-    }
-  }
+  // @override
+  // void didPopNext() {
+  //   if (widget.reloadOnPop) {
+  //     loadItems();
+  //   }
+  // }
 
   void loadItems() {
     if (widget.saveTag.isNotEmpty) {

@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
@@ -52,7 +54,7 @@ class AlarmNotificationManager {
   static const String _snoozeActionKey = "snooze";
   static const String _dismissActionKey = "dismiss";
 
-  static FGBGType _fgbgTypeWhenCreated = FGBGType.foreground;
+  static FGBGType _appVisibilityWhenCreated = FGBGType.foreground;
 
   static void showFullScreenNotification(
     ScheduledNotificationType type,
@@ -123,7 +125,9 @@ class AlarmNotificationManager {
       Routes.pop();
     }
 
-    if (_fgbgTypeWhenCreated == FGBGType.background &&
+    // If notification was created while app was in background, move app back
+    // to background when we close the notification
+    if (_appVisibilityWhenCreated == FGBGType.background &&
         AppVisibilityListener.state == FGBGType.foreground) {
       MoveToBackground.moveTaskToBack();
     }
@@ -132,19 +136,24 @@ class AlarmNotificationManager {
 
   static Future<void> snoozeAlarm(
       int scheduleId, ScheduledNotificationType type) async {
-    scheduleStopAlarm(scheduleId, AlarmStopAction.snooze, type: type);
-    closeNotification(type);
+    stopAlarm(scheduleId, type, AlarmStopAction.snooze);
   }
 
   static Future<void> dismissAlarm(
       int scheduleId, ScheduledNotificationType type) async {
-    scheduleStopAlarm(scheduleId, AlarmStopAction.dismiss, type: type);
+    stopAlarm(scheduleId, type, AlarmStopAction.dismiss);
+  }
+
+  static Future<void> stopAlarm(int scheduleId, ScheduledNotificationType type,
+      AlarmStopAction action) async {
+    SendPort? sendPort = IsolateNameServer.lookupPortByName(stopAlarmPortName);
+    sendPort?.send([scheduleId, type.toString(), action.toString()]);
     closeNotification(type);
   }
 
   static void handleNotificationCreated(
       ReceivedNotification receivedNotification) {
-    _fgbgTypeWhenCreated = AppVisibilityListener.state;
+    _appVisibilityWhenCreated = AppVisibilityListener.state;
     GetStorage().write("fullScreenNotificationRecentlyShown", false);
   }
 
@@ -154,15 +163,15 @@ class AlarmNotificationManager {
         .firstWhere(
             (element) => element.toString() == receivedAction.payload?['type']);
 
-    print("Action received Isolate: ${Service.getIsolateID(Isolate.current)}");
+    // print("Action received Isolate: ${Service.getIsolateID(Isolate.current)}");
 
-    if (type == ScheduledNotificationType.timer) {
-      await updateTimers();
-      SettingsManager.notifyListeners("timers");
-    } else if (type == ScheduledNotificationType.alarm) {
-      updateAlarms();
-      SettingsManager.notifyListeners("alarms");
-    }
+    // if (type == ScheduledNotificationType.timer) {
+    //   await updateTimers();
+    //   SettingsManager.notifyListeners("timers");
+    // } else if (type == ScheduledNotificationType.alarm) {
+    //   updateAlarms();
+    //   SettingsManager.notifyListeners("alarms");
+    // }
 
     FullScreenNotificationData data = alarmNotificationData[type]!;
 
@@ -188,9 +197,7 @@ class AlarmNotificationManager {
         }
         App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
           data.route,
-          (route) {
-            return (route.settings.name != data.route) || route.isFirst;
-          },
+          (route) => (route.settings.name != data.route) || route.isFirst,
           arguments: scheduleIds,
         );
         break;
