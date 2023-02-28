@@ -61,7 +61,7 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
     super.initState();
     _loadDatabase();
     setState(() {
-      _favoriteCities = loadList('favorite_cities');
+      _favoriteCities = loadListSync('favorite_cities');
     });
   }
 

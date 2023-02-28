@@ -30,7 +30,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   @override
   void initState() {
     super.initState();
-    _stopwatch = loadList<ClockStopwatch>('stopwatches').first;
+    _stopwatch = loadListSync<ClockStopwatch>('stopwatches').first;
   }
 
   void _handleReset() {

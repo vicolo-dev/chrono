@@ -4,6 +4,7 @@ import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/custom_list_view.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:flutter/material.dart';
 
 class PersistentListView<Item extends ListItem> extends StatefulWidget {
@@ -50,8 +51,9 @@ class _PersistentListViewState<Item extends ListItem>
   void initState() {
     super.initState();
     if (widget.saveTag.isNotEmpty) {
-      _items = loadList<Item>(widget.saveTag);
+      _items = loadListSync<Item>(widget.saveTag);
     }
+    SettingsManager.addOnChangeListener(widget.saveTag, loadItems);
   }
 
   @override
@@ -63,6 +65,7 @@ class _PersistentListViewState<Item extends ListItem>
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
+    SettingsManager.removeOnChangeListener(widget.saveTag);
     super.dispose();
   }
 
@@ -77,7 +80,7 @@ class _PersistentListViewState<Item extends ListItem>
     if (widget.saveTag.isNotEmpty) {
       widget.listController.changeItems(
         (List<Item> items) {
-          List<Item> newList = loadList<Item>(widget.saveTag);
+          List<Item> newList = loadListSync<Item>(widget.saveTag);
           items.clear();
           items.addAll(newList);
           // print(encodeList(items));

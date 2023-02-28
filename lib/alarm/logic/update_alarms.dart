@@ -2,7 +2,7 @@ import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 
 Future<void> updateAlarm(int scheduleId) async {
-  List<Alarm> alarms = loadList("alarms");
+  List<Alarm> alarms = await loadList("alarms");
   int alarmIndex =
       alarms.indexWhere((alarm) => alarm.hasScheduleWithId(scheduleId));
   Alarm alarm = alarms[alarmIndex];
@@ -20,7 +20,7 @@ Future<void> updateAlarm(int scheduleId) async {
 }
 
 Future<void> updateAlarms() async {
-  List<Alarm> alarms = loadList("alarms");
+  List<Alarm> alarms = await loadList("alarms");
 
   alarms.where((alarm) => alarm.enabled).forEach((alarm) {
     if (alarm.isRepeating) {

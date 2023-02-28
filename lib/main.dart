@@ -1,5 +1,7 @@
 import 'dart:core';
+import 'dart:developer';
 import 'dart:io';
+import 'dart:isolate';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
@@ -51,6 +53,8 @@ void main() async {
     file.createSync();
   }
   file.writeAsStringSync("", mode: FileMode.writeOnly);
+
+  print("Main Isolate: ${Service.getIsolateID(Isolate.current)}");
 
   runApp(const App());
 }

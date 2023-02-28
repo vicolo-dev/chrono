@@ -9,7 +9,7 @@ import 'package:queue/queue.dart';
 
 final queue = Queue();
 
-List<T> loadList<T extends JsonSerializable>(String key) {
+List<T> loadListSync<T extends JsonSerializable>(String key) {
   // GetStorage storage = GetStorage();
   // String encodedList = storage.read(key);
   // return decodeList<T>(encodedList);
@@ -23,7 +23,7 @@ List<T> loadList<T extends JsonSerializable>(String key) {
   }
 }
 
-Future<List<T>> loadListAsync<T extends JsonSerializable>(String key) async {
+Future<List<T>> loadList<T extends JsonSerializable>(String key) async {
   // GetStorage storage = GetStorage();
   // String encodedList = storage.read(key);
   // return decodeList<T>(encodedList);
@@ -55,5 +55,4 @@ Future<void> saveList<T extends JsonSerializable>(
 
     await file.writeAsString(encodedList, mode: FileMode.writeOnly);
   });
-  print("saved");
 }

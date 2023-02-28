@@ -1,4 +1,8 @@
+import 'dart:developer';
+import 'dart:isolate';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 
@@ -36,6 +40,7 @@ class NotificationController {
   @pragma("vm:entry-point")
   static Future<void> _onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
+    // print isolate id
     // Your code goes here
   }
 

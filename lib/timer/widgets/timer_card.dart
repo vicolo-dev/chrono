@@ -60,7 +60,6 @@ class _TimerCardState extends State<TimerCard> {
 
   @override
   Widget build(BuildContext context) {
-    print("timer build: ${widget.timer.state}");
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(

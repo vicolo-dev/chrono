@@ -2,7 +2,7 @@ import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 
 Future<void> updateTimer(int scheduleId) async {
-  List<ClockTimer> timers = loadList("timers");
+  List<ClockTimer> timers = await loadList("timers");
   int timerIndex = timers.indexWhere((timer) => timer.id == scheduleId);
   ClockTimer timer = timers[timerIndex];
 
@@ -15,9 +15,7 @@ Future<void> updateTimer(int scheduleId) async {
 }
 
 Future<void> updateTimers() async {
-  List<ClockTimer> timers = loadList("timers");
-
-  print(timers);
+  List<ClockTimer> timers = await loadList("timers");
 
   timers.where((timer) => timer.remainingSeconds <= 0).forEach((timer) {
     timer.reset();

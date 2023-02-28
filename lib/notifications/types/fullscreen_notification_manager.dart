@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:isolate';
 
 import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -10,6 +13,7 @@ import 'package:clock_app/main.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:move_to_background/move_to_background.dart';
@@ -149,6 +153,16 @@ class AlarmNotificationManager {
     ScheduledNotificationType type = ScheduledNotificationType.values
         .firstWhere(
             (element) => element.toString() == receivedAction.payload?['type']);
+
+    print("Action received Isolate: ${Service.getIsolateID(Isolate.current)}");
+
+    if (type == ScheduledNotificationType.timer) {
+      await updateTimers();
+      SettingsManager.notifyListeners("timers");
+    } else if (type == ScheduledNotificationType.alarm) {
+      updateAlarms();
+      SettingsManager.notifyListeners("alarms");
+    }
 
     FullScreenNotificationData data = alarmNotificationData[type]!;
 

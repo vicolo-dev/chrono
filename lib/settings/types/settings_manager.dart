@@ -1,7 +1,5 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
 class SettingsManager {
-  // static final Map<String, void Function()> _listeners = {};
+  static final Map<String, void Function()> _listeners = {};
 
   // static SharedPreferences? get preferences {
   //   if (_preferences == null) {
@@ -18,15 +16,15 @@ class SettingsManager {
   //   await _preferences?.reload();
   // }
 
-  // static void addOnChangeListener(String key, void Function() listener) {
-  //   _listeners[key] = listener;
-  // }
+  static void addOnChangeListener(String key, void Function() listener) {
+    _listeners[key] = listener;
+  }
 
-  // static void removeOnChangeListener(String key) {
-  //   _listeners.remove(key);
-  // }
+  static void removeOnChangeListener(String key) {
+    _listeners.remove(key);
+  }
 
-  // static void notifyListeners(String key) {
-  //   _listeners[key]?.call();
-  // }
+  static void notifyListeners(String key) {
+    _listeners[key]?.call();
+  }
 }

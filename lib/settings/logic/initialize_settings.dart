@@ -1,11 +1,9 @@
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/settings/types/settings_manager.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> initializeSettings() async {
   // await SettingsManager.initialize();
