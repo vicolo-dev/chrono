@@ -64,11 +64,9 @@ class Settings {
 
   void save(String key) {
     GetStorage().write(key, json.encode(toJson()));
-    print("Saved ${json.encode(toJson())}");
   }
 
   void load(String key) {
     fromJson(json.decode(GetStorage().read(key)));
-    print("Loaded ${json.encode(toJson())}");
   }
 }

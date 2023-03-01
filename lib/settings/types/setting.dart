@@ -325,12 +325,15 @@ class ToggleSetting<T> extends Setting<List<bool>> {
     String name,
     this.options, {
     void Function(BuildContext, List<bool>)? onChange,
+    List<bool> defaultValue = const [],
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(
           name,
           description,
-          List.generate(options.length, (index) => index == 0),
+          defaultValue.length == options.length
+              ? defaultValue
+              : List.generate(options.length, (index) => index == 0),
           onChange,
           enableConditions,
         );
@@ -340,6 +343,7 @@ class ToggleSetting<T> extends Setting<List<bool>> {
     return ToggleSetting(
       name,
       options,
+      defaultValue: _value,
       onChange: onChange,
       description: description,
       enableConditions: enableConditions,
