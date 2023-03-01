@@ -23,7 +23,12 @@ class SelectBottomSheet extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.7,
       child: Container(
-        color: Theme.of(context).colorScheme.background,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          borderRadius:
+              (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
+                  .borderRadius,
+        ),
         child: Column(
           children: [
             const SizedBox(height: 12.0),

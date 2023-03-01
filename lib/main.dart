@@ -22,8 +22,10 @@ import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/input.dart';
 import 'package:clock_app/theme/shadow.dart';
+import 'package:clock_app/theme/snackbar.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:flutter/material.dart';
@@ -132,12 +134,8 @@ class _AppState extends State<App> {
           bodyColor: colorScheme.onBackground,
           displayColor: colorScheme.onBackground,
         ),
-        snackBarTheme: _theme.snackBarTheme.copyWith(
-          backgroundColor: colorScheme.primary,
-          contentTextStyle: _theme.snackBarTheme.contentTextStyle!.apply(
-            color: colorScheme.onSurface,
-          ),
-        ),
+        snackBarTheme: getSnackBarTheme(
+            colorScheme, _theme.toggleButtonsTheme.borderRadius!),
         inputDecorationTheme:
             getInputTheme(colorScheme, _theme.toggleButtonsTheme.borderRadius!),
       );
@@ -161,13 +159,7 @@ class _AppState extends State<App> {
       );
       _theme = _theme.copyWith(
         cardTheme: _theme.cardTheme.copyWith(shape: shape),
-        bottomSheetTheme: _theme.bottomSheetTheme.copyWith(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(radius),
-            ),
-          ),
-        ),
+        bottomSheetTheme: getBottomSheetTheme(Radius.circular(radius)),
         timePickerTheme: _theme.timePickerTheme.copyWith(
           shape: shape,
           dayPeriodShape: shape,
@@ -176,6 +168,8 @@ class _AppState extends State<App> {
         toggleButtonsTheme: _theme.toggleButtonsTheme.copyWith(
           borderRadius: BorderRadius.circular(radius),
         ),
+        snackBarTheme:
+            getSnackBarTheme(_theme.colorScheme, BorderRadius.circular(radius)),
         inputDecorationTheme:
             getInputTheme(_theme.colorScheme, BorderRadius.circular(radius)),
       );

@@ -26,11 +26,11 @@ ThemeData defaultTheme = ThemeData(
     timePickerTheme: timePickerTheme,
     dialogTheme: dialogTheme,
     switchTheme: switchTheme,
-    snackBarTheme: snackBarTheme,
+    snackBarTheme: getSnackBarTheme(lightColorScheme, defaultBorderRadius),
     inputDecorationTheme: getInputTheme(lightColorScheme, defaultBorderRadius),
     radioTheme: radioTheme,
     sliderTheme: sliderTheme,
-    bottomSheetTheme: bottomSheetTheme,
+    bottomSheetTheme: getBottomSheetTheme(defaultBorderRadius.topLeft),
     toggleButtonsTheme: toggleButtonsTheme,
     extensions: const <ThemeExtension<ShadowStyle>>[ShadowStyle()]
 

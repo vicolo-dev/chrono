@@ -38,7 +38,12 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
-        color: Theme.of(context).colorScheme.background,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          borderRadius:
+              (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
+                  .borderRadius,
+        ),
         child: Wrap(
           children: [
             Column(

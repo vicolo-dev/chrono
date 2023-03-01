@@ -44,8 +44,11 @@ class _SelectCardState<T> extends State<SelectCard<T>> {
         context: context,
         isScrollControlled: true,
         enableDrag: true,
-        // shape:
-        //     const RoundedRectangleBorder(borderRadius: Theme.of(context).cardTheme.shape as),
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.vertical(
+        //     top: Radius.circular(16),
+        //   ),
+        // ),
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {

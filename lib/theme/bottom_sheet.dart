@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
-const bottomSheetTheme = BottomSheetThemeData(
-    shape: RoundedRectangleBorder(
+BottomSheetThemeData getBottomSheetTheme(Radius borderRadius) =>
+    BottomSheetThemeData(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-  top: Radius.circular(12),
-)));
+          top: borderRadius,
+        ),
+      ),
+    );

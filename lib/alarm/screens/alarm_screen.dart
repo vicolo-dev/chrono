@@ -76,7 +76,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
             height: 28,
             child: Text('Alarm will ring $hoursText$minutesText')),
         margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
-        shape: defaultShape,
         elevation: 2,
         dismissDirection: DismissDirection.none,
       );
