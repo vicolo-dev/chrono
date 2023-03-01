@@ -22,6 +22,7 @@ import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/theme/input.dart';
 import 'package:clock_app/theme/shadow.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
@@ -137,6 +138,8 @@ class _AppState extends State<App> {
             color: colorScheme.onSurface,
           ),
         ),
+        inputDecorationTheme:
+            getInputTheme(colorScheme, _theme.toggleButtonsTheme.borderRadius!),
       );
     });
   }
@@ -173,6 +176,8 @@ class _AppState extends State<App> {
         toggleButtonsTheme: _theme.toggleButtonsTheme.copyWith(
           borderRadius: BorderRadius.circular(radius),
         ),
+        inputDecorationTheme:
+            getInputTheme(_theme.colorScheme, BorderRadius.circular(radius)),
       );
     });
   }

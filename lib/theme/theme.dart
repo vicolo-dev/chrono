@@ -1,3 +1,4 @@
+import 'package:clock_app/theme/border.dart';
 import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/card.dart';
 import 'package:clock_app/theme/color.dart';
@@ -26,7 +27,7 @@ ThemeData defaultTheme = ThemeData(
     dialogTheme: dialogTheme,
     switchTheme: switchTheme,
     snackBarTheme: snackBarTheme,
-    inputDecorationTheme: inputTheme,
+    inputDecorationTheme: getInputTheme(lightColorScheme, defaultBorderRadius),
     radioTheme: radioTheme,
     sliderTheme: sliderTheme,
     bottomSheetTheme: bottomSheetTheme,
