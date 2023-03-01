@@ -1,6 +1,5 @@
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/select_option_card.dart';
-import 'package:clock_app/theme/border.dart';
 import 'package:flutter/material.dart';
 
 class SelectBottomSheet extends StatelessWidget {
@@ -81,7 +80,7 @@ class SelectBottomSheet extends StatelessWidget {
                       })
                   : GridView.builder(
                       itemCount: choices.length,
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 5,

@@ -1,9 +1,7 @@
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/input_card.dart';
-import 'package:clock_app/common/widgets/slider_card.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class StringSettingCard extends StatefulWidget {
   final StringSetting setting;

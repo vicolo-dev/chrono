@@ -1,11 +1,7 @@
-import 'package:clock_app/clock/widgets/timezone_card_content.dart';
-import 'package:clock_app/common/widgets/delete_action_pane.dart';
-import 'package:flutter/material.dart';
-
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:timezone/timezone.dart' as timezone;
-
 import 'package:clock_app/clock/types/city.dart';
+import 'package:clock_app/clock/widgets/timezone_card_content.dart';
+import 'package:flutter/material.dart';
+import 'package:timezone/timezone.dart' as timezone;
 
 class TimeZoneCard extends StatelessWidget {
   TimeZoneCard({

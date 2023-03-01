@@ -1,21 +1,17 @@
-import 'dart:ui';
-
 import 'package:clock_app/theme/bottom_sheet.dart';
-import 'package:clock_app/theme/font.dart';
-import 'package:clock_app/theme/shadow.dart';
-import 'package:clock_app/theme/slider.dart';
-import 'package:clock_app/theme/toggle_buttons.dart';
-import 'package:flutter/material.dart';
-
-import 'package:clock_app/theme/radio.dart';
-import 'package:clock_app/theme/input.dart';
 import 'package:clock_app/theme/card.dart';
 import 'package:clock_app/theme/color.dart';
-import 'package:clock_app/theme/text.dart';
 import 'package:clock_app/theme/dialog.dart';
+import 'package:clock_app/theme/input.dart';
+import 'package:clock_app/theme/radio.dart';
+import 'package:clock_app/theme/shadow.dart';
+import 'package:clock_app/theme/slider.dart';
 import 'package:clock_app/theme/snackbar.dart';
 import 'package:clock_app/theme/switch.dart';
+import 'package:clock_app/theme/text.dart';
 import 'package:clock_app/theme/time_picker.dart';
+import 'package:clock_app/theme/toggle_buttons.dart';
+import 'package:flutter/material.dart';
 
 ThemeData defaultTheme = ThemeData(
     fontFamily: 'Rubik',

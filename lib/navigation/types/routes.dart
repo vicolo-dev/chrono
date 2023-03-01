@@ -20,4 +20,10 @@ class Routes {
     App.navigatorKey.currentState?.pop();
     _currentRoute = _previousRoute;
   }
+
+  static void popIf(String? route) {
+    if (Routes.currentRoute == route) {
+      Routes.pop();
+    }
+  }
 }

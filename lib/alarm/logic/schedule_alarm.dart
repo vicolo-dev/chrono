@@ -2,7 +2,6 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:intl/intl.dart';
 
 enum ScheduledNotificationType {
   alarm,
@@ -29,7 +28,7 @@ Future<void> scheduleAlarm(
     params: <String, String>{
       'scheduleId': scheduleId.toString(),
       'timeOfDay': startDate.toTimeOfDay().encode(),
-      'type': type.toString(),
+      'type': type.name,
     },
   );
 }

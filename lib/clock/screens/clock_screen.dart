@@ -1,16 +1,13 @@
-import 'package:clock_app/clock/widgets/timezone_card.dart';
-import 'package:clock_app/main.dart';
-import 'package:clock_app/theme/color.dart';
-import 'package:flutter/material.dart';
-
-import 'package:clock_app/common/types/list_controller.dart';
-import 'package:clock_app/common/widgets/persistent_list_view.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/clock/screens/search_city_screen.dart';
 import 'package:clock_app/clock/types/city.dart';
+import 'package:clock_app/clock/widgets/timezone_card.dart';
+import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/widgets/clock.dart';
 import 'package:clock_app/common/widgets/fab.dart';
+import 'package:clock_app/common/widgets/persistent_list_view.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:flutter/material.dart';
 
 class ClockScreen extends StatefulWidget {
   const ClockScreen({Key? key}) : super(key: key);

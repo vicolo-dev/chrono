@@ -10,13 +10,13 @@ class TimeInputField extends StatefulWidget {
 }
 
 class _TimeInputFieldState extends State<TimeInputField> {
-  TextEditingController _txtTimeController = TextEditingController();
+  final TextEditingController _txtTimeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: _txtTimeController,
-      keyboardType: TextInputType.numberWithOptions(decimal: false),
+      keyboardType: const TextInputType.numberWithOptions(decimal: false),
       style: Theme.of(context).textTheme.displayMedium,
       showCursor: false,
       decoration: InputDecoration(

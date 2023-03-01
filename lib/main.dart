@@ -1,37 +1,33 @@
 import 'dart:core';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
-import 'package:clock_app/audio/types/ringtone_manager.dart';
-import 'package:clock_app/common/logic/lock_screen_flags.dart';
-import 'package:clock_app/navigation/data/route_observer.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/settings/types/settings_manager.dart';
-import 'package:clock_app/theme/color.dart';
-import 'package:clock_app/theme/shadow.dart';
-import 'package:clock_app/timer/screens/timer_notification_screen.dart';
-import 'package:flutter/material.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter_boot_receiver/flutter_boot_receiver.dart';
-import 'package:timezone/data/latest_all.dart';
-
+import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/logic/handle_boot.dart';
+import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
+import 'package:clock_app/audio/types/ringtone_manager.dart';
+import 'package:clock_app/audio/types/ringtone_player.dart';
+import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/common/data/paths.dart';
+import 'package:clock_app/common/logic/lock_screen_flags.dart';
+import 'package:clock_app/navigation/data/route_observer.dart';
+import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/logic/notifications.dart';
-import 'package:clock_app/settings/logic/initialize_settings.dart';
-import 'package:clock_app/theme/theme.dart';
-import 'package:clock_app/navigation/screens/nav_scaffold.dart';
-import 'package:clock_app/clock/logic/timezone_database.dart';
-import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
-import 'package:clock_app/audio/types/ringtone_player.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/logic/initialize_settings.dart';
+import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/theme/shadow.dart';
+import 'package:clock_app/theme/theme.dart';
+import 'package:clock_app/timer/screens/timer_notification_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_boot_receiver/flutter_boot_receiver.dart';
+import 'package:timezone/data/latest_all.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,13 +42,12 @@ void main() async {
   await initializeAudioSession();
   await BootReceiver.initialize(handleBoot);
   await initializeNotifications();
-  AppVisibilityListener.initialize();
+  AppVisibility.initialize();
   await LockScreenFlagManager.initialize();
 
   ReceivePort receivePort = ReceivePort();
   IsolateNameServer.registerPortWithName(receivePort.sendPort, updatePortName);
   receivePort.listen((message) {
-    print("Main Isolate Received: $message");
     if (message == "updateAlarms") {
       SettingsManager.notifyListeners("alarms");
     } else if (message == "updateTimers") {
@@ -67,8 +62,6 @@ void main() async {
     file.createSync();
   }
   file.writeAsStringSync("", mode: FileMode.writeOnly);
-
-  print("Main Isolate: ${Service.getIsolateID(Isolate.current)}");
 
   runApp(const App());
 }

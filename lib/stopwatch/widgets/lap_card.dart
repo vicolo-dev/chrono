@@ -14,8 +14,6 @@ class LapCard extends StatefulWidget {
 class _LapCardState extends State<LapCard> {
   @override
   void initState() {
-    print("eeyup");
-
     super.initState();
     // widget.onInit?.call();
   }
@@ -27,7 +25,7 @@ class _LapCardState extends State<LapCard> {
       child: Row(
         children: [
           Text('${widget.lap.number}'),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

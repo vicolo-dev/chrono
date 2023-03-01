@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:ui' show Color;
-
 import 'package:flutter/material.dart';
 
 /// An interactive button within either material's [BottomNavBar]
@@ -28,8 +26,7 @@ class BottomNavBarItem {
     Widget? activeIcon,
     this.backgroundColor,
     this.tooltip,
-  })  : activeIcon = activeIcon ?? icon,
-        assert(icon != null);
+  }) : activeIcon = activeIcon ?? icon;
 
   /// The icon of the item.
   ///

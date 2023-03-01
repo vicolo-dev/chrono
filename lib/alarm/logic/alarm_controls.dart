@@ -1,9 +1,12 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:get_storage/get_storage.dart';
+
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/alarm/types/ringing_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
@@ -12,100 +15,32 @@ import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
-import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
-import 'package:get_storage/get_storage.dart';
 
-const String stopAlarmPortName = "13";
-const String updatePortName = "d";
-
-int ringingAlarmId = -1;
-List<int> ringingTimerIds = [];
-bool isAlarmUpdating = false;
-bool isTimerUpdating = false;
-
-void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
-  if (!isAlarmUpdating) {
-    isAlarmUpdating = true;
-    await updateAlarms();
-    SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
-    sendPort?.send("updateAlarms");
-    isAlarmUpdating = false;
-  }
-
-  GetStorage().write("fullScreenNotificationRecentlyShown", true);
-
-  if (ringingTimerIds.isNotEmpty) {
-    RingtonePlayer.pause();
-  }
-
-  if (ringingAlarmId != -1) {
-    await AlarmNotificationManager.removeNotification(
-        ScheduledNotificationType.alarm);
-  }
-
-  RingtonePlayer.playAlarm(getAlarmByScheduleId(scheduleId));
-
-  ringingAlarmId = scheduleId;
-
-  AlarmNotificationManager.showFullScreenNotification(
-    ScheduledNotificationType.alarm,
-    [ringingAlarmId],
-    "Alarm Ringing...",
-    TimeOfDayUtils.decode(params['timeOfDay']).formatToString('h:mm a'),
-  );
-}
-
-void triggerTimer(int scheduleId, Map<String, dynamic> params) async {
-  if (!isTimerUpdating) {
-    isTimerUpdating = true;
-    await updateTimers();
-    SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
-    sendPort?.send("updateTimers");
-    isTimerUpdating = false;
-  }
-
-  GetStorage().write("fullScreenNotificationRecentlyShown", true);
-
-  if (ringingAlarmId != -1) {
-    RingtonePlayer.pause();
-  }
-
-  if (ringingTimerIds.isNotEmpty) {
-    await AlarmNotificationManager.removeNotification(
-        ScheduledNotificationType.timer);
-  }
-
-  ClockTimer timer = getTimerById(scheduleId);
-
-  RingtonePlayer.playTimer(timer);
-
-  ringingTimerIds.add(scheduleId);
-
-  AlarmNotificationManager.showFullScreenNotification(
-      ScheduledNotificationType.timer,
-      ringingTimerIds,
-      "Time's Up!",
-      "${ringingTimerIds.length} Timer${ringingTimerIds.length > 1 ? 's' : ''}");
-}
+// For some reason, the ports stop stops working when we hot restart the app and only works
+// again when we close and reopen the app. As a workaround, we can update the port
+// name to a new value before hot restarting the app.
+const String stopAlarmPortName = "14";
+const String updatePortName = "e";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(
     int scheduleId, Map<String, dynamic> params) async {
-  print("ringingAlarmId: $ringingAlarmId");
+  print("ringingAlarmId: ${RingingManager.ringingAlarmId}");
   print("Alarm triggered: $scheduleId");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
 
   ScheduledNotificationType notificationType =
-      ScheduledNotificationType.values.firstWhere(
-    (element) => element.toString() == params['type'],
-  );
+      ScheduledNotificationType.values.byName(params['type']);
 
+  // This code listens for a message from the main isolate to stop the notification
+  // For some reason, this stops working when we hot restart the app and only works
+  // again when we close and reopen the app. As a workaround, we can update the port
+  // name to a new value before hot restarting the app.
   ReceivePort receivePort = ReceivePort();
   IsolateNameServer.registerPortWithName(
       receivePort.sendPort, stopAlarmPortName);
   receivePort.listen((message) {
-    print("${message[0]} - ${message[1]} - ${message[2]}");
     stopScheduledNotification(message);
   });
 
@@ -122,51 +57,117 @@ void triggerScheduledNotification(
   }
 }
 
-void stopAlarm(int scheduleId, AlarmStopAction action) async {
-  if (action == AlarmStopAction.snooze) {
-    Alarm alarm = getAlarmByScheduleId(scheduleId);
-    Duration snoozeDuration = Duration(minutes: alarm.snoozeLength.floor());
-
-    scheduleSnoozeAlarm(
-        scheduleId, snoozeDuration, ScheduledNotificationType.alarm);
-  } else {
-    updateAlarms();
-    if (ringingTimerIds.isNotEmpty) {
-      RingtonePlayer.playTimer(getTimerById(ringingTimerIds.first));
-    }
-  }
-  ringingAlarmId = -1;
-}
-
-void stopTimer(int scheduleId, AlarmStopAction action) async {
-  if (action == AlarmStopAction.snooze) {
-    Duration snoozeDuration = const Duration(minutes: 1);
-    scheduleSnoozeAlarm(
-        scheduleId, snoozeDuration, ScheduledNotificationType.timer);
-  } else {
-    updateTimers();
-    if (ringingAlarmId != -1) {
-      RingtonePlayer.playAlarm(getAlarmByScheduleId(ringingAlarmId));
-    }
-  }
-  ringingTimerIds = [];
-}
-
 void stopScheduledNotification(List<dynamic> message) {
   int scheduleId = message[0];
   RingtonePlayer.stop();
-  AlarmStopAction action = AlarmStopAction.values.firstWhere(
-    (element) => element.toString() == message[2],
-  );
+  AlarmStopAction action = AlarmStopAction.values.byName(message[2]);
 
   ScheduledNotificationType notificationType =
-      ScheduledNotificationType.values.firstWhere(
-    (element) => element.toString() == message[1],
-  );
+      ScheduledNotificationType.values.byName(message[1]);
 
   if (notificationType == ScheduledNotificationType.alarm) {
     stopAlarm(scheduleId, action);
   } else if (notificationType == ScheduledNotificationType.timer) {
     stopTimer(scheduleId, action);
   }
+}
+
+void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
+  await updateAlarms();
+  // Notify the frontend to update the alarms
+  SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
+  sendPort?.send("updateAlarms");
+
+  GetStorage().write("fullScreenNotificationRecentlyShown", true);
+
+  // Pause any currently ringing timers. We will continue them after the alarm
+  // is dismissed
+  if (RingingManager.isTimerRinging) {
+    RingtonePlayer.pause();
+  }
+
+  // Remove any existing alarm notifications
+  if (RingingManager.isAlarmRinging) {
+    await AlarmNotificationManager.removeNotification(
+        ScheduledNotificationType.alarm);
+  }
+
+  RingtonePlayer.playAlarm(getAlarmByScheduleId(scheduleId));
+  RingingManager.ringAlarm(scheduleId);
+
+  AlarmNotificationManager.showFullScreenNotification(
+    type: ScheduledNotificationType.alarm,
+    scheduleIds: [scheduleId],
+    title: "Alarm Ringing...",
+    body: TimeOfDayUtils.decode(params['timeOfDay']).formatToString('h:mm a'),
+  );
+}
+
+void stopAlarm(int scheduleId, AlarmStopAction action) async {
+  if (action == AlarmStopAction.snooze) {
+    Alarm alarm = getAlarmByScheduleId(scheduleId);
+    scheduleSnoozeAlarm(
+      scheduleId,
+      Duration(minutes: alarm.snoozeLength.floor()),
+      ScheduledNotificationType.alarm,
+    );
+  } else if (action == AlarmStopAction.dismiss) {
+    // updateAlarms();
+    // If there was a timer ringing when the alarm was triggered, resume it now
+    if (RingingManager.isTimerRinging) {
+      RingtonePlayer.playTimer(getTimerById(RingingManager.activeTimerId));
+    }
+  }
+  RingingManager.stopAlarm();
+}
+
+void triggerTimer(int scheduleId, Map<String, dynamic> params) async {
+  await updateTimers();
+  // Notify the front-end to update the timers
+  SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
+  sendPort?.send("updateTimers");
+
+  GetStorage().write("fullScreenNotificationRecentlyShown", true);
+
+  // Pause any currently ringing alarms. We will continue them after the timer
+  // is dismissed
+  if (RingingManager.isAlarmRinging) {
+    RingtonePlayer.pause();
+  }
+
+  // Remove any existing timer notifications
+  if (RingingManager.isTimerRinging) {
+    await AlarmNotificationManager.removeNotification(
+        ScheduledNotificationType.timer);
+  }
+
+  RingtonePlayer.playTimer(getTimerById(scheduleId));
+  RingingManager.ringTimer(scheduleId);
+
+  AlarmNotificationManager.showFullScreenNotification(
+    type: ScheduledNotificationType.timer,
+    scheduleIds: RingingManager.ringingTimerIds,
+    title: "Time's Up!",
+    body:
+        "${RingingManager.ringingTimerIds.length} Timer${RingingManager.ringingTimerIds.length > 1 ? 's' : ''}",
+  );
+}
+
+void stopTimer(int scheduleId, AlarmStopAction action) async {
+  if (action == AlarmStopAction.snooze) {
+    scheduleSnoozeAlarm(
+      scheduleId,
+      const Duration(minutes: 1),
+      ScheduledNotificationType.timer,
+    );
+  } else if (action == AlarmStopAction.dismiss) {
+    // updateTimers();
+    // If there was an alarm already ringing when the timer was triggered, we
+    // need to resume it now
+    if (RingingManager.isAlarmRinging) {
+      RingtonePlayer.playAlarm(
+          getAlarmByScheduleId(RingingManager.ringingAlarmId));
+    }
+  }
+  RingingManager.stopAllTimers();
 }

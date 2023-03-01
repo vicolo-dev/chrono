@@ -4,7 +4,6 @@ import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/types/list_item.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';

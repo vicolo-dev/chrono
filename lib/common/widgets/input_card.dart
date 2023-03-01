@@ -1,7 +1,4 @@
-import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/input_bottom_sheet.dart';
-import 'package:clock_app/theme/border.dart';
-import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class InputCard<T> extends StatefulWidget {

@@ -2,7 +2,6 @@ import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/settings.dart';
 import 'package:flutter/material.dart';
 
 class WeekdaySchedule extends JsonSerializable {

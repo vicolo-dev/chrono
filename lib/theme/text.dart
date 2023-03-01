@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-
-import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/theme/font.dart';
+import 'package:flutter/material.dart';
 
 TextTheme textTheme = const TextTheme(
   titleLarge: TextStyle(

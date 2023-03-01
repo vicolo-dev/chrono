@@ -1,4 +1,3 @@
-import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/common/types/timer_state.dart';
 import 'package:clock_app/common/utils/duration.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';

@@ -2,7 +2,6 @@ import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
 import 'package:clock_app/navigation/widgets/nav_bar.dart';
 import 'package:clock_app/navigation/widgets/nav_bar_item.dart';
-import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class AppNavigationBar extends StatefulWidget {

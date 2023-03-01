@@ -8,7 +8,6 @@ import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
-import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class CustomizeAlarmScreen extends StatefulWidget {

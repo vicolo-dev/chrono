@@ -1,12 +1,6 @@
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
-import 'package:clock_app/alarm/utils/alarm_id.dart';
-import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
-import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:clock_app/common/widgets/clock_display.dart';
-import 'package:clock_app/navigation/types/alignment.dart';
-import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
 import 'package:flutter/material.dart';
 

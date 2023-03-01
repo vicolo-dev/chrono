@@ -1,4 +1,3 @@
-import 'package:clock_app/main.dart';
 import 'package:flutter/material.dart';
 
 class AppTopBar extends StatelessWidget implements PreferredSizeWidget {

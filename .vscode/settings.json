@@ -1,3 +1,14 @@
 {
-  "cSpell.words": ["fullscreen", "Layouter", "RGBO", "Tappable", "Unmanaged"]
+  "cSpell.words": [
+    "Animatable",
+    "Cupertino",
+    "dartpad",
+    "fullscreen",
+    "Layouter",
+    "LTWH",
+    "RGBO",
+    "sublist",
+    "Tappable",
+    "Unmanaged"
+  ]
 }

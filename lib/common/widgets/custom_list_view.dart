@@ -1,11 +1,7 @@
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_item.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/list_item_card.dart';
-import 'package:clock_app/navigation/data/route_observer.dart';
-import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';

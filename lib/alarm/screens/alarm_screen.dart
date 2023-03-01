@@ -2,13 +2,11 @@ import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
 import 'package:clock_app/common/types/list_controller.dart';
-import 'package:clock_app/common/widgets/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/persistent_list_view.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:great_list_view/great_list_view.dart';
 
 typedef AlarmCardBuilder = Widget Function(
@@ -104,7 +102,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
         if (timePickerResult.isCustomize) {
           alarm = await onCustomize(alarm) ?? alarm;
         }
-        print("add item");
         _listController.addItem(alarm);
       }
     }
@@ -120,7 +117,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
           ),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
           onAddItem: (alarm) {
-            print("added");
             alarm.schedule();
             _showNextScheduleSnackBar(alarm);
           },

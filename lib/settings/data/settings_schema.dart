@@ -1,13 +1,10 @@
-import 'dart:ui';
-
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/main.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
-
-import 'package:clock_app/settings/types/setting.dart';
 
 List<SettingItem> settingsItems = [
   SettingGroup(

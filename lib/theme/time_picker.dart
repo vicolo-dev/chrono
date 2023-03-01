@@ -1,4 +1,3 @@
-import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/theme/shape.dart';
 import 'package:clock_app/theme/text.dart';
 import 'package:flutter/material.dart';

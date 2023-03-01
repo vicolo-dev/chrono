@@ -27,7 +27,7 @@ class TimeDuration extends JsonSerializable {
       : hours = (milliseconds / 3600000).floor(),
         minutes = ((milliseconds % 3600000) / 60000).floor(),
         seconds = ((milliseconds % 3600000) % 60000 / 1000).floor(),
-        milliseconds = ((milliseconds % 3600000) % 60000 % 1000).floor() {}
+        milliseconds = ((milliseconds % 3600000) % 60000 % 1000).floor();
 
   Duration get toDuration => Duration(
       hours: hours,

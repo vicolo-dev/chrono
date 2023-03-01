@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 
-import 'package:clock_app/theme/color.dart';
+import 'package:clock_app/common/widgets/circular_progress_bar.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
-import 'package:clock_app/common/widgets/circular_progress_bar.dart';
+import 'package:flutter/material.dart';
 
 class TimerCard extends StatefulWidget {
   const TimerCard({

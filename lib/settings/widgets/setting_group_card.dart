@@ -1,9 +1,8 @@
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/settings/screens/settings_group_screen.dart';
-import 'package:clock_app/settings/types/settings.dart';
-import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/settings.dart';
 import 'package:flutter/material.dart';
 
 class SettingGroupCard extends StatelessWidget {

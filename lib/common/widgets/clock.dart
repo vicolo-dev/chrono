@@ -1,10 +1,7 @@
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:flutter/material.dart';
-
 import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;
-
-import 'package:clock_app/clock/types/time.dart';
 
 import 'clock_display.dart';
 

@@ -1,10 +1,8 @@
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import 'package:clock_app/theme/color.dart';
-import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/theme/text.dart';
+import 'package:clock_app/timer/types/time_duration.dart';
+import 'package:flutter/material.dart';
 
 class DialDurationPicker extends StatefulWidget {
   const DialDurationPicker(

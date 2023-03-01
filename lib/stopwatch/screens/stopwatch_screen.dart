@@ -1,19 +1,14 @@
 import 'package:clock_app/common/types/list_controller.dart';
-import 'package:clock_app/common/widgets/custom_list_view.dart';
-import 'package:clock_app/common/widgets/persistent_list_view.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-
-import 'package:great_list_view/great_list_view.dart';
-import 'package:timer_builder/timer_builder.dart';
-
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/common/widgets/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
-import 'package:clock_app/common/widgets/list_item_measurer.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/stopwatch/widgets/lap_card.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:timer_builder/timer_builder.dart';
 
 class StopwatchScreen extends StatefulWidget {
   const StopwatchScreen({Key? key}) : super(key: key);

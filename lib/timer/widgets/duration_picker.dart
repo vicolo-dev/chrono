@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
-import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/widgets/dial_duration_picker.dart';
+import 'package:flutter/material.dart';
 
 Future<TimeDuration?> showDurationPicker(BuildContext context) {
   return showDialog<TimeDuration>(

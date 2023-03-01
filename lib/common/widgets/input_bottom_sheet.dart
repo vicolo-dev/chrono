@@ -1,6 +1,3 @@
-import 'package:clock_app/common/types/select_choice.dart';
-import 'package:clock_app/common/widgets/select_option_card.dart';
-import 'package:clock_app/theme/border.dart';
 import 'package:flutter/material.dart';
 
 class InputBottomSheet extends StatefulWidget {
@@ -93,7 +90,7 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                           border: InputBorder.none,
                           hintText: widget.hintText,
                           contentPadding:
-                              EdgeInsets.symmetric(horizontal: 16.0),
+                              const EdgeInsets.symmetric(horizontal: 16.0),
                         ),
                       ),
                       Row(mainAxisAlignment: MainAxisAlignment.end, children: [

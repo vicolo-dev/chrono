@@ -1,5 +1,3 @@
-import 'package:clock_app/theme/border.dart';
-import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class ToggleOption<T> {

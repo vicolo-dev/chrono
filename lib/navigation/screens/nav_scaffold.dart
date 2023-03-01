@@ -1,11 +1,9 @@
+import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
+import 'package:clock_app/navigation/widgets/app_navigation_bar.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/screens/settings_screen.dart';
-import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
-
-import 'package:clock_app/navigation/widgets/app_navigation_bar.dart';
-import 'package:clock_app/icons/flux_icons.dart';
 
 class NavScaffold extends StatefulWidget {
   const NavScaffold({super.key});
