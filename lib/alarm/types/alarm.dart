@@ -132,7 +132,7 @@ class Alarm extends ListItem {
       : _timeOfDay = TimeOfDayUtils.fromJson(json['timeOfDay']),
         _enabled = json['enabled'],
         _settings = alarmSettingsSchema.copy() {
-    _settings.load(json['settings']);
+    _settings.fromJson(json['settings']);
     _schedules = [
       OnceAlarmSchedule.fromJson(json['schedules'][0]),
       DailyAlarmSchedule.fromJson(json['schedules'][1]),

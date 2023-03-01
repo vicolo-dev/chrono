@@ -18,6 +18,7 @@ List<Widget> getSettingWidgets(
   bool showSummaryView = false,
   bool showExpandedView = false,
   VoidCallback? checkDependentEnableConditions,
+  VoidCallback? onSettingChanged,
 }) {
   List<SettingItem> items = settingItems ?? settings.items;
 
@@ -29,6 +30,7 @@ List<Widget> getSettingWidgets(
       showSummaryView: showSummaryView,
       checkDependentEnableConditions: checkDependentEnableConditions,
       showExpandedView: showExpandedView,
+      onSettingChanged: onSettingChanged,
     );
     if (widget != null) {
       widgets.add(widget);
@@ -43,6 +45,7 @@ Widget? getSettingWidget(
   bool showSummaryView = false,
   bool showExpandedView = false,
   VoidCallback? checkDependentEnableConditions,
+  VoidCallback? onSettingChanged,
 }) {
   if (item is SettingGroup) {
     return SettingGroupCard(
@@ -50,6 +53,7 @@ Widget? getSettingWidget(
       settingGroup: item,
       checkDependentEnableConditions: checkDependentEnableConditions,
       showExpandedView: showExpandedView,
+      onSettingChanged: onSettingChanged,
     );
   } else if (item is Setting) {
     if (item.enableConditions.isNotEmpty) {
@@ -79,6 +83,7 @@ Widget? getSettingWidget(
           listener(value);
         }
       }
+      onSettingChanged?.call();
     }
 
     if (item is SelectSetting) {

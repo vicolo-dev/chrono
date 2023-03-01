@@ -9,6 +9,7 @@ class SettingGroupCard extends StatelessWidget {
   final SettingGroup settingGroup;
   final Settings settings;
   final VoidCallback? checkDependentEnableConditions;
+  final VoidCallback? onSettingChanged;
   final bool showExpandedView;
 
   // final VoidCallback onTap;
@@ -19,6 +20,7 @@ class SettingGroupCard extends StatelessWidget {
     required this.settings,
     this.checkDependentEnableConditions,
     this.showExpandedView = false,
+    this.onSettingChanged,
   }) : super(key: key);
 
   @override
@@ -69,6 +71,7 @@ class SettingGroupCard extends StatelessWidget {
                   .toList(),
               showSummaryView: true,
               checkDependentEnableConditions: checkDependentEnableConditions,
+              onSettingChanged: onSettingChanged,
             )
           ],
         ),
@@ -105,6 +108,7 @@ class SettingGroupCard extends StatelessWidget {
               settingItems: settingGroup.settingItems,
               showSummaryView: true,
               checkDependentEnableConditions: checkDependentEnableConditions,
+              onSettingChanged: onSettingChanged,
             )
           ],
         ),

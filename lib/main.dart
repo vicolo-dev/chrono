@@ -120,6 +120,14 @@ class _AppState extends State<App> {
   @override
   void initState() {
     NotificationController.setListeners();
+
+    setColorScheme(appSettings.getSetting("Color Scheme").value);
+    setAccentColor(appSettings.getSetting("Accent Color").value);
+    setCardRadius(appSettings.getSetting("Corner Roundness").value);
+    setCardElevation(appSettings.getSetting("Elevation").value);
+    setShadowBlurRadius(appSettings.getSetting("Blur").value);
+    setShadowOpacity(appSettings.getSetting("Opacity").value / 100);
+
     super.initState();
   }
 
@@ -130,6 +138,8 @@ class _AppState extends State<App> {
         scaffoldBackgroundColor: colorScheme.background,
         cardColor: colorScheme.surface,
         dialogBackgroundColor: colorScheme.surface,
+        bottomSheetTheme: getBottomSheetTheme(colorScheme,
+            _theme.toggleButtonsTheme.borderRadius?.bottomLeft ?? Radius.zero),
         textTheme: _theme.textTheme.apply(
           bodyColor: colorScheme.onBackground,
           displayColor: colorScheme.onBackground,
@@ -159,7 +169,8 @@ class _AppState extends State<App> {
       );
       _theme = _theme.copyWith(
         cardTheme: _theme.cardTheme.copyWith(shape: shape),
-        bottomSheetTheme: getBottomSheetTheme(Radius.circular(radius)),
+        bottomSheetTheme:
+            getBottomSheetTheme(_theme.colorScheme, Radius.circular(radius)),
         timePickerTheme: _theme.timePickerTheme.copyWith(
           shape: shape,
           dayPeriodShape: shape,

@@ -30,7 +30,8 @@ ThemeData defaultTheme = ThemeData(
     inputDecorationTheme: getInputTheme(lightColorScheme, defaultBorderRadius),
     radioTheme: radioTheme,
     sliderTheme: sliderTheme,
-    bottomSheetTheme: getBottomSheetTheme(defaultBorderRadius.topLeft),
+    bottomSheetTheme:
+        getBottomSheetTheme(lightColorScheme, defaultBorderRadius.topLeft),
     toggleButtonsTheme: toggleButtonsTheme,
     extensions: const <ThemeExtension<ShadowStyle>>[ShadowStyle()]
 

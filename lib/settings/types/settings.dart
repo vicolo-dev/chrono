@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:get_storage/get_storage.dart';
 
 class Settings {
   List<SettingItem> items;
@@ -53,9 +56,19 @@ class Settings {
     return json;
   }
 
-  void load(Map<String, dynamic> json) {
+  void fromJson(Map<String, dynamic> json) {
     for (var item in items) {
       item.deserialize(json[item.name]);
     }
+  }
+
+  void save(String key) {
+    GetStorage().write(key, json.encode(toJson()));
+    print("Saved ${json.encode(toJson())}");
+  }
+
+  void load(String key) {
+    fromJson(json.decode(GetStorage().read(key)));
+    print("Loaded ${json.encode(toJson())}");
   }
 }
