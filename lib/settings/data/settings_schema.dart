@@ -1,9 +1,13 @@
+import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/main.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/theme/border.dart';
 import 'package:clock_app/theme/color.dart';
+import 'package:clock_app/theme/theme.dart';
+import 'package:clock_app/theme/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 List<SettingItem> settingsItems = [
@@ -70,7 +74,8 @@ List<SettingItem> settingsItems = [
         SettingGroup(
           "Shapes",
           [
-            SliderSetting("Corner Roundness", 0, 36, 16,
+            SliderSetting("Corner Roundness", 0, 36,
+                (defaultTheme.extension<ThemeStyle>()?.borderRadius)!,
                 onChange: (context, radius) {
               App.setCardRadius(context, radius);
             }),
@@ -85,13 +90,19 @@ List<SettingItem> settingsItems = [
                   value ? Theme.of(context).colorScheme.primary : Colors.black);
             },
           ),
-          SliderSetting("Elevation", 0, 20, 1, onChange: (context, elevation) {
+          SliderSetting("Elevation", 0, 10,
+              (defaultTheme.extension<ThemeStyle>()?.shadowElevation)!,
+              onChange: (context, elevation) {
             App.setCardElevation(context, elevation);
           }),
-          SliderSetting("Opacity", 0, 100, 50, onChange: (context, opacity) {
+          SliderSetting("Opacity", 0, 100,
+              (defaultTheme.extension<ThemeStyle>()?.shadowOpacity)! * 100,
+              onChange: (context, opacity) {
             App.setShadowOpacity(context, opacity / 100);
           }),
-          SliderSetting("Blur", 0, 20, 2, onChange: (context, blur) {
+          SliderSetting("Blur", 0, 20,
+              (defaultTheme.extension<ThemeStyle>()?.shadowBlurRadius)!,
+              onChange: (context, blur) {
             App.setShadowBlurRadius(context, blur);
           }),
         ])

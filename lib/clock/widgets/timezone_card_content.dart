@@ -1,4 +1,4 @@
-import 'package:clock_app/common/widgets/clock.dart';
+import 'package:clock_app/common/widgets/clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;

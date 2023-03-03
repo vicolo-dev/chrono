@@ -1,7 +1,7 @@
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/common/widgets/custom_list_view.dart';
+import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart';

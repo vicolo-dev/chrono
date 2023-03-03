@@ -1,5 +1,5 @@
 import 'package:clock_app/clock/types/time.dart';
-import 'package:clock_app/common/widgets/time_display.dart';
+import 'package:clock_app/common/widgets/clock/time_display.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:flutter/material.dart';

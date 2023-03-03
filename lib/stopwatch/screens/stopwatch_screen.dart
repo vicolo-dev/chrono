@@ -1,6 +1,6 @@
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/common/widgets/custom_list_view.dart';
+import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';

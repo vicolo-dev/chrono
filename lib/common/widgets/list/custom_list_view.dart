@@ -1,7 +1,7 @@
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
-import 'package:clock_app/common/widgets/list_item_card.dart';
+import 'package:clock_app/common/widgets/list/list_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -178,7 +178,7 @@ class _CustomListViewState<Item extends ListItem>
       SlidableAutoCloseBehavior(
         child: AutomaticAnimatedListView<Item>(
           list: widget.items,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           comparator: AnimatedListDiffListComparator<Item>(
             sameItem: (a, b) => a.id == b.id,
             sameContent: (a, b) => a.id == b.id,

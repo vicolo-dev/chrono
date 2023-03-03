@@ -3,7 +3,7 @@ import 'package:clock_app/alarm/logic/time_of_day_icon.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:clock_app/common/widgets/clock_display.dart';
+import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';

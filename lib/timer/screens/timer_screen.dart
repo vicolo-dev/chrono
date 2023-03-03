@@ -4,7 +4,7 @@ import 'package:great_list_view/great_list_view.dart';
 
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/widgets/fab.dart';
-import 'package:clock_app/common/widgets/persistent_list_view.dart';
+import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/widgets/duration_picker.dart';

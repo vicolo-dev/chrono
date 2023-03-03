@@ -1,4 +1,4 @@
-import 'package:clock_app/theme/shadow.dart';
+import 'package:clock_app/theme/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
@@ -18,7 +18,7 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ShadowStyle? shadowStyle = Theme.of(context).extension<ShadowStyle>();
+    ThemeStyle? themeStyle = Theme.of(context).extension<ThemeStyle>();
 
     return Container(
       margin: margin ?? const EdgeInsets.all(4),
@@ -30,11 +30,12 @@ class CardContainer extends StatelessWidget {
                 .borderRadius,
         boxShadow: [
           BoxShadow(
-            color: shadowStyle?.color.withOpacity(shadowStyle.opacity) ??
-                Theme.of(context).shadowColor,
-            blurRadius: shadowStyle?.blurRadius ?? 5,
-            offset:
-                Offset(0, (shadowStyle?.elevation ?? 1) * elevationMultiplier),
+            color:
+                themeStyle?.shadowColor.withOpacity(themeStyle.shadowOpacity) ??
+                    Theme.of(context).shadowColor,
+            blurRadius: themeStyle?.shadowBlurRadius ?? 5,
+            offset: Offset(
+                0, (themeStyle?.shadowElevation ?? 1) * elevationMultiplier),
           ),
         ],
       ),
