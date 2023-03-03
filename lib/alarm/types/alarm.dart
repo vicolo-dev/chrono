@@ -7,6 +7,7 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
 List<AlarmSchedule> createSchedules(Settings settings) {
@@ -36,6 +37,10 @@ class Alarm extends ListItem {
   String get ringtoneUri => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
   double get snoozeLength => _settings.getSetting("Length").value;
+  TimeDuration get risingVolumeDuration =>
+      _settings.getSetting("Rising Volume").value
+          ? _settings.getSetting("Time To Full Volume").value
+          : TimeDuration.zero;
   AlarmSchedule get activeSchedule =>
       _schedules.firstWhere((schedule) => schedule.runtimeType == scheduleType);
   List<AlarmRunner> get activeAlarmRunners => activeSchedule.alarmRunners;

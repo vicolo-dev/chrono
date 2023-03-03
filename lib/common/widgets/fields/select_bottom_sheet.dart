@@ -1,5 +1,5 @@
 import 'package:clock_app/common/types/select_choice.dart';
-import 'package:clock_app/common/widgets/select_option_card.dart';
+import 'package:clock_app/common/widgets/fields/select_option_card.dart';
 import 'package:flutter/material.dart';
 
 class SelectBottomSheet extends StatelessWidget {

@@ -1,3 +1,4 @@
+import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
 abstract class SettingItem {
@@ -387,6 +388,38 @@ class DateTimeSetting extends Setting<DateTime> {
       description: description,
       enableConditions: enableConditions,
     );
+  }
+}
+
+class DurationSetting extends Setting<TimeDuration> {
+  DurationSetting(
+    String name,
+    TimeDuration defaultValue, {
+    void Function(BuildContext, TimeDuration)? onChange,
+    String description = "",
+    List<SettingEnableCondition> enableConditions = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions);
+
+  @override
+  DurationSetting copy() {
+    return DurationSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+    );
+  }
+
+  @override
+  dynamic serialize() {
+    return _value.inMilliseconds;
+  }
+
+  @override
+  void deserialize(dynamic value) {
+    print("deserialize duration: $value");
+    _value = TimeDuration.fromMilliseconds(value);
   }
 }
 

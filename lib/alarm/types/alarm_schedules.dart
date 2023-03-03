@@ -9,9 +9,7 @@ class WeekdaySchedule extends JsonSerializable {
   int weekday;
   AlarmRunner alarmRunner;
 
-  WeekdaySchedule(this.weekday) : alarmRunner = AlarmRunner() {
-    print("default constructor");
-  }
+  WeekdaySchedule(this.weekday) : alarmRunner = AlarmRunner();
 
   WeekdaySchedule.fromJson(Map<String, dynamic> json)
       : weekday = json['weekday'],
@@ -172,10 +170,8 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
     List<int> weekdays = _weekdaySetting.selected.toList();
     List<int> existingWeekdays =
         _weekdaySchedules.map((schedule) => schedule.weekday).toList();
-    print("$weekdays : $existingWeekdays");
 
     if (!listEquals(weekdays, existingWeekdays)) {
-      print("equaaaaaaaaals");
       _weekdaySchedules =
           weekdays.map((weekday) => WeekdaySchedule(weekday)).toList();
     }
@@ -183,7 +179,6 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       DateTime alarmDate =
           getWeeklyAlarmDate(timeOfDay, weekdaySchedule.weekday);
-      print("$alarmDate : ${weekdaySchedule.alarmRunner.id}");
       weekdaySchedule.alarmRunner.schedule(
         alarmDate,
         repeatInterval: const Duration(days: 7),

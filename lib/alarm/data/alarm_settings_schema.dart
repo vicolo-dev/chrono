@@ -3,6 +3,7 @@ import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -60,6 +61,11 @@ Settings alarmSettingsSchema = Settings([
             SliderSetting("Volume", 0, 100, 100, unit: "%"),
             SwitchSetting("Rising Volume", false,
                 description: "Gradually increase volume over time"),
+            DurationSetting(
+                "Time To Full Volume", const TimeDuration(minutes: 1),
+                enableConditions: [
+                  SettingEnableCondition("Rising Volume", true)
+                ]),
           ],
         ),
         SwitchSetting("Vibration", false),

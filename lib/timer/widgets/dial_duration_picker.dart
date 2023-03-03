@@ -6,10 +6,14 @@ import 'package:flutter/material.dart';
 
 class DialDurationPicker extends StatefulWidget {
   const DialDurationPicker(
-      {super.key, required this.duration, required this.onChange});
+      {super.key,
+      required this.duration,
+      required this.onChange,
+      this.showHours = true});
 
   final TimeDuration duration;
   final void Function(TimeDuration) onChange;
+  final bool showHours;
 
   @override
   State<DialDurationPicker> createState() => _DialDurationPickerState();
@@ -69,28 +73,29 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
                 Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
           ),
         ),
-        Positioned(
-          left: 80 + leftPadding,
-          top: 80 + leftPadding,
-          child: TimerKnob(
-            maxValue: 24,
-            minValue: 0,
-            value: widget.duration.hours,
-            size: Size(width - 160, width - 160),
-            onChanged: (value) {
-              widget.onChange(TimeDuration(
-                  hours: value,
-                  minutes: widget.duration.minutes,
-                  seconds: widget.duration.seconds));
-            },
-            handleLabel: 'H',
-            handleLabelOffset: 6,
-            divisions: 8,
-            snapDivisions: 24,
-            fillColor:
-                Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+        if (widget.showHours)
+          Positioned(
+            left: 80 + leftPadding,
+            top: 80 + leftPadding,
+            child: TimerKnob(
+              maxValue: 24,
+              minValue: 0,
+              value: widget.duration.hours,
+              size: Size(width - 160, width - 160),
+              onChanged: (value) {
+                widget.onChange(TimeDuration(
+                    hours: value,
+                    minutes: widget.duration.minutes,
+                    seconds: widget.duration.seconds));
+              },
+              handleLabel: 'H',
+              handleLabelOffset: 6,
+              divisions: 8,
+              snapDivisions: 24,
+              fillColor:
+                  Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+            ),
           ),
-        ),
       ],
     );
   }

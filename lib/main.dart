@@ -21,7 +21,7 @@ import 'package:clock_app/notifications/logic/notifications.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/initialize_settings.dart';
-import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/input.dart';
 import 'package:clock_app/theme/shadow.dart';
@@ -49,12 +49,13 @@ void main() async {
   await LockScreenFlagManager.initialize();
 
   ReceivePort receivePort = ReceivePort();
+  IsolateNameServer.removePortNameMapping(updatePortName);
   IsolateNameServer.registerPortWithName(receivePort.sendPort, updatePortName);
   receivePort.listen((message) {
     if (message == "updateAlarms") {
-      SettingsManager.notifyListeners("alarms");
+      ListenerManager.notifyListeners("alarms");
     } else if (message == "updateTimers") {
-      SettingsManager.notifyListeners("timers");
+      ListenerManager.notifyListeners("timers");
     }
   });
 

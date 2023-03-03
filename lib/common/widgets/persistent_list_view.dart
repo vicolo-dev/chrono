@@ -3,7 +3,7 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/custom_list_view.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
-import 'package:clock_app/settings/types/settings_manager.dart';
+import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart';
 
 class PersistentListView<Item extends ListItem> extends StatefulWidget {
@@ -52,7 +52,7 @@ class _PersistentListViewState<Item extends ListItem>
     if (widget.saveTag.isNotEmpty) {
       _items = loadListSync<Item>(widget.saveTag);
     }
-    SettingsManager.addOnChangeListener(widget.saveTag, loadItems);
+    ListenerManager.addOnChangeListener(widget.saveTag, loadItems);
   }
 
   @override
@@ -64,7 +64,7 @@ class _PersistentListViewState<Item extends ListItem>
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
-    SettingsManager.removeOnChangeListener(widget.saveTag);
+    ListenerManager.removeOnChangeListener(widget.saveTag);
     super.dispose();
   }
 

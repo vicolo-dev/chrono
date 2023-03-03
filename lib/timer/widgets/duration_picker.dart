@@ -2,11 +2,16 @@ import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/widgets/dial_duration_picker.dart';
 import 'package:flutter/material.dart';
 
-Future<TimeDuration?> showDurationPicker(BuildContext context) {
+Future<TimeDuration?> showDurationPicker(
+  BuildContext context, {
+  TimeDuration initialTime =
+      const TimeDuration(hours: 0, minutes: 5, seconds: 0),
+  bool showHours = true,
+}) async {
   return showDialog<TimeDuration>(
     context: context,
     builder: (BuildContext context) {
-      TimeDuration duration = TimeDuration(hours: 0, minutes: 5, seconds: 0);
+      TimeDuration duration = initialTime;
       return StatefulBuilder(
         builder: (context, StateSetter setState) {
           return AlertDialog(
@@ -42,6 +47,7 @@ Future<TimeDuration?> showDurationPicker(BuildContext context) {
                             duration = newDuration;
                           });
                         },
+                        showHours: showHours,
                       ),
                     ),
                   ],

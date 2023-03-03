@@ -1,21 +1,24 @@
 import 'package:clock_app/common/utils/json_serialize.dart';
 
 class TimeDuration extends JsonSerializable {
-  int hours;
-  int minutes;
-  int seconds;
-  int milliseconds;
+  final int hours;
+  final int minutes;
+  final int seconds;
+  final int milliseconds;
 
-  int get inSeconds => hours * 3600 + minutes * 60 + seconds;
   int get inMilliseconds => inSeconds * 1000 + milliseconds;
+  int get inSeconds => hours * 3600 + minutes * 60 + seconds;
+  int get inMinutes => inSeconds ~/ 60;
+  int get inHours => inMinutes ~/ 60;
   static TimeDuration get zero =>
-      TimeDuration(hours: 0, minutes: 0, seconds: 0);
+      const TimeDuration(hours: 0, minutes: 0, seconds: 0);
 
-  TimeDuration(
-      {required this.hours,
-      required this.minutes,
-      required this.seconds,
-      this.milliseconds = 0});
+  const TimeDuration({
+    this.hours = 0,
+    this.minutes = 0,
+    this.seconds = 0,
+    this.milliseconds = 0,
+  });
 
   TimeDuration.fromSeconds(int seconds)
       : hours = (seconds / 3600).floor(),
@@ -42,6 +45,18 @@ class TimeDuration extends JsonSerializable {
     String secondsString = seconds > 0 ? '${seconds}s' : '';
     String millisecondsString = milliseconds > 0 ? '${milliseconds}ms' : '';
     return "$hoursString$minutesString$secondsString$millisecondsString";
+  }
+
+  String toReadableString() {
+    if (inMilliseconds == 0) return "0 seconds";
+    String hoursString =
+        hours > 0 ? '$hours ${hours == 1 ? "hour" : "hours"} ' : '';
+    String minutesString =
+        minutes > 0 ? '$minutes ${minutes == 1 ? "minute" : "minutes"} ' : '';
+    String secondsString =
+        seconds > 0 ? '$seconds ${seconds == 1 ? "second" : "seconds"} ' : '';
+    String millisecondsString = milliseconds > 0 ? '${milliseconds}ms' : '';
+    return "$hoursString$minutesString$secondsString$millisecondsString".trim();
   }
 
   String toTimeString({bool showMilliseconds = false}) {

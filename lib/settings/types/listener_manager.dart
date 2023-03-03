@@ -1,4 +1,4 @@
-class SettingsManager {
+class ListenerManager {
   static final Map<String, void Function()> _listeners = {};
 
   // static SharedPreferences? get preferences {

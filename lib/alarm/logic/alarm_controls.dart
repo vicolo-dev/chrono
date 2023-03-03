@@ -20,8 +20,8 @@ import 'package:clock_app/timer/utils/timer_id.dart';
 // For some reason, the ports stop stops working when we hot restart the app and only works
 // again when we close and reopen the app. As a workaround, we can update the port
 // name to a new value before hot restarting the app.
-const String stopAlarmPortName = "eterrdfgdasd";
-const String updatePortName = "deteetgdfg";
+const String stopAlarmPortName = "etserfrtedfgddfgdasd";
+const String updatePortName = "detegfffdetgdfg";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(
@@ -38,6 +38,7 @@ void triggerScheduledNotification(
   // again when we close and reopen the app. As a workaround, we can update the port
   // name to a new value before hot restarting the app.
   ReceivePort receivePort = ReceivePort();
+  IsolateNameServer.removePortNameMapping(stopAlarmPortName);
   IsolateNameServer.registerPortWithName(
       receivePort.sendPort, stopAlarmPortName);
   receivePort.listen((message) {
