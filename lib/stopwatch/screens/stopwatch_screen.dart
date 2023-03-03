@@ -37,6 +37,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   }
 
   void _handleAddLap() {
+    if (_stopwatch.currentLapTime.inMilliseconds == 0) return;
     _listController.addItem(_stopwatch.getLap());
     saveList('stopwatches', [_stopwatch]);
   }
@@ -60,16 +61,52 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
           children: [
             TimerBuilder.periodic(const Duration(milliseconds: 30),
                 builder: (context) {
+              // print(_stopwatch.fastestLap?.lapTime.toTimeString());
+              // print(_stopwatch.slowestLap?.lapTime.toTimeString());
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(
-                    TimeDuration.fromMilliseconds(
-                            _stopwatch.elapsedMilliseconds)
-                        .toTimeString(showMilliseconds: true),
-                    style: const TextStyle(fontSize: 48.0)),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        TimeDuration.fromMilliseconds(
+                                _stopwatch.elapsedMilliseconds)
+                            .toTimeString(showMilliseconds: true),
+                        style: const TextStyle(fontSize: 48.0),
+                      ),
+                      LinearProgressIndicator(
+                        minHeight: 4,
+                        value: _stopwatch.currentLapTime.inMilliseconds /
+                            (_stopwatch.previousLap?.lapTime.inMilliseconds ??
+                                double.infinity),
+                        backgroundColor: Colors.black.withOpacity(0.15),
+                      ),
+                      SizedBox(height: 4),
+                      LinearProgressIndicator(
+                        minHeight: 4,
+                        value: _stopwatch.currentLapTime.inMilliseconds /
+                            (_stopwatch.slowestLap?.lapTime.inMilliseconds ??
+                                double.infinity),
+                        color: Colors.orange,
+                        backgroundColor: Colors.black.withOpacity(0.15),
+                      ),
+                      SizedBox(height: 4),
+                      LinearProgressIndicator(
+                        minHeight: 4,
+                        value: _stopwatch.currentLapTime.inMilliseconds /
+                            (_stopwatch.fastestLap?.lapTime.inMilliseconds ??
+                                double.infinity),
+                        color: Colors.red,
+                        backgroundColor: Colors.black.withOpacity(0.15),
+                      ),
+                    ],
+                  ),
+                ),
               );
             }),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Expanded(
               child: CustomListView<Lap>(
                 items: _stopwatch.laps,
@@ -82,6 +119,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                 isDeleteEnabled: false,
                 isDuplicateEnabled: false,
                 isReorderable: false,
+                onAddItem: (lap) => _stopwatch.updateFastestAndSlowestLap(),
               ),
             ),
           ],

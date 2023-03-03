@@ -67,7 +67,7 @@ class _DurationInputCardState<T> extends State<DurationInputCard<T>> {
               ),
               const Spacer(),
               Icon(
-                Icons.timer_outlined,
+                Icons.access_time_rounded,
                 color:
                     Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
               )

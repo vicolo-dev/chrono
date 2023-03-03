@@ -11,6 +11,8 @@ class ClockStopwatch extends JsonSerializable {
   TimerState _state;
   final int _id;
   List<Lap> _laps = [];
+  Lap? _fastestLap;
+  Lap? _slowestLap;
 
   int get id => _id;
   List<Lap> get laps => _laps;
@@ -21,6 +23,12 @@ class ClockStopwatch extends JsonSerializable {
   bool get isStarted =>
       _state == TimerState.running || _state == TimerState.paused;
   TimerState get state => _state;
+  TimeDuration get currentLapTime =>
+      TimeDuration.fromMilliseconds(elapsedMilliseconds -
+          (_laps.isNotEmpty ? _laps.first.elapsedTime.inMilliseconds : 0));
+  Lap? get previousLap => _laps.isNotEmpty ? _laps.first : null;
+  Lap? get fastestLap => _fastestLap;
+  Lap? get slowestLap => _slowestLap;
 
   ClockStopwatch()
       : _id = UniqueKey().hashCode,
@@ -54,6 +62,8 @@ class ClockStopwatch extends JsonSerializable {
     _state = TimerState.stopped;
     _elapsedMillisecondsOnPause = 0;
     _laps = [];
+    _fastestLap = null;
+    _slowestLap = null;
   }
 
   void toggleState() {
@@ -64,16 +74,28 @@ class ClockStopwatch extends JsonSerializable {
     }
   }
 
+  void updateFastestAndSlowestLap() {
+    // print("update");
+    _fastestLap = _laps.reduce((value, element) =>
+        value.lapTime.inMilliseconds < element.lapTime.inMilliseconds
+            ? value
+            : element);
+    _slowestLap = _laps.reduce((value, element) =>
+        value.lapTime.inMilliseconds > element.lapTime.inMilliseconds
+            ? value
+            : element);
+  }
+
   void addLap() {
-    _laps.add(getLap());
+    _laps.insert(0, getLap());
+    updateFastestAndSlowestLap();
   }
 
   Lap getLap() {
     return Lap(
       elapsedTime: TimeDuration.fromMilliseconds(elapsedMilliseconds),
       number: _laps.length + 1,
-      lapTime: TimeDuration.fromMilliseconds(elapsedMilliseconds -
-          (_laps.isNotEmpty ? _laps.first.elapsedTime.inMilliseconds : 0)),
+      lapTime: currentLapTime,
     );
   }
 

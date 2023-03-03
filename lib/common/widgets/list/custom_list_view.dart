@@ -117,7 +117,6 @@ class _CustomListViewState<Item extends ListItem>
 
   _handleDeleteItem(Item deletedItem) {
     widget.onDeleteItem?.call(deletedItem);
-
     int index = _getItemIndex(deletedItem);
     setState(() {
       widget.items.removeAt(index);
@@ -132,15 +131,11 @@ class _CustomListViewState<Item extends ListItem>
     lastListLength = widget.items.length;
   }
 
-  Stopwatch stopwatch = Stopwatch();
-
   void _handleAddItem(Item item, {int index = -1}) {
-    widget.onAddItem?.call(item);
-
     if (index == -1) index = 0;
     setState(() => widget.items.insert(index, item));
+    widget.onAddItem?.call(item);
     _controller.notifyInsertedRange(index, 1);
-    stopwatch.start();
     _scrollToIndex(index);
     Future.delayed(const Duration(milliseconds: 250), () {
       _scrollToIndex(index);
