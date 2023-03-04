@@ -33,6 +33,9 @@ ThemeData defaultTheme = ThemeData(
   bottomSheetTheme:
       getBottomSheetTheme(lightColorScheme, defaultBorderRadius.topLeft),
   toggleButtonsTheme: toggleButtonsTheme,
+  // progressIndicatorTheme: ProgressIndicatorThemeData(
+
+  // ),
   extensions: const <ThemeExtension<dynamic>>[ThemeStyle()],
 
   // textButtonTheme: textButtonTheme,

@@ -137,14 +137,17 @@ class _CustomListViewState<Item extends ListItem>
     widget.onAddItem?.call(item);
     _controller.notifyInsertedRange(index, 1);
     _scrollToIndex(index);
-    Future.delayed(const Duration(milliseconds: 250), () {
-      _scrollToIndex(index);
-    });
+    // Future.delayed(const Duration(milliseconds: 250), () {
+    //   _scrollToIndex(index);
+    // });
     _updateItemHeight();
     widget.onModifyList?.call();
   }
 
   void _scrollToIndex(int index) {
+    if (_scrollController.offset == 0) {
+      _scrollController.jumpTo(1);
+    }
     _scrollController.animateTo(index * _itemCardHeight,
         duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
   }

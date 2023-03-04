@@ -1,5 +1,6 @@
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/common/widgets/linear_progress_bar.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
@@ -76,30 +77,26 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                             .toTimeString(showMilliseconds: true),
                         style: const TextStyle(fontSize: 48.0),
                       ),
-                      LinearProgressIndicator(
-                        minHeight: 4,
-                        value: _stopwatch.currentLapTime.inMilliseconds /
-                            (_stopwatch.previousLap?.lapTime.inMilliseconds ??
-                                double.infinity),
-                        backgroundColor: Colors.black.withOpacity(0.15),
+                      SizedBox(height: 8),
+                      LapComparer(
+                        stopwatch: _stopwatch,
+                        comparisonLap: _stopwatch.previousLap,
+                        label: "Previous",
+                        color: Theme.of(context).primaryColor,
                       ),
                       SizedBox(height: 4),
-                      LinearProgressIndicator(
-                        minHeight: 4,
-                        value: _stopwatch.currentLapTime.inMilliseconds /
-                            (_stopwatch.slowestLap?.lapTime.inMilliseconds ??
-                                double.infinity),
-                        color: Colors.orange,
-                        backgroundColor: Colors.black.withOpacity(0.15),
-                      ),
-                      SizedBox(height: 4),
-                      LinearProgressIndicator(
-                        minHeight: 4,
-                        value: _stopwatch.currentLapTime.inMilliseconds /
-                            (_stopwatch.fastestLap?.lapTime.inMilliseconds ??
-                                double.infinity),
+                      LapComparer(
+                        stopwatch: _stopwatch,
+                        comparisonLap: _stopwatch.fastestLap,
+                        label: "Fastest",
                         color: Colors.red,
-                        backgroundColor: Colors.black.withOpacity(0.15),
+                      ),
+                      SizedBox(height: 4),
+                      LapComparer(
+                        stopwatch: _stopwatch,
+                        comparisonLap: _stopwatch.slowestLap,
+                        label: "Slowest",
+                        color: Colors.orange,
                       ),
                     ],
                   ),
@@ -142,6 +139,50 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
             onPressed: _handleReset,
             icon: Icons.refresh_rounded,
           ),
+      ],
+    );
+  }
+}
+
+class LapComparer extends StatelessWidget {
+  const LapComparer({
+    super.key,
+    required ClockStopwatch stopwatch,
+    required this.comparisonLap,
+    required this.label,
+    this.color = Colors.green,
+  }) : _stopwatch = stopwatch;
+
+  final Lap? comparisonLap;
+  final ClockStopwatch _stopwatch;
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        LinearProgressBar(
+          minHeight: 14,
+          value: _stopwatch.currentLapTime.inMilliseconds /
+              (comparisonLap?.lapTime.inMilliseconds ?? double.infinity),
+          backgroundColor: Colors.black.withOpacity(0.25),
+          color: color,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 1.0, left: 4.0, right: 4.0),
+          child: Row(
+            children: [
+              Text(label,
+                  style: TextStyle(fontSize: 10.0, color: Colors.white)),
+              Spacer(),
+              Text(
+                  comparisonLap?.lapTime.toTimeString(showMilliseconds: true) ??
+                      "",
+                  style: TextStyle(fontSize: 10.0, color: Colors.white)),
+            ],
+          ),
+        ),
       ],
     );
   }
