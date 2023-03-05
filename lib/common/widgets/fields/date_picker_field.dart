@@ -1,0 +1,132 @@
+import 'package:clock_app/common/widgets/fields/date_picker_bottom_sheet.dart';
+import 'package:clock_app/timer/types/time_duration.dart';
+import 'package:clock_app/timer/widgets/duration_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class DatePickerField<T> extends StatefulWidget {
+  const DatePickerField({
+    Key? key,
+    required this.title,
+    this.description,
+    required this.onChange,
+    required this.value,
+  }) : super(key: key);
+
+  final List<DateTime> value;
+  final String title;
+  final String? description;
+  final void Function(List<DateTime>) onChange;
+
+  @override
+  State<DatePickerField<T>> createState() => _DatePickerFieldState<T>();
+}
+
+enum SelectType { color, text }
+
+class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
+  @override
+  void initState() {
+    super.initState();
+    // _currentSelectedIndex = widget.selectedIndex;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    void showSelect() async {
+      List<DateTime>? selectedDates =
+          await showModalBottomSheet<List<DateTime>>(
+        context: context,
+        isScrollControlled: true,
+        enableDrag: true,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return DatePickerBottomSheet(
+                title: widget.title,
+                initialDates: widget.value,
+                onChange: (value) {
+                  setState(() {
+                    widget.onChange(value);
+                  });
+                },
+              );
+            },
+          );
+        },
+      );
+
+      if (selectedDates != null) {
+        setState(() {
+          widget.onChange(selectedDates);
+        });
+      }
+    }
+
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: showSelect,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    widget.title,
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                  const Spacer(),
+                  Icon(Icons.access_time_rounded,
+                      color: colorScheme.onBackground.withOpacity(0.6))
+                ],
+              ),
+              const SizedBox(height: 4.0),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 64,
+                child: Wrap(
+                  spacing: 6.0,
+                  runSpacing: 6.0,
+                  children: [
+                    for (var i = 0; i < widget.value.length; i++)
+                      DateChip(date: widget.value[i]),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DateChip extends StatelessWidget {
+  const DateChip({
+    super.key,
+    required this.date,
+  });
+
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context) {
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    return Chip(
+      backgroundColor: colorScheme.onBackground.withOpacity(0.1),
+      // labelPadding: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
+      // side: ,
+      label: Text(
+        DateFormat("dd/MM/yy").format(date),
+        style: TextStyle(fontSize: 10),
+      ),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+  }
+}

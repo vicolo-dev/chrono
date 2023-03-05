@@ -1,5 +1,5 @@
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/fields/switch_card.dart';
+import 'package:clock_app/common/widgets/fields/switch_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class SwitchSettingCard extends StatefulWidget {
 class _SwitchSettingCardState extends State<SwitchSettingCard> {
   @override
   Widget build(BuildContext context) {
-    SwitchCard switchCard = SwitchCard(
+    SwitchField switchCard = SwitchField(
       name: widget.setting.name,
       value: widget.setting.value,
       onChanged: (value) {

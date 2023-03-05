@@ -2,8 +2,8 @@ import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/widgets/duration_picker.dart';
 import 'package:flutter/material.dart';
 
-class DurationInputCard<T> extends StatefulWidget {
-  const DurationInputCard({
+class DurationPickerField<T> extends StatefulWidget {
+  const DurationPickerField({
     Key? key,
     required this.title,
     this.description,
@@ -17,12 +17,12 @@ class DurationInputCard<T> extends StatefulWidget {
   final void Function(TimeDuration) onChange;
 
   @override
-  State<DurationInputCard<T>> createState() => _DurationInputCardState<T>();
+  State<DurationPickerField<T>> createState() => _DurationPickerFieldState<T>();
 }
 
 enum SelectType { color, text }
 
-class _DurationInputCardState<T> extends State<DurationInputCard<T>> {
+class _DurationPickerFieldState<T> extends State<DurationPickerField<T>> {
   @override
   void initState() {
     super.initState();
@@ -31,7 +31,7 @@ class _DurationInputCardState<T> extends State<DurationInputCard<T>> {
 
   @override
   Widget build(BuildContext context) {
-    void showSelect() async {
+    void showPicker() async {
       TimeDuration? newTimeDuration = await showDurationPicker(
         context,
         showHours: false,
@@ -46,7 +46,7 @@ class _DurationInputCardState<T> extends State<DurationInputCard<T>> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: showSelect,
+        onTap: showPicker,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(

@@ -1,5 +1,6 @@
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/settings/widgets/date_setting_card.dart';
 import 'package:clock_app/settings/widgets/duration_setting_card.dart';
 import 'package:clock_app/settings/widgets/select_setting_card.dart';
 import 'package:clock_app/settings/widgets/setting_group_card.dart';
@@ -119,6 +120,12 @@ Widget? getSettingWidget(
       );
     } else if (item is DurationSetting) {
       return DurationSettingCard(
+        setting: item,
+        showSummaryView: showSummaryView,
+        onChanged: onChanged,
+      );
+    } else if (item is DateTimeSetting) {
+      return DateSettingCard(
         setting: item,
         showSummaryView: showSummaryView,
         onChanged: onChanged,

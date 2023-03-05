@@ -370,11 +370,11 @@ class ToggleSetting<T> extends Setting<List<bool>> {
   }
 }
 
-class DateTimeSetting extends Setting<DateTime> {
+class DateTimeSetting extends Setting<List<DateTime>> {
   DateTimeSetting(
     String name,
-    DateTime defaultValue, {
-    void Function(BuildContext, DateTime)? onChange,
+    List<DateTime> defaultValue, {
+    void Function(BuildContext, List<DateTime>)? onChange,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions);
@@ -383,11 +383,42 @@ class DateTimeSetting extends Setting<DateTime> {
   DateTimeSetting copy() {
     return DateTimeSetting(
       name,
-      _value,
+      List.from(_value),
       onChange: onChange,
       description: description,
       enableConditions: enableConditions,
     );
+  }
+
+  @override
+  List<DateTime> get value => List.from(_value);
+
+  @override
+  void setValue(BuildContext context, List<DateTime> value) {
+    _value = List.from(value);
+    onChange?.call(context, _value);
+  }
+
+  @override
+  dynamic serialize() {
+    return _value.map((e) => e.millisecondsSinceEpoch).toList();
+  }
+
+  @override
+  void deserialize(dynamic value) {
+    _value = (value as List)
+        .map((e) => DateTime.fromMillisecondsSinceEpoch(e))
+        .toList();
+  }
+
+  void addDateTime(BuildContext context, DateTime dateTime) {
+    _value.add(dateTime);
+    onChange?.call(context, _value);
+  }
+
+  void removeDateTime(BuildContext context, DateTime dateTime) {
+    _value.remove(dateTime);
+    onChange?.call(context, _value);
   }
 }
 
@@ -418,7 +449,6 @@ class DurationSetting extends Setting<TimeDuration> {
 
   @override
   void deserialize(dynamic value) {
-    print("deserialize duration: $value");
     _value = TimeDuration.fromMilliseconds(value);
   }
 }

@@ -2,8 +2,8 @@ import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/fields/select_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-class SelectCard<T> extends StatefulWidget {
-  const SelectCard({
+class SelectField<T> extends StatefulWidget {
+  const SelectField({
     Key? key,
     required this.selectedIndex,
     required this.title,
@@ -23,12 +23,12 @@ class SelectCard<T> extends StatefulWidget {
   final Function(int index)? onSelect;
 
   @override
-  State<SelectCard<T>> createState() => _SelectCardState<T>();
+  State<SelectField<T>> createState() => _SelectFieldState<T>();
 }
 
 enum SelectType { color, text }
 
-class _SelectCardState<T> extends State<SelectCard<T>> {
+class _SelectFieldState<T> extends State<SelectField<T>> {
   late int _currentSelectedIndex;
 
   @override

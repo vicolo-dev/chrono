@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SliderCard extends StatefulWidget {
-  const SliderCard(
+class SliderField extends StatefulWidget {
+  const SliderField(
       {Key? key,
       required this.value,
       required this.onChanged,
@@ -19,10 +19,10 @@ class SliderCard extends StatefulWidget {
   final void Function(double value)? onChanged;
 
   @override
-  State<SliderCard> createState() => _SliderCardState();
+  State<SliderField> createState() => _SliderFieldState();
 }
 
-class _SliderCardState extends State<SliderCard> {
+class _SliderFieldState extends State<SliderField> {
   Size calcTextSize(int length, TextStyle style) {
     String text = '0' * length;
     final TextPainter textPainter = TextPainter(

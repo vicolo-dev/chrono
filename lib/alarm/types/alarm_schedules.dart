@@ -219,45 +219,19 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
       _weekdaySchedules.map((e) => e.alarmRunner).toList();
 }
 
-/*
-dropdown
-
-- specific dates
-
-these will reveal the range and off days option
-- daily
-- specific days of month
-- specific days of week
-
-
-- specific dates -> onetime
-
-{
-- daily -> periodic
-- specific day of month -> 12 periodic with 1 year duration
-- specific days of week -> periodic
-
-range
- - start -> forever
- or
- - start -> end  -> list of onetime
-}
-
-- off-days  -> send off days as params, don't show notification if today is off day
-*/
-
 class DatesAlarmSchedule extends AlarmSchedule {
+  //  List<WeekdaySchedule> _weekdaySchedules = [];
+  final DateTimeSetting _datesSetting;
   List<DateSchedule> _dateSchedules = [];
 
   DateSchedule get nextDateSchedule {
-    DateSchedule nextDateSchedule = _dateSchedules[0];
-    for (DateSchedule dateSchedule in _dateSchedules) {
-      if (dateSchedule.alarmRunner.nextScheduleDateTime
-          .isBefore(nextDateSchedule.alarmRunner.nextScheduleDateTime)) {
-        nextDateSchedule = dateSchedule;
-      }
-    }
-    return nextDateSchedule;
+    return _dateSchedules
+        .where((schedule) =>
+            schedule.alarmRunner.nextScheduleDateTime.isAfter(DateTime.now()))
+        .reduce((current, next) => current.alarmRunner.nextScheduleDateTime
+                .isBefore(next.alarmRunner.nextScheduleDateTime)
+            ? current
+            : next);
   }
 
   @override
@@ -267,7 +241,9 @@ class DatesAlarmSchedule extends AlarmSchedule {
   @override
   int get currentAlarmRunnerId => nextDateSchedule.alarmRunner.id;
 
-  DatesAlarmSchedule() : super();
+  DatesAlarmSchedule(Setting datesSetting)
+      : _datesSetting = datesSetting as DateTimeSetting,
+        super();
 
   @override
   void cancel() {
@@ -282,10 +258,20 @@ class DatesAlarmSchedule extends AlarmSchedule {
       dateSchedule.alarmRunner.cancel();
     }
 
+    List<DateTime> dates = _datesSetting.value;
+    List<DateTime> existingDates =
+        _dateSchedules.map((schedule) => schedule.date).toList();
+
+    if (!listEquals(dates, existingDates)) {
+      _dateSchedules = dates.map((date) => DateSchedule(date)).toList();
+    }
+
     for (DateSchedule dateSchedule in _dateSchedules) {
       DateTime alarmDate =
           getDailyAlarmDate(timeOfDay, scheduledDate: dateSchedule.date);
-      dateSchedule.alarmRunner.schedule(alarmDate);
+      if (alarmDate.isAfter(DateTime.now())) {
+        dateSchedule.alarmRunner.schedule(alarmDate);
+      }
     }
   }
 
@@ -294,10 +280,11 @@ class DatesAlarmSchedule extends AlarmSchedule {
         'dateSchedules': _dateSchedules.map((e) => e.toJson()).toList(),
       };
 
-  DatesAlarmSchedule.fromJson(Map<String, dynamic> json)
+  DatesAlarmSchedule.fromJson(Map<String, dynamic> json, Setting datesSetting)
       : _dateSchedules = (json['dateSchedules'] as List)
             .map((e) => DateSchedule.fromJson(e))
             .toList(),
+        _datesSetting = datesSetting as DateTimeSetting,
         super();
 
   @override

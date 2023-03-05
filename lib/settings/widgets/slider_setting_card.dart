@@ -1,5 +1,5 @@
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/fields/slider_card.dart';
+import 'package:clock_app/common/widgets/fields/slider_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class SliderSettingCard extends StatefulWidget {
 class _SliderSettingCardState extends State<SliderSettingCard> {
   @override
   Widget build(BuildContext context) {
-    SliderCard sliderCard = SliderCard(
+    SliderField sliderCard = SliderField(
       name: widget.setting.name,
       value: widget.setting.value,
       min: widget.setting.min,

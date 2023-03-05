@@ -1,8 +1,8 @@
 import 'package:clock_app/common/widgets/fields/input_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-class InputCard<T> extends StatefulWidget {
-  const InputCard({
+class InputField<T> extends StatefulWidget {
+  const InputField({
     super.key,
     required this.title,
     this.description,
@@ -18,10 +18,10 @@ class InputCard<T> extends StatefulWidget {
   final void Function(String value) onChange;
 
   @override
-  State<InputCard<T>> createState() => _InputCardState<T>();
+  State<InputField<T>> createState() => _InputFieldState<T>();
 }
 
-class _InputCardState<T> extends State<InputCard<T>> {
+class _InputFieldState<T> extends State<InputField<T>> {
   // late int _currentSelectedIndex;
 
   // @override

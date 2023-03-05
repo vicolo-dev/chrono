@@ -1,15 +1,16 @@
 import 'package:clock_app/common/widgets/card_container.dart';
+import 'package:clock_app/common/widgets/fields/date_picker_field.dart';
 import 'package:clock_app/common/widgets/fields/duration_picker_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
-class DurationSettingCard extends StatefulWidget {
-  final DurationSetting setting;
+class DateSettingCard extends StatefulWidget {
+  final DateTimeSetting setting;
   final bool showSummaryView;
-  final void Function(TimeDuration)? onChanged;
+  final void Function(List<DateTime>)? onChanged;
 
-  const DurationSettingCard({
+  const DateSettingCard({
     Key? key,
     required this.setting,
     this.showSummaryView = false,
@@ -17,13 +18,13 @@ class DurationSettingCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<DurationSettingCard> createState() => _DurationSettingCardState();
+  State<DateSettingCard> createState() => _DateSettingCardState();
 }
 
-class _DurationSettingCardState extends State<DurationSettingCard> {
+class _DateSettingCardState extends State<DateSettingCard> {
   @override
   Widget build(BuildContext context) {
-    Widget input = DurationPickerField(
+    Widget input = DatePickerField(
       title: widget.setting.name,
       description: widget.setting.description,
       value: widget.setting.value,

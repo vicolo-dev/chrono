@@ -35,6 +35,11 @@ Settings alarmSettingsSchema = Settings([
   ], enableConditions: [
     SettingEnableCondition("Schedule Type", WeeklyAlarmSchedule)
   ]),
+  DateTimeSetting("Dates", [
+    DateTime.now()
+  ], enableConditions: [
+    SettingEnableCondition("Schedule Type", DatesAlarmSchedule)
+  ]),
   SettingGroup(
       "Sound and Vibration",
       [

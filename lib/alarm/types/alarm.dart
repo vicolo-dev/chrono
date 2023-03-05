@@ -15,7 +15,7 @@ List<AlarmSchedule> createSchedules(Settings settings) {
     OnceAlarmSchedule(),
     DailyAlarmSchedule(),
     WeeklyAlarmSchedule(settings.getSetting("Week Days")),
-    DatesAlarmSchedule(),
+    DatesAlarmSchedule(settings.getSetting("Dates")),
     RangeAlarmSchedule()
   ];
 }
@@ -133,6 +133,10 @@ class Alarm extends ListItem {
         .toList();
   }
 
+  List<DateTime> getDates() {
+    return (getSetting("Dates") as DateTimeSetting).value;
+  }
+
   Alarm.fromJson(Map<String, dynamic> json)
       : _timeOfDay = TimeOfDayUtils.fromJson(json['timeOfDay']),
         _enabled = json['enabled'],
@@ -143,7 +147,8 @@ class Alarm extends ListItem {
       DailyAlarmSchedule.fromJson(json['schedules'][1]),
       WeeklyAlarmSchedule.fromJson(
           json['schedules'][2], _settings.getSetting("Week Days")),
-      DatesAlarmSchedule.fromJson(json['schedules'][3]),
+      DatesAlarmSchedule.fromJson(
+          json['schedules'][3], settings.getSetting("Dates")),
       RangeAlarmSchedule.fromJson(json['schedules'][4]),
     ];
   }

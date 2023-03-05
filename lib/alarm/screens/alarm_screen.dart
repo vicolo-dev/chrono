@@ -59,22 +59,35 @@ class _AlarmScreenState extends State<AlarmScreen> {
       Duration etaNextAlarm =
           alarm.nextScheduleDateTime.difference(DateTime.now().toLocal());
 
-      int hours = etaNextAlarm.inHours;
-      int minutes = etaNextAlarm.inMinutes % 60;
+      String etaText = '';
 
-      String hourTextSuffix = hours <= 1 ? "hour" : "hours";
-      String minuteTextSuffix = minutes % 60 <= 1 ? "minute" : "minutes";
-
-      String hoursText = hours == 0 ? "" : "$hours $hourTextSuffix and ";
-      String minutesText = minutes == 0
-          ? "in less than 1 minute"
-          : "$minutes $minuteTextSuffix from now";
+      if (etaNextAlarm.inDays > 0) {
+        int days = etaNextAlarm.inDays;
+        String dayTextSuffix = days <= 1 ? 'day' : 'days';
+        etaText = '$days $dayTextSuffix';
+      } else if (etaNextAlarm.inHours > 0) {
+        int hours = etaNextAlarm.inHours;
+        int minutes = etaNextAlarm.inMinutes % 60;
+        String hourTextSuffix = hours <= 1 ? 'hour' : 'hours';
+        String minuteTextSuffix = minutes <= 1 ? 'minute' : 'minutes';
+        String hoursText = '$hours $hourTextSuffix';
+        String minutesText =
+            minutes == 0 ? '' : ' and $minutes $minuteTextSuffix';
+        etaText = '$hoursText$minutesText';
+      } else if (etaNextAlarm.inMinutes > 0) {
+        int minutes = etaNextAlarm.inMinutes;
+        String minuteTextSuffix = minutes <= 1 ? 'minute' : 'minutes';
+        etaText = '$minutes $minuteTextSuffix';
+      } else {
+        etaText = 'less than 1 minute';
+      }
 
       SnackBar snackBar = SnackBar(
         content: Container(
-            alignment: Alignment.centerLeft,
-            height: 28,
-            child: Text('Alarm will ring $hoursText$minutesText')),
+          alignment: Alignment.centerLeft,
+          height: 28,
+          child: Text('Alarm will ring in $etaText'),
+        ),
         margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
         elevation: 2,
         dismissDirection: DismissDirection.none,

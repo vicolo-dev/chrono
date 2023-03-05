@@ -10,6 +10,7 @@ Future<void> updateAlarm(int scheduleId) async {
   if (alarm.isRepeating) {
     alarm.schedule();
   } else {
+    print(alarm.nextScheduleDateTime);
     if (alarm.nextScheduleDateTime.isBefore(DateTime.now())) {
       alarm.disable();
     }
@@ -26,6 +27,7 @@ Future<void> updateAlarms() async {
     if (alarm.isRepeating) {
       alarm.schedule();
     } else {
+      print(alarm.nextScheduleDateTime);
       if (alarm.nextScheduleDateTime.isBefore(DateTime.now())) {
         alarm.disable();
       }

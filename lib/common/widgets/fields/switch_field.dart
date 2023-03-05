@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SwitchCard extends StatefulWidget {
-  const SwitchCard(
+class SwitchField extends StatefulWidget {
+  const SwitchField(
       {Key? key,
       required this.value,
       required this.onChanged,
@@ -13,10 +13,10 @@ class SwitchCard extends StatefulWidget {
   final void Function(bool value)? onChanged;
 
   @override
-  State<SwitchCard> createState() => _SwitchCardState();
+  State<SwitchField> createState() => _SwitchFieldState();
 }
 
-class _SwitchCardState extends State<SwitchCard> {
+class _SwitchFieldState extends State<SwitchField> {
   @override
   Widget build(BuildContext context) {
     return Material(

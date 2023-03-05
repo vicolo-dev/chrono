@@ -4,6 +4,7 @@ import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 bool weekdaysContains(List<Weekday> alarmWeekdays, String name) {
   return alarmWeekdays
@@ -38,8 +39,9 @@ String getAlarmScheduleDescription(Alarm alarm) {
         return 'Every weekday';
       }
       return 'Every ${weekdays.where((weekday) => alarmWeekdays.contains(weekday)).map((weekday) => weekday.displayName).join(', ')}';
-    // case DatesAlarmSchedule:
-    //   return 'On ${alarm.getDates().map((date) => '${date.day}/${date.month}').join(', ')}';
+    case DatesAlarmSchedule:
+      List<DateTime> dates = alarm.getDates();
+      return 'On ${DateFormat('dd/MM/yy').format(dates[0])}${dates.length > 1 ? ' and ${dates.length - 1} other${dates.length > 2 ? 's' : ''}' : ''}';
     // case RangeAlarmSchedule:
     //   DateTime rangeStart = alarm.getRangeStartDate();
     //   DateTime rangeEnd = alarm.getRangeEndDate();

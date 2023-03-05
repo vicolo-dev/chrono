@@ -1,5 +1,5 @@
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/fields/toggle_card.dart';
+import 'package:clock_app/common/widgets/fields/toggle_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class ToggleSettingCard<T> extends StatefulWidget {
 class _ToggleSettingCardState<T> extends State<ToggleSettingCard<T>> {
   @override
   Widget build(BuildContext context) {
-    ToggleCard<T> toggleCard = ToggleCard<T>(
+    ToggleField<T> toggleCard = ToggleField<T>(
       name: widget.setting.name,
       description: widget.setting.description,
       selectedItems: widget.setting.value,

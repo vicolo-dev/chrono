@@ -7,8 +7,8 @@ class ToggleOption<T> {
   const ToggleOption(this.name, this.value);
 }
 
-class ToggleCard<T> extends StatefulWidget {
-  const ToggleCard({
+class ToggleField<T> extends StatefulWidget {
+  const ToggleField({
     Key? key,
     required this.selectedItems,
     required this.onChange,
@@ -24,10 +24,10 @@ class ToggleCard<T> extends StatefulWidget {
   final void Function(int) onChange;
 
   @override
-  State<ToggleCard<T>> createState() => _ToggleCardState<T>();
+  State<ToggleField<T>> createState() => _ToggleFieldState<T>();
 }
 
-class _ToggleCardState<T> extends State<ToggleCard<T>> {
+class _ToggleFieldState<T> extends State<ToggleField<T>> {
   @override
   Widget build(BuildContext context) {
     return Column(

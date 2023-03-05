@@ -1,5 +1,5 @@
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/fields/input_card.dart';
+import 'package:clock_app/common/widgets/fields/input_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +36,7 @@ class _StringSettingCardState extends State<StringSettingCard> {
     //   },
     // );
 
-    Widget input = InputCard(
+    Widget input = InputField(
       title: widget.setting.name,
       description: widget.setting.description,
       value: widget.setting.value,
