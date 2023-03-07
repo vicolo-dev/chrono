@@ -28,6 +28,7 @@ class _DateSettingCardState extends State<DateSettingCard> {
       title: widget.setting.name,
       description: widget.setting.description,
       value: widget.setting.value,
+      rangeOnly: widget.setting.rangeOnly,
       onChange: (value) {
         setState(() {
           widget.setting.setValue(context, value);

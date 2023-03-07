@@ -4,6 +4,7 @@ typedef ItemChanger<T> = void Function(ItemChangerCallback<T>, bool);
 class ListController<T> {
   ItemChanger<T>? _changeItems;
   void Function(T item)? _addItem;
+  void Function(T item)? _deleteItem;
   int Function(T item)? _getItemIndex;
 
   ListController();
@@ -17,16 +18,24 @@ class ListController<T> {
     _changeItems?.call(callback, callOnModifyList);
   }
 
-  void setGetItemIndex(int Function(T item) builder) {
-    _getItemIndex = builder;
+  void setGetItemIndex(int Function(T item) callback) {
+    _getItemIndex = callback;
   }
 
-  void setAddItem(void Function(T item) builder) {
-    _addItem = builder;
+  void setAddItem(void Function(T item) callback) {
+    _addItem = callback;
+  }
+
+  void setDeleteItem(void Function(T item) callback) {
+    _deleteItem = callback;
   }
 
   void addItem(T item) {
     _addItem?.call(item);
+  }
+
+  void deleteItem(T item) {
+    _deleteItem?.call(item);
   }
 
   int getItemIndex(T item) {

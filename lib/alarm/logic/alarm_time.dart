@@ -6,7 +6,7 @@ DateTime getDailyAlarmDate(
   TimeOfDay timeOfDay, {
   DateTime? scheduledDate,
 }) {
-  if (scheduledDate != null) {
+  if (scheduledDate != null && scheduledDate.isAfter(DateTime.now())) {
     return DateTime(scheduledDate.year, scheduledDate.month, scheduledDate.day,
         timeOfDay.hour, timeOfDay.minute);
   }

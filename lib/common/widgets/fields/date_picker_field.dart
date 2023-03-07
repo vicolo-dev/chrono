@@ -11,11 +11,13 @@ class DatePickerField<T> extends StatefulWidget {
     this.description,
     required this.onChange,
     required this.value,
+    this.rangeOnly = false,
   }) : super(key: key);
 
   final List<DateTime> value;
   final String title;
   final String? description;
+  final bool rangeOnly;
   final void Function(List<DateTime>) onChange;
 
   @override
@@ -28,6 +30,14 @@ class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
   @override
   void initState() {
     super.initState();
+    // if (widget.value.first.isBefore()) {
+    //   if (widget.rangeOnly) {
+    //     widget.onChange(
+    //         [DateTime.now(), DateTime.now().add(const Duration(days: 2))]);
+    //   } else {
+    //     widget.onChange([DateTime.now()]);
+    //   }
+    // }
     // _currentSelectedIndex = widget.selectedIndex;
   }
 
@@ -45,6 +55,7 @@ class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
               return DatePickerBottomSheet(
                 title: widget.title,
                 initialDates: widget.value,
+                rangeOnly: widget.rangeOnly,
                 onChange: (value) {
                   setState(() {
                     widget.onChange(value);

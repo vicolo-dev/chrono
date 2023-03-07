@@ -8,7 +8,7 @@ ActionPane getDeleteActionPane(VoidCallback onDelete, BuildContext context) =>
       children: [
         CustomSlidableAction(
           onPressed: (context) => onDelete(),
-          backgroundColor: const Color(0xFFFE4A49),
+          backgroundColor: Theme.of(context).colorScheme.error,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

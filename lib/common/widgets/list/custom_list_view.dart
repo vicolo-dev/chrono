@@ -61,6 +61,7 @@ class _CustomListViewState<Item extends ListItem>
     super.initState();
     widget.listController.setChangeItems(_changeItems);
     widget.listController.setAddItem(_handleAddItem);
+    widget.listController.setDeleteItem(_handleDeleteItem);
     widget.listController.setGetItemIndex(_getItemIndex);
   }
 
@@ -137,17 +138,17 @@ class _CustomListViewState<Item extends ListItem>
     widget.onAddItem?.call(item);
     _controller.notifyInsertedRange(index, 1);
     _scrollToIndex(index);
-    // Future.delayed(const Duration(milliseconds: 250), () {
-    //   _scrollToIndex(index);
-    // });
+    Future.delayed(const Duration(milliseconds: 250), () {
+      _scrollToIndex(index);
+    });
     _updateItemHeight();
     widget.onModifyList?.call();
   }
 
   void _scrollToIndex(int index) {
-    if (_scrollController.offset == 0) {
-      _scrollController.jumpTo(1);
-    }
+    // if (_scrollController.offset == 0) {
+    //   _scrollController.jumpTo(1);
+    // }
     _scrollController.animateTo(index * _itemCardHeight,
         duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
   }
@@ -176,7 +177,7 @@ class _CustomListViewState<Item extends ListItem>
       SlidableAutoCloseBehavior(
         child: AutomaticAnimatedListView<Item>(
           list: widget.items,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           comparator: AnimatedListDiffListComparator<Item>(
             sameItem: (a, b) => a.id == b.id,
             sameContent: (a, b) => a.id == b.id,

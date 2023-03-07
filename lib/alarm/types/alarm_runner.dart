@@ -4,29 +4,33 @@ import 'package:flutter/material.dart';
 
 class AlarmRunner extends JsonSerializable {
   late int _id;
-  DateTime _nextScheduleDateTime = DateTime.now();
+  DateTime? _currentScheduleDateTime;
 
   int get id => _id;
-  DateTime get nextScheduleDateTime => _nextScheduleDateTime;
+  DateTime? get currentScheduleDateTime => _currentScheduleDateTime;
 
   AlarmRunner() {
     _id = UniqueKey().hashCode;
   }
 
-  void schedule(DateTime dateTime, {Duration repeatInterval = Duration.zero}) {
-    _nextScheduleDateTime = dateTime;
-    scheduleAlarm(_id, dateTime, repeatInterval: repeatInterval);
+  void schedule(DateTime dateTime) {
+    _currentScheduleDateTime = dateTime;
+    scheduleAlarm(_id, dateTime);
   }
 
-  AlarmRunner.fromJson(Map<String, dynamic> json)
-      : _id = json['id'],
-        _nextScheduleDateTime =
-            DateTime.fromMillisecondsSinceEpoch(json['nextScheduleDateTime']);
+  AlarmRunner.fromJson(Map<String, dynamic> json) : _id = json['id'] {
+    int millisecondsSinceEpoch = json['nextScheduleDateTime'];
+
+    _currentScheduleDateTime = millisecondsSinceEpoch == 0
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(json['nextScheduleDateTime']);
+  }
 
   @override
   Map<String, dynamic> toJson() => {
         'id': _id,
-        'nextScheduleDateTime': _nextScheduleDateTime.millisecondsSinceEpoch,
+        'nextScheduleDateTime':
+            _currentScheduleDateTime?.millisecondsSinceEpoch ?? 0,
       };
 
   void cancel() {

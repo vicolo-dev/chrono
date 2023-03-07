@@ -1,5 +1,9 @@
+import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
-import 'package:clock_app/alarm/types/alarm_schedules.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
@@ -35,11 +39,31 @@ Settings alarmSettingsSchema = Settings([
   ], enableConditions: [
     SettingEnableCondition("Schedule Type", WeeklyAlarmSchedule)
   ]),
-  DateTimeSetting("Dates", [
-    DateTime.now()
-  ], enableConditions: [
-    SettingEnableCondition("Schedule Type", DatesAlarmSchedule)
-  ]),
+  DateTimeSetting(
+    "Dates",
+    [],
+    enableConditions: [
+      SettingEnableCondition("Schedule Type", DatesAlarmSchedule)
+    ],
+  ),
+  DateTimeSetting(
+    "Date Range",
+    [],
+    rangeOnly: true,
+    enableConditions: [
+      SettingEnableCondition("Schedule Type", RangeAlarmSchedule)
+    ],
+  ),
+  SelectSetting<Duration>(
+    "Interval",
+    [
+      SelectSettingOption("Daily", const Duration(days: 1)),
+      SelectSettingOption("Weekly", const Duration(days: 7)),
+    ],
+    enableConditions: [
+      SettingEnableCondition("Schedule Type", RangeAlarmSchedule)
+    ],
+  ),
   SettingGroup(
       "Sound and Vibration",
       [

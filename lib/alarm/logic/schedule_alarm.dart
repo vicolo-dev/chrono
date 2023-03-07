@@ -11,10 +11,13 @@ enum ScheduledNotificationType {
 Future<void> scheduleAlarm(
   int scheduleId,
   DateTime startDate, {
-  Duration repeatInterval = Duration.zero,
   ScheduledNotificationType type = ScheduledNotificationType.alarm,
 }) async {
   await cancelAlarm(scheduleId);
+
+  if (startDate.isBefore(DateTime.now())) {
+    throw Exception('Attempted to schedule alarm in the past ($startDate)');
+  }
 
   AndroidAlarmManager.oneShotAtTime(
     startDate,

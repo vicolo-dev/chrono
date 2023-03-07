@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 ColorScheme lightColorScheme = const ColorScheme(
   background: Color.fromARGB(255, 250, 250, 250),
-  error: Color.fromARGB(255, 194, 64, 64),
+  error: Color(0xFFFE4A49),
   secondary: Colors.cyan,
   brightness: Brightness.light,
   onError: Colors.white,

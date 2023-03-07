@@ -9,10 +9,12 @@ class DatePickerBottomSheet extends StatefulWidget {
     required this.title,
     required this.onChange,
     required this.initialDates,
+    this.rangeOnly = false,
   });
 
   final String title;
   final List<DateTime> initialDates;
+  final bool rangeOnly;
   final void Function(List<DateTime>) onChange;
 
   @override
@@ -21,13 +23,22 @@ class DatePickerBottomSheet extends StatefulWidget {
 
 class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
   List<DateTime> _selectedDates = [];
+  DateTime? _rangeStartDate;
+  DateTime? _rangeEndDate;
   DateTime _focusedDate = DateTime.now();
+
+  bool get _isSaveEnabled =>
+      widget.rangeOnly ? _selectedDates.length == 2 : _selectedDates.isNotEmpty;
 
   @override
   void initState() {
     super.initState();
     _selectedDates = List.from(widget.initialDates);
     _focusedDate = widget.initialDates.first;
+    if (widget.rangeOnly) {
+      _rangeStartDate = widget.initialDates.first;
+      _rangeEndDate = widget.initialDates.last;
+    }
   }
 
   @override
@@ -86,34 +97,70 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                       TableCalendar(
                         firstDay: DateTime.now(),
                         lastDay: DateTime.utc(2030, 3, 14),
-                        focusedDay: _focusedDate,
+                        focusedDay: _focusedDate.isAfter(DateTime.now())
+                            ? _focusedDate
+                            : DateTime.now(),
                         selectedDayPredicate: (date) {
-                          return _selectedDates.any(
-                              (selectedDate) => isSameDay(selectedDate, date));
+                          return widget.rangeOnly
+                              ? false
+                              : _selectedDates.any((selectedDate) =>
+                                  isSameDay(selectedDate, date));
                         },
                         onDaySelected: (newSelectedDate, focusedDate) {
                           setState(() {
                             _focusedDate = newSelectedDate;
 
-                            int dateIndex = _selectedDates.indexWhere(
-                                (date) => isSameDay(date, newSelectedDate));
-                            if (dateIndex != -1) {
-                              // If the selected day already exists, remove it from the list
-                              _selectedDates.removeAt(dateIndex);
-                            } else {
-                              // Add the selected day at the right position based on chronological order
-                              int index = 0;
-                              for (DateTime date in _selectedDates) {
-                                if (newSelectedDate.isAfter(date)) {
-                                  index++;
-                                } else {
-                                  break;
+                            if (!widget.rangeOnly) {
+                              int dateIndex = _selectedDates.indexWhere(
+                                  (date) => isSameDay(date, newSelectedDate));
+                              if (dateIndex != -1) {
+                                // If the selected day already exists, remove it from the list
+                                _selectedDates.removeAt(dateIndex);
+                              } else {
+                                // Add the selected day at the right position based on chronological order
+                                int index = 0;
+                                for (DateTime date in _selectedDates) {
+                                  if (newSelectedDate.isAfter(date)) {
+                                    index++;
+                                  } else {
+                                    break;
+                                  }
                                 }
+                                _selectedDates.insert(index, newSelectedDate);
                               }
-                              _selectedDates.insert(index, newSelectedDate);
                             }
                           });
-                          if (_selectedDates.isNotEmpty) {
+                          if (_isSaveEnabled) {
+                            widget.onChange(_selectedDates);
+                          }
+                        },
+                        rangeStartDay: _rangeStartDate,
+                        rangeEndDay: _rangeEndDate,
+                        onRangeSelected: (startDate, endDate, focusedDay) {
+                          setState(() {
+                            _focusedDate = startDate ?? focusedDay;
+
+                            _rangeStartDate = startDate;
+                            _rangeEndDate = endDate;
+
+                            // add all dates between start and end date
+                            if (widget.rangeOnly) {
+                              if (startDate != null && endDate != null) {
+                                _selectedDates = [startDate, endDate];
+                              }
+                            } else {
+                              _selectedDates = [];
+                              if (startDate != null && endDate != null) {
+                                DateTime date = startDate;
+                                while (date.isBefore(endDate)) {
+                                  _selectedDates.add(date);
+                                  date = date.add(const Duration(days: 1));
+                                }
+                                _selectedDates.add(endDate);
+                              }
+                            }
+                          });
+                          if (_isSaveEnabled) {
                             widget.onChange(_selectedDates);
                           }
                         },
@@ -139,6 +186,9 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                           ),
                         ),
                         daysOfWeekHeight: 48,
+                        rangeSelectionMode: widget.rangeOnly
+                            ? RangeSelectionMode.enforced
+                            : RangeSelectionMode.disabled,
                         calendarBuilders: CalendarBuilders(
                           disabledBuilder: _dateLabelBuilder(
                               colorScheme.onBackground.withOpacity(0.25)),
@@ -222,14 +272,14 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                         Spacer(),
                         TextButton(
                           onPressed: () {
-                            if (_selectedDates.isNotEmpty) {
+                            if (_isSaveEnabled) {
                               Navigator.pop(context, _selectedDates);
                             }
                           },
                           child: Text(
                             'Save',
                             style: theme.textTheme.labelLarge?.copyWith(
-                              color: _selectedDates.isNotEmpty
+                              color: _isSaveEnabled
                                   ? colorScheme.primary
                                   : colorScheme.onBackground.withOpacity(0.2),
                             ),

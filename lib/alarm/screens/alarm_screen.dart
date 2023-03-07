@@ -46,7 +46,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
     if (newAlarm == null) return;
 
-    newAlarm.schedule();
+    newAlarm.update();
 
     _listController.changeItems((alarms) => alarms[index] = newAlarm);
 
@@ -56,8 +56,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
   _showNextScheduleSnackBar(Alarm alarm) {
     Future.delayed(Duration.zero).then((value) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      DateTime? nextScheduleDateTime = alarm.nextScheduleDateTime;
+      if (nextScheduleDateTime == null) return;
       Duration etaNextAlarm =
-          alarm.nextScheduleDateTime.difference(DateTime.now().toLocal());
+          alarm.nextScheduleDateTime!.difference(DateTime.now().toLocal());
 
       String etaText = '';
 
@@ -126,10 +128,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
           itemBuilder: (alarm) => AlarmCard(
             alarm: alarm,
             onEnabledChange: (value) => _handleEnableChangeAlarm(alarm, value),
+            onPressDelete: () => _listController.deleteItem(alarm),
           ),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
           onAddItem: (alarm) {
-            alarm.schedule();
+            alarm.update();
             _showNextScheduleSnackBar(alarm);
           },
           onDeleteItem: (alarm) => setState(() {

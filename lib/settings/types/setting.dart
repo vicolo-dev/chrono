@@ -87,6 +87,10 @@ abstract class Setting<T> extends SettingItem {
     onChange?.call(context, value);
   }
 
+  void setValueWithoutNotify(T value) {
+    _value = value;
+  }
+
   dynamic get value => _value;
 
   @override
@@ -371,9 +375,12 @@ class ToggleSetting<T> extends Setting<List<bool>> {
 }
 
 class DateTimeSetting extends Setting<List<DateTime>> {
+  final bool rangeOnly;
+
   DateTimeSetting(
     String name,
     List<DateTime> defaultValue, {
+    this.rangeOnly = false,
     void Function(BuildContext, List<DateTime>)? onChange,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
@@ -384,6 +391,7 @@ class DateTimeSetting extends Setting<List<DateTime>> {
     return DateTimeSetting(
       name,
       List.from(_value),
+      rangeOnly: rangeOnly,
       onChange: onChange,
       description: description,
       enableConditions: enableConditions,
@@ -397,6 +405,11 @@ class DateTimeSetting extends Setting<List<DateTime>> {
   void setValue(BuildContext context, List<DateTime> value) {
     _value = List.from(value);
     onChange?.call(context, _value);
+  }
+
+  @override
+  void setValueWithoutNotify(List<DateTime> value) {
+    _value = List.from(value);
   }
 
   @override

@@ -1,7 +1,12 @@
 import 'package:clock_app/alarm/data/alarm_settings_schema.dart';
 import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
-import 'package:clock_app/alarm/types/alarm_schedules.dart';
+import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
@@ -16,12 +21,16 @@ List<AlarmSchedule> createSchedules(Settings settings) {
     DailyAlarmSchedule(),
     WeeklyAlarmSchedule(settings.getSetting("Week Days")),
     DatesAlarmSchedule(settings.getSetting("Dates")),
-    RangeAlarmSchedule()
+    RangeAlarmSchedule(
+      settings.getSetting("Date Range"),
+      settings.getSetting("Interval"),
+    ),
   ];
 }
 
 class Alarm extends ListItem {
-  bool _enabled = true;
+  bool _isEnabled = true;
+  bool _isFinished = false;
   TimeOfDay _timeOfDay;
   Settings _settings = alarmSettingsSchema.copy();
 
@@ -29,7 +38,8 @@ class Alarm extends ListItem {
 
   @override
   int get id => currentScheduleId;
-  bool get enabled => _enabled;
+  bool get isEnabled => _isEnabled;
+  bool get isFinished => _isFinished;
   TimeOfDay get timeOfDay => _timeOfDay;
   Settings get settings => _settings;
   String get label => _settings.getSetting("Label").value;
@@ -44,12 +54,9 @@ class Alarm extends ListItem {
   AlarmSchedule get activeSchedule =>
       _schedules.firstWhere((schedule) => schedule.runtimeType == scheduleType);
   List<AlarmRunner> get activeAlarmRunners => activeSchedule.alarmRunners;
-  bool get isRepeating => [
-        RangeAlarmSchedule,
-        DailyAlarmSchedule,
-        WeeklyAlarmSchedule
-      ].contains(scheduleType);
-  DateTime get nextScheduleDateTime => activeSchedule.nextScheduleDateTime;
+  bool get isRepeating =>
+      [DailyAlarmSchedule, WeeklyAlarmSchedule].contains(scheduleType);
+  DateTime? get nextScheduleDateTime => activeSchedule.currentScheduleDateTime;
   int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
 
   Alarm(this._timeOfDay) {
@@ -57,7 +64,7 @@ class Alarm extends ListItem {
   }
 
   Alarm.fromAlarm(Alarm alarm)
-      : _enabled = alarm._enabled,
+      : _isEnabled = alarm._isEnabled,
         _timeOfDay = alarm._timeOfDay,
         _settings = alarm._settings.copy() {
     _schedules = createSchedules(_settings);
@@ -76,7 +83,7 @@ class Alarm extends ListItem {
   }
 
   void toggle() {
-    if (_enabled) {
+    if (_isEnabled) {
       disable();
     } else {
       enable();
@@ -92,6 +99,8 @@ class Alarm extends ListItem {
   }
 
   void schedule() {
+    _isEnabled = true;
+
     for (var schedule in _schedules) {
       if (schedule.runtimeType == scheduleType) {
         schedule.schedule(_timeOfDay);
@@ -108,13 +117,31 @@ class Alarm extends ListItem {
   }
 
   void enable() {
-    _enabled = true;
+    _isEnabled = true;
     schedule();
   }
 
   void disable() {
-    _enabled = false;
+    _isEnabled = false;
     cancel();
+  }
+
+  void finish() {
+    disable();
+    _isFinished = true;
+  }
+
+  void update() {
+    if (_isEnabled) {
+      schedule();
+
+      if (activeSchedule.isDisabled) {
+        disable();
+      }
+      if (activeSchedule.isFinished) {
+        finish();
+      }
+    }
   }
 
   void setTimeOfDay(TimeOfDay timeOfDay) {
@@ -137,26 +164,48 @@ class Alarm extends ListItem {
     return (getSetting("Dates") as DateTimeSetting).value;
   }
 
+  DateTime getStartDate() {
+    return (getSetting("Date Range") as DateTimeSetting).value[0];
+  }
+
+  DateTime getEndDate() {
+    return (getSetting("Date Range") as DateTimeSetting).value[1];
+  }
+
+  Duration getInterval() {
+    return (getSetting("Interval") as SelectSetting<Duration>).value;
+  }
+
   Alarm.fromJson(Map<String, dynamic> json)
       : _timeOfDay = TimeOfDayUtils.fromJson(json['timeOfDay']),
-        _enabled = json['enabled'],
+        _isEnabled = json['enabled'],
+        _isFinished = json['finished'],
         _settings = alarmSettingsSchema.copy() {
     _settings.fromJson(json['settings']);
     _schedules = [
       OnceAlarmSchedule.fromJson(json['schedules'][0]),
       DailyAlarmSchedule.fromJson(json['schedules'][1]),
       WeeklyAlarmSchedule.fromJson(
-          json['schedules'][2], _settings.getSetting("Week Days")),
+        json['schedules'][2],
+        _settings.getSetting("Week Days"),
+      ),
       DatesAlarmSchedule.fromJson(
-          json['schedules'][3], settings.getSetting("Dates")),
-      RangeAlarmSchedule.fromJson(json['schedules'][4]),
+        json['schedules'][3],
+        settings.getSetting("Dates"),
+      ),
+      RangeAlarmSchedule.fromJson(
+        json['schedules'][4],
+        settings.getSetting("Date Range"),
+        settings.getSetting("Interval"),
+      ),
     ];
   }
 
   @override
   Map<String, dynamic> toJson() => {
         'timeOfDay': _timeOfDay.toJson(),
-        'enabled': _enabled,
+        'enabled': _isEnabled,
+        'finished': _isFinished,
         'schedules': _schedules
             .map<Map<String, dynamic>>((schedule) => schedule.toJson())
             .toList(),

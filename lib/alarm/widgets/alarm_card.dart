@@ -11,10 +11,12 @@ class AlarmCard extends StatefulWidget {
     super.key,
     required this.onEnabledChange,
     required this.alarm,
+    required this.onPressDelete,
   });
 
   final Alarm alarm;
   final void Function(bool) onEnabledChange;
+  final VoidCallback onPressDelete;
 
   @override
   State<AlarmCard> createState() => _AlarmCardState();
@@ -36,7 +38,7 @@ class _AlarmCardState extends State<AlarmCard> {
                   children: [
                     Text(widget.alarm.label,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: widget.alarm.enabled
+                              color: widget.alarm.isEnabled
                                   ? Theme.of(context)
                                       .colorScheme
                                       .onBackground
@@ -53,7 +55,7 @@ class _AlarmCardState extends State<AlarmCard> {
                   ClockDisplay(
                       dateTime: widget.alarm.timeOfDay.toDateTime(),
                       scale: 0.6,
-                      color: widget.alarm.enabled
+                      color: widget.alarm.isEnabled
                           ? null
                           : Theme.of(context)
                               .colorScheme
@@ -65,7 +67,7 @@ class _AlarmCardState extends State<AlarmCard> {
                 children: [
                   Icon(
                     timeOfDayIcon.icon,
-                    color: widget.alarm.enabled
+                    color: widget.alarm.isEnabled
                         ? timeOfDayIcon.color
                         : Theme.of(context)
                             .colorScheme
@@ -77,7 +79,7 @@ class _AlarmCardState extends State<AlarmCard> {
                   Text(
                     getAlarmScheduleDescription(widget.alarm),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: widget.alarm.enabled
+                          color: widget.alarm.isEnabled
                               ? Theme.of(context)
                                   .colorScheme
                                   .onBackground
@@ -96,10 +98,22 @@ class _AlarmCardState extends State<AlarmCard> {
           Column(
             children: [
               // const SizedBox(width: 8),
-              Switch(
-                value: widget.alarm.enabled,
-                onChanged: widget.onEnabledChange,
-              ),
+              widget.alarm.isFinished
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        onPressed: widget.onPressDelete,
+                        icon: Icon(
+                          Icons.delete_rounded,
+                          color: Theme.of(context).colorScheme.error,
+                          size: 32,
+                        ),
+                      ),
+                    )
+                  : Switch(
+                      value: widget.alarm.isEnabled,
+                      onChanged: widget.onEnabledChange,
+                    ),
             ],
           )
         ],

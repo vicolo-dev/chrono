@@ -7,14 +7,7 @@ Future<void> updateAlarm(int scheduleId) async {
       alarms.indexWhere((alarm) => alarm.hasScheduleWithId(scheduleId));
   Alarm alarm = alarms[alarmIndex];
 
-  if (alarm.isRepeating) {
-    alarm.schedule();
-  } else {
-    print(alarm.nextScheduleDateTime);
-    if (alarm.nextScheduleDateTime.isBefore(DateTime.now())) {
-      alarm.disable();
-    }
-  }
+  alarm.update();
 
   alarms[alarmIndex] = alarm;
   await saveList("alarms", alarms);
@@ -22,17 +15,6 @@ Future<void> updateAlarm(int scheduleId) async {
 
 Future<void> updateAlarms() async {
   List<Alarm> alarms = await loadList("alarms");
-
-  alarms.where((alarm) => alarm.enabled).forEach((alarm) {
-    if (alarm.isRepeating) {
-      alarm.schedule();
-    } else {
-      print(alarm.nextScheduleDateTime);
-      if (alarm.nextScheduleDateTime.isBefore(DateTime.now())) {
-        alarm.disable();
-      }
-    }
-  });
-
+  alarms.where((alarm) => alarm.isEnabled).forEach((alarm) => alarm.update());
   await saveList("alarms", alarms);
 }

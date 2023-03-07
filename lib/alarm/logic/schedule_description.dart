@@ -1,6 +1,10 @@
 import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/types/alarm_schedules.dart';
+import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +20,10 @@ bool weekdaysContainsAll(List<Weekday> alarmWeekdays, List<String> names) {
 }
 
 String getAlarmScheduleDescription(Alarm alarm) {
-  if (alarm.enabled == false) {
+  if (alarm.isFinished) {
+    return 'No future dates';
+  }
+  if (!alarm.isEnabled) {
     return 'Not scheduled';
   }
   switch (alarm.scheduleType) {
@@ -42,10 +49,12 @@ String getAlarmScheduleDescription(Alarm alarm) {
     case DatesAlarmSchedule:
       List<DateTime> dates = alarm.getDates();
       return 'On ${DateFormat('dd/MM/yy').format(dates[0])}${dates.length > 1 ? ' and ${dates.length - 1} other${dates.length > 2 ? 's' : ''}' : ''}';
-    // case RangeAlarmSchedule:
-    //   DateTime rangeStart = alarm.getRangeStartDate();
-    //   DateTime rangeEnd = alarm.getRangeEndDate();
-    //   return 'From ${rangeStart.day}/${rangeStart.month} to ${rangeEnd.day}/${rangeEnd.month}';
+    case RangeAlarmSchedule:
+      DateTime rangeStart = alarm.getStartDate();
+      DateTime rangeEnd = alarm.getEndDate();
+      Duration interval = alarm.getInterval();
+
+      return '${interval.inDays == 1 ? "Daily" : "Weekly"} from ${DateFormat('dd/MM/yy').format(rangeStart)} to ${DateFormat('dd/MM/yy').format(rangeEnd)}';
     default:
       return 'Not scheduled';
   }
