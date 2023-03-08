@@ -1,3 +1,4 @@
+import 'package:clock_app/timer/screens/timer_fullscreen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:great_list_view/great_list_view.dart';
@@ -78,6 +79,15 @@ class _TimerScreenState extends State<TimerScreen> {
               timer: timer,
               onToggleState: () => _handleToggleState(timer),
             ),
+            onTapItem: (timer, index) async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TimerFullscreen(
+                        timer: timer,
+                        onToggleState: () => _handleToggleState(timer))),
+              );
+            },
             onDeleteItem: _handleDeleteTimer,
             duplicateItem: (alarm) => ClockTimer.fromTimer(alarm),
             placeholderText: "No timers created",

@@ -36,6 +36,7 @@ class _ToggleSettingCardState<T> extends State<ToggleSettingCard<T>> {
 
         widget.onChanged?.call(widget.setting.value);
       },
+      padding: widget.showSummaryView ? 16 : 0,
     );
 
     return widget.showSummaryView

@@ -7,6 +7,7 @@ import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -25,11 +26,26 @@ class CustomizeAlarmScreen extends StatefulWidget {
 class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
   late Alarm _alarm;
   int lastPlayedRingtoneIndex = -1;
+  late String dateFormat;
+
+  void setDateFormat(dynamic newDateFormat) {
+    setState(() {
+      dateFormat = newDateFormat;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _alarm = Alarm.fromAlarm(widget.initialAlarm);
+    appSettings.addSettingListener("Date Format", setDateFormat);
+    setDateFormat(appSettings.getSetting("Date Format").value);
+  }
+
+  @override
+  void dispose() {
+    appSettings.removeSettingListener("Date Format", setDateFormat);
+    super.dispose();
   }
 
   @override
@@ -86,7 +102,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          getAlarmScheduleDescription(_alarm),
+                          getAlarmScheduleDescription(_alarm, dateFormat),
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall

@@ -19,7 +19,7 @@ bool weekdaysContainsAll(List<Weekday> alarmWeekdays, List<String> names) {
   return names.every((name) => weekdaysContains(alarmWeekdays, name));
 }
 
-String getAlarmScheduleDescription(Alarm alarm) {
+String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
   if (alarm.isFinished) {
     return 'No future dates';
   }
@@ -48,13 +48,13 @@ String getAlarmScheduleDescription(Alarm alarm) {
       return 'Every ${weekdays.where((weekday) => alarmWeekdays.contains(weekday)).map((weekday) => weekday.displayName).join(', ')}';
     case DatesAlarmSchedule:
       List<DateTime> dates = alarm.getDates();
-      return 'On ${DateFormat('dd/MM/yy').format(dates[0])}${dates.length > 1 ? ' and ${dates.length - 1} other${dates.length > 2 ? 's' : ''}' : ''}';
+      return 'On ${DateFormat(dateFormat).format(dates[0])}${dates.length > 1 ? ' and ${dates.length - 1} other${dates.length > 2 ? 's' : ''}' : ''}';
     case RangeAlarmSchedule:
       DateTime rangeStart = alarm.getStartDate();
       DateTime rangeEnd = alarm.getEndDate();
       Duration interval = alarm.getInterval();
 
-      return '${interval.inDays == 1 ? "Daily" : "Weekly"} from ${DateFormat('dd/MM/yy').format(rangeStart)} to ${DateFormat('dd/MM/yy').format(rangeEnd)}';
+      return '${interval.inDays == 1 ? "Daily" : "Weekly"} from ${DateFormat(dateFormat).format(rangeStart)} to ${DateFormat(dateFormat).format(rangeEnd)}';
     default:
       return 'Not scheduled';
   }

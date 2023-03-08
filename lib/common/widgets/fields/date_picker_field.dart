@@ -1,4 +1,5 @@
 import 'package:clock_app/common/widgets/fields/date_picker_bottom_sheet.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/widgets/duration_picker.dart';
 import 'package:flutter/material.dart';
@@ -27,18 +28,25 @@ class DatePickerField<T> extends StatefulWidget {
 enum SelectType { color, text }
 
 class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
+  late String dateFormat;
+
+  void setDateFormat(dynamic newDateFormat) {
+    setState(() {
+      dateFormat = newDateFormat;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    // if (widget.value.first.isBefore()) {
-    //   if (widget.rangeOnly) {
-    //     widget.onChange(
-    //         [DateTime.now(), DateTime.now().add(const Duration(days: 2))]);
-    //   } else {
-    //     widget.onChange([DateTime.now()]);
-    //   }
-    // }
-    // _currentSelectedIndex = widget.selectedIndex;
+    appSettings.addSettingListener("Date Format", setDateFormat);
+    setDateFormat(appSettings.getSetting("Date Format").value);
+  }
+
+  @override
+  void dispose() {
+    appSettings.removeSettingListener("Date Format", setDateFormat);
+    super.dispose();
   }
 
   @override
@@ -105,7 +113,7 @@ class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
                   runSpacing: 6.0,
                   children: [
                     for (var i = 0; i < widget.value.length; i++)
-                      DateChip(date: widget.value[i]),
+                      DateChip(date: widget.value[i], dateFormat: dateFormat),
                   ],
                 ),
               ),
@@ -121,9 +129,11 @@ class DateChip extends StatelessWidget {
   const DateChip({
     super.key,
     required this.date,
+    required this.dateFormat,
   });
 
   final DateTime date;
+  final String dateFormat;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +144,7 @@ class DateChip extends StatelessWidget {
       padding: EdgeInsets.zero,
       // side: ,
       label: Text(
-        DateFormat("dd/MM/yy").format(date),
+        DateFormat(dateFormat).format(date),
         style: TextStyle(fontSize: 10),
       ),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

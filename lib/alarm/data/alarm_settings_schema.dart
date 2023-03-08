@@ -13,55 +13,62 @@ import 'package:just_audio/just_audio.dart';
 
 Settings alarmSettingsSchema = Settings([
   StringSetting("Label", ""),
-  SelectSetting<Type>(
-    "Schedule Type",
+  SettingGroup(
+    "Schedule",
     [
-      SelectSettingOption("Once", OnceAlarmSchedule,
-          description: "Will ring at the next occurrence of the time."),
-      SelectSettingOption("Daily", DailyAlarmSchedule,
-          description: "Will ring every day"),
-      SelectSettingOption("On Specified Week Days", WeeklyAlarmSchedule,
-          description: "Will repeat on the specified week days"),
-      SelectSettingOption("On Specific Dates", DatesAlarmSchedule,
-          description: "Will repeat on the specified dates"),
-      SelectSettingOption("Date Range", RangeAlarmSchedule,
-          description: "Will repeat during the specified date range"),
+      SelectSetting<Type>(
+        "Type",
+        [
+          SelectSettingOption("Once", OnceAlarmSchedule,
+              description: "Will ring at the next occurrence of the time."),
+          SelectSettingOption("Daily", DailyAlarmSchedule,
+              description: "Will ring every day"),
+          SelectSettingOption("On Specified Week Days", WeeklyAlarmSchedule,
+              description: "Will repeat on the specified week days"),
+          SelectSettingOption("On Specific Dates", DatesAlarmSchedule,
+              description: "Will repeat on the specified dates"),
+          SelectSettingOption("Date Range", RangeAlarmSchedule,
+              description: "Will repeat during the specified date range"),
+        ],
+      ),
+      ToggleSetting("Week Days", [
+        ToggleSettingOption("M", 1),
+        ToggleSettingOption("T", 2),
+        ToggleSettingOption("W", 3),
+        ToggleSettingOption("T", 4),
+        ToggleSettingOption("F", 5),
+        ToggleSettingOption("S", 6),
+        ToggleSettingOption("S", 7),
+      ], enableConditions: [
+        SettingEnableCondition("Type", WeeklyAlarmSchedule)
+      ]),
+      DateTimeSetting(
+        "Dates",
+        [],
+        enableConditions: [SettingEnableCondition("Type", DatesAlarmSchedule)],
+      ),
+      DateTimeSetting(
+        "Date Range",
+        [],
+        rangeOnly: true,
+        enableConditions: [SettingEnableCondition("Type", RangeAlarmSchedule)],
+      ),
+      SelectSetting<Duration>(
+        "Interval",
+        [
+          SelectSettingOption("Daily", const Duration(days: 1)),
+          SelectSettingOption("Weekly", const Duration(days: 7)),
+        ],
+        enableConditions: [SettingEnableCondition("Type", RangeAlarmSchedule)],
+      ),
     ],
-  ),
-  ToggleSetting("Week Days", [
-    ToggleSettingOption("M", 1),
-    ToggleSettingOption("T", 2),
-    ToggleSettingOption("W", 3),
-    ToggleSettingOption("T", 4),
-    ToggleSettingOption("F", 5),
-    ToggleSettingOption("S", 6),
-    ToggleSettingOption("S", 7),
-  ], enableConditions: [
-    SettingEnableCondition("Schedule Type", WeeklyAlarmSchedule)
-  ]),
-  DateTimeSetting(
-    "Dates",
-    [],
-    enableConditions: [
-      SettingEnableCondition("Schedule Type", DatesAlarmSchedule)
-    ],
-  ),
-  DateTimeSetting(
-    "Date Range",
-    [],
-    rangeOnly: true,
-    enableConditions: [
-      SettingEnableCondition("Schedule Type", RangeAlarmSchedule)
-    ],
-  ),
-  SelectSetting<Duration>(
-    "Interval",
-    [
-      SelectSettingOption("Daily", const Duration(days: 1)),
-      SelectSettingOption("Weekly", const Duration(days: 7)),
-    ],
-    enableConditions: [
-      SettingEnableCondition("Schedule Type", RangeAlarmSchedule)
+    icon: Icons.timer,
+    summarySettings: [
+      "Type",
+      "Week Days",
+      "Dates",
+      "Date Range",
+      "Interval",
     ],
   ),
   SettingGroup(

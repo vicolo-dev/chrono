@@ -43,7 +43,7 @@ class Alarm extends ListItem {
   TimeOfDay get timeOfDay => _timeOfDay;
   Settings get settings => _settings;
   String get label => _settings.getSetting("Label").value;
-  Type get scheduleType => _settings.getSetting("Schedule Type").value;
+  Type get scheduleType => _settings.getSetting("Type").value;
   String get ringtoneUri => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
   double get snoozeLength => _settings.getSetting("Length").value;

@@ -45,7 +45,11 @@ class DatesAlarmSchedule extends AlarmSchedule {
       : _datesSetting = datesSetting as DateTimeSetting,
         _alarmRunner = AlarmRunner(),
         _isFinished = false,
-        super();
+        super() {
+    if (_datesSetting.value.isEmpty) {
+      _datesSetting.setValueWithoutNotify([DateTime.now()]);
+    }
+  }
 
   @override
   void cancel() {
