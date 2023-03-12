@@ -55,7 +55,6 @@ class RingtonePlayer {
         Future.delayed(
           Duration(milliseconds: i * (secondsToMaxVolume * 100)),
           () {
-            print("at time ${i * secondsToMaxVolume} set volume to ${i / 10}");
             activePlayer?.setVolume(i / 10);
           },
         );

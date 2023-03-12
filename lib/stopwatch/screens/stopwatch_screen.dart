@@ -177,8 +177,9 @@ class LapComparer extends StatelessWidget {
                   style: TextStyle(fontSize: 10.0, color: Colors.white)),
               Spacer(),
               Text(
-                  comparisonLap?.lapTime.toTimeString(showMilliseconds: true) ??
-                      "",
+                  comparisonLap != null
+                      ? 'Lap ${comparisonLap?.number}: ${comparisonLap?.lapTime.toTimeString(showMilliseconds: true)}'
+                      : '',
                   style: TextStyle(fontSize: 10.0, color: Colors.white)),
             ],
           ),

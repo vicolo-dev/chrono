@@ -114,9 +114,16 @@ class _TimerScreenState extends State<TimerScreen> {
       ]),
       FAB(
         onPressed: () async {
-          TimeDuration? timeDuration = await showDurationPicker(context);
-          if (timeDuration == null) return;
-          ClockTimer timer = ClockTimer(timeDuration);
+          TimerPreset? timerPreset = await showDurationPicker(
+            context,
+            showCustomize: true,
+            showPresets: true,
+          );
+          if (timerPreset == null) return;
+          ClockTimer timer = ClockTimer(
+            timerPreset.duration,
+            label: timerPreset.name.isNotEmpty ? timerPreset.name : "",
+          );
           timer.start();
           _listController.addItem(timer);
         },

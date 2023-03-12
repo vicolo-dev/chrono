@@ -4,12 +4,15 @@ import 'package:clock_app/theme/text.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
+double bandWidth = 90;
+
 class DialDurationPicker extends StatefulWidget {
-  const DialDurationPicker(
-      {super.key,
-      required this.duration,
-      required this.onChange,
-      this.showHours = true});
+  const DialDurationPicker({
+    super.key,
+    required this.duration,
+    required this.onChange,
+    this.showHours = true,
+  });
 
   final TimeDuration duration;
   final void Function(TimeDuration) onChange;
@@ -23,9 +26,9 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
   @override
   Widget build(BuildContext context) {
     double originalWidth = MediaQuery.of(context).size.width;
-    double width = originalWidth - 48;
+    double width = originalWidth - 64;
 
-    double leftPadding = 8;
+    double leftPadding = 0;
 
     return Stack(
       children: [
@@ -52,13 +55,13 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
           ),
         ),
         Positioned(
-          left: 40 + leftPadding,
-          top: 40 + leftPadding,
+          left: bandWidth / 2 + leftPadding,
+          top: bandWidth / 2 + leftPadding,
           child: TimerKnob(
             maxValue: 60,
             minValue: 0,
             value: widget.duration.minutes,
-            size: Size(width - 80, width - 80),
+            size: Size(width - bandWidth, width - bandWidth),
             onChanged: (value) {
               widget.onChange(TimeDuration(
                   hours: widget.duration.hours,
@@ -75,13 +78,13 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
         ),
         if (widget.showHours)
           Positioned(
-            left: 80 + leftPadding,
-            top: 80 + leftPadding,
+            left: bandWidth + leftPadding,
+            top: bandWidth + leftPadding,
             child: TimerKnob(
               maxValue: 24,
               minValue: 0,
               value: widget.duration.hours,
-              size: Size(width - 160, width - 160),
+              size: Size(width - bandWidth * 2, width - bandWidth * 2),
               onChanged: (value) {
                 widget.onChange(TimeDuration(
                     hours: value,
@@ -133,17 +136,17 @@ class TimerKnob extends StatefulWidget {
 
 class _TimerKnobState extends State<TimerKnob> {
   double _angle = 0.0;
-  late int _currentDuration;
+  // late int widget.value;
 
   @override
   void initState() {
     super.initState();
-    _currentDuration = widget.value;
-    _angle = _durationToAngle(_currentDuration);
+    // widget.value = widget.value;
   }
 
   @override
   Widget build(BuildContext context) {
+    _angle = _durationToAngle(widget.value);
     final center = Offset(widget.size.width / 2, widget.size.height / 2);
     final radius = math.min(center.dx, center.dy);
 
@@ -171,7 +174,7 @@ class _TimerKnobState extends State<TimerKnob> {
 
   void _onTapUp(TapUpDetails tapUpDetails) {
     _updateAngle(tapUpDetails.localPosition, snapToMajor: true);
-    widget.onChanged(_currentDuration);
+    // widget.onChanged(widget.value);
   }
 
   void _onPanStart(DragStartDetails details) {
@@ -180,11 +183,11 @@ class _TimerKnobState extends State<TimerKnob> {
 
   void _onPanUpdate(DragUpdateDetails details) {
     _updateAngle(details.localPosition);
-    widget.onChanged(_currentDuration);
+    // widget.onChanged(widget.value);
   }
 
   void _onPanEnd(DragEndDetails details) {
-    widget.onChanged(_currentDuration);
+    // widget.onChanged(widget.value);
   }
 
   void _updateAngle(Offset position, {bool snapToMajor = false}) {
@@ -203,7 +206,7 @@ class _TimerKnobState extends State<TimerKnob> {
 
     setState(() {
       _angle = angle;
-      _currentDuration = _angleToDuration(angle);
+      widget.onChanged(_angleToDuration(angle));
     });
   }
 
@@ -287,8 +290,12 @@ class _TimerKnobPainter extends CustomPainter {
       textPainter.layout(minWidth: 0, maxWidth: size.width);
 
       final offset = Offset(
-          center.dx + math.cos(i - math.pi / 2) * (trackRadius - 20) - 6,
-          center.dy + math.sin(i - math.pi / 2) * (trackRadius - 20) - 6);
+          center.dx +
+              math.cos(i - math.pi / 2) * (trackRadius - bandWidth / 4) -
+              6,
+          center.dy +
+              math.sin(i - math.pi / 2) * (trackRadius - bandWidth / 4) -
+              6);
 
       textPainter.paint(canvas, offset);
     }

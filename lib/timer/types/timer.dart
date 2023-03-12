@@ -10,6 +10,7 @@ import 'package:clock_app/timer/types/time_duration.dart';
 
 class ClockTimer extends ListItem {
   final TimeDuration _duration;
+  String _label;
   TimeDuration _currentDuration;
   int _secondsRemainingOnPause;
   DateTime _startTime;
@@ -19,6 +20,7 @@ class ClockTimer extends ListItem {
 
   @override
   int get id => _id;
+  String get label => _label;
   TimeDuration get duration => _duration;
   TimeDuration get currentDuration => _currentDuration;
   int get remainingSeconds {
@@ -35,8 +37,9 @@ class ClockTimer extends ListItem {
   bool get isRunning => _state == TimerState.running;
   TimerState get state => _state;
 
-  ClockTimer(this._duration)
+  ClockTimer(this._duration, {String label = ""})
       : _id = UniqueKey().hashCode,
+        _label = label.isNotEmpty ? label : '${_duration.toString()} timer',
         _currentDuration = TimeDuration.from(_duration),
         _secondsRemainingOnPause = _duration.inSeconds,
         _startTime = DateTime(0),
@@ -44,6 +47,7 @@ class ClockTimer extends ListItem {
 
   ClockTimer.from(ClockTimer timer)
       : _duration = timer._duration,
+        _label = timer._label,
         _currentDuration = TimeDuration.from(timer._duration),
         _secondsRemainingOnPause = timer._duration.inSeconds,
         _startTime = DateTime(0),
@@ -102,6 +106,7 @@ class ClockTimer extends ListItem {
   Map<String, dynamic> toJson() {
     return {
       'duration': _duration.inSeconds,
+      "label": _label,
       'currentDuration': _currentDuration.inSeconds,
       'id': _id,
       'durationRemainingOnPause': _secondsRemainingOnPause,
@@ -112,6 +117,7 @@ class ClockTimer extends ListItem {
 
   ClockTimer.fromJson(Map<String, dynamic> json)
       : _duration = TimeDuration.fromSeconds(json['duration']),
+        _label = json['label'],
         _currentDuration = TimeDuration.fromSeconds(json['currentDuration']),
         _secondsRemainingOnPause = json['durationRemainingOnPause'],
         _startTime = DateTime.parse(json['startTime']),

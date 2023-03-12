@@ -34,7 +34,6 @@ class ListenerManager {
   // }
 
   static void notifyListeners(String key) {
-    print(_listeners[key]?.length);
     _listeners[key]?.forEach((listener) => listener());
   }
 }

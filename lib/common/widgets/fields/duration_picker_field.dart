@@ -32,11 +32,12 @@ class _DurationPickerFieldState<T> extends State<DurationPickerField<T>> {
   @override
   Widget build(BuildContext context) {
     void showPicker() async {
-      TimeDuration? newTimeDuration = await showDurationPicker(
+      TimeDuration? newTimeDuration = (await showDurationPicker(
         context,
         showHours: false,
         initialTime: widget.value,
-      );
+      ))
+          ?.duration;
       if (newTimeDuration == null) return;
       setState(() {
         widget.onChange(newTimeDuration);

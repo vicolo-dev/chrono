@@ -36,7 +36,6 @@ class _TimerCardState extends State<TimerCard> {
           valueNotifier.value = widget.timer.remainingSeconds.toDouble();
         });
       }
-      print('update timer ${widget.timer.remainingSeconds.toDouble()}');
       valueNotifier.value = widget.timer.remainingSeconds.toDouble();
       // remainingSeconds = widget.timer.remainingSeconds;
     });
@@ -78,7 +77,7 @@ class _TimerCardState extends State<TimerCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${widget.timer.duration.toString()} timer',
+                  widget.timer.label,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
@@ -89,7 +88,7 @@ class _TimerCardState extends State<TimerCard> {
                 Text(
                   TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontSize: 48,
+                        fontSize: remainingSeconds > 3600 ? 40 : 48,
                       ),
                 ),
               ],

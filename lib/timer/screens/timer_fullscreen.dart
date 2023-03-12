@@ -38,7 +38,6 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
 
   void updateTimer() {
     setState(() {
-      print(timer.toJson());
       periodicTimer?.cancel();
       if (timer.isRunning) {
         periodicTimer =
@@ -92,7 +91,7 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '${timer.duration.toString()} timer',
+              widget.timer.label,
               style: Theme.of(context).textTheme.displayMedium?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -113,7 +112,7 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                 return Text(
                   TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontSize: 64,
+                        fontSize: remainingSeconds > 3600 ? 48 : 64,
                       ),
                 );
               },
