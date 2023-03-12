@@ -18,7 +18,6 @@ List<Widget> getSettingWidgets(
   Settings settings, {
   List<SettingItem>? settingItems,
   bool showSummaryView = false,
-  bool showExpandedView = false,
   VoidCallback? checkDependentEnableConditions,
   VoidCallback? onSettingChanged,
 }) {
@@ -31,7 +30,6 @@ List<Widget> getSettingWidgets(
       item,
       showSummaryView: showSummaryView,
       checkDependentEnableConditions: checkDependentEnableConditions,
-      showExpandedView: showExpandedView,
       onSettingChanged: onSettingChanged,
     );
     if (widget != null) {
@@ -45,7 +43,6 @@ Widget? getSettingWidget(
   Settings settings,
   SettingItem item, {
   bool showSummaryView = false,
-  bool showExpandedView = false,
   VoidCallback? checkDependentEnableConditions,
   VoidCallback? onSettingChanged,
 }) {
@@ -54,7 +51,6 @@ Widget? getSettingWidget(
       settings: settings,
       settingGroup: item,
       checkDependentEnableConditions: checkDependentEnableConditions,
-      showExpandedView: showExpandedView,
       onSettingChanged: onSettingChanged,
     );
   } else if (item is Setting) {

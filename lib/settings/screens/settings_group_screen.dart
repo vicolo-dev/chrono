@@ -42,7 +42,6 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
                 widget.settings,
                 settingItems: widget.settingsGroup.settingItems,
                 checkDependentEnableConditions: () => setState(() {}),
-                showExpandedView: true,
                 onSettingChanged: () {
                   widget.settings.save("settings");
                 },

@@ -17,12 +17,18 @@ class SettingGroup extends SettingItem {
   String description;
   IconData? icon;
   List<String> summarySettings;
+  bool? showExpandedView;
 
   List<SettingItem> settingItems;
 
-  SettingGroup(String name, this.settingItems,
-      {this.icon, this.summarySettings = const [], this.description = ""})
-      : super(name);
+  SettingGroup(
+    String name,
+    this.settingItems, {
+    this.icon,
+    this.summarySettings = const [],
+    this.description = "",
+    this.showExpandedView,
+  }) : super(name);
 
   @override
   SettingGroup copy() {
@@ -45,6 +51,17 @@ class SettingGroup extends SettingItem {
       }
     }
     return allSettings;
+  }
+
+  List<SettingGroup> get settingGroups {
+    List<SettingGroup> allSettingGroups = [];
+    for (var item in settingItems) {
+      if (item is SettingGroup) {
+        allSettingGroups.add(item);
+        allSettingGroups.addAll(item.settingGroups);
+      }
+    }
+    return allSettingGroups;
   }
 
   @override

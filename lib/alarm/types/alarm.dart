@@ -10,6 +10,7 @@ import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
@@ -32,7 +33,8 @@ class Alarm extends ListItem {
   bool _isEnabled = true;
   bool _isFinished = false;
   TimeOfDay _timeOfDay;
-  Settings _settings = alarmSettingsSchema.copy();
+  Settings _settings = Settings(
+      appSettings.getSettingGroup("Default Settings").copy().settingItems);
 
   late List<AlarmSchedule> _schedules;
 
@@ -180,7 +182,10 @@ class Alarm extends ListItem {
       : _timeOfDay = TimeOfDayUtils.fromJson(json['timeOfDay']),
         _isEnabled = json['enabled'],
         _isFinished = json['finished'],
-        _settings = alarmSettingsSchema.copy() {
+        _settings = Settings(appSettings
+            .getSettingGroup("Default Settings")
+            .copy()
+            .settingItems) {
     _settings.fromJson(json['settings']);
     _schedules = [
       OnceAlarmSchedule.fromJson(json['schedules'][0]),

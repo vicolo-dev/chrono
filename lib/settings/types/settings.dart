@@ -9,13 +9,16 @@ class Settings {
   final Map<String, List<void Function(dynamic)>> _settingListeners;
 
   final List<Setting> _settings = [];
+  final List<SettingGroup> _settingGroups = [];
 
   Settings(this.items) : _settingListeners = {} {
     for (var item in items) {
       if (item is Setting) {
-        settings.add(item);
+        _settings.add(item);
       } else if (item is SettingGroup) {
-        settings.addAll(item.settings);
+        _settingGroups.add(item);
+        _settingGroups.addAll(item.settingGroups);
+        _settings.addAll(item.settings);
       }
     }
   }
@@ -24,6 +27,7 @@ class Settings {
       _settingListeners;
 
   List<Setting> get settings => _settings;
+  List<SettingGroup> get settingGroups => _settingGroups;
 
   void addSettingListener(String settingName, void Function(dynamic) listener) {
     if (!_settingListeners.containsKey(settingName)) {
@@ -45,7 +49,12 @@ class Settings {
   }
 
   Setting getSetting(String name) {
-    return settings.firstWhere((setting) => setting.name == name);
+    return _settings.firstWhere((setting) => setting.name == name);
+  }
+
+  SettingGroup getSettingGroup(String name) {
+    return _settingGroups
+        .firstWhere((settingGroup) => settingGroup.name == name);
   }
 
   Map<String, dynamic> toJson() {

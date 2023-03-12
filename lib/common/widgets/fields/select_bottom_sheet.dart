@@ -71,6 +71,7 @@ class SelectBottomSheet extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(height: 16.0),
             Flexible(
               child: choices[0].runtimeType == SelectTextChoice
                   ? ListView.builder(

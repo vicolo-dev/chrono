@@ -36,7 +36,7 @@ class _SliderFieldState extends State<SliderField> {
   @override
   Widget build(BuildContext context) {
     String valueString = '${widget.value.toStringAsFixed(0)} ${widget.unit}';
-    String maxValueString = '${widget.max.toStringAsFixed(0)} ${widget.unit}';
+    String maxValueString = '0000 ${widget.unit}';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(

@@ -10,7 +10,6 @@ class SettingGroupCard extends StatelessWidget {
   final Settings settings;
   final VoidCallback? checkDependentEnableConditions;
   final VoidCallback? onSettingChanged;
-  final bool showExpandedView;
 
   // final VoidCallback onTap;
 
@@ -19,7 +18,6 @@ class SettingGroupCard extends StatelessWidget {
     required this.settingGroup,
     required this.settings,
     this.checkDependentEnableConditions,
-    this.showExpandedView = false,
     this.onSettingChanged,
   }) : super(key: key);
 
@@ -133,21 +131,29 @@ class SettingGroupCard extends StatelessWidget {
                     settingGroup.name,
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
-                  const SizedBox(height: 4),
-                  if (settingGroup.description.isNotEmpty)
+                  if (settingGroup.description.isNotEmpty) ...[
+                    const SizedBox(height: 4),
                     Text(
                       settingGroup.description,
                       style: Theme.of(context).textTheme.bodyMedium,
                     )
+                  ]
                 ],
               ),
             ),
-            Icon(Icons.arrow_right,
-                color: Theme.of(context).colorScheme.onBackground),
+            Icon(
+              Icons.chevron_right_rounded,
+              color:
+                  Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+            ),
           ],
         ),
       ),
     );
+
+    bool showExpandedView = settingGroup.showExpandedView ??
+        settingGroup.settingItems
+            .every((item) => item.runtimeType != SettingGroup);
 
     return showExpandedView
         ? expandedView

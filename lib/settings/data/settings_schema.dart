@@ -1,3 +1,4 @@
+import 'package:clock_app/alarm/data/alarm_settings_schema.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/icons/flux_icons.dart';
@@ -54,86 +55,99 @@ List<SettingItem> settingsItems = [
     description: "Set app wide settings like time format",
   ),
   SettingGroup(
-      "Appearance",
-      [
-        SettingGroup(
-          "Color",
-          [
-            SelectSetting<ColorScheme>(
-              "Color Scheme",
-              [
-                SelectSettingOption("Light", lightColorScheme),
-                SelectSettingOption("Dark", darkColorScheme),
-                SelectSettingOption("Amoled", amoledColorScheme),
-              ],
-              onSelect: (context, index, colorScheme) {
-                App.setColorScheme(
-                    context,
-                    colorScheme.copyWith(
-                      primary: Theme.of(context).colorScheme.primary,
-                      secondary: Theme.of(context).colorScheme.secondary,
-                    ));
-              },
-            ),
-            SelectSetting<Color>(
-              "Accent Color",
-              [
-                SelectSettingOption("Cyan", Colors.cyan),
-                SelectSettingOption("Red", Colors.red),
-                SelectSettingOption("Green", Colors.green),
-                SelectSettingOption("Blue", Colors.blue),
-                SelectSettingOption("Yellow", Colors.yellow),
-                SelectSettingOption("Orange", Colors.orange),
-                SelectSettingOption("Purple", Colors.purple),
-                SelectSettingOption("Pink", Colors.pink),
-                SelectSettingOption("Teal", Colors.teal),
-                SelectSettingOption("Lime", Colors.lime),
-                SelectSettingOption("Indigo", Colors.indigo),
-              ],
-              onSelect: (context, index, color) {
-                App.setAccentColor(context, color);
-              },
-            ),
-          ],
-        ),
-        SettingGroup(
-          "Shapes",
-          [
-            SliderSetting("Corner Roundness", 0, 36,
-                (defaultTheme.extension<ThemeStyle>()?.borderRadius)!,
-                onChange: (context, radius) {
-              App.setCardRadius(context, radius);
-            }),
-          ],
-        ),
-        SettingGroup("Shadows", [
-          SwitchSetting(
-            "Use Accent Color",
-            false,
-            onChange: (context, value) {
-              App.setShadowColor(context,
-                  value ? Theme.of(context).colorScheme.primary : Colors.black);
+    "Appearance",
+    [
+      SettingGroup(
+        "Color",
+        [
+          SelectSetting<ColorScheme>(
+            "Color Scheme",
+            [
+              SelectSettingOption("Light", lightColorScheme),
+              SelectSettingOption("Dark", darkColorScheme),
+              SelectSettingOption("Amoled", amoledColorScheme),
+            ],
+            onSelect: (context, index, colorScheme) {
+              App.setColorScheme(
+                  context,
+                  colorScheme.copyWith(
+                    primary: Theme.of(context).colorScheme.primary,
+                    secondary: Theme.of(context).colorScheme.secondary,
+                  ));
             },
           ),
-          SliderSetting("Elevation", 0, 10,
-              (defaultTheme.extension<ThemeStyle>()?.shadowElevation)!,
-              onChange: (context, elevation) {
-            App.setCardElevation(context, elevation);
+          SelectSetting<Color>(
+            "Accent Color",
+            [
+              SelectSettingOption("Cyan", Colors.cyan),
+              SelectSettingOption("Red", Colors.red),
+              SelectSettingOption("Green", Colors.green),
+              SelectSettingOption("Blue", Colors.blue),
+              SelectSettingOption("Yellow", Colors.yellow),
+              SelectSettingOption("Orange", Colors.orange),
+              SelectSettingOption("Purple", Colors.purple),
+              SelectSettingOption("Pink", Colors.pink),
+              SelectSettingOption("Teal", Colors.teal),
+              SelectSettingOption("Lime", Colors.lime),
+              SelectSettingOption("Indigo", Colors.indigo),
+            ],
+            onSelect: (context, index, color) {
+              App.setAccentColor(context, color);
+            },
+          ),
+        ],
+      ),
+      SettingGroup(
+        "Shapes",
+        [
+          SliderSetting("Corner Roundness", 0, 36,
+              (defaultTheme.extension<ThemeStyle>()?.borderRadius)!,
+              onChange: (context, radius) {
+            App.setCardRadius(context, radius);
           }),
-          SliderSetting("Opacity", 0, 100,
-              (defaultTheme.extension<ThemeStyle>()?.shadowOpacity)! * 100,
-              onChange: (context, opacity) {
-            App.setShadowOpacity(context, opacity / 100);
-          }),
-          SliderSetting("Blur", 0, 20,
-              (defaultTheme.extension<ThemeStyle>()?.shadowBlurRadius)!,
-              onChange: (context, blur) {
-            App.setShadowBlurRadius(context, blur);
-          }),
-        ])
-      ],
-      icon: FluxIcons.settings,
-      description: "Set themes, colors and change layout"),
+        ],
+      ),
+      SettingGroup("Shadows", [
+        SwitchSetting(
+          "Use Accent Color",
+          false,
+          onChange: (context, value) {
+            App.setShadowColor(context,
+                value ? Theme.of(context).colorScheme.primary : Colors.black);
+          },
+        ),
+        SliderSetting("Elevation", 0, 10,
+            (defaultTheme.extension<ThemeStyle>()?.shadowElevation)!,
+            onChange: (context, elevation) {
+          App.setCardElevation(context, elevation);
+        }),
+        SliderSetting("Opacity", 0, 100,
+            (defaultTheme.extension<ThemeStyle>()?.shadowOpacity)! * 100,
+            onChange: (context, opacity) {
+          App.setShadowOpacity(context, opacity / 100);
+        }),
+        SliderSetting("Blur", 0, 20,
+            (defaultTheme.extension<ThemeStyle>()?.shadowBlurRadius)!,
+            onChange: (context, blur) {
+          App.setShadowBlurRadius(context, blur);
+        }),
+      ])
+    ],
+    icon: FluxIcons.settings,
+    description: "Set themes, colors and change layout",
+  ),
+  SettingGroup(
+    "Alarm",
+    [
+      SettingGroup(
+        "Default Settings",
+        [...alarmSettingsSchema.items],
+        description: "Set default settings for new alarms",
+        icon: Icons.settings,
+      ),
+    ],
+    icon: FluxIcons.alarm,
+  )
 ];
 
 Settings appSettings = Settings(settingsItems);
