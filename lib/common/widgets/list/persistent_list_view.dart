@@ -6,6 +6,40 @@ import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart';
 
+class PersistentListController<T> {
+  VoidCallback? _onReload;
+  final ListController<T> _listController = ListController<T>();
+
+  ListController<T> get listController => _listController;
+
+  PersistentListController();
+
+  void setOnReload(VoidCallback onReload) {
+    _onReload = onReload;
+  }
+
+  void changeItems(ItemChangerCallback<T> callback,
+      {bool callOnModifyList = true}) {
+    _listController.changeItems(callback, callOnModifyList: callOnModifyList);
+  }
+
+  void addItem(T item) {
+    _listController.addItem(item);
+  }
+
+  void deleteItem(T item) {
+    _listController.deleteItem(item);
+  }
+
+  int getItemIndex(T item) {
+    return _listController.getItemIndex(item);
+  }
+
+  void reload() {
+    _onReload?.call();
+  }
+}
+
 class PersistentListView<Item extends ListItem> extends StatefulWidget {
   const PersistentListView({
     super.key,
@@ -32,7 +66,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final void Function(Item item)? onAddItem;
   final String saveTag;
   final String placeholderText;
-  final ListController<Item> listController;
+  final PersistentListController<Item> listController;
   final bool isReorderable;
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
@@ -43,12 +77,13 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
 }
 
 class _PersistentListViewState<Item extends ListItem>
-    extends State<PersistentListView<Item>> with RouteAware {
+    extends State<PersistentListView<Item>> {
   List<Item> _items = [];
 
   @override
   void initState() {
     super.initState();
+    widget.listController.setOnReload(loadItems);
     if (widget.saveTag.isNotEmpty) {
       _items = loadListSync<Item>(widget.saveTag);
     }
@@ -56,15 +91,8 @@ class _PersistentListViewState<Item extends ListItem>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
-  }
-
-  @override
   void dispose() {
-    routeObserver.unsubscribe(this);
-    ListenerManager.removeOnChangeListener(widget.saveTag);
+    ListenerManager.removeOnChangeListener(widget.saveTag, loadItems);
     super.dispose();
   }
 
@@ -105,7 +133,7 @@ class _PersistentListViewState<Item extends ListItem>
       onReorderItem: widget.onReorderItem,
       onDeleteItem: widget.onDeleteItem,
       onAddItem: widget.onAddItem,
-      listController: widget.listController,
+      listController: widget.listController.listController,
       placeholderText: widget.placeholderText,
       onModifyList: saveItems,
       isReorderable: widget.isReorderable,

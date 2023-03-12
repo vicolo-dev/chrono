@@ -10,6 +10,7 @@ import 'package:clock_app/timer/types/time_duration.dart';
 
 class ClockTimer extends ListItem {
   final TimeDuration _duration;
+  TimeDuration _currentDuration;
   int _secondsRemainingOnPause;
   DateTime _startTime;
   TimerState _state;
@@ -19,6 +20,7 @@ class ClockTimer extends ListItem {
   @override
   int get id => _id;
   TimeDuration get duration => _duration;
+  TimeDuration get currentDuration => _currentDuration;
   int get remainingSeconds {
     if (isRunning) {
       return math.max(
@@ -35,12 +37,14 @@ class ClockTimer extends ListItem {
 
   ClockTimer(this._duration)
       : _id = UniqueKey().hashCode,
+        _currentDuration = TimeDuration.from(_duration),
         _secondsRemainingOnPause = _duration.inSeconds,
         _startTime = DateTime(0),
         _state = TimerState.stopped;
 
-  ClockTimer.fromTimer(ClockTimer timer)
+  ClockTimer.from(ClockTimer timer)
       : _duration = timer._duration,
+        _currentDuration = TimeDuration.from(timer._duration),
         _secondsRemainingOnPause = timer._duration.inSeconds,
         _startTime = DateTime(0),
         _state = TimerState.stopped,
@@ -54,6 +58,15 @@ class ClockTimer extends ListItem {
     _state = TimerState.running;
   }
 
+  void addTime(TimeDuration addedDuration) {
+    _currentDuration = _currentDuration.add(addedDuration);
+    // _startTime = _startTime.subtract(addedDuration.toDuration);
+    _secondsRemainingOnPause =
+        _secondsRemainingOnPause + addedDuration.inSeconds;
+    scheduleAlarm(_id, DateTime.now().add(Duration(seconds: remainingSeconds)),
+        type: ScheduledNotificationType.timer);
+  }
+
   void pause() {
     cancelAlarm(_id);
     _secondsRemainingOnPause = _secondsRemainingOnPause -
@@ -64,6 +77,7 @@ class ClockTimer extends ListItem {
   void reset() {
     cancelAlarm(_id);
     _state = TimerState.stopped;
+    _currentDuration = TimeDuration.from(_duration);
     _secondsRemainingOnPause = _duration.inSeconds;
   }
 
@@ -75,10 +89,20 @@ class ClockTimer extends ListItem {
     }
   }
 
+  bool equals(ClockTimer timer) {
+    return _duration == timer._duration &&
+        _currentDuration == timer._currentDuration &&
+        _secondsRemainingOnPause == timer._secondsRemainingOnPause &&
+        _startTime == timer._startTime &&
+        _state == timer._state &&
+        _id == timer._id;
+  }
+
   @override
   Map<String, dynamic> toJson() {
     return {
       'duration': _duration.inSeconds,
+      'currentDuration': _currentDuration.inSeconds,
       'id': _id,
       'durationRemainingOnPause': _secondsRemainingOnPause,
       'startTime': _startTime.toIso8601String(),
@@ -88,6 +112,7 @@ class ClockTimer extends ListItem {
 
   ClockTimer.fromJson(Map<String, dynamic> json)
       : _duration = TimeDuration.fromSeconds(json['duration']),
+        _currentDuration = TimeDuration.fromSeconds(json['currentDuration']),
         _secondsRemainingOnPause = json['durationRemainingOnPause'],
         _startTime = DateTime.parse(json['startTime']),
         _state =

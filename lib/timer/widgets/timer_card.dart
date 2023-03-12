@@ -21,19 +21,24 @@ class TimerCard extends StatefulWidget {
 
 class _TimerCardState extends State<TimerCard> {
   late ValueNotifier<double> valueNotifier;
+  late ClockTimer _previousTimer;
 
   late int remainingSeconds;
 
-  Timer? timer;
+  Timer? periodicTimer;
 
   void updateTimer() {
     setState(() {
-      timer?.cancel();
+      periodicTimer?.cancel();
       if (widget.timer.isRunning) {
-        timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+        periodicTimer =
+            Timer.periodic(const Duration(seconds: 1), (Timer timer) {
           valueNotifier.value = widget.timer.remainingSeconds.toDouble();
         });
       }
+      print('update timer ${widget.timer.remainingSeconds.toDouble()}');
+      valueNotifier.value = widget.timer.remainingSeconds.toDouble();
+      // remainingSeconds = widget.timer.remainingSeconds;
     });
   }
 
@@ -49,16 +54,22 @@ class _TimerCardState extends State<TimerCard> {
       });
     });
     updateTimer();
+    _previousTimer = ClockTimer.from(widget.timer);
   }
 
   @override
   void dispose() {
-    timer?.cancel();
+    periodicTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_previousTimer.equals(widget.timer)) {
+      updateTimer();
+      _previousTimer = ClockTimer.from(widget.timer);
+    }
+
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -89,7 +100,7 @@ class _TimerCardState extends State<TimerCard> {
               valueNotifier: valueNotifier,
               progressStrokeWidth: 8,
               backStrokeWidth: 8,
-              maxValue: widget.timer.duration.inSeconds.toDouble(),
+              maxValue: widget.timer.currentDuration.inSeconds.toDouble(),
               mergeMode: true,
               animationDuration: 0,
               onGetCenterWidget: (value) {

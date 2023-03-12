@@ -8,19 +8,22 @@ class CardContainer extends StatelessWidget {
       this.elevationMultiplier = 1,
       this.color,
       this.margin,
-      this.onTap});
+      this.onTap,
+      this.alignment});
 
   final Widget child;
   final double elevationMultiplier;
   final Color? color;
   final EdgeInsetsGeometry? margin;
   final VoidCallback? onTap;
+  final Alignment? alignment;
 
   @override
   Widget build(BuildContext context) {
     ThemeStyle? themeStyle = Theme.of(context).extension<ThemeStyle>();
 
     return Container(
+      alignment: alignment,
       margin: margin ?? const EdgeInsets.all(4),
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(

@@ -25,7 +25,7 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
-  final _listController = ListController<ClockTimer>();
+  final _listController = PersistentListController<ClockTimer>();
 
   void _handleDeleteTimer(ClockTimer deletedTimer) {
     int index = _listController.getItemIndex(deletedTimer);
@@ -35,6 +35,17 @@ class _TimerScreenState extends State<TimerScreen> {
   void _handleToggleState(ClockTimer timer) {
     int index = _listController.getItemIndex(timer);
     _listController.changeItems((timers) => timers[index].toggleState());
+  }
+
+  void _handleResetTimer(ClockTimer timer) {
+    int index = _listController.getItemIndex(timer);
+    _listController.changeItems((timers) => timers[index].reset());
+  }
+
+  void _handleAddTimeToTimer(ClockTimer timer) {
+    int index = _listController.getItemIndex(timer);
+    _listController.changeItems(
+        (timers) => timers[index].addTime(const TimeDuration(minutes: 1)));
   }
 
   // Future<Timer?> _openCustomizeTimerScreen(Timer timer) async {
@@ -83,13 +94,19 @@ class _TimerScreenState extends State<TimerScreen> {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => TimerFullscreen(
-                        timer: timer,
-                        onToggleState: () => _handleToggleState(timer))),
+                  builder: (context) => TimerFullscreen(
+                    timer: timer,
+                    onReset: () => _handleResetTimer(timer),
+                    onToggleState: () => _handleToggleState(timer),
+                    onAddTime: () => _handleAddTimeToTimer(timer),
+                  ),
+                ),
               );
+              _listController.reload();
+              // _listController.changeItems((item) {});
             },
             onDeleteItem: _handleDeleteTimer,
-            duplicateItem: (alarm) => ClockTimer.fromTimer(alarm),
+            duplicateItem: (timer) => ClockTimer.from(timer),
             placeholderText: "No timers created",
             reloadOnPop: true,
           ),

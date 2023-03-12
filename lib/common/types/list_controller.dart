@@ -13,11 +13,6 @@ class ListController<T> {
     _changeItems = changeItems;
   }
 
-  void changeItems(ItemChangerCallback<T> callback,
-      {bool callOnModifyList = true}) {
-    _changeItems?.call(callback, callOnModifyList);
-  }
-
   void setGetItemIndex(int Function(T item) callback) {
     _getItemIndex = callback;
   }
@@ -28,6 +23,11 @@ class ListController<T> {
 
   void setDeleteItem(void Function(T item) callback) {
     _deleteItem = callback;
+  }
+
+  void changeItems(ItemChangerCallback<T> callback,
+      {bool callOnModifyList = true}) {
+    _changeItems?.call(callback, callOnModifyList);
   }
 
   void addItem(T item) {

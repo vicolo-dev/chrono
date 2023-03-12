@@ -19,7 +19,7 @@ class ClockScreen extends StatefulWidget {
 class _ClockScreenState extends State<ClockScreen> {
   bool shouldShowSeconds = false;
 
-  final _listController = ListController<City>();
+  final _listController = PersistentListController<City>();
 
   void setShowSeconds(dynamic value) {
     setState(() {

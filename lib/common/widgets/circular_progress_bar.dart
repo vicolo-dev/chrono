@@ -120,81 +120,85 @@ class _CircularProgressBarState extends State<CircularProgressBar>
   final double minSweepAngle = 0.015;
 
   late double circleLength;
-  late double maxValue;
   late double widgetSize;
 
   late double startAngle;
   late double correctAngle;
   late SweepGradient sweepGradient;
 
-  late AnimationController animationController;
+  // late AnimationController animationController;
 
   late Color fullProgressColor;
 
   late ValueNotifier<double> valueNotifier;
   late ValueNotifier<double>? defaultValueNotifier;
 
-  @override
-  void initState() {
-    super.initState();
+  void updateState() {
+    setState(() {
+      widgetSize = (widget.size <= 0) ? 100.0 : widget.size;
 
-    // Check zero size.
-    widgetSize = (widget.size <= 0) ? 100.0 : widget.size;
-    maxValue = (widget.maxValue <= 0) ? 100.0 : widget.maxValue;
+      // Check value notifier
+      if (widget.valueNotifier != null) {
+        defaultValueNotifier = null;
+        valueNotifier = widget.valueNotifier!;
+      } else {
+        defaultValueNotifier = ValueNotifier(widget.maxValue);
+        valueNotifier = defaultValueNotifier!;
+      }
 
-    // Check value notifier
-    if (widget.valueNotifier != null) {
-      defaultValueNotifier = null;
-      valueNotifier = widget.valueNotifier!;
-    } else {
-      defaultValueNotifier = ValueNotifier(widget.maxValue);
-      valueNotifier = defaultValueNotifier!;
-    }
+      // Calculate the real starting angle and correction angle.
+      // Correction angle - the angle to which the main line should be
+      // shifted in order for the SweepGradient to be displayed correctly.
+      circleLength = pi * widgetSize;
+      final k = _doublePi / circleLength;
 
-    // Calculate the real starting angle and correction angle.
-    // Correction angle - the angle to which the main line should be
-    // shifted in order for the SweepGradient to be displayed correctly.
-    circleLength = pi * widgetSize;
-    final k = _doublePi / circleLength;
+      correctAngle = widget.progressStrokeWidth * k;
+      startAngle = (correctAngle / 2);
 
-    correctAngle = widget.progressStrokeWidth * k;
-    startAngle = (correctAngle / 2);
+      // Adjusting the colors.
+      final List<Color> progressColors = [];
+      if (widget.progressColors.isEmpty) {
+        progressColors.add(Colors.blueAccent);
+        progressColors.add(Colors.greenAccent);
+      } else if (widget.progressColors.length == 1) {
+        progressColors.add(widget.progressColors[0]);
+        progressColors.add(widget.progressColors[0]);
+      } else {
+        progressColors.addAll(widget.progressColors);
+      }
 
-    // Adjusting the colors.
-    final List<Color> progressColors = [];
-    if (widget.progressColors.isEmpty) {
-      progressColors.add(Colors.blueAccent);
-      progressColors.add(Colors.greenAccent);
-    } else if (widget.progressColors.length == 1) {
-      progressColors.add(widget.progressColors[0]);
-      progressColors.add(widget.progressColors[0]);
-    } else {
-      progressColors.addAll(widget.progressColors);
-    }
+      sweepGradient = SweepGradient(
+        tileMode: TileMode.decal,
+        colors: progressColors,
+      );
 
-    sweepGradient = SweepGradient(
-      tileMode: TileMode.decal,
-      colors: progressColors,
-    );
+      fullProgressColor = (widget.fullProgressColor == null)
+          ? progressColors.last
+          : widget.fullProgressColor!;
 
-    fullProgressColor = (widget.fullProgressColor == null)
-        ? progressColors.last
-        : widget.fullProgressColor!;
-
-    // Create animation.
-    final animationDuration =
-        (widget.animationDuration < 0) ? 0 : widget.animationDuration;
-
-    animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: animationDuration),
-      value: 0.0,
-      upperBound: maxValue,
-    );
+      // Create animation.
+    });
   }
 
   @override
+  void initState() {
+    super.initState();
+    updateState();
+    // Check zero size.
+  }
+
+  // @override
+  // didUpdateWidget(CircularProgressBar oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (oldWidget.maxValue != widget.maxValue) {
+  //     updateState();
+  //   }
+  // }
+
+  @override
   Widget build(BuildContext context) {
+    double maxValue = (widget.maxValue <= 0) ? 100.0 : widget.maxValue;
+
     return ValueListenableBuilder(
       valueListenable: valueNotifier,
       builder: (BuildContext context, double value, Widget? child) {
@@ -207,88 +211,66 @@ class _CircularProgressBarState extends State<CircularProgressBar>
         }
 
         // Read [MAIN LOGIC]
-        if (value < animationController.value) {
-          animationController.forward();
+        // if (value < animationController.value) {
+        //   animationController.forward();
+        // } else {
+        // animationController.animateTo(value);
+        // }
+
+        double sweepAngle;
+
+        // Reduce the value to a range of 0.0 to 1.0.
+        final reducedValue = value / maxValue;
+
+        if (value == 0) {
+          sweepAngle = 0;
         } else {
-          animationController.animateTo(value);
+          sweepAngle = (_doublePi * reducedValue) - correctAngle;
+
+          if (sweepAngle <= 0) {
+            sweepAngle = minSweepAngle;
+          }
         }
 
-        return AnimatedBuilder(
-          animation: animationController,
-          builder: (context, snapshot) {
-            // [MAIN LOGIC]
-            //
-            // If [value] >= [animation.value]:
-            // Moving from the current value to the new value.
-            //
-            // If [value] <  [animation.value]:
-            // Move to the end of the circle and from there to a new value.
-            //
-            // [MAIN LOGIC]
+        final currentLength = reducedValue * circleLength;
+        // print('$maxValue, $value, $reducedValue, $sweepAngle, $currentLength');
 
-            if ((value != animationController.upperBound) &&
-                (animationController.value >= animationController.upperBound)) {
-              animationController.reset();
-              animationController.animateTo(value);
-            }
+        // If mergeMode is on and the current value is equal to the maximum
+        // value, we should draw a full circle with the specified color.
+        final isFullProgress = widget.mergeMode & (value == maxValue);
 
-            double sweepAngle;
+        // Create center text widget.
+        // If no callback is defined, create an empty widget.
+        Widget centerWidget;
+        if (widget.onGetCenterWidget != null) {
+          centerWidget = widget.onGetCenterWidget!(value);
+        } else {
+          centerWidget = const SizedBox.shrink();
+        }
 
-            // Reduce the value to a range of 0.0 to 1.0.
-            final reducedValue = animationController.value / maxValue;
-
-            if (animationController.value == 0) {
-              sweepAngle = 0;
-            } else {
-              sweepAngle = (_doublePi * reducedValue) - correctAngle;
-
-              if (sweepAngle <= 0) {
-                sweepAngle = minSweepAngle;
-              }
-            }
-
-            final currentLength = reducedValue * circleLength;
-
-            // If mergeMode is on and the current value is equal to the maximum
-            // value, we should draw a full circle with the specified color.
-            final isFullProgress = widget.mergeMode &
-                (animationController.value == animationController.upperBound);
-
-            // Create center text widget.
-            // If no callback is defined, create an empty widget.
-            Widget centerWidget;
-            if (widget.onGetCenterWidget != null) {
-              centerWidget =
-                  widget.onGetCenterWidget!(animationController.value);
-            } else {
-              centerWidget = const SizedBox.shrink();
-            }
-
-            // Repaint progress bar.
-            return Stack(
-              alignment: Alignment.center,
-              children: [
-                Transform.rotate(
-                  angle: _degToRad(widget.startAngle - 90),
-                  child: CustomPaint(
-                    size: Size(widgetSize, widgetSize),
-                    painter: _SimpleCircularProgressBarPainter(
-                      progressStrokeWidth: widget.progressStrokeWidth,
-                      backStrokeWidth: widget.backStrokeWidth,
-                      startAngle: startAngle,
-                      sweepAngle: sweepAngle,
-                      currentLength: currentLength,
-                      frontGradient: sweepGradient,
-                      backColor: widget.backColor,
-                      fullProgressColor: fullProgressColor,
-                      isFullProgress: isFullProgress,
-                    ),
-                  ),
+        // Repaint progress bar.
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Transform.rotate(
+              angle: _degToRad(widget.startAngle - 90),
+              child: CustomPaint(
+                size: Size(widgetSize, widgetSize),
+                painter: _SimpleCircularProgressBarPainter(
+                  progressStrokeWidth: widget.progressStrokeWidth,
+                  backStrokeWidth: widget.backStrokeWidth,
+                  startAngle: startAngle,
+                  sweepAngle: sweepAngle,
+                  currentLength: currentLength,
+                  frontGradient: sweepGradient,
+                  backColor: widget.backColor,
+                  fullProgressColor: fullProgressColor,
+                  isFullProgress: isFullProgress,
                 ),
-                centerWidget,
-              ],
-            );
-          },
+              ),
+            ),
+            centerWidget,
+          ],
         );
       },
     );
@@ -296,7 +278,7 @@ class _CircularProgressBarState extends State<CircularProgressBar>
 
   @override
   void dispose() {
-    animationController.dispose();
+    // animationController.dispose();
 
     if (defaultValueNotifier != null) {
       defaultValueNotifier!.dispose();
@@ -410,6 +392,8 @@ class _SimpleCircularProgressBarPainter extends CustomPainter {
       ..strokeWidth = progressStrokeWidth
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
+
+    // print('startAngle: $startAngle, sweepAngle: $sweepAngle');
 
     canvas.drawArc(arcRect, startAngle, sweepAngle, false, arcPaint);
   }

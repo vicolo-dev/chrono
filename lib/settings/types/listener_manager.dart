@@ -1,5 +1,5 @@
 class ListenerManager {
-  static final Map<String, void Function()> _listeners = {};
+  static final Map<String, List<void Function()>> _listeners = {};
 
   // static SharedPreferences? get preferences {
   //   if (_preferences == null) {
@@ -17,14 +17,24 @@ class ListenerManager {
   // }
 
   static void addOnChangeListener(String key, void Function() listener) {
-    _listeners[key] = listener;
+    final listeners = _listeners[key];
+    if (listeners == null) {
+      _listeners[key] = [];
+    } else {
+      listeners.add(listener);
+    }
   }
 
-  static void removeOnChangeListener(String key) {
-    _listeners.remove(key);
+  static void removeOnChangeListener(String key, void Function() listener) {
+    _listeners[key]?.remove(listener);
   }
+
+  // static void removeAllOnChangeListener(String key) {
+  //   _listeners.remove(key);
+  // }
 
   static void notifyListeners(String key) {
-    _listeners[key]?.call();
+    print(_listeners[key]?.length);
+    _listeners[key]?.forEach((listener) => listener());
   }
 }

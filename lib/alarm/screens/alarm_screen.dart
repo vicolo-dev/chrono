@@ -23,7 +23,7 @@ class AlarmScreen extends StatefulWidget {
 }
 
 class _AlarmScreenState extends State<AlarmScreen> {
-  final _listController = ListController<Alarm>();
+  final _listController = PersistentListController<Alarm>();
 
   _handleEnableChangeAlarm(Alarm alarm, bool value) {
     int index = _listController.getItemIndex(alarm);

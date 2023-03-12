@@ -20,6 +20,12 @@ class TimeDuration extends JsonSerializable {
     this.milliseconds = 0,
   });
 
+  TimeDuration.from(TimeDuration other)
+      : hours = other.hours,
+        minutes = other.minutes,
+        seconds = other.seconds,
+        milliseconds = other.milliseconds;
+
   TimeDuration.fromSeconds(int seconds)
       : hours = (seconds / 3600).floor(),
         minutes = ((seconds % 3600) / 60).floor(),
@@ -37,6 +43,10 @@ class TimeDuration extends JsonSerializable {
       minutes: minutes,
       seconds: seconds,
       milliseconds: milliseconds);
+
+  TimeDuration add(TimeDuration other) {
+    return TimeDuration.fromMilliseconds(inMilliseconds + other.inMilliseconds);
+  }
 
   @override
   String toString() {
