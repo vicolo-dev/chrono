@@ -79,7 +79,7 @@ Future<TimerPreset?> showDurationPicker(
                           children: [
                             Text("Presets", style: textTheme.labelMedium),
                             SizedBox(
-                              height: 64,
+                              height: 48,
                               width: width - 64,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
@@ -87,11 +87,14 @@ Future<TimerPreset?> showDurationPicker(
                                 itemBuilder: (context, index) {
                                   if (index == presets.length) {
                                     return Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: Chip(
-                                          label: Icon(Icons.edit),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4.0),
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Edit",
+                                          style: textTheme.labelSmall?.copyWith(
+                                              color: colorScheme.primary),
                                         ),
                                       ),
                                     );
@@ -198,7 +201,7 @@ class PresetChip extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 2.0),
       child: GestureDetector(
         onTap: onTap,
         child: Chip(
