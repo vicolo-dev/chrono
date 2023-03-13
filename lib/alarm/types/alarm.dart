@@ -31,6 +31,7 @@ List<AlarmSchedule> createSchedules(Settings settings) {
 
 class Alarm extends ListItem {
   bool _isEnabled = true;
+  DateTime? _snoozeTime;
   bool _isFinished = false;
   TimeOfDay _timeOfDay;
   Settings _settings = Settings(
@@ -42,6 +43,8 @@ class Alarm extends ListItem {
   int get id => currentScheduleId;
   bool get isEnabled => _isEnabled;
   bool get isFinished => _isFinished;
+  bool get isSnoozed => _snoozeTime != null;
+  DateTime? get snoozeTime => _snoozeTime;
   TimeOfDay get timeOfDay => _timeOfDay;
   Settings get settings => _settings;
   String get label => _settings.getSetting("Label").value;
@@ -58,7 +61,8 @@ class Alarm extends ListItem {
   List<AlarmRunner> get activeAlarmRunners => activeSchedule.alarmRunners;
   bool get isRepeating =>
       [DailyAlarmSchedule, WeeklyAlarmSchedule].contains(scheduleType);
-  DateTime? get nextScheduleDateTime => activeSchedule.currentScheduleDateTime;
+  DateTime? get currentScheduleDateTime =>
+      activeSchedule.currentScheduleDateTime;
   int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
 
   Alarm(this._timeOfDay) {
@@ -67,6 +71,7 @@ class Alarm extends ListItem {
 
   Alarm.fromAlarm(Alarm alarm)
       : _isEnabled = alarm._isEnabled,
+        _isFinished = alarm._isFinished,
         _timeOfDay = alarm._timeOfDay,
         _settings = alarm._settings.copy() {
     _schedules = createSchedules(_settings);
@@ -98,6 +103,16 @@ class Alarm extends ListItem {
     } else {
       disable();
     }
+  }
+
+  void snooze() {
+    _snoozeTime = DateTime.now().add(
+      Duration(minutes: snoozeLength.toInt()),
+    );
+  }
+
+  void unSnooze() {
+    _snoozeTime = null;
   }
 
   void schedule() {
@@ -137,7 +152,7 @@ class Alarm extends ListItem {
     if (_isEnabled) {
       schedule();
 
-      if (activeSchedule.isDisabled) {
+      if (activeSchedule.isDisabled && !isSnoozed) {
         disable();
       }
       if (activeSchedule.isFinished) {
@@ -182,6 +197,9 @@ class Alarm extends ListItem {
       : _timeOfDay = TimeOfDayUtils.fromJson(json['timeOfDay']),
         _isEnabled = json['enabled'],
         _isFinished = json['finished'],
+        _snoozeTime = json['snoozeTime'] != 0
+            ? DateTime.fromMillisecondsSinceEpoch(json['snoozeTime'])
+            : null,
         _settings = Settings(appSettings
             .getSettingGroup("Default Settings")
             .copy()
@@ -211,6 +229,8 @@ class Alarm extends ListItem {
         'timeOfDay': _timeOfDay.toJson(),
         'enabled': _isEnabled,
         'finished': _isFinished,
+        'snoozeTime':
+            snoozeTime != null ? snoozeTime!.millisecondsSinceEpoch : 0,
         'schedules': _schedules
             .map<Map<String, dynamic>>((schedule) => schedule.toJson())
             .toList(),

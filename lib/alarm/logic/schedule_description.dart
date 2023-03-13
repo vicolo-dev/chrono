@@ -20,6 +20,9 @@ bool weekdaysContainsAll(List<Weekday> alarmWeekdays, List<String> names) {
 }
 
 String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
+  if (alarm.isSnoozed) {
+    return 'Snoozed until ${DateFormat("hh:mm").format(alarm.snoozeTime!)}';
+  }
   if (alarm.isFinished) {
     return 'No future dates';
   }

@@ -56,10 +56,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
   _showNextScheduleSnackBar(Alarm alarm) {
     Future.delayed(Duration.zero).then((value) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      DateTime? nextScheduleDateTime = alarm.nextScheduleDateTime;
+      DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
       if (nextScheduleDateTime == null) return;
       Duration etaNextAlarm =
-          alarm.nextScheduleDateTime!.difference(DateTime.now().toLocal());
+          alarm.currentScheduleDateTime!.difference(DateTime.now().toLocal());
 
       String etaText = '';
 

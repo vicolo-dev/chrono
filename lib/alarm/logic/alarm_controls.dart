@@ -74,10 +74,9 @@ void stopScheduledNotification(List<dynamic> message) {
 }
 
 void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
+  await updateAlarmById(scheduleId, (alarm) => alarm.unSnooze());
   await updateAlarms();
   // Notify the frontend to update the alarms
-  SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
-  sendPort?.send("updateAlarms");
 
   GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
@@ -112,6 +111,8 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
       Duration(minutes: alarm.snoozeLength.floor()),
       ScheduledNotificationType.alarm,
     );
+    await updateAlarmById(scheduleId, (alarm) => alarm.snooze());
+    updateAlarms();
   } else if (action == AlarmStopAction.dismiss) {
     // updateAlarms();
     // If there was a timer ringing when the alarm was triggered, resume it now
