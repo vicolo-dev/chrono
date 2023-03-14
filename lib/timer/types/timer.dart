@@ -62,6 +62,13 @@ class ClockTimer extends ListItem {
     _state = TimerState.running;
   }
 
+  void setTime(TimeDuration newDuration) {
+    _currentDuration = TimeDuration.from(newDuration);
+    _secondsRemainingOnPause = newDuration.inSeconds;
+    scheduleAlarm(_id, DateTime.now().add(Duration(seconds: remainingSeconds)),
+        type: ScheduledNotificationType.timer);
+  }
+
   void addTime(TimeDuration addedDuration) {
     _currentDuration = _currentDuration.add(addedDuration);
     // _startTime = _startTime.subtract(addedDuration.toDuration);

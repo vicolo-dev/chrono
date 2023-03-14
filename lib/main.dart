@@ -13,6 +13,7 @@ import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
+import 'package:clock_app/common/utils/debug.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/notifications/logic/notifications.dart';
 import 'package:clock_app/settings/logic/initialize_settings.dart';
@@ -40,6 +41,7 @@ void main() async {
   ReceivePort receivePort = ReceivePort();
   IsolateNameServer.removePortNameMapping(updatePortName);
   IsolateNameServer.registerPortWithName(receivePort.sendPort, updatePortName);
+  printIsolateInfo();
   receivePort.listen((message) {
     if (message == "updateAlarms") {
       ListenerManager.notifyListeners("alarms");

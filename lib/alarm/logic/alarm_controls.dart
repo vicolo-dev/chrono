@@ -1,6 +1,7 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -74,9 +75,7 @@ void stopScheduledNotification(List<dynamic> message) {
 }
 
 void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
-  await updateAlarmById(scheduleId, (alarm) => alarm.unSnooze());
   await updateAlarms();
-  // Notify the frontend to update the alarms
 
   GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
@@ -112,7 +111,6 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
       ScheduledNotificationType.alarm,
     );
     await updateAlarmById(scheduleId, (alarm) => alarm.snooze());
-    updateAlarms();
   } else if (action == AlarmStopAction.dismiss) {
     // updateAlarms();
     // If there was a timer ringing when the alarm was triggered, resume it now
@@ -126,8 +124,6 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
 void triggerTimer(int scheduleId, Map<String, dynamic> params) async {
   await updateTimers();
   // Notify the front-end to update the timers
-  SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
-  sendPort?.send("updateTimers");
 
   GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
@@ -162,6 +158,10 @@ void stopTimer(int scheduleId, AlarmStopAction action) async {
       const Duration(minutes: 1),
       ScheduledNotificationType.timer,
     );
+    updateTimerById(scheduleId, (timer) {
+      timer.setTime(const TimeDuration(minutes: 1));
+      timer.start();
+    });
   } else if (action == AlarmStopAction.dismiss) {
     // updateTimers();
     // If there was an alarm already ringing when the timer was triggered, we

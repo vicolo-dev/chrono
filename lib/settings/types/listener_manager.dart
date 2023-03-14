@@ -1,3 +1,8 @@
+import 'dart:isolate';
+
+import 'package:clock_app/common/utils/debug.dart';
+import 'package:flutter/foundation.dart';
+
 class ListenerManager {
   static final Map<String, List<void Function()>> _listeners = {};
 
@@ -19,7 +24,7 @@ class ListenerManager {
   static void addOnChangeListener(String key, void Function() listener) {
     final listeners = _listeners[key];
     if (listeners == null) {
-      _listeners[key] = [];
+      _listeners[key] = [listener];
     } else {
       listeners.add(listener);
     }
