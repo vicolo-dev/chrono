@@ -1,7 +1,5 @@
 import 'package:clock_app/common/widgets/fields/date_picker_bottom_sheet.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/timer/types/time_duration.dart';
-import 'package:clock_app/timer/widgets/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

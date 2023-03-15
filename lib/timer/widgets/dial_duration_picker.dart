@@ -301,7 +301,7 @@ class _TimerKnobPainter extends CustomPainter {
     }
 
     final knobAngle = angle;
-    final knobPositionRadius = trackRadius - 20;
+    final knobPositionRadius = trackRadius - bandWidth / 4;
     final knobX = center.dx + math.cos(knobAngle) * (knobPositionRadius);
     final knobY = center.dy + math.sin(knobAngle) * (knobPositionRadius);
     final knobCenter = Offset(knobX, knobY);

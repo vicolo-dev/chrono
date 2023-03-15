@@ -35,9 +35,8 @@ class _DurationPickerFieldState<T> extends State<DurationPickerField<T>> {
       TimeDuration? newTimeDuration = (await showDurationPicker(
         context,
         showHours: false,
-        initialTime: widget.value,
-      ))
-          ?.duration;
+        initialTimeDuration: widget.value,
+      ));
       if (newTimeDuration == null) return;
       setState(() {
         widget.onChange(newTimeDuration);

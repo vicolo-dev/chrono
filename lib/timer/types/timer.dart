@@ -9,7 +9,7 @@ import 'package:clock_app/common/utils/duration.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 
 class ClockTimer extends ListItem {
-  final TimeDuration _duration;
+  TimeDuration _duration;
   String _label;
   TimeDuration _currentDuration;
   int _secondsRemainingOnPause;

@@ -1,26 +1,26 @@
+import 'package:clock_app/common/widgets/fields/input_field.dart';
 import 'package:clock_app/common/widgets/modal.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
+import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:clock_app/timer/widgets/dial_duration_picker.dart';
 import 'package:flutter/material.dart';
 
-Future<TimeDuration?> showDurationPicker(
-  BuildContext context, {
-  TimeDuration initialTimeDuration =
-      const TimeDuration(hours: 0, minutes: 5, seconds: 0),
-  bool showHours = true,
-}) async {
+Future<TimerPreset?> showTimerPresetPicker(BuildContext context,
+    {TimerPreset? initialTimerPreset}) async {
   final theme = Theme.of(context);
   final textTheme = theme.textTheme;
   final colorScheme = theme.colorScheme;
 
-  return showDialog<TimeDuration>(
+  return showDialog<TimerPreset>(
     context: context,
     builder: (BuildContext context) {
-      TimeDuration timeDuration = initialTimeDuration;
+      TimerPreset timerPreset = TimerPreset.from(initialTimerPreset ??
+          TimerPreset("New Preset", const TimeDuration(minutes: 5)));
+
       return StatefulBuilder(
         builder: (context, StateSetter setState) {
           return Modal(
-            onSave: () => Navigator.of(context).pop(timeDuration),
+            onSave: () => Navigator.of(context).pop(timerPreset),
             title: "Choose Duration",
             child: Builder(
               builder: (context) {
@@ -31,21 +31,31 @@ Future<TimeDuration?> showDurationPicker(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 16),
-                    Text(timeDuration.toString(),
+                    Text(timerPreset.duration.toString(),
                         style: textTheme.displayMedium),
                     const SizedBox(height: 16),
                     SizedBox(
                       height: width - 64,
                       width: width - 64,
                       child: DialDurationPicker(
-                        duration: timeDuration,
+                        duration: timerPreset.duration,
                         onChange: (TimeDuration newDuration) {
                           setState(() {
-                            timeDuration = newDuration;
+                            timerPreset.duration = newDuration;
                           });
                         },
-                        showHours: showHours,
+                        showHours: true,
                       ),
+                    ),
+                    InputField(
+                      title: "Label",
+                      onChange: (value) {
+                        setState(() {
+                          timerPreset.name = value;
+                        });
+                      },
+                      value: timerPreset.name,
+                      hintText: "Enter a label",
                     ),
                   ],
                 );
