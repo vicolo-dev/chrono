@@ -14,12 +14,14 @@ class Modal extends StatelessWidget {
     required this.child,
     this.onSave,
     this.additionalAction,
+    this.titleWidget,
   }) : super(key: key);
 
   final String title;
   final Widget child;
   final VoidCallback? onSave;
   final ModalAction? additionalAction;
+  final Widget? titleWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +34,13 @@ class Modal extends StatelessWidget {
       insetPadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       titlePadding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-      title: Text(
-        title,
-        style: textTheme.displaySmall?.copyWith(
-          color: colorScheme.onBackground.withOpacity(0.6),
-        ),
-      ),
+      title: titleWidget ??
+          Text(
+            title,
+            style: textTheme.displaySmall?.copyWith(
+              color: colorScheme.onBackground.withOpacity(0.6),
+            ),
+          ),
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: child,

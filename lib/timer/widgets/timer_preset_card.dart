@@ -19,7 +19,7 @@ class _TimerPresetCardState extends State<TimerPresetCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(left: 16.0, right: 4, top: 8, bottom: 8),
         child: Row(
           children: [
             Column(

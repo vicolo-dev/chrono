@@ -73,15 +73,25 @@ class _InputFieldState<T> extends State<InputField<T>> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Row(
             children: [
-              Text(
-                widget.title,
-                style: Theme.of(context).textTheme.headlineMedium,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 4.0),
+                  // const Spacer(),
+                  Text(
+                    widget.value.isNotEmpty ? widget.value : widget.hintText,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
               ),
               const Spacer(),
-              Text(
-                widget.value.isNotEmpty ? widget.value : widget.hintText,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              Icon(Icons.arrow_drop_down_rounded,
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6))
             ],
           ),
         ),

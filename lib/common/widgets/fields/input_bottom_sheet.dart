@@ -8,6 +8,7 @@ class InputBottomSheet extends StatefulWidget {
     this.hintText = "",
     required this.onChange,
     required this.initialValue,
+    this.isInputRequired = false,
   });
 
   final String title;
@@ -15,6 +16,7 @@ class InputBottomSheet extends StatefulWidget {
   final String? description;
   final String hintText;
   final void Function(String) onChange;
+  final bool isInputRequired;
 
   @override
   State<InputBottomSheet> createState() => _InputBottomSheetState();
@@ -101,6 +103,10 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                       Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                         TextButton(
                           onPressed: () {
+                            if (widget.isInputRequired &&
+                                _controller.text.isEmpty) {
+                              return;
+                            }
                             Navigator.pop(context);
                           },
                           child: Text('Save',
@@ -108,9 +114,15 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                                   .textTheme
                                   .labelMedium
                                   ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary)),
+                                      color: widget.isInputRequired &&
+                                              _controller.text.isEmpty
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .onBackground
+                                              .withOpacity(0.6)
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .primary)),
                         ),
                       ])
                     ],
