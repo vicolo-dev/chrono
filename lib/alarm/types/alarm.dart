@@ -88,6 +88,10 @@ class Alarm extends ListItem {
     _settings.getSetting(name).setValue(context, value);
   }
 
+  void setSettingWithoutNotify(String name, dynamic value) {
+    _settings.getSetting(name).setValueWithoutNotify(value);
+  }
+
   void toggle() {
     if (_isEnabled) {
       disable();

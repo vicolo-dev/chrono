@@ -8,29 +8,29 @@ class TimeZoneCard extends StatelessWidget {
     Key? key,
     required this.city,
   }) : super(key: key) {
-    timezoneLocation = timezone.getLocation(city.timezone);
-    offset = (timezoneLocation.currentTimeZone.offset -
+    _timezoneLocation = timezone.getLocation(city.timezone);
+    _offset = (_timezoneLocation.currentTimeZone.offset -
             DateTime.now().timeZoneOffset.inMilliseconds) /
         3600000;
   }
 
-  late final timezone.Location timezoneLocation;
-  late final double offset;
+  late final timezone.Location _timezoneLocation;
+  late final double _offset;
   final City city;
 
-  String formatTimeOffset(double n) {
+  String _formatTimeOffset(double n) {
     return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 1);
   }
 
-  String getOffsetDescription() {
+  String _getOffsetDescription() {
     DateTime currentTime = DateTime.now();
-    DateTime cityTime = timezone.TZDateTime.now(timezoneLocation);
+    DateTime cityTime = timezone.TZDateTime.now(_timezoneLocation);
 
-    String hourDifference = formatTimeOffset(offset.abs());
-    String hourLabel = offset == 1 ? 'hour' : 'hours';
-    String relativeLabel = offset < 0 ? 'behind' : 'ahead';
+    String hourDifference = _formatTimeOffset(_offset.abs());
+    String hourLabel = _offset == 1 ? 'hour' : 'hours';
+    String relativeLabel = _offset < 0 ? 'behind' : 'ahead';
     String differentOffsetLabel = '$hourDifference $hourLabel $relativeLabel';
-    String offsetLabel = offset != 0 ? differentOffsetLabel : 'Same time';
+    String offsetLabel = _offset != 0 ? differentOffsetLabel : 'Same time';
 
     String differentDayLabel = currentTime.day < cityTime.day
         ? ' (next day)'
@@ -45,8 +45,8 @@ class TimeZoneCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return TimezoneCardContent(
       title: city.name,
-      subtitle: getOffsetDescription(),
-      timezoneLocation: timezoneLocation,
+      subtitle: _getOffsetDescription(),
+      timezoneLocation: _timezoneLocation,
     );
   }
 }
