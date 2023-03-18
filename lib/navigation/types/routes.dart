@@ -1,5 +1,4 @@
 import 'package:clock_app/app.dart';
-import 'package:clock_app/main.dart';
 
 class Routes {
   static const String rootRoute = '/';

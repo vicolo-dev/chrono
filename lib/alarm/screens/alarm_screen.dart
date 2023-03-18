@@ -1,12 +1,10 @@
 import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
-import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
-import 'package:clock_app/theme/shape.dart';
 import 'package:flutter/material.dart';
 import 'package:great_list_view/great_list_view.dart';
 

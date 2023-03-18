@@ -2,6 +2,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:clock_app/timer/types/time_duration.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -21,14 +22,16 @@ import 'package:clock_app/timer/utils/timer_id.dart';
 // For some reason, the ports stop stops working when we hot restart the app and only works
 // again when we close and reopen the app. As a workaround, we can update the port
 // name to a new value before hot restarting the app.
-const String stopAlarmPortName = "etserfrtedfgddfgdasd";
-const String updatePortName = "detegfffdetgdfg";
+const String stopAlarmPortName = "stopAlarmPort";
+const String updatePortName = "updatePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(
     int scheduleId, Map<String, dynamic> params) async {
-  print("ringingAlarmId: ${RingingManager.ringingAlarmId}");
-  print("Alarm triggered: $scheduleId");
+  if (kDebugMode) {
+    print("ringingAlarmId: ${RingingManager.ringingAlarmId}");
+    print("Alarm triggered: $scheduleId");
+  }
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
 
   ScheduledNotificationType notificationType =

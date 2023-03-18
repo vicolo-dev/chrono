@@ -11,7 +11,6 @@ Future<TimeDuration?> showDurationPicker(
 }) async {
   final theme = Theme.of(context);
   final textTheme = theme.textTheme;
-  final colorScheme = theme.colorScheme;
 
   return showDialog<TimeDuration>(
     context: context,

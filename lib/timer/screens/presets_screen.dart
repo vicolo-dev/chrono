@@ -1,7 +1,6 @@
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
-import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:clock_app/timer/widgets/timer_preset_card.dart';
 import 'package:clock_app/timer/widgets/timer_preset_picker.dart';
@@ -22,7 +21,7 @@ class _PresetsScreenState extends State<PresetsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppTopBar(
+      appBar: const AppTopBar(
         title: Text("Edit Presets"),
       ),
       body: Stack(

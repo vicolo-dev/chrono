@@ -48,7 +48,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
     ThemeStyle? themeStyle = theme.extension<ThemeStyle>();
     TextStyle? dateTextStyle = theme.textTheme.labelSmall;
 
-    Widget Function(BuildContext, DateTime, DateTime) _dateLabelBuilder(
+    Widget Function(BuildContext, DateTime, DateTime) dateLabelBuilder(
             Color color) =>
         (context, date, focusedDay) => Center(
               child: Text(
@@ -190,13 +190,13 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                             ? RangeSelectionMode.enforced
                             : RangeSelectionMode.disabled,
                         calendarBuilders: CalendarBuilders(
-                          disabledBuilder: _dateLabelBuilder(
+                          disabledBuilder: dateLabelBuilder(
                               colorScheme.onBackground.withOpacity(0.25)),
-                          holidayBuilder: _dateLabelBuilder(
+                          holidayBuilder: dateLabelBuilder(
                               colorScheme.onBackground.withOpacity(0.5)),
                           defaultBuilder:
-                              _dateLabelBuilder(colorScheme.onBackground),
-                          outsideBuilder: _dateLabelBuilder(
+                              dateLabelBuilder(colorScheme.onBackground),
+                          outsideBuilder: dateLabelBuilder(
                               colorScheme.onBackground.withOpacity(0.5)),
                           selectedBuilder: (context, date, focusedDay) =>
                               Container(
@@ -269,7 +269,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                             ),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         TextButton(
                           onPressed: () {
                             if (_isSaveEnabled) {

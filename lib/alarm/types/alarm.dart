@@ -1,4 +1,3 @@
-import 'package:clock_app/alarm/data/alarm_settings_schema.dart';
 import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';

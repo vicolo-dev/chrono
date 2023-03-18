@@ -133,7 +133,7 @@ class _LinearProgressIndicatorPainter extends CustomPainter {
     required this.animationValue,
     required this.textDirection,
     required this.borderRadius,
-  }) : assert(textDirection != null);
+  });
 
   final Color backgroundColor;
   final Color valueColor;
@@ -265,7 +265,7 @@ class _LinearProgressIndicatorPainter extends CustomPainter {
 ///
 ///  * [CircularProgressIndicator], which shows progress along a circular arc.
 ///  * [RefreshIndicator], which automatically displays a [CircularProgressIndicator]
-///    when the underlying vertical scrollable is overscrolled.
+///    when the underlying vertical scrollable is over scrolled.
 ///  * <https://material.io/design/components/progress-indicators.html#linear-progress-indicators>
 class LinearProgressBar extends ProgressIndicator {
   /// Creates a linear progress indicator.

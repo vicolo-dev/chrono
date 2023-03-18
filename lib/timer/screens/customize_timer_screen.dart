@@ -1,13 +1,8 @@
-import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:clock_app/common/widgets/clock/clock_display.dart';
-import 'package:clock_app/common/widgets/time_picker.dart';
-import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
-import 'package:clock_app/timer/widgets/dial_duration_picker.dart';
 import 'package:clock_app/timer/widgets/duration_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -50,8 +45,6 @@ class _CustomizeTimerScreenState extends State<CustomizeTimerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppTopBar(actions: [
         TextButton(

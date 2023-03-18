@@ -1,7 +1,6 @@
 import 'package:clock_app/clock/screens/search_city_screen.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/clock/widgets/timezone_card.dart';
-import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/widgets/clock/clock.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';

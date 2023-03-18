@@ -1,8 +1,6 @@
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/fields/date_picker_field.dart';
-import 'package:clock_app/common/widgets/fields/duration_picker_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
 class DateSettingCard extends StatefulWidget {

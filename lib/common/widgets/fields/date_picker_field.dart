@@ -143,7 +143,7 @@ class DateChip extends StatelessWidget {
       // side: ,
       label: Text(
         DateFormat(dateFormat).format(date),
-        style: TextStyle(fontSize: 10),
+        style: const TextStyle(fontSize: 10),
       ),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );

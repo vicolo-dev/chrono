@@ -1,10 +1,5 @@
-import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
-import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
-import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
-import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
-import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
-import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
+import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:clock_app/timer/types/time_duration.dart';

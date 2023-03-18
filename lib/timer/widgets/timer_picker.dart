@@ -1,7 +1,6 @@
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/modal.dart';
-import 'package:clock_app/timer/screens/customize_timer_screen.dart';
 import 'package:clock_app/timer/screens/presets_screen.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -29,7 +28,6 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
         builder: (context, StateSetter setState) {
           return Modal(
             onSave: () {
-              print(timer.toJson());
               Navigator.of(context).pop(PickerResult(timer, false));
             },
             title: "Choose Duration",
@@ -81,7 +79,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                                 await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => PresetsScreen(),
+                                    builder: (context) => const PresetsScreen(),
                                   ),
                                 );
 

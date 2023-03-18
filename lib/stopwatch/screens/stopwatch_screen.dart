@@ -77,21 +77,21 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                             .toTimeString(showMilliseconds: true),
                         style: const TextStyle(fontSize: 48.0),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       LapComparer(
                         stopwatch: _stopwatch,
                         comparisonLap: _stopwatch.previousLap,
                         label: "Previous",
                         color: Theme.of(context).primaryColor,
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       LapComparer(
                         stopwatch: _stopwatch,
                         comparisonLap: _stopwatch.fastestLap,
                         label: "Fastest",
                         color: Colors.red,
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       LapComparer(
                         stopwatch: _stopwatch,
                         comparisonLap: _stopwatch.slowestLap,
@@ -174,13 +174,13 @@ class LapComparer extends StatelessWidget {
           child: Row(
             children: [
               Text(label,
-                  style: TextStyle(fontSize: 10.0, color: Colors.white)),
-              Spacer(),
+                  style: const TextStyle(fontSize: 10.0, color: Colors.white)),
+              const Spacer(),
               Text(
                   comparisonLap != null
                       ? 'Lap ${comparisonLap?.number}: ${comparisonLap?.lapTime.toTimeString(showMilliseconds: true)}'
                       : '',
-                  style: TextStyle(fontSize: 10.0, color: Colors.white)),
+                  style: const TextStyle(fontSize: 10.0, color: Colors.white)),
             ],
           ),
         ),
