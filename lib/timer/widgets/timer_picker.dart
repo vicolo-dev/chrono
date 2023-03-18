@@ -1,5 +1,7 @@
+import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/modal.dart';
+import 'package:clock_app/timer/screens/customize_timer_screen.dart';
 import 'package:clock_app/timer/screens/presets_screen.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -7,7 +9,7 @@ import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:clock_app/timer/widgets/dial_duration_picker.dart';
 import 'package:flutter/material.dart';
 
-Future<ClockTimer?> showTimerPicker(
+Future<PickerResult<ClockTimer>?> showTimerPicker(
   BuildContext context, {
   ClockTimer? initialTimer,
 }) async {
@@ -15,7 +17,7 @@ Future<ClockTimer?> showTimerPicker(
   final textTheme = theme.textTheme;
   final colorScheme = theme.colorScheme;
 
-  return showDialog<ClockTimer>(
+  return showDialog<PickerResult<ClockTimer>>(
     context: context,
     builder: (BuildContext context) {
       ClockTimer timer = ClockTimer.from(
@@ -28,13 +30,13 @@ Future<ClockTimer?> showTimerPicker(
           return Modal(
             onSave: () {
               print(timer.toJson());
-              Navigator.of(context).pop(timer);
+              Navigator.of(context).pop(PickerResult(timer, false));
             },
             title: "Choose Duration",
             additionalAction: ModalAction(
               title: "Customize",
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                Navigator.of(context).pop(PickerResult(timer, true));
               },
             ),
             child: Builder(
@@ -109,8 +111,9 @@ Future<ClockTimer?> showTimerPicker(
                                 preset: presets[index],
                                 onTap: () {
                                   setState(() {
-                                    timer = ClockTimer(presets[index].duration,
-                                        label: presets[index].name);
+                                    timer = ClockTimer(presets[index].duration);
+                                    timer.setSetting(
+                                        context, "Label", presets[index].name);
                                   });
                                 },
                               );

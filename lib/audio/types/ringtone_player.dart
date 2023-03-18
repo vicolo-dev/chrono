@@ -24,17 +24,23 @@ class RingtonePlayer {
 
   static void playAlarm(Alarm alarm, {LoopMode loopMode = LoopMode.one}) async {
     activePlayer = _alarmPlayer;
-    _play(alarm.ringtoneUri,
-        vibrate: alarm.vibrate,
-        loopMode: LoopMode.one,
-        secondsToMaxVolume: alarm.risingVolumeDuration.inSeconds);
+    _play(
+      alarm.ringtoneUri,
+      vibrate: alarm.vibrate,
+      loopMode: LoopMode.one,
+      secondsToMaxVolume: alarm.risingVolumeDuration.inSeconds,
+    );
   }
 
   static void playTimer(ClockTimer timer,
       {LoopMode loopMode = LoopMode.one}) async {
     activePlayer = _timerPlayer;
-    _play(RingtoneManager.ringtones[0].uri,
-        vibrate: true, loopMode: LoopMode.one);
+    _play(
+      timer.ringtoneUri,
+      vibrate: timer.vibrate,
+      loopMode: LoopMode.one,
+      secondsToMaxVolume: timer.risingVolumeDuration.inSeconds,
+    );
   }
 
   static void _play(

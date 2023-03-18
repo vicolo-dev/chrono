@@ -2,6 +2,7 @@ import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/logic/time_of_day_icon.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
+import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
@@ -76,7 +77,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                         horizontalAlignment: ElementAlignment.center,
                       ),
                       onTap: () async {
-                        TimePickerResult? timePickerResult =
+                        PickerResult<TimeOfDay>? timePickerResult =
                             await showTimePickerDialog(
                           context: context,
                           initialTime: _alarm.timeOfDay,
@@ -87,7 +88,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
 
                         if (timePickerResult != null) {
                           setState(() {
-                            _alarm.setTimeOfDay(timePickerResult.timeOfDay);
+                            _alarm.setTimeOfDay(timePickerResult.value);
                           });
                         }
                       },

@@ -27,7 +27,7 @@ Future<TimerPreset?> showTimerPresetPicker(BuildContext context,
         builder: (context, StateSetter setState) {
           return Modal(
             onSave: () => Navigator.of(context).pop(timerPreset),
-            title: "Edit Preset",
+            // title: "Edit Preset",
             // titleWidget: Row(
             //   children: [
             //     Text(

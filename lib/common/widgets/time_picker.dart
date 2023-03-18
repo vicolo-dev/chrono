@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/theme/border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -2276,7 +2277,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
       }
       form.save();
     }
-    Navigator.pop(context, TimePickerResult(_selectedTime.value, isCustomize));
+    Navigator.pop(context, PickerResult(_selectedTime.value, isCustomize));
   }
 
   Size _dialogSize(BuildContext context) {
@@ -2594,7 +2595,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
 ///    typography, and shape of the time picker.
 ///  * [DisplayFeatureSubScreen], which documents the specifics of how
 ///    [DisplayFeature]s can split the screen into sub-screens.
-Future<TimePickerResult?> showTimePickerDialog({
+Future<PickerResult<TimeOfDay>?> showTimePickerDialog({
   required BuildContext context,
   required TimeOfDay initialTime,
   TransitionBuilder? builder,
@@ -2629,7 +2630,7 @@ Future<TimePickerResult?> showTimePickerDialog({
     dialogActions: dialogActions,
     useSimple: useSimple,
   );
-  return showDialog<TimePickerResult>(
+  return showDialog<PickerResult<TimeOfDay>>(
     context: context,
     useRootNavigator: useRootNavigator,
     builder: (BuildContext context) {
@@ -2642,12 +2643,6 @@ Future<TimePickerResult?> showTimePickerDialog({
 
 void _announceToAccessibility(BuildContext context, String message) {
   SemanticsService.announce(message, Directionality.of(context));
-}
-
-class TimePickerResult {
-  TimeOfDay timeOfDay;
-  bool isCustomize;
-  TimePickerResult(this.timeOfDay, this.isCustomize);
 }
 
 class DialogAction {

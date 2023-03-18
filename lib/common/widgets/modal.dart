@@ -10,14 +10,14 @@ class ModalAction {
 class Modal extends StatelessWidget {
   const Modal({
     Key? key,
-    required this.title,
+    this.title,
     required this.child,
     this.onSave,
     this.additionalAction,
     this.titleWidget,
   }) : super(key: key);
 
-  final String title;
+  final String? title;
   final Widget child;
   final VoidCallback? onSave;
   final ModalAction? additionalAction;
@@ -34,13 +34,14 @@ class Modal extends StatelessWidget {
       insetPadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       titlePadding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-      title: titleWidget ??
-          Text(
-            title,
-            style: textTheme.displaySmall?.copyWith(
-              color: colorScheme.onBackground.withOpacity(0.6),
-            ),
-          ),
+      title: title != null
+          ? Text(
+              title!,
+              style: textTheme.displaySmall?.copyWith(
+                color: colorScheme.onBackground.withOpacity(0.6),
+              ),
+            )
+          : null,
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: child,

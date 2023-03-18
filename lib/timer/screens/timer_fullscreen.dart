@@ -17,12 +17,14 @@ class TimerFullscreen extends StatefulWidget {
     required this.onToggleState,
     required this.onReset,
     required this.onAddTime,
+    required this.onCustomize,
   });
 
   final ClockTimer timer;
-  final VoidCallback onToggleState;
-  final VoidCallback onReset;
-  final VoidCallback onAddTime;
+  final void Function(ClockTimer) onToggleState;
+  final void Function(ClockTimer) onReset;
+  final void Function(ClockTimer) onAddTime;
+  final Future<ClockTimer> Function(ClockTimer) onCustomize;
 
   @override
   State<TimerFullscreen> createState() => _TimerFullscreenState();
@@ -53,7 +55,6 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
 
   void onTimerUpdated() {
     timer = getTimerById(timer.id);
-
     updateTimer();
   }
 
@@ -83,7 +84,17 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppTopBar(),
+      appBar: AppTopBar(actions: [
+        TextButton(
+            onPressed: () async {
+              ClockTimer newTimer = await widget.onCustomize(timer);
+              setState(() {
+                timer = newTimer;
+                updateTimer();
+              });
+            },
+            child: const Text("Edit"))
+      ]),
       body: SizedBox(
         width: double.infinity,
         child: Column(
@@ -91,7 +102,7 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              widget.timer.label,
+              timer.label,
               style: Theme.of(context).textTheme.displayMedium?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -128,8 +139,8 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                 children: [
                   if (timer.state != TimerState.stopped)
                     SizedBox(
-                      width: 72,
-                      height: 72,
+                      width: 84,
+                      height: 84,
                       child: CardContainer(
                         child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -141,7 +152,7 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                               // size: 64,
                             )),
                         onTap: () {
-                          widget.onReset();
+                          widget.onReset(timer);
                           updateTimer();
                         },
                       ),
@@ -166,23 +177,23 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                             ),
                     ),
                     onTap: () {
-                      widget.onToggleState();
+                      widget.onToggleState(timer);
                       updateTimer();
                     },
                   ),
                   if (timer.state != TimerState.stopped)
                     SizedBox(
-                      width: 72,
-                      height: 72,
+                      width: 84,
+                      height: 84,
                       child: CardContainer(
                         alignment: Alignment.center,
                         child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text('+1:00',
+                            child: Text('+${timer.addLength.floor()}:00',
                                 style:
                                     Theme.of(context).textTheme.displaySmall)),
                         onTap: () {
-                          widget.onAddTime();
+                          widget.onAddTime(timer);
                           updateTimer();
                         },
                       ),

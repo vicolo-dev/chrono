@@ -1,6 +1,6 @@
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
-import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
+import 'package:clock_app/timer/widgets/timer_picker.dart';
 
 List<TimerPreset> defaultTimerPresets = [
   TimerPreset("1 min", const TimeDuration(minutes: 1)),

@@ -1,7 +1,7 @@
-import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/common/types/picker_result.dart';
+import 'package:clock_app/timer/screens/customize_timer_screen.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
-import 'package:clock_app/timer/types/timer_preset.dart';
-import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
+import 'package:clock_app/timer/widgets/timer_picker.dart';
 import 'package:flutter/material.dart';
 
 import 'package:great_list_view/great_list_view.dart';
@@ -45,38 +45,27 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void _handleAddTimeToTimer(ClockTimer timer) {
     int index = _listController.getItemIndex(timer);
-    _listController.changeItems(
-        (timers) => timers[index].addTime(const TimeDuration(minutes: 1)));
+    _listController.changeItems((timers) => timers[index].addTime());
   }
 
-  // Future<Timer?> _openCustomizeTimerScreen(Timer timer) async {
-  //   ScaffoldMessenger.of(context).removeCurrentSnackBar();
+  Future<ClockTimer?> _openCustomizeTimerScreen(ClockTimer timer) async {
+    return await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CustomizeTimerScreen(initialTimer: timer)),
+    );
+  }
 
-  //   return await Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //         builder: (context) => CustomizeTimerScreen(initialTimer: timer)),
-  //   );
-  // }
+  Future<ClockTimer> _handleCustomizeTimer(ClockTimer timer) async {
+    int index = _listController.getItemIndex(timer);
+    ClockTimer? newTimer = await _openCustomizeTimerScreen(timer);
+    if (newTimer == null) return timer;
+    newTimer.reset();
+    newTimer.start();
 
-  // _handleCustomizeTimer(Timer timer) async {
-  //   int index = _getTimerIndex(timer);
-  //   Timer? newTimer = await _openCustomizeTimerScreen(timer);
-
-  //   if (newTimer == null) return;
-
-  //   newTimer.schedule();
-  //   _timers[index] = newTimer;
-  //   _controller.notifyChangedRange(
-  //     index,
-  //     1,
-  //     getTimerChangeWidgetBuilder(timer),
-  //   );
-
-  //   _showNextScheduleSnackBar(newTimer);
-
-  //   saveList('timers', _timers);
-  // }
+    _listController.changeItems((timers) => timers[index] = newTimer);
+    return newTimer;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +87,10 @@ class _TimerScreenState extends State<TimerScreen> {
                   MaterialPageRoute(
                     builder: (context) => TimerFullscreen(
                       timer: timer,
-                      onReset: () => _handleResetTimer(timer),
-                      onToggleState: () => _handleToggleState(timer),
-                      onAddTime: () => _handleAddTimeToTimer(timer),
+                      onReset: _handleResetTimer,
+                      onToggleState: _handleToggleState,
+                      onAddTime: _handleAddTimeToTimer,
+                      onCustomize: _handleCustomizeTimer,
                     ),
                   ),
                 );
@@ -117,10 +107,16 @@ class _TimerScreenState extends State<TimerScreen> {
       ),
       FAB(
         onPressed: () async {
-          ClockTimer? timer = await showTimerPicker(context);
-          if (timer == null) return;
-          timer.start();
-          _listController.addItem(timer);
+          PickerResult<ClockTimer>? pickerResult =
+              await showTimerPicker(context);
+          if (pickerResult != null) {
+            ClockTimer timer = ClockTimer.from(pickerResult.value);
+            if (pickerResult.isCustomize) {
+              timer = await _openCustomizeTimerScreen(timer) ?? timer;
+            }
+            timer.start();
+            _listController.addItem(timer);
+          }
         },
       )
     ]);
