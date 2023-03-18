@@ -35,17 +35,29 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
     });
   }
 
+  void update(value) {
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
     _alarm = Alarm.fromAlarm(widget.initialAlarm);
     appSettings.addSettingListener("Date Format", setDateFormat);
+    _alarm.settings.addSettingListener("Week Days", update);
+    _alarm.settings.addSettingListener("Dates", update);
+    _alarm.settings.addSettingListener("Date Range", update);
+    _alarm.settings.addSettingListener("Interval", update);
     setDateFormat(appSettings.getSetting("Date Format").value);
   }
 
   @override
   void dispose() {
     appSettings.removeSettingListener("Date Format", setDateFormat);
+    _alarm.settings.removeSettingListener("Week Days", update);
+    _alarm.settings.removeSettingListener("Dates", update);
+    _alarm.settings.removeSettingListener("Date Range", update);
+    _alarm.settings.removeSettingListener("Interval", update);
     super.dispose();
   }
 
@@ -102,17 +114,20 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                           size: 28,
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          getAlarmScheduleDescription(_alarm, dateFormat),
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onBackground
-                                    .withOpacity(0.6),
-                              ),
+                        Flexible(
+                          child: Text(
+                            getAlarmScheduleDescription(_alarm, dateFormat),
+                            maxLines: 2,
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall
+                                ?.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground
+                                      .withOpacity(0.6),
+                                ),
+                          ),
                         ),
                       ],
                     ),

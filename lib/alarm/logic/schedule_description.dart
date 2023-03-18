@@ -57,7 +57,23 @@ String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
       DateTime rangeEnd = alarm.getEndDate();
       Duration interval = alarm.getInterval();
 
-      return '${interval.inDays == 1 ? "Daily" : "Weekly"} from ${DateFormat(dateFormat).format(rangeStart)} to ${DateFormat(dateFormat).format(rangeEnd)}';
+      String startString = DateFormat(dateFormat).format(rangeStart);
+      String endString = DateFormat(dateFormat).format(rangeEnd);
+
+      DateTime currentDate = DateTime.now();
+
+      if (rangeStart.year == currentDate.year &&
+          rangeEnd.year == currentDate.year) {
+        if (rangeStart.month == rangeEnd.month) {
+          startString = DateFormat('d').format(rangeStart);
+          endString = DateFormat('d MMM').format(rangeEnd);
+        } else {
+          startString = DateFormat('d MMM').format(rangeStart);
+          endString = DateFormat('d MMM').format(rangeEnd);
+        }
+      }
+
+      return '${interval.inDays == 1 ? "Daily" : "Weekly"} from $startString to $endString';
     default:
       return 'Not scheduled';
   }

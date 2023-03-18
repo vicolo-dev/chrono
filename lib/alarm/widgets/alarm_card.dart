@@ -52,14 +52,60 @@ class _AlarmCardState extends State<AlarmCard> {
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (widget.alarm.label.isNotEmpty)
+          Expanded(
+            flex: 8,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.alarm.label.isNotEmpty)
+                  Row(
+                    children: [
+                      Text(widget.alarm.label,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: widget.alarm.isEnabled
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onBackground
+                                            .withOpacity(0.8)
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onBackground
+                                            .withOpacity(0.6),
+                                  )),
+                    ],
+                  ),
                 Row(
                   children: [
-                    Text(widget.alarm.label,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    ClockDisplay(
+                        dateTime: widget.alarm.timeOfDay.toDateTime(),
+                        scale: 0.6,
+                        color: widget.alarm.isEnabled
+                            ? null
+                            : Theme.of(context)
+                                .colorScheme
+                                .onBackground
+                                .withOpacity(0.6)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      timeOfDayIcon.icon,
+                      color: widget.alarm.isEnabled
+                          ? timeOfDayIcon.color
+                          : Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.6),
+                      size: 24,
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        getAlarmScheduleDescription(widget.alarm, dateFormat),
+                        maxLines: 2,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: widget.alarm.isEnabled
                                   ? Theme.of(context)
                                       .colorScheme
@@ -69,74 +115,38 @@ class _AlarmCardState extends State<AlarmCard> {
                                       .colorScheme
                                       .onBackground
                                       .withOpacity(0.6),
-                            )),
+                            ),
+                      ),
+                    ),
                   ],
-                ),
-              Row(
-                children: [
-                  ClockDisplay(
-                      dateTime: widget.alarm.timeOfDay.toDateTime(),
-                      scale: 0.6,
-                      color: widget.alarm.isEnabled
-                          ? null
-                          : Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.6)),
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(
-                    timeOfDayIcon.icon,
-                    color: widget.alarm.isEnabled
-                        ? timeOfDayIcon.color
-                        : Theme.of(context)
-                            .colorScheme
-                            .onBackground
-                            .withOpacity(0.6),
-                    size: 24,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    getAlarmScheduleDescription(widget.alarm, dateFormat),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: widget.alarm.isEnabled
-                              ? Theme.of(context)
-                                  .colorScheme
-                                  .onBackground
-                                  .withOpacity(0.8)
-                              : Theme.of(context)
-                                  .colorScheme
-                                  .onBackground
-                                  .withOpacity(0.6),
-                        ),
-                  ),
-                ],
-              )
-            ],
+                )
+              ],
+            ),
           ),
           const Spacer(),
-          Column(
-            children: [
-              // const SizedBox(width: 8),
-              widget.alarm.isFinished
-                  ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                        onPressed: widget.onPressDelete,
-                        icon: Icon(
-                          Icons.delete_rounded,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 32,
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                // const SizedBox(width: 8),
+                widget.alarm.isFinished
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: IconButton(
+                          onPressed: widget.onPressDelete,
+                          icon: Icon(
+                            Icons.delete_rounded,
+                            color: Theme.of(context).colorScheme.error,
+                            size: 32,
+                          ),
                         ),
+                      )
+                    : Switch(
+                        value: widget.alarm.isEnabled,
+                        onChanged: widget.onEnabledChange,
                       ),
-                    )
-                  : Switch(
-                      value: widget.alarm.isEnabled,
-                      onChanged: widget.onEnabledChange,
-                    ),
-            ],
+              ],
+            ),
           )
         ],
       ),
