@@ -3,7 +3,6 @@ import 'package:clock_app/alarm/widgets/alarm_card.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:timezone/data/latest_all.dart' as timezone_db;
 
 const testKey = Key('key');
 var sampleAlarm = Alarm(const TimeOfDay(hour: 2, minute: 30));
@@ -12,7 +11,6 @@ void main() {
   group('AlarmCard', () {
     setUp(
       () async {
-        timezone_db.initializeTimeZones();
         sampleAlarm = Alarm(const TimeOfDay(hour: 2, minute: 30));
       },
     );
