@@ -13,23 +13,23 @@ class AlarmRunner extends JsonSerializable {
     _id = UniqueKey().hashCode;
   }
 
-  void schedule(DateTime dateTime) {
+  Future<bool> schedule(DateTime dateTime) async {
     _currentScheduleDateTime = dateTime;
-    scheduleAlarm(_id, dateTime);
+    return await scheduleAlarm(_id, dateTime);
   }
 
   AlarmRunner.fromJson(Map<String, dynamic> json) : _id = json['id'] {
-    int millisecondsSinceEpoch = json['nextScheduleDateTime'];
+    int millisecondsSinceEpoch = json['currentScheduleDateTime'];
 
     _currentScheduleDateTime = millisecondsSinceEpoch == 0
         ? null
-        : DateTime.fromMillisecondsSinceEpoch(json['nextScheduleDateTime']);
+        : DateTime.fromMillisecondsSinceEpoch(json['currentScheduleDateTime']);
   }
 
   @override
   Map<String, dynamic> toJson() => {
         'id': _id,
-        'nextScheduleDateTime':
+        'currentScheduleDateTime':
             _currentScheduleDateTime?.millisecondsSinceEpoch ?? 0,
       };
 

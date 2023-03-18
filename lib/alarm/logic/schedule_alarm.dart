@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/common/utils/date_time.dart';
@@ -8,32 +10,36 @@ enum ScheduledNotificationType {
   timer,
 }
 
-Future<void> scheduleAlarm(
+Future<bool> scheduleAlarm(
   int scheduleId,
   DateTime startDate, {
   ScheduledNotificationType type = ScheduledNotificationType.alarm,
 }) async {
-  await cancelAlarm(scheduleId);
-
   if (startDate.isBefore(DateTime.now())) {
     throw Exception('Attempted to schedule alarm in the past ($startDate)');
   }
 
-  AndroidAlarmManager.oneShotAtTime(
-    startDate,
-    scheduleId,
-    triggerScheduledNotification,
-    allowWhileIdle: true,
-    alarmClock: true,
-    exact: true,
-    wakeup: true,
-    rescheduleOnReboot: true,
-    params: <String, String>{
-      'scheduleId': scheduleId.toString(),
-      'timeOfDay': startDate.toTimeOfDay().encode(),
-      'type': type.name,
-    },
-  );
+  if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+    await cancelAlarm(scheduleId);
+
+    return AndroidAlarmManager.oneShotAtTime(
+      startDate,
+      scheduleId,
+      triggerScheduledNotification,
+      allowWhileIdle: true,
+      alarmClock: true,
+      exact: true,
+      wakeup: true,
+      rescheduleOnReboot: true,
+      params: <String, String>{
+        'scheduleId': scheduleId.toString(),
+        'timeOfDay': startDate.toTimeOfDay().encode(),
+        'type': type.name,
+      },
+    );
+  } else {
+    return true;
+  }
 }
 
 Future<void> cancelAlarm(int scheduleId) async {

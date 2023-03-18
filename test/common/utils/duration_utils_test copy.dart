@@ -6,9 +6,9 @@ Duration duration = const Duration(hours: 1, minutes: 30, seconds: 0);
 
 void main() {
   group('DurationUtils', () {
-    testWidgets(
+    test(
       'toTimeDuration() returns correct value',
-      (tester) async {
+      () {
         expect(duration.toTimeDuration(),
             const TimeDuration(hours: 1, minutes: 30));
       },

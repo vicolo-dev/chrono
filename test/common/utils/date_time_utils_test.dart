@@ -7,22 +7,22 @@ DateTime dateTime = DateTime(2023, 1, 1, 1, 30, 0);
 
 void main() {
   group('DateTimeUtils', () {
-    testWidgets(
+    test(
       'toHours() returns correct value',
-      (tester) async {
+      () {
         expect(dateTime.toHours(), 1.5);
       },
     );
 
-    testWidgets(
+    test(
       'toTimeOfDay() returns correct value',
-      (tester) async {
+      () {
         expect(dateTime.toTimeOfDay(), const TimeOfDay(hour: 1, minute: 30));
       },
     );
-    testWidgets(
+    test(
       'addTimeDuration() returns correct value',
-      (tester) async {
+      () {
         expect(
             dateTime.addTimeDuration(const TimeDuration(hours: 5, minutes: 7)),
             DateTime(2023, 1, 1, 6, 37, 0));

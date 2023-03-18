@@ -8,9 +8,9 @@ TimeOfDay timeOfDay = const TimeOfDay(hour: 1, minute: 30);
 
 void main() {
   group('TimeOfDayUtils', () {
-    testWidgets(
+    test(
       'toHours() returns correct value',
-      (tester) async {
+      () {
         expect(timeOfDay.toHours(), 1.5);
       },
     );
@@ -18,9 +18,9 @@ void main() {
     group(
       'isBetween() returns correct value',
       () {
-        testWidgets(
+        test(
           'when time is between start and end',
-          (tester) async {
+          () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 1, minute: 0),
                     const TimeOfDay(hour: 2, minute: 0)),
@@ -28,9 +28,9 @@ void main() {
           },
         );
 
-        testWidgets(
+        test(
           'when time is equal to start',
-          (tester) async {
+          () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 1, minute: 30),
                     const TimeOfDay(hour: 2, minute: 0)),
@@ -38,9 +38,9 @@ void main() {
           },
         );
 
-        testWidgets(
+        test(
           'when time is equal to end',
-          (tester) async {
+          () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 1, minute: 0),
                     const TimeOfDay(hour: 1, minute: 30)),
@@ -48,9 +48,9 @@ void main() {
           },
         );
 
-        testWidgets(
+        test(
           'when time is before start',
-          (tester) async {
+          () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 2, minute: 0),
                     const TimeOfDay(hour: 3, minute: 0)),
@@ -58,9 +58,9 @@ void main() {
           },
         );
 
-        testWidgets(
+        test(
           'when time is after end',
-          (tester) async {
+          () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 0, minute: 0),
                     const TimeOfDay(hour: 1, minute: 0)),
@@ -70,50 +70,50 @@ void main() {
       },
     );
 
-    testWidgets(
+    test(
       'formatToString() returns correct value',
-      (tester) async {
+      () {
         expect(timeOfDay.formatToString("hh:mm"), '01:30');
       },
     );
 
-    testWidgets(
+    test(
       'fromHours() returns correct value',
-      (tester) async {
+      () {
         expect(TimeOfDayUtils.fromHours(1.5),
             const TimeOfDay(hour: 1, minute: 30));
       },
     );
-    testWidgets(
+    test(
       'fromJson() returns correct value',
-      (tester) async {
+      () {
         expect(TimeOfDayUtils.fromJson({'hour': 1, 'minute': 30}),
             const TimeOfDay(hour: 1, minute: 30));
       },
     );
-    // testWidgets(
+    // test(
     //   'toDateTime() returns correct value',
-    //   (tester) async {
+    //   ()  {
     //     expect(timeOfDay.toDateTime(), DateTime(2020, 1, 1, 1, 30, 0));
     //   },
     // );
-    testWidgets(
+    test(
       'toJson() returns correct value',
-      (tester) async {
+      () {
         expect(timeOfDay.toJson(), {'hour': 1, 'minute': 30});
       },
     );
 
-    testWidgets(
+    test(
       'encode() returns correct value',
-      (tester) async {
+      () {
         expect(timeOfDay.encode(), '1.5');
       },
     );
 
-    testWidgets(
+    test(
       'decode() returns correct value',
-      (tester) async {
+      () {
         expect(
             TimeOfDayUtils.decode('1.5'), const TimeOfDay(hour: 1, minute: 30));
       },
