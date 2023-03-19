@@ -5,13 +5,28 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 
+ToggleSetting<int> weekdaySetting =
+    alarmSettingsSchema.getSetting("Week Days").copy() as ToggleSetting<int>;
+WeeklyAlarmSchedule schedule = WeeklyAlarmSchedule(weekdaySetting);
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('WeeklyAlarmSchedule', () {
-    ToggleSetting<int> weekdaySetting =
-        alarmSettingsSchema.getSetting("Week Days") as ToggleSetting<int>;
-    final schedule = WeeklyAlarmSchedule(weekdaySetting);
+    setUp(() {
+      weekdaySetting = alarmSettingsSchema.getSetting("Week Days").copy()
+          as ToggleSetting<int>;
+      schedule = WeeklyAlarmSchedule(weekdaySetting);
+    });
+    test('schedule sets currentScheduleDateTime to correct value', () async {
+      const timeOfDay = TimeOfDay(hour: 10, minute: 30);
+
+      bool result = await schedule.schedule(timeOfDay);
+
+      expect(result, true);
+      expect(schedule.currentScheduleDateTime?.hour, timeOfDay.hour);
+      expect(schedule.currentScheduleDateTime?.minute, timeOfDay.minute);
+    });
 
     group('schedules alarm in the future', () {
       test(
@@ -22,8 +37,6 @@ void main() {
           bool result = await schedule.schedule(timeOfDay);
 
           expect(result, true);
-          expect(schedule.currentScheduleDateTime?.hour, timeOfDay.hour);
-          expect(schedule.currentScheduleDateTime?.minute, timeOfDay.minute);
           expect(
               schedule.currentScheduleDateTime?.isAfter(DateTime.now()), true);
         },
@@ -36,15 +49,13 @@ void main() {
           bool result = await schedule.schedule(timeOfDay);
 
           expect(result, true);
-          expect(schedule.currentScheduleDateTime?.hour, timeOfDay.hour);
-          expect(schedule.currentScheduleDateTime?.minute, timeOfDay.minute);
           expect(
               schedule.currentScheduleDateTime?.isAfter(DateTime.now()), true);
         },
       );
     });
 
-    group('cancel', () {
+    group('cancel sets currentScheduleDateTime to null', () {
       test(
         'cancels scheduled alarm',
         () async {
@@ -56,7 +67,69 @@ void main() {
       );
     });
 
-    test('toJson() returns correct value', () async {
+    test('isFinished returns false', () {
+      expect(schedule.isFinished, false);
+    });
+
+    test('isDisabled returns false', () {
+      expect(schedule.isDisabled, false);
+    });
+
+    group('alarmRunners', () {
+      test('returns empty list when not scheduled', () {
+        expect(schedule.alarmRunners, []);
+      });
+      test('returns list with one item when scheduled', () {
+        schedule.schedule(const TimeOfDay(hour: 10, minute: 30));
+        expect(schedule.alarmRunners.length, 1);
+      });
+      test('returns list with 5 items when 5 weekdays are selected', () {
+        weekdaySetting.setValueWithoutNotify(
+            [true, true, true, false, true, false, true]);
+        schedule.schedule(const TimeOfDay(hour: 10, minute: 30));
+        expect(schedule.alarmRunners.length, 5);
+      });
+    });
+
+    group('hasId()', () {
+      test('returns false when id is not in alarmRunners', () {
+        expect(schedule.hasId(-1), false);
+      });
+      test('returns true when id is in alarmRunners', () {
+        schedule.schedule(const TimeOfDay(hour: 10, minute: 30));
+        expect(schedule.hasId(schedule.currentAlarmRunnerId), true);
+      });
+    });
+
+    group('nextWeekdaySchedule', () {
+      test('returns default WeekdaySchedule when no weekdays are selected', () {
+        expect(
+            schedule.nextWeekdaySchedule.weekday, WeekdaySchedule(0).weekday);
+      });
+      test('returns correct weekday schedule when scheduled', () {
+        schedule.schedule(const TimeOfDay(hour: 10, minute: 30));
+        expect(schedule.nextWeekdaySchedule.weekday, 1);
+      });
+    });
+
+    group('scheduledWeekdays', () {
+      test('returns list with one item when not scheduled', () {
+        schedule.schedule(const TimeOfDay(hour: 10, minute: 30));
+        expect(schedule.scheduledWeekdays.length, 1);
+      });
+      test('returns list with one item when scheduled', () {
+        schedule.schedule(const TimeOfDay(hour: 10, minute: 30));
+        expect(schedule.scheduledWeekdays.length, 1);
+      });
+      test('returns list with 5 items when 5 weekdays are selected', () {
+        weekdaySetting.setValueWithoutNotify(
+            [true, true, true, false, true, false, true]);
+        schedule.schedule(const TimeOfDay(hour: 10, minute: 30));
+        expect(schedule.scheduledWeekdays.length, 5);
+      });
+    });
+
+    test('toJson() returns correct value', () {
       schedule.schedule(const TimeOfDay(hour: 10, minute: 30));
       final weekdayScheduleJson = {
         'weekday': 1,
