@@ -20,7 +20,7 @@ void main() {
     testWidgets(
       'shows city name',
       (tester) async {
-        await renderWidget(tester);
+        await _renderWidget(tester);
 
         // The widget code uses `replaceAll` to work around flutter's
         // limitation of cutting entire words on overflow instead of
@@ -32,7 +32,7 @@ void main() {
   });
 }
 
-Future<void> renderWidget(WidgetTester tester) async {
+Future<void> _renderWidget(WidgetTester tester) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: defaultTheme,

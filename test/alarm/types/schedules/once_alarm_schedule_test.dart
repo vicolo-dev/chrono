@@ -1,16 +1,16 @@
-import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
+import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-DailyAlarmSchedule schedule = DailyAlarmSchedule();
+OnceAlarmSchedule schedule = OnceAlarmSchedule();
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('DailyAlarmSchedule', () {
+  group('OnceAlarmSchedule', () {
     setUp(() {
-      schedule = DailyAlarmSchedule();
+      schedule = OnceAlarmSchedule();
     });
 
     test('schedule sets currentScheduleDateTime to correct value', () async {
@@ -97,24 +97,27 @@ void main() {
           'currentScheduleDateTime':
               schedule.currentScheduleDateTime?.millisecondsSinceEpoch,
         },
+        'isDisabled': false,
       });
     });
 
-    test('fromJson() creates DailyAlarmSchedule with correct values', () async {
+    test('fromJson() creates OnceAlarmSchedule with correct values', () async {
       final scheduleDate = DateTime.now().add(const Duration(minutes: 1));
       final Map<String, dynamic> json = {
         'alarmRunner': {
           'id': 50,
           'currentScheduleDateTime': scheduleDate.millisecondsSinceEpoch,
         },
+        'isDisabled': true,
       };
 
-      final DailyAlarmSchedule scheduleFromJson =
-          DailyAlarmSchedule.fromJson(json);
+      final OnceAlarmSchedule scheduleFromJson =
+          OnceAlarmSchedule.fromJson(json);
 
       expect(scheduleFromJson.currentAlarmRunnerId, 50);
       expect(scheduleFromJson.currentScheduleDateTime?.millisecondsSinceEpoch,
           scheduleDate.millisecondsSinceEpoch);
+      expect(scheduleFromJson.isDisabled, true);
     });
   });
 }

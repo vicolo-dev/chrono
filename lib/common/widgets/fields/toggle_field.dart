@@ -36,7 +36,7 @@ class _ToggleFieldState<T> extends State<ToggleField<T>> {
       padding: EdgeInsets.symmetric(horizontal: widget.padding),
       child: Column(
         children: [
-          // if (name != null) Text(name!),
+          if (widget.name != null) Text(widget.name!),
           ToggleButtons(
             fillColor: Theme.of(context).colorScheme.primary,
             selectedColor: Theme.of(context).colorScheme.onPrimary,

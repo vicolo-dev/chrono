@@ -18,7 +18,7 @@ void main() {
     testWidgets(
       'shows alarm time correctly',
       (tester) async {
-        await renderWidget(tester);
+        await _renderWidget(tester);
 
         expect(find.text("2:30"), findsOneWidget);
       },
@@ -27,7 +27,7 @@ void main() {
     testWidgets(
       'shows time period correctly',
       (tester) async {
-        await renderWidget(tester);
+        await _renderWidget(tester);
 
         expect(find.text("AM"), findsOneWidget);
       },
@@ -37,7 +37,7 @@ void main() {
       testWidgets(
         'on enabled alarm',
         (tester) async {
-          await renderWidget(tester);
+          await _renderWidget(tester);
           final finder = find.byWidgetPredicate(
               (widget) => widget is Switch && widget.value == true,
               description: 'Switch is enabled');
@@ -50,7 +50,7 @@ void main() {
         'on disabled alarm',
         (tester) async {
           sampleAlarm.disable();
-          await renderWidget(tester);
+          await _renderWidget(tester);
           final finder = find.byWidgetPredicate(
               (widget) => widget is Switch && widget.value == false,
               description: 'Switch is disabled');
@@ -64,7 +64,7 @@ void main() {
       testWidgets(
         'when label is empty',
         (tester) async {
-          await renderWidget(tester);
+          await _renderWidget(tester);
           // final finder = find.byWidgetPredicate(
           //     (widget) => widget is Switch && widget.value == true,
           //     description: 'Switch is enabled');
@@ -76,7 +76,7 @@ void main() {
         'when label is present',
         (tester) async {
           sampleAlarm.setSettingWithoutNotify("Label", "Test Label");
-          await renderWidget(tester);
+          await _renderWidget(tester);
           expect(find.text("Test Label"), findsOneWidget);
         },
       );
@@ -84,7 +84,7 @@ void main() {
   });
 }
 
-Future<void> renderWidget(WidgetTester tester, [Alarm? alarm]) async {
+Future<void> _renderWidget(WidgetTester tester, [Alarm? alarm]) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: defaultTheme,

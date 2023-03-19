@@ -22,14 +22,6 @@ class InputField<T> extends StatefulWidget {
 }
 
 class _InputFieldState<T> extends State<InputField<T>> {
-  // late int _currentSelectedIndex;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _currentSelectedIndex = widget.selectedIndex;
-  // }
-
   @override
   Widget build(BuildContext context) {
     void showSelect() async {
@@ -37,18 +29,9 @@ class _InputFieldState<T> extends State<InputField<T>> {
         context: context,
         isScrollControlled: true,
         enableDrag: true,
-        // shape:
-        //     const RoundedRectangleBorder(borderRadius: Theme.of(context).cardTheme.shape as),
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              // void handleSelect(int index) {
-              //   setState(() {
-              //     _currentSelectedIndex = index;
-              //     widget.onSelect?.call(index);
-              //   });
-              // }
-
               return InputBottomSheet(
                 title: widget.title,
                 description: widget.description,
@@ -60,9 +43,6 @@ class _InputFieldState<T> extends State<InputField<T>> {
           );
         },
       );
-      // setState(() {
-      //   widget.onChange(_currentSelectedIndex);
-      // });
     }
 
     return Material(

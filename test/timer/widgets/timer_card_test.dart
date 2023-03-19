@@ -20,7 +20,7 @@ void main() {
     testWidgets(
       'shows remaining time correctly',
       (tester) async {
-        await renderWidget(tester);
+        await _renderWidget(tester);
         expect(
             find.text(TimeDuration.fromSeconds(sampleTimer.remainingSeconds)
                 .toTimeString()),
@@ -31,7 +31,7 @@ void main() {
       testWidgets(
         'when stopped',
         (tester) async {
-          await renderWidget(tester);
+          await _renderWidget(tester);
           expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);
         },
       );
@@ -39,7 +39,7 @@ void main() {
         'when running',
         (tester) async {
           sampleTimer.start();
-          await renderWidget(tester);
+          await _renderWidget(tester);
           expect(find.byIcon(Icons.pause_rounded), findsOneWidget);
         },
       );
@@ -48,7 +48,7 @@ void main() {
         (tester) async {
           sampleTimer.start();
           sampleTimer.pause();
-          await renderWidget(tester);
+          await _renderWidget(tester);
           expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);
         },
       );
@@ -58,7 +58,7 @@ void main() {
       testWidgets(
         'when label is empty',
         (tester) async {
-          await renderWidget(tester);
+          await _renderWidget(tester);
           expect(find.text("2h 30m 10s timer"), findsOneWidget);
         },
       );
@@ -66,7 +66,7 @@ void main() {
         'when label is present',
         (tester) async {
           sampleTimer.setSettingWithoutNotify("Label", "Test Label");
-          await renderWidget(tester);
+          await _renderWidget(tester);
           expect(find.text("Test Label"), findsOneWidget);
         },
       );
@@ -74,7 +74,7 @@ void main() {
   });
 }
 
-Future<void> renderWidget(WidgetTester tester, [ClockTimer? timer]) async {
+Future<void> _renderWidget(WidgetTester tester, [ClockTimer? timer]) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: defaultTheme,
