@@ -1,6 +1,8 @@
+import 'package:clock_app/alarm/data/weekdays.dart';
 import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';
+import 'package:clock_app/alarm/types/weekday.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/foundation.dart';
@@ -33,6 +35,13 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
   @override
   bool get isFinished => false;
 
+  List<Weekday> get scheduledWeekdays {
+    return _weekdaySetting.selected
+        .map((weekdayId) =>
+            weekdays.firstWhere((weekday) => weekday.id == weekdayId))
+        .toList();
+  }
+
   WeekdaySchedule get nextWeekdaySchedule {
     if (_weekdaySchedules.isEmpty) return WeekdaySchedule(0);
     return _weekdaySchedules.reduce((a, b) => a
@@ -54,7 +63,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
         super();
 
   @override
-  void schedule(TimeOfDay timeOfDay) {
+  Future<bool> schedule(TimeOfDay timeOfDay) async {
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       weekdaySchedule.alarmRunner.cancel();
     }
@@ -71,8 +80,11 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       DateTime alarmDate =
           getWeeklyAlarmDate(timeOfDay, weekdaySchedule.weekday);
+
       weekdaySchedule.alarmRunner.schedule(alarmDate);
     }
+
+    return true;
   }
 
   @override

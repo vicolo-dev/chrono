@@ -24,13 +24,13 @@ class OnceAlarmSchedule extends AlarmSchedule {
         super();
 
   @override
-  void schedule(TimeOfDay timeOfDay) {
+  Future<bool> schedule(TimeOfDay timeOfDay) async {
     if (currentScheduleDateTime?.isBefore(DateTime.now()) ?? false) {
       _isDisabled = true;
-      return;
+      return false;
     }
     DateTime alarmDate = getDailyAlarmDate(timeOfDay);
-    _alarmRunner.schedule(alarmDate);
+    return _alarmRunner.schedule(alarmDate);
   }
 
   @override

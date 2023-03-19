@@ -55,19 +55,19 @@ class DatesAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  void schedule(TimeOfDay timeOfDay) {
+  Future<bool> schedule(TimeOfDay timeOfDay) async {
     List<DateTime> dates = _datesSetting.value;
 
     for (int i = 0; i < dates.length; i++) {
       DateTime date = DateTime(dates[i].year, dates[i].month, dates[i].day,
           timeOfDay.hour, timeOfDay.minute);
       if (date.isAfter(DateTime.now())) {
-        _alarmRunner.schedule(date);
-        return;
+        return _alarmRunner.schedule(date);
       }
     }
 
     _isFinished = true;
+    return false;
   }
 
   @override

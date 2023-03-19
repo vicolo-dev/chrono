@@ -172,27 +172,22 @@ class Alarm extends ListItem {
     return _schedules.any((schedule) => schedule.hasId(scheduleId));
   }
 
-  List<Weekday> getWeekdays() {
-    return (getSetting("Week Days") as ToggleSetting<int>)
-        .selected
-        .map((weekdayId) =>
-            weekdays.firstWhere((weekday) => weekday.id == weekdayId))
-        .toList();
-  }
+  List<Weekday> get weekdays =>
+      getSchedule<WeeklyAlarmSchedule>().scheduledWeekdays;
 
-  List<DateTime> getDates() {
+  List<DateTime> get dates {
     return (getSetting("Dates") as DateTimeSetting).value;
   }
 
-  DateTime getStartDate() {
+  DateTime get startDate {
     return (getSetting("Date Range") as DateTimeSetting).value[0];
   }
 
-  DateTime getEndDate() {
+  DateTime get endDate {
     return (getSetting("Date Range") as DateTimeSetting).value[1];
   }
 
-  Duration getInterval() {
+  Duration get interval {
     return (getSetting("Interval") as SelectSetting<Duration>).value;
   }
 

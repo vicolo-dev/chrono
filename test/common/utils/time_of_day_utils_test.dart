@@ -16,10 +16,10 @@ void main() {
     );
 
     group(
-      'isBetween() returns correct value',
+      'isBetween()',
       () {
         test(
-          'when time is between start and end',
+          'return true when time is between start and end',
           () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 1, minute: 0),
@@ -29,7 +29,7 @@ void main() {
         );
 
         test(
-          'when time is equal to start',
+          'returns true when time is equal to start',
           () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 1, minute: 30),
@@ -39,7 +39,7 @@ void main() {
         );
 
         test(
-          'when time is equal to end',
+          'returns true when time is equal to end',
           () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 1, minute: 0),
@@ -49,7 +49,7 @@ void main() {
         );
 
         test(
-          'when time is before start',
+          'returns false when time is before start',
           () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 2, minute: 0),
@@ -59,7 +59,7 @@ void main() {
         );
 
         test(
-          'when time is after end',
+          'returns false when time is after end',
           () {
             expect(
                 timeOfDay.isBetween(const TimeOfDay(hour: 0, minute: 0),

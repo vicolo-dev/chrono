@@ -40,13 +40,14 @@ class RangeAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  void schedule(TimeOfDay timeOfDay) {
+  Future<bool> schedule(TimeOfDay timeOfDay) async {
     // Da
     DateTime alarmDate = getDailyAlarmDate(timeOfDay, scheduledDate: startDate);
     if (alarmDate.day <= endDate.day) {
-      _alarmRunner.schedule(alarmDate);
+      return _alarmRunner.schedule(alarmDate);
     } else {
       _isFinished = true;
+      return false;
     }
   }
 

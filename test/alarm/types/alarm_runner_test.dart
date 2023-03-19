@@ -69,15 +69,17 @@ void main() {
       });
     });
 
-    // test('fromJson() creates AlarmRunner with correct values', () async {
-    //   DateTime scheduledTime = DateTime.now().add(const Duration(minutes: 1));
+    test('fromJson() creates AlarmRunner with correct values', () async {
+      DateTime scheduledTime = DateTime.now().add(const Duration(minutes: 1));
 
-    //   AlarmRunner alarmRunnerFromJson = AlarmRunner.fromJson({
-    //     'id': 50,
-    //     'currentScheduleDateTime': scheduledTime.millisecondsSinceEpoch,
-    //   });
-    //   expect(alarmRunnerFromJson.id, 50);
-    //   expect(alarmRunnerFromJson.currentScheduleDateTime, scheduledTime);
-    // });
+      AlarmRunner alarmRunnerFromJson = AlarmRunner.fromJson({
+        'id': 50,
+        'currentScheduleDateTime': scheduledTime.millisecondsSinceEpoch,
+      });
+      expect(alarmRunnerFromJson.id, 50);
+      expect(
+          alarmRunnerFromJson.currentScheduleDateTime?.millisecondsSinceEpoch,
+          scheduledTime.millisecondsSinceEpoch);
+    });
   });
 }

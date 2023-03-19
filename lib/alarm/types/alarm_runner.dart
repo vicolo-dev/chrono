@@ -34,6 +34,7 @@ class AlarmRunner extends JsonSerializable {
       };
 
   void cancel() {
+    _currentScheduleDateTime = null;
     cancelAlarm(_id);
   }
 }

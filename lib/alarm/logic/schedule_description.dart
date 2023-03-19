@@ -35,7 +35,7 @@ String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
     case DailyAlarmSchedule:
       return 'Every day';
     case WeeklyAlarmSchedule:
-      List<Weekday> alarmWeekdays = alarm.getWeekdays();
+      List<Weekday> alarmWeekdays = alarm.weekdays;
       if (alarmWeekdays.length == 7) {
         return 'Every day';
       }
@@ -50,12 +50,12 @@ String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
       }
       return 'Every ${weekdays.where((weekday) => alarmWeekdays.contains(weekday)).map((weekday) => weekday.displayName).join(', ')}';
     case DatesAlarmSchedule:
-      List<DateTime> dates = alarm.getDates();
+      List<DateTime> dates = alarm.dates;
       return 'On ${DateFormat(dateFormat).format(dates[0])}${dates.length > 1 ? ' and ${dates.length - 1} other${dates.length > 2 ? 's' : ''}' : ''}';
     case RangeAlarmSchedule:
-      DateTime rangeStart = alarm.getStartDate();
-      DateTime rangeEnd = alarm.getEndDate();
-      Duration interval = alarm.getInterval();
+      DateTime rangeStart = alarm.startDate;
+      DateTime rangeEnd = alarm.endDate;
+      Duration interval = alarm.interval;
 
       String startString = DateFormat(dateFormat).format(rangeStart);
       String endString = DateFormat(dateFormat).format(rangeEnd);
