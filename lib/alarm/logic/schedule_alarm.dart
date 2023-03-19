@@ -18,10 +18,9 @@ Future<bool> scheduleAlarm(
   if (startDate.isBefore(DateTime.now())) {
     throw Exception('Attempted to schedule alarm in the past ($startDate)');
   }
+  await cancelAlarm(scheduleId);
 
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
-    await cancelAlarm(scheduleId);
-
     return AndroidAlarmManager.oneShotAtTime(
       startDate,
       scheduleId,
@@ -43,7 +42,9 @@ Future<bool> scheduleAlarm(
 }
 
 Future<void> cancelAlarm(int scheduleId) async {
-  await AndroidAlarmManager.cancel(scheduleId);
+  if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+    await AndroidAlarmManager.cancel(scheduleId);
+  }
 }
 
 enum AlarmStopAction {

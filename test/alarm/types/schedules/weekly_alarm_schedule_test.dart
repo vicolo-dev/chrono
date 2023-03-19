@@ -1,10 +1,5 @@
 import 'package:clock_app/alarm/data/alarm_settings_schema.dart';
-import 'package:clock_app/alarm/logic/alarm_time.dart';
-import 'package:clock_app/alarm/types/alarm_runner.dart';
-import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -22,7 +17,7 @@ void main() {
       test(
         'when time of day is more than current time of day',
         () async {
-          final timeOfDay = TimeOfDay(hour: 10, minute: 30);
+          const timeOfDay = TimeOfDay(hour: 10, minute: 30);
 
           bool result = await schedule.schedule(timeOfDay);
 
@@ -36,7 +31,7 @@ void main() {
       test(
         'when time of day is less than current time of day',
         () async {
-          final timeOfDay = TimeOfDay(hour: 10, minute: 30);
+          const timeOfDay = TimeOfDay(hour: 10, minute: 30);
 
           bool result = await schedule.schedule(timeOfDay);
 
