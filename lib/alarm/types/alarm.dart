@@ -5,7 +5,7 @@ import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
-import 'package:clock_app/alarm/types/weekday.dart';
+import 'package:clock_app/common/types/weekday.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';

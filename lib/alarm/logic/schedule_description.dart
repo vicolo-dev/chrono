@@ -1,24 +1,15 @@
-import 'package:clock_app/alarm/data/weekdays.dart';
+import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
-import 'package:clock_app/alarm/types/weekday.dart';
+import 'package:clock_app/common/types/weekday.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
+import 'package:clock_app/common/utils/weekday_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-bool weekdaysContains(List<Weekday> alarmWeekdays, String name) {
-  Weekday weekday =
-      weekdays.firstWhere((weekday) => weekday.displayName == name);
-  return alarmWeekdays.contains(weekday);
-}
-
-bool weekdaysContainsAll(List<Weekday> alarmWeekdays, List<String> names) {
-  return names.every((name) => weekdaysContains(alarmWeekdays, name));
-}
 
 String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
   if (alarm.isSnoozed) {

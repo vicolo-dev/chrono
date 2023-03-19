@@ -1,4 +1,4 @@
-import 'package:clock_app/alarm/types/weekday.dart';
+import 'package:clock_app/common/types/weekday.dart';
 
 const List<Weekday> weekdays = [
   Weekday(1, 'M', 'Mon'),
