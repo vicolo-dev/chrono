@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 bool weekdaysContains(List<Weekday> alarmWeekdays, String name) {
-  return alarmWeekdays
-      .contains(weekdays.firstWhere((weekday) => weekday.displayName == name));
+  Weekday weekday =
+      weekdays.firstWhere((weekday) => weekday.displayName == name);
+  return alarmWeekdays.contains(weekday);
 }
 
 bool weekdaysContainsAll(List<Weekday> alarmWeekdays, List<String> names) {
