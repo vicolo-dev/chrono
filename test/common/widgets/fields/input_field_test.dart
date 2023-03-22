@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const title = 'Test';
+const hintText = 'TestHint';
 
 void main() {
   group('InputField Widget', () {
@@ -18,6 +19,12 @@ void main() {
         await _renderWidget(tester, value: value);
         final valueFinder = find.text(value);
         expect(valueFinder, findsOneWidget);
+      });
+      testWidgets('hint text correctly', (tester) async {
+        const hintText = "TestHint";
+        await _renderWidget(tester);
+        final hintTextFinder = find.text(hintText);
+        expect(hintTextFinder, findsOneWidget);
       });
     });
     group('shows bottom sheet', () {
@@ -64,6 +71,7 @@ Future<void> _renderWidget(WidgetTester tester,
         body: InputField(
           value: value,
           title: title,
+          hintText: hintText,
           onChanged: onChanged ?? (_) {},
         ),
       ),

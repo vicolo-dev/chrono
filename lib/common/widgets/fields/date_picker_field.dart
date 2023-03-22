@@ -8,7 +8,7 @@ class DatePickerField<T> extends StatefulWidget {
     Key? key,
     required this.title,
     this.description,
-    required this.onChange,
+    required this.onChanged,
     required this.value,
     this.rangeOnly = false,
   }) : super(key: key);
@@ -17,7 +17,7 @@ class DatePickerField<T> extends StatefulWidget {
   final String title;
   final String? description;
   final bool rangeOnly;
-  final void Function(List<DateTime>) onChange;
+  final void Function(List<DateTime>) onChanged;
 
   @override
   State<DatePickerField<T>> createState() => _DatePickerFieldState<T>();
@@ -62,9 +62,9 @@ class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
                 title: widget.title,
                 initialDates: widget.value,
                 rangeOnly: widget.rangeOnly,
-                onChange: (value) {
+                onChanged: (value) {
                   setState(() {
-                    widget.onChange(value);
+                    widget.onChanged(value);
                   });
                 },
               );
@@ -75,7 +75,7 @@ class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
 
       if (selectedDates != null) {
         setState(() {
-          widget.onChange(selectedDates);
+          widget.onChanged(selectedDates);
         });
       }
     }

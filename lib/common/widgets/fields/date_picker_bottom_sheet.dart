@@ -7,7 +7,7 @@ class DatePickerBottomSheet extends StatefulWidget {
   const DatePickerBottomSheet({
     super.key,
     required this.title,
-    required this.onChange,
+    required this.onChanged,
     required this.initialDates,
     this.rangeOnly = false,
   });
@@ -15,7 +15,7 @@ class DatePickerBottomSheet extends StatefulWidget {
   final String title;
   final List<DateTime> initialDates;
   final bool rangeOnly;
-  final void Function(List<DateTime>) onChange;
+  final void Function(List<DateTime>) onChanged;
 
   @override
   State<DatePickerBottomSheet> createState() => _DatePickerBottomSheetState();
@@ -34,7 +34,9 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
   void initState() {
     super.initState();
     _selectedDates = List.from(widget.initialDates);
-    _focusedDate = widget.initialDates.first;
+    _focusedDate = widget.initialDates.isEmpty
+        ? DateTime.now()
+        : widget.initialDates.first;
     if (widget.rangeOnly) {
       _rangeStartDate = widget.initialDates.first;
       _rangeEndDate = widget.initialDates.last;
@@ -59,14 +61,17 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
               ),
             );
 
+    BorderRadiusGeometry borderRadius = theme.cardTheme.shape != null
+        ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
+        : BorderRadius.circular(8.0);
+
     return Padding(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         decoration: BoxDecoration(
           color: colorScheme.background,
-          borderRadius:
-              (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius,
+          borderRadius: borderRadius,
         ),
         child: Wrap(
           children: [
@@ -131,7 +136,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                             }
                           });
                           if (_isSaveEnabled) {
-                            widget.onChange(_selectedDates);
+                            widget.onChanged(_selectedDates);
                           }
                         },
                         rangeStartDay: _rangeStartDate,
@@ -161,7 +166,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                             }
                           });
                           if (_isSaveEnabled) {
-                            widget.onChange(_selectedDates);
+                            widget.onChanged(_selectedDates);
                           }
                         },
                         availableCalendarFormats: const {
