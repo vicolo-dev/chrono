@@ -9,7 +9,7 @@ class SelectField<T> extends StatefulWidget {
     required this.title,
     this.description,
     required this.choices,
-    required this.onChange,
+    required this.onChanged,
     this.type = SelectType.text,
     this.onSelect,
   }) : super(key: key);
@@ -19,7 +19,7 @@ class SelectField<T> extends StatefulWidget {
   final String? description;
   final SelectType type;
   final List<SelectChoice> choices;
-  final void Function(int index) onChange;
+  final void Function(int index) onChanged;
   final Function(int index)? onSelect;
 
   @override
@@ -71,7 +71,7 @@ class _SelectFieldState<T> extends State<SelectField<T>> {
         },
       );
       setState(() {
-        widget.onChange(_currentSelectedIndex);
+        widget.onChanged(_currentSelectedIndex);
       });
     }
 

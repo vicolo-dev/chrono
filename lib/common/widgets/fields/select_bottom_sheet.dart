@@ -20,14 +20,17 @@ class SelectBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    BorderRadiusGeometry borderRadius = theme.cardTheme.shape != null
+        ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
+        : BorderRadius.circular(8.0);
+
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.7,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-          borderRadius:
-              (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
-                  .borderRadius,
+          color: theme.colorScheme.background,
+          borderRadius: borderRadius,
         ),
         child: Column(
           children: [
@@ -38,10 +41,7 @@ class SelectBottomSheet extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(64),
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.6)),
+                    color: theme.colorScheme.onBackground.withOpacity(0.6)),
               ),
             ),
             const SizedBox(height: 12.0),
@@ -52,21 +52,16 @@ class SelectBottomSheet extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onBackground
-                            .withOpacity(0.6)),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.onBackground.withOpacity(0.6)),
                   ),
                   if (description != null) const SizedBox(height: 8.0),
                   if (description != null)
                     Text(
                       description!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.6)),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                          color:
+                              theme.colorScheme.onBackground.withOpacity(0.6)),
                     ),
                 ],
               ),

@@ -31,7 +31,7 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
               : SelectTextChoice(
                   title: option.name, description: option.description))
           .toList(),
-      onChange: (value) {
+      onChanged: (value) {
         setState(() {
           widget.setting.setValue(context, value);
         });
