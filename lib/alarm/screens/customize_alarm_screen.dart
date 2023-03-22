@@ -93,7 +93,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                             await showTimePickerDialog(
                           context: context,
                           initialTime: _alarm.timeOfDay,
-                          helpText: "Select Time",
+                          title: "Select Time",
                           cancelText: "Cancel",
                           confirmText: "Save",
                         );

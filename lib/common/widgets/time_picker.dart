@@ -217,8 +217,7 @@ class _TimePickerHeader extends StatelessWidget {
                       child: _HourControl(fragmentContext: fragmentContext)),
                   _StringFragment(timeOfDayFormat: timeOfDayFormat),
                   Expanded(
-                      child:
-                          _MinuteControl(fragmentContext: fragmentContext)),
+                      child: _MinuteControl(fragmentContext: fragmentContext)),
                 ],
               ),
             ),
@@ -1923,7 +1922,7 @@ class TimePickerDialog extends StatefulWidget {
     required this.initialTime,
     this.cancelText,
     this.confirmText,
-    this.helpText,
+    this.title,
     this.errorInvalidText,
     this.hourLabelText,
     this.minuteLabelText,
@@ -1951,7 +1950,7 @@ class TimePickerDialog extends StatefulWidget {
   final String? confirmText;
 
   /// Optionally provide your own help text to the header of the time picker.
-  final String? helpText;
+  final String? title;
 
   /// Optionally provide your own validation error text.
   final String? errorInvalidText;
@@ -2411,7 +2410,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
           onHourDoubleTapped: _handleHourDoubleTapped,
           onMinuteDoubleTapped: _handleMinuteDoubleTapped,
           use24HourDials: use24HourDials,
-          helpText: widget.helpText,
+          helpText: widget.title,
           entryMode: _entryMode,
           handleEntryModeToggle: _handleEntryModeToggle,
         );
@@ -2465,7 +2464,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
               children: <Widget>[
                 _TimePickerInput(
                   initialSelectedTime: _selectedTime.value,
-                  helpText: widget.helpText,
+                  helpText: widget.title,
                   errorInvalidText: widget.errorInvalidText,
                   hourLabelText: widget.hourLabelText,
                   minuteLabelText: widget.minuteLabelText,
@@ -2541,7 +2540,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
 /// determine the initial time entry selection of the picker (either a clock
 /// dial or text input).
 ///
-/// Optional strings for the [helpText], [cancelText], [errorInvalidText],
+/// Optional strings for the [title], [cancelText], [errorInvalidText],
 /// [hourLabelText], [minuteLabelText] and [confirmText] can be provided to
 /// override the default values.
 ///
@@ -2603,7 +2602,7 @@ Future<PickerResult<TimeOfDay>?> showTimePickerDialog({
   String? confirmText,
   TextStyle? confirmButtonStyle,
   TextStyle? cancelButtonStyle,
-  String? helpText,
+  String? title,
   String? errorInvalidText,
   String? hourLabelText,
   String? minuteLabelText,
@@ -2620,7 +2619,7 @@ Future<PickerResult<TimeOfDay>?> showTimePickerDialog({
     initialEntryMode: initialEntryMode,
     cancelText: cancelText,
     confirmText: confirmText,
-    helpText: helpText,
+    title: title,
     errorInvalidText: errorInvalidText,
     hourLabelText: hourLabelText,
     minuteLabelText: minuteLabelText,
