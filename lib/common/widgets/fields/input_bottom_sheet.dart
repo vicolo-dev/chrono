@@ -36,15 +36,17 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    BorderRadiusGeometry borderRadius = theme.cardTheme.shape != null
+        ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
+        : BorderRadius.circular(8.0);
     return Padding(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
-          borderRadius:
-              (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
-                  .borderRadius,
+          borderRadius: borderRadius,
         ),
         child: Wrap(
           children: [

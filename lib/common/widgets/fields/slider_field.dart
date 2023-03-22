@@ -7,16 +7,16 @@ class SliderField extends StatefulWidget {
       required this.onChanged,
       required this.min,
       required this.max,
-      required this.name,
+      required this.title,
       this.unit = ''})
       : super(key: key);
 
-  final String name;
+  final String title;
   final double value;
   final double min;
   final double max;
   final String unit;
-  final void Function(double value)? onChanged;
+  final void Function(double value) onChanged;
 
   @override
   State<SliderField> createState() => _SliderFieldState();
@@ -43,7 +43,7 @@ class _SliderFieldState extends State<SliderField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.name,
+            widget.title,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 4.0),

@@ -40,7 +40,7 @@ class _StringSettingCardState extends State<StringSettingCard> {
       title: widget.setting.name,
       description: widget.setting.description,
       value: widget.setting.value,
-      onChange: (value) {
+      onChanged: (value) {
         setState(() {
           widget.setting.setValue(context, value);
         });

@@ -1,12 +1,12 @@
 import 'package:clock_app/common/widgets/fields/input_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-class InputField<T> extends StatefulWidget {
+class InputField extends StatefulWidget {
   const InputField({
     super.key,
     required this.title,
     this.description,
-    required this.onChange,
+    required this.onChanged,
     required this.value,
     this.hintText = "Empty",
   });
@@ -15,13 +15,13 @@ class InputField<T> extends StatefulWidget {
   final String hintText;
   final String title;
   final String? description;
-  final void Function(String value) onChange;
+  final void Function(String value) onChanged;
 
   @override
-  State<InputField<T>> createState() => _InputFieldState<T>();
+  State<InputField> createState() => _InputFieldState();
 }
 
-class _InputFieldState<T> extends State<InputField<T>> {
+class _InputFieldState<T> extends State<InputField> {
   @override
   Widget build(BuildContext context) {
     void showSelect() async {
@@ -37,7 +37,7 @@ class _InputFieldState<T> extends State<InputField<T>> {
                 description: widget.description,
                 initialValue: widget.value,
                 hintText: widget.hintText,
-                onChange: widget.onChange,
+                onChange: widget.onChanged,
               );
             },
           );

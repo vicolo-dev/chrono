@@ -23,7 +23,7 @@ class _SliderSettingCardState extends State<SliderSettingCard> {
   @override
   Widget build(BuildContext context) {
     SliderField sliderCard = SliderField(
-      name: widget.setting.name,
+      title: widget.setting.name,
       value: widget.setting.value,
       min: widget.setting.min,
       max: widget.setting.max,

@@ -38,6 +38,32 @@ void main() {
         //     TimeOfDay(hour: 12, minute: 0).replacing(hour: DateTime.now().hour));
       });
     });
+    // group('shows dial labels', () {
+    //   testWidgets('with default text', (WidgetTester tester) async {
+
+    //     // await tester.tap(find.text('Open Time Picker'));
+    //     // await tester.pumpAndSettle();
+    //     // await tester.tap(find.textContaining('11'));
+    //      await _renderWidget(tester);
+    //     final finder = find.byWidgetPredicate((widget) {
+    //       if (widget is CustomPaint) {
+    //         final painter = widget.painter;
+    //         if (painter is DialPainter) {
+    //           return painter. == 'Hello, world!';
+    //         }
+    //       }
+    //       return false;
+    //     });
+    //     expect(finder, findsOneWidget);
+
+    //   });
+    // testWidgets('custom', (WidgetTester tester) async {
+    //   await _renderWidget(tester);
+    //   await tester.tap(find.text('Open Time Picker'));hb
+    //   await tester.pumpAndSettle();
+    //   await tester.tap(find.text('OK'));
+    // });
+    // });
 
     group('shows confirm button', () {
       testWidgets('with default text', (WidgetTester tester) async {

@@ -894,8 +894,8 @@ class _TappableLabel {
   final VoidCallback onTap;
 }
 
-class _DialPainter extends CustomPainter {
-  _DialPainter({
+class DialPainter extends CustomPainter {
+  DialPainter({
     required this.primaryLabels,
     required this.secondaryLabels,
     required this.backgroundColor,
@@ -978,7 +978,7 @@ class _DialPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DialPainter oldPainter) {
+  bool shouldRepaint(DialPainter oldPainter) {
     return oldPainter.primaryLabels != primaryLabels ||
         oldPainter.secondaryLabels != secondaryLabels ||
         oldPainter.backgroundColor != backgroundColor ||
@@ -1377,7 +1377,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
       onTapUp: _handleTapUp,
       child: CustomPaint(
         key: const ValueKey<String>('time-picker-dial'),
-        painter: _DialPainter(
+        painter: DialPainter(
           selectedValue: selectedDialValue,
           primaryLabels: primaryLabels,
           secondaryLabels: secondaryLabels,
