@@ -197,41 +197,39 @@ class _TimePickerHeader extends StatelessWidget {
         break;
       case Orientation.landscape:
         width = _kTimePickerHeaderLandscapeWidth;
-        controls = Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              if (!use24HourDials &&
-                  timeOfDayFormat == TimeOfDayFormat.a_space_h_colon_mm)
-                _DayPeriodControl(
-                  selectedTime: selectedTime,
-                  orientation: orientation,
-                  onChanged: onChanged,
-                ),
-              SizedBox(
-                height: kMinInteractiveDimension * 2,
-                child: Row(
-                  // Hour/minutes should not change positions in RTL locales.
-                  textDirection: TextDirection.ltr,
-                  children: <Widget>[
-                    Expanded(
-                        child: _HourControl(fragmentContext: fragmentContext)),
-                    _StringFragment(timeOfDayFormat: timeOfDayFormat),
-                    Expanded(
-                        child:
-                            _MinuteControl(fragmentContext: fragmentContext)),
-                  ],
-                ),
+        controls = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            if (!use24HourDials &&
+                timeOfDayFormat == TimeOfDayFormat.a_space_h_colon_mm)
+              _DayPeriodControl(
+                selectedTime: selectedTime,
+                orientation: orientation,
+                onChanged: onChanged,
               ),
-              if (!use24HourDials &&
-                  timeOfDayFormat != TimeOfDayFormat.a_space_h_colon_mm)
-                _DayPeriodControl(
-                  selectedTime: selectedTime,
-                  orientation: orientation,
-                  onChanged: onChanged,
-                ),
-            ],
-          ),
+            SizedBox(
+              height: kMinInteractiveDimension * 2,
+              child: Row(
+                // Hour/minutes should not change positions in RTL locales.
+                textDirection: TextDirection.ltr,
+                children: <Widget>[
+                  Expanded(
+                      child: _HourControl(fragmentContext: fragmentContext)),
+                  _StringFragment(timeOfDayFormat: timeOfDayFormat),
+                  Expanded(
+                      child:
+                          _MinuteControl(fragmentContext: fragmentContext)),
+                ],
+              ),
+            ),
+            if (!use24HourDials &&
+                timeOfDayFormat != TimeOfDayFormat.a_space_h_colon_mm)
+              _DayPeriodControl(
+                selectedTime: selectedTime,
+                orientation: orientation,
+                onChanged: onChanged,
+              ),
+          ],
         );
         break;
     }
