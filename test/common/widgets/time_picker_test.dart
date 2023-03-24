@@ -3,14 +3,14 @@ import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:flutter/material.dart' hide TimePickerDialog;
 import 'package:flutter_test/flutter_test.dart';
 
-TimeOfDay selectedTime = const TimeOfDay(hour: 12, minute: 0);
+TimeOfDay selectedTime = const TimeOfDay(hour: 12, minute: 30);
 
 void main() {
   final TestWidgetsFlutterBinding binding =
       TestWidgetsFlutterBinding.ensureInitialized();
   group("showTimePickerDialog", () {
     setUp(() {
-      selectedTime = const TimeOfDay(hour: 12, minute: 0);
+      selectedTime = const TimeOfDay(hour: 12, minute: 30);
     });
     group('opens correctly', () {
       testWidgets('in landscape mode', (WidgetTester tester) async {
@@ -38,14 +38,28 @@ void main() {
         //     TimeOfDay(hour: 12, minute: 0).replacing(hour: DateTime.now().hour));
       });
     });
-    group('shows input fields', () {
+    group('shows text', () {
       testWidgets('for hours', (WidgetTester tester) async {
         await _renderWidget(tester);
         await tester.tap(find.text('Open Time Picker'));
         await tester.pumpAndSettle();
-        expect(find.byKey(const Key('hours')), findsOneWidget);
+        expect(find.text("12"), findsOneWidget);
+      });
+      testWidgets('for minutes', (WidgetTester tester) async {
+        await _renderWidget(tester);
+        await tester.tap(find.text('Open Time Picker'));
+        await tester.pumpAndSettle();
+        expect(find.text("30"), findsOneWidget);
+      });
+      testWidgets('for day period', (WidgetTester tester) async {
+        await _renderWidget(tester);
+        await tester.tap(find.text('Open Time Picker'));
+        await tester.pumpAndSettle();
+        expect(find.text("AM"), findsOneWidget);
+        expect(find.text("PM"), findsOneWidget);
       });
     });
+
     // group('shows dial labels', () {
     //   testWidgets('with default text', (WidgetTester tester) async {
 
@@ -103,7 +117,7 @@ void main() {
         // expect(find.byType(TimePickerDialog), findsOneWidget);
         await tester.tap(find.text('OK'));
         await tester.pumpAndSettle();
-        expect(selectedTime, const TimeOfDay(hour: 12, minute: 0));
+        expect(selectedTime, const TimeOfDay(hour: 12, minute: 30));
       });
     });
   });
