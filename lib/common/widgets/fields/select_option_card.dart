@@ -11,7 +11,7 @@ class SelectTextOptionCard extends StatelessWidget {
   }) : super(key: key);
 
   final int selectedIndex;
-  final SelectTextChoice choice;
+  final SelectChoice choice;
   final int index;
   final void Function(int) onSelect;
 
@@ -33,7 +33,7 @@ class SelectTextOptionCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(choice.title,
+                Text(choice.value,
                     style: Theme.of(context).textTheme.headlineMedium),
                 if (choice.description.isNotEmpty) const SizedBox(height: 4.0),
                 if (choice.description.isNotEmpty)
@@ -58,7 +58,7 @@ class SelectColorOptionCard extends StatelessWidget {
   }) : super(key: key);
 
   final int selectedIndex;
-  final SelectColorChoice choice;
+  final SelectChoice choice;
   final int index;
   final void Function(int) onSelect;
 
@@ -70,7 +70,7 @@ class SelectColorOptionCard extends StatelessWidget {
           width: 64.0,
           height: 64.0,
           decoration: BoxDecoration(
-            color: choice.color,
+            color: choice.value,
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: InkWell(

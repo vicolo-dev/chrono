@@ -10,7 +10,7 @@ class SelectField<T> extends StatefulWidget {
     this.description,
     required this.choices,
     required this.onChanged,
-    this.type = SelectType.text,
+    this.type = SelectType.string,
     this.onSelect,
   }) : super(key: key);
 
@@ -25,8 +25,6 @@ class SelectField<T> extends StatefulWidget {
   @override
   State<SelectField<T>> createState() => _SelectFieldState<T>();
 }
-
-enum SelectType { color, text }
 
 class _SelectFieldState<T> extends State<SelectField<T>> {
   late int _currentSelectedIndex;
@@ -91,19 +89,16 @@ class _SelectFieldState<T> extends State<SelectField<T>> {
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 4.0),
-                  if (widget.choices[_currentSelectedIndex].runtimeType ==
-                      SelectTextChoice)
+                  if (widget.choices[_currentSelectedIndex].type ==
+                      SelectType.string)
                     Text(
-                      (widget.choices[_currentSelectedIndex]
-                              as SelectTextChoice)
-                          .title,
+                      widget.choices[_currentSelectedIndex].value,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                 ],
               ),
               const Spacer(),
-              widget.choices[_currentSelectedIndex].runtimeType ==
-                      SelectTextChoice
+              widget.choices[_currentSelectedIndex].type == SelectType.string
                   ? Icon(
                       Icons.arrow_drop_down_rounded,
                       color: Theme.of(context)
@@ -115,9 +110,7 @@ class _SelectFieldState<T> extends State<SelectField<T>> {
                       width: 36.0,
                       height: 36.0,
                       decoration: BoxDecoration(
-                        color: (widget.choices[_currentSelectedIndex]
-                                as SelectColorChoice)
-                            .color,
+                        color: widget.choices[_currentSelectedIndex].value,
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                     )

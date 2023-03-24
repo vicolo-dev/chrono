@@ -52,6 +52,9 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
     timeDilation = 0.5;
     return Stack(
       alignment: Alignment.center,
@@ -75,14 +78,14 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                         TimeDuration.fromMilliseconds(
                                 _stopwatch.elapsedMilliseconds)
                             .toTimeString(showMilliseconds: true),
-                        style: const TextStyle(fontSize: 48.0),
+                        style: textTheme.displayLarge?.copyWith(fontSize: 48),
                       ),
                       const SizedBox(height: 8),
                       LapComparer(
                         stopwatch: _stopwatch,
                         comparisonLap: _stopwatch.previousLap,
                         label: "Previous",
-                        color: Theme.of(context).primaryColor,
+                        color: colorScheme.primary,
                       ),
                       const SizedBox(height: 4),
                       LapComparer(

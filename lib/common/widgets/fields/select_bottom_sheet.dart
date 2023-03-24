@@ -68,13 +68,13 @@ class SelectBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Flexible(
-              child: choices[0].runtimeType == SelectTextChoice
+              child: choices[0].type == SelectType.string
                   ? ListView.builder(
                       itemCount: choices.length,
                       itemBuilder: (context, index) {
                         return SelectTextOptionCard(
                           index: index,
-                          choice: choices[index] as SelectTextChoice,
+                          choice: choices[index],
                           selectedIndex: currentSelectedIndex,
                           onSelect: onSelect,
                         );
@@ -91,7 +91,7 @@ class SelectBottomSheet extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return SelectColorOptionCard(
                           index: index,
-                          choice: choices[index] as SelectColorChoice,
+                          choice: choices[index],
                           selectedIndex: currentSelectedIndex,
                           onSelect: onSelect,
                         );

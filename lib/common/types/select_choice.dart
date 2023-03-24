@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-abstract class SelectChoice {}
+enum SelectType { color, string }
 
-class SelectTextChoice implements SelectChoice {
-  final String title;
+class SelectChoice<T> {
   final String description;
+  final T value;
+  SelectType type = SelectType.string;
 
-  const SelectTextChoice({required this.title, this.description = ""});
-}
-
-class SelectColorChoice implements SelectChoice {
-  final Color color;
-
-  const SelectColorChoice({required this.color});
+  SelectChoice({required this.value, this.description = ""}) {
+    if (value is Color) {
+      type = SelectType.color;
+    } else if (value is String) {
+      type = SelectType.string;
+    }
+  }
 }

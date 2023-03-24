@@ -38,6 +38,14 @@ void main() {
         //     TimeOfDay(hour: 12, minute: 0).replacing(hour: DateTime.now().hour));
       });
     });
+    group('shows input fields', () {
+      testWidgets('for hours', (WidgetTester tester) async {
+        await _renderWidget(tester);
+        await tester.tap(find.text('Open Time Picker'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('hours')), findsOneWidget);
+      });
+    });
     // group('shows dial labels', () {
     //   testWidgets('with default text', (WidgetTester tester) async {
 
