@@ -46,7 +46,7 @@ class _SliderFieldState extends State<SliderField> {
             widget.title,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
-          const SizedBox(height: 4.0),
+          const SizedBox(height: 8.0),
           Row(
             children: [
               SizedBox(

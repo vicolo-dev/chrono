@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 // }
 
 ColorScheme lightColorScheme = const ColorScheme(
-  background: Color.fromARGB(255, 250, 250, 250),
+  background: Color.fromARGB(255, 248, 250, 250),
   error: Color(0xFFFE4A49),
   secondary: Colors.cyan,
   brightness: Brightness.light,

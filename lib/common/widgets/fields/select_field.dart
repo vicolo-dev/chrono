@@ -55,6 +55,8 @@ class _SelectFieldState<T> extends State<SelectField<T>> {
                   _currentSelectedIndex = index;
                   widget.onSelect?.call(index);
                 });
+                //close bottom sheet
+                Navigator.pop(context);
               }
 
               return SelectBottomSheet(
