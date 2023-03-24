@@ -50,6 +50,7 @@ class TimeDuration extends JsonSerializable {
 
   @override
   String toString() {
+    if (inMilliseconds == 0) return "0s";
     String hoursString = hours > 0 ? '${hours}h ' : '';
     String minutesString = minutes > 0 ? '${minutes}m ' : '';
     String secondsString = seconds > 0 ? '${seconds}s' : '';

@@ -23,6 +23,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
           initialTimer ?? ClockTimer(const TimeDuration(minutes: 5)));
 
       List<TimerPreset> presets = loadListSync<TimerPreset>("timerPresets");
+      TimerPreset? selectedPreset;
 
       return StatefulBuilder(
         builder: (context, StateSetter setState) {
@@ -30,6 +31,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
             onSave: () {
               Navigator.of(context).pop(PickerResult(timer, false));
             },
+            isSaveEnabled: timer.duration.inSeconds > 0,
             title: "Choose Duration",
             additionalAction: ModalAction(
               title: "Customize",
@@ -106,10 +108,12 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                             itemCount: presets.length,
                             itemBuilder: (context, index) {
                               return PresetChip(
+                                isSelected: presets[index] == selectedPreset,
                                 preset: presets[index],
                                 onTap: () {
                                   setState(() {
                                     timer = ClockTimer(presets[index].duration);
+                                    selectedPreset = presets[index];
                                     timer.setSetting(
                                         context, "Label", presets[index].name);
                                   });
@@ -137,8 +141,10 @@ class PresetChip extends StatelessWidget {
     required this.preset,
     this.onTap,
     this.onDeleted,
+    required this.isSelected,
   });
 
+  final bool isSelected;
   final TimerPreset preset;
   final VoidCallback? onTap;
   final VoidCallback? onDeleted;
@@ -147,13 +153,25 @@ class PresetChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2.0),
       child: GestureDetector(
         onTap: onTap,
         child: Chip(
-          // onDeleted: onDeleted,
-          label: Text(preset.name, style: textTheme.labelSmall),
+          avatar: isSelected
+              ? Icon(Icons.check_circle_outline_rounded,
+                  color: colorScheme.onPrimary, size: 20)
+              : null,
+          backgroundColor: isSelected
+              ? colorScheme.primary
+              : colorScheme.onBackground.withOpacity(0.1),
+          label: Text(preset.name,
+              style: textTheme.labelSmall?.copyWith(
+                color: isSelected
+                    ? colorScheme.onPrimary
+                    : colorScheme.onBackground,
+              )),
         ),
       ),
     );

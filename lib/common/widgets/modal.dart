@@ -15,6 +15,7 @@ class Modal extends StatelessWidget {
     this.onSave,
     this.additionalAction,
     this.titleWidget,
+    this.isSaveEnabled = true,
   }) : super(key: key);
 
   final String? title;
@@ -22,6 +23,7 @@ class Modal extends StatelessWidget {
   final VoidCallback? onSave;
   final ModalAction? additionalAction;
   final Widget? titleWidget;
+  final bool isSaveEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -73,11 +75,16 @@ class Modal extends StatelessWidget {
             TextButton(
               child: Text(
                 'Save',
-                style:
-                    textTheme.labelMedium?.copyWith(color: colorScheme.primary),
+                style: textTheme.labelMedium?.copyWith(
+                  color: isSaveEnabled
+                      ? colorScheme.primary
+                      : colorScheme.onBackground.withOpacity(0.4),
+                ),
               ),
               onPressed: () {
-                onSave?.call();
+                if (isSaveEnabled) {
+                  onSave?.call();
+                }
               },
             ),
           ],

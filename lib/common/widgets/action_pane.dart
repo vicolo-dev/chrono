@@ -14,6 +14,7 @@ ActionPane getDeleteActionPane(VoidCallback onDelete, BuildContext context) =>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.delete),
+              const SizedBox(height: 4),
               Text('Delete',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary,
@@ -37,7 +38,8 @@ ActionPane getDuplicateActionPane(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.delete),
+              const Icon(Icons.copy_rounded),
+              const SizedBox(height: 4),
               Text('Duplicate',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary,

@@ -29,22 +29,26 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void _handleDeleteTimer(ClockTimer deletedTimer) {
     int index = _listController.getItemIndex(deletedTimer);
-    _listController.changeItems((timers) => timers[index].reset());
+    deletedTimer.reset();
+    _listController.changeItems((timers) => timers[index] = deletedTimer);
   }
 
   void _handleToggleState(ClockTimer timer) {
     int index = _listController.getItemIndex(timer);
-    _listController.changeItems((timers) => timers[index].toggleState());
+    timer.toggleState();
+    _listController.changeItems((timers) => timers[index] = timer);
   }
 
   void _handleResetTimer(ClockTimer timer) {
     int index = _listController.getItemIndex(timer);
-    _listController.changeItems((timers) => timers[index].reset());
+    timer.reset();
+    _listController.changeItems((timers) => timers[index] = timer);
   }
 
   void _handleAddTimeToTimer(ClockTimer timer) {
     int index = _listController.getItemIndex(timer);
-    _listController.changeItems((timers) => timers[index].addTime());
+    timer.addTime();
+    _listController.changeItems((timers) => timers[index] = timer);
   }
 
   Future<ClockTimer?> _openCustomizeTimerScreen(ClockTimer timer) async {

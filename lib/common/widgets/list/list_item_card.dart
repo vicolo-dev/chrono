@@ -1,5 +1,5 @@
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/delete_action_pane.dart';
+import 'package:clock_app/common/widgets/action_pane.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
