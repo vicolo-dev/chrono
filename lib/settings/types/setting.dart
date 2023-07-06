@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 
 abstract class SettingItem {
   String name;
+  String id;
+  SettingItem? _parent;
 
-  SettingItem(this.name);
+  SettingItem? get parent => _parent;
+  void set parent(SettingItem? parent) {
+    _parent = parent;
+    id = "${_parent?.id}{$name}";
+  }
+
+  SettingItem(this.name) : id = name;
 
   SettingItem copy();
 
@@ -28,7 +36,11 @@ class SettingGroup extends SettingItem {
     this.summarySettings = const [],
     this.description = "",
     this.showExpandedView,
-  }) : super(name);
+  }) : super(name) {
+    for (var item in settingItems) {
+      item.parent = this;
+    }
+  }
 
   @override
   SettingGroup copy() {
@@ -62,6 +74,18 @@ class SettingGroup extends SettingItem {
       }
     }
     return allSettingGroups;
+  }
+
+  SettingGroup getSettingGroup(String name) {
+    return settingItems
+        .whereType<SettingGroup>()
+        .firstWhere((item) => item.name == name);
+  }
+
+  Setting getSetting(String name) {
+    return settingItems
+        .whereType<Setting>()
+        .firstWhere((item) => item.name == name);
   }
 
   @override

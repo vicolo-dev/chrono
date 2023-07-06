@@ -55,6 +55,11 @@ class App extends StatefulWidget {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
     state.setShadowBlurRadius(radius);
   }
+
+  static void setShadowSpreadRadius(BuildContext context, double radius) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setShadowSpreadRadius(radius);
+  }
 }
 
 class _AppState extends State<App> {
@@ -70,6 +75,7 @@ class _AppState extends State<App> {
     setCardElevation(appSettings.getSetting("Elevation").value);
     setShadowBlurRadius(appSettings.getSetting("Blur").value);
     setShadowOpacity(appSettings.getSetting("Opacity").value / 100);
+    setShadowSpreadRadius(appSettings.getSetting("Spread").value);
 
     super.initState();
   }
@@ -174,6 +180,17 @@ class _AppState extends State<App> {
       _theme = _theme.copyWith(extensions: [
         _theme.extension<ThemeStyle>()?.copyWith(
                   shadowBlurRadius: blurRadius,
+                ) ??
+            const ThemeStyle(),
+      ]);
+    });
+  }
+
+  setShadowSpreadRadius(blurRadius) {
+    setState(() {
+      _theme = _theme.copyWith(extensions: [
+        _theme.extension<ThemeStyle>()?.copyWith(
+                  shadowSpreadRadius: blurRadius,
                 ) ??
             const ThemeStyle(),
       ]);

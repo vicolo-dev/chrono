@@ -29,18 +29,27 @@ class Settings {
   List<Setting> get settings => _settings;
   List<SettingGroup> get settingGroups => _settingGroups;
 
-  void addSettingListener(String settingName, void Function(dynamic) listener) {
-    if (!_settingListeners.containsKey(settingName)) {
-      _settingListeners[settingName] = [];
+  // void addSettingListenerByName(
+  //     String settingName, void Function(dynamic) listener) {
+  //       Setting setting = getSetting(settingName);
+  //   if (!_settingListeners.containsKey(setting.id)) {
+  //     _settingListeners[setting.id] = [];
+  //   }
+
+  //   _settingListeners[setting.id]?.add(listener);
+  // }
+
+  void addSettingListener(Setting setting, void Function(dynamic) listener) {
+    if (!_settingListeners.containsKey(setting.id)) {
+      _settingListeners[setting.id] = [];
     }
 
-    _settingListeners[settingName]?.add(listener);
+    _settingListeners[setting.id]?.add(listener);
   }
 
-  void removeSettingListener(
-      String settingName, void Function(dynamic) listener) {
-    if (_settingListeners.containsKey(settingName)) {
-      _settingListeners[settingName]?.remove(listener);
+  void removeSettingListener(Setting setting, void Function(dynamic) listener) {
+    if (_settingListeners.containsKey(setting.id)) {
+      _settingListeners[setting.id]?.remove(listener);
     }
   }
 
@@ -56,6 +65,31 @@ class Settings {
     return _settingGroups
         .firstWhere((settingGroup) => settingGroup.name == name);
   }
+
+  // Setting getSettingFromPath(List<String> path) {
+  //   if (path.isEmpty) throw Exception("Setting path cannot be empty");
+  //   if (path.length == 1) return getSetting(path[0]);
+
+  //   SettingItem item;
+  //   List<SettingItem> currentItems = items;
+
+  //   for (var i = 0; i < path.length - 1; i++) {
+  //     item = currentItems.firstWhere((item) => item.name == path[i]);
+  //     if (item is SettingGroup) {
+  //       currentItems = item.settingItems;
+  //     }
+  //     if (item is Setting) {
+  //       return item;
+  //     }
+  //   }
+
+  //   throw Exception("Setting not found");
+  // }
+
+  // SettingGroup getSettingGroup(String name) {
+  //   return _settingGroups
+  //       .firstWhere((settingGroup) => settingGroup.name == name);
+  // }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

@@ -2,6 +2,7 @@ import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/widgets/clock/time_display.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
 class ClockDisplay extends StatefulWidget {
@@ -28,6 +29,7 @@ class ClockDisplay extends StatefulWidget {
 
 class _ClockDisplayState extends State<ClockDisplay> {
   late TimeFormat timeFormat;
+  late Setting timeFormatSetting;
 
   void setTimeFormat(dynamic newTimeFormat) {
     setState(() {
@@ -45,13 +47,17 @@ class _ClockDisplayState extends State<ClockDisplay> {
   @override
   void initState() {
     super.initState();
-    setTimeFormat(appSettings.getSetting("Time Format").value);
-    appSettings.addSettingListener("Time Format", setTimeFormat);
+    timeFormatSetting = appSettings
+        .getSettingGroup("General")
+        .getSettingGroup("Display")
+        .getSetting("Time Format");
+    setTimeFormat(timeFormatSetting.value);
+    appSettings.addSettingListener(timeFormatSetting, setTimeFormat);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener("Time Format", setTimeFormat);
+    appSettings.removeSettingListener(timeFormatSetting, setTimeFormat);
     super.dispose();
   }
 

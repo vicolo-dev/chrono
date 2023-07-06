@@ -1,6 +1,7 @@
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/widgets/duration_picker.dart';
@@ -20,26 +21,30 @@ class CustomizeTimerScreen extends StatefulWidget {
 
 class _CustomizeTimerScreenState extends State<CustomizeTimerScreen> {
   late ClockTimer _timer;
-  int lastPlayedRingtoneIndex = -1;
-  late String dateFormat;
+  // late String _dateFormat;
+  // late Setting _dateFormatSetting;
 
-  void setDateFormat(dynamic newDateFormat) {
-    setState(() {
-      dateFormat = newDateFormat;
-    });
-  }
+  // void setDateFormat(dynamic newDateFormat) {
+  //   setState(() {
+  //     _dateFormat = newDateFormat;
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
     _timer = ClockTimer.from(widget.initialTimer);
-    appSettings.addSettingListener("Date Format", setDateFormat);
-    setDateFormat(appSettings.getSetting("Date Format").value);
+    // _dateFormatSetting = appSettings
+    //     .getSettingGroup("General")
+    //     .getSettingGroup("Display")
+    //     .getSetting("Date Format");
+    // appSettings.addSettingListener(_dateFormatSetting, setDateFormat);
+    // setDateFormat(appSettings.getSetting("Date Format").value);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener("Date Format", setDateFormat);
+    // appSettings.removeSettingListener(_dateFormatSetting, setDateFormat);
     super.dispose();
   }
 

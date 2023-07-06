@@ -29,6 +29,17 @@ class ClockStopwatch extends JsonSerializable {
   Lap? get previousLap => _laps.isNotEmpty ? _laps.first : null;
   Lap? get fastestLap => _fastestLap;
   Lap? get slowestLap => _slowestLap;
+  Lap? get averageLap {
+    if (_laps.isEmpty) return null;
+    var totalMilliseconds = _laps.fold(
+        0, (previousValue, lap) => previousValue + lap.lapTime.inMilliseconds);
+    return Lap(
+      elapsedTime:
+          TimeDuration.fromMilliseconds(totalMilliseconds ~/ _laps.length),
+      number: _laps.length + 1,
+      lapTime: TimeDuration.fromMilliseconds(totalMilliseconds ~/ _laps.length),
+    );
+  }
 
   ClockStopwatch()
       : _id = UniqueKey().hashCode,

@@ -10,6 +10,7 @@ import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
 class CustomizeAlarmScreen extends StatefulWidget {
@@ -29,6 +30,12 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
   int lastPlayedRingtoneIndex = -1;
   late String dateFormat;
 
+  late Setting dateFormatSetting;
+  late Setting weekDaysSetting;
+  late Setting datesSetting;
+  late Setting dateRangeSetting;
+  late Setting intervalSetting;
+
   void setDateFormat(dynamic newDateFormat) {
     setState(() {
       dateFormat = newDateFormat;
@@ -43,21 +50,35 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
   void initState() {
     super.initState();
     _alarm = Alarm.fromAlarm(widget.initialAlarm);
-    appSettings.addSettingListener("Date Format", setDateFormat);
-    _alarm.settings.addSettingListener("Week Days", update);
-    _alarm.settings.addSettingListener("Dates", update);
-    _alarm.settings.addSettingListener("Date Range", update);
-    _alarm.settings.addSettingListener("Interval", update);
-    setDateFormat(appSettings.getSetting("Date Format").value);
+
+    dateFormatSetting = appSettings
+        .getSettingGroup("General")
+        .getSettingGroup("Display")
+        .getSetting("Date Format");
+
+    appSettings.addSettingListener(dateFormatSetting, setDateFormat);
+    setDateFormat(dateFormatSetting.value);
+
+    SettingGroup scheduleSettings = _alarm.settings.getSettingGroup("Schedule");
+
+    weekDaysSetting = scheduleSettings.getSetting("Week Days");
+    datesSetting = scheduleSettings.getSetting("Dates");
+    dateRangeSetting = scheduleSettings.getSetting("Date Range");
+    intervalSetting = scheduleSettings.getSetting("Interval");
+
+    _alarm.settings.addSettingListener(weekDaysSetting, update);
+    _alarm.settings.addSettingListener(datesSetting, update);
+    _alarm.settings.addSettingListener(dateRangeSetting, update);
+    _alarm.settings.addSettingListener(intervalSetting, update);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener("Date Format", setDateFormat);
-    _alarm.settings.removeSettingListener("Week Days", update);
-    _alarm.settings.removeSettingListener("Dates", update);
-    _alarm.settings.removeSettingListener("Date Range", update);
-    _alarm.settings.removeSettingListener("Interval", update);
+    appSettings.removeSettingListener(dateFormatSetting, setDateFormat);
+    _alarm.settings.removeSettingListener(weekDaysSetting, update);
+    _alarm.settings.removeSettingListener(datesSetting, update);
+    _alarm.settings.removeSettingListener(dateRangeSetting, update);
+    _alarm.settings.removeSettingListener(intervalSetting, update);
     super.dispose();
   }
 

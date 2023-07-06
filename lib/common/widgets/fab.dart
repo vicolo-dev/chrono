@@ -9,18 +9,20 @@ class FAB extends StatelessWidget {
     this.icon = FluxIcons.add,
     this.index = 0,
     this.bottomPadding = 0,
+    this.size = 1,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
   final IconData icon;
   final int index;
   final double bottomPadding;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
       bottom: bottomPadding,
-      right: 16 + (index * 64),
+      right: 16 + (index * 45 * size),
       child: CardContainer(
         elevationMultiplier: 2,
         color: Theme.of(context).colorScheme.primary,
@@ -30,6 +32,7 @@ class FAB extends StatelessWidget {
           child: Icon(
             icon,
             color: Theme.of(context).colorScheme.onPrimary,
+            size: 24 * size,
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/modal.dart';
 import 'package:clock_app/timer/screens/presets_screen.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
@@ -158,20 +159,29 @@ class PresetChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 2.0),
       child: GestureDetector(
         onTap: onTap,
-        child: Chip(
-          avatar: isSelected
-              ? Icon(Icons.check_circle_outline_rounded,
-                  color: colorScheme.onPrimary, size: 20)
-              : null,
-          backgroundColor: isSelected
+        child: CardContainer(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          showShadow: false,
+          // blurStyle: BlurStyle.outer,
+          // elevationMultiplier: 0,
+          color: isSelected
               ? colorScheme.primary
               : colorScheme.onBackground.withOpacity(0.1),
-          label: Text(preset.name,
-              style: textTheme.labelSmall?.copyWith(
-                color: isSelected
-                    ? colorScheme.onPrimary
-                    : colorScheme.onBackground,
-              )),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(children: [
+              if (isSelected)
+                Icon(Icons.check_circle_outline_rounded,
+                    color: colorScheme.onPrimary, size: 20),
+              if (isSelected) const SizedBox(width: 8),
+              Text(preset.name,
+                  style: textTheme.labelSmall?.copyWith(
+                    color: isSelected
+                        ? colorScheme.onPrimary
+                        : colorScheme.onBackground,
+                  ))
+            ]),
+          ),
         ),
       ),
     );

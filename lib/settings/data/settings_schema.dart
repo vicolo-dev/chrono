@@ -7,6 +7,7 @@ import 'package:clock_app/settings/types/settings.dart';
 import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/theme_extension.dart';
+import 'package:clock_app/timer/data/timer_settings_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -124,10 +125,15 @@ List<SettingItem> settingsItems = [
             onChange: (context, opacity) {
           App.setShadowOpacity(context, opacity / 100);
         }),
-        SliderSetting("Blur", 0, 20,
+        SliderSetting("Blur", 0, 16,
             (defaultTheme.extension<ThemeStyle>()?.shadowBlurRadius)!,
             onChange: (context, blur) {
           App.setShadowBlurRadius(context, blur);
+        }),
+        SliderSetting("Spread", 0, 8,
+            (defaultTheme.extension<ThemeStyle>()?.shadowSpreadRadius)!,
+            onChange: (context, spread) {
+          App.setShadowSpreadRadius(context, spread);
         }),
       ])
     ],
@@ -145,6 +151,43 @@ List<SettingItem> settingsItems = [
       ),
     ],
     icon: FluxIcons.alarm,
+  ),
+  SettingGroup(
+    "Timer",
+    [
+      SettingGroup(
+        "Default Settings",
+        [...timerSettingsSchema.items],
+        description: "Set default settings for new timers",
+        icon: Icons.settings,
+      ),
+    ],
+    icon: FluxIcons.timer,
+  ),
+  SettingGroup(
+    "Stopwatch",
+    [
+      SettingGroup(
+        "Time Format",
+        [
+          SwitchSetting("Show Milliseconds", true),
+        ],
+        description: "Show comparison laps bars in stopwatch",
+        icon: Icons.settings,
+      ),
+      SettingGroup(
+        "Comparison Lap Bars",
+        [
+          SwitchSetting("Show Previous Lap", true),
+          SwitchSetting("Show Fastest Lap", true),
+          SwitchSetting("Show Slowest Lap", true),
+          SwitchSetting("Show Average Lap", true),
+        ],
+        description: "Show comparison laps bars in stopwatch",
+        icon: Icons.settings,
+      ),
+    ],
+    icon: FluxIcons.stopwatch,
   )
 ];
 

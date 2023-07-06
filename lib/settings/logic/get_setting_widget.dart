@@ -76,8 +76,8 @@ Widget? getSettingWidget(
       if (changesEnableConditions) {
         checkDependentEnableConditions?.call();
       }
-      if (settings.settingListeners.containsKey(item.name)) {
-        for (var listener in settings.settingListeners[item.name]!) {
+      if (settings.settingListeners.containsKey(item.id)) {
+        for (var listener in settings.settingListeners[item.id]!) {
           listener(value);
         }
       }

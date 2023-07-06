@@ -5,6 +5,7 @@ import 'package:clock_app/alarm/types/time_of_day_icon.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
 class AlarmCard extends StatefulWidget {
@@ -25,6 +26,7 @@ class AlarmCard extends StatefulWidget {
 
 class _AlarmCardState extends State<AlarmCard> {
   late String dateFormat;
+  late Setting dateFormatSetting;
 
   void setDateFormat(dynamic newDateFormat) {
     setState(() {
@@ -35,13 +37,17 @@ class _AlarmCardState extends State<AlarmCard> {
   @override
   void initState() {
     super.initState();
-    appSettings.addSettingListener("Date Format", setDateFormat);
+    dateFormatSetting = appSettings
+        .getSettingGroup("General")
+        .getSettingGroup("Display")
+        .getSetting("Date Format");
+    appSettings.addSettingListener(dateFormatSetting, setDateFormat);
     setDateFormat(appSettings.getSetting("Date Format").value);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener("Date Format", setDateFormat);
+    appSettings.removeSettingListener(dateFormatSetting, setDateFormat);
     super.dispose();
   }
 

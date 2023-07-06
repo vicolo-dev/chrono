@@ -1,5 +1,6 @@
 import 'package:clock_app/common/widgets/fields/date_picker_bottom_sheet.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -27,6 +28,7 @@ enum SelectType { color, text }
 
 class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
   late String dateFormat;
+  late Setting dateFormatSetting;
 
   void setDateFormat(dynamic newDateFormat) {
     setState(() {
@@ -37,13 +39,17 @@ class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
   @override
   void initState() {
     super.initState();
-    appSettings.addSettingListener("Date Format", setDateFormat);
-    setDateFormat(appSettings.getSetting("Date Format").value);
+    dateFormatSetting = appSettings
+        .getSettingGroup("General")
+        .getSettingGroup("Display")
+        .getSetting("Date Format");
+    appSettings.addSettingListener(dateFormatSetting, setDateFormat);
+    setDateFormat(dateFormatSetting.value);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener("Date Format", setDateFormat);
+    appSettings.removeSettingListener(dateFormatSetting, setDateFormat);
     super.dispose();
   }
 

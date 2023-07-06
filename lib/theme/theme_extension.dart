@@ -8,6 +8,7 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
   final double shadowOpacity;
   final double shadowBlurRadius;
   final double borderRadius;
+  final double shadowSpreadRadius;
 
   const ThemeStyle({
     this.shadowElevation = 1,
@@ -15,6 +16,7 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
     this.shadowOpacity = 0.2,
     this.shadowBlurRadius = 1,
     this.borderRadius = 16,
+    this.shadowSpreadRadius = 0,
   });
 
   @override
@@ -24,6 +26,7 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
     double? shadowOpacity,
     double? shadowBlurRadius,
     double? borderRadius,
+    double? shadowSpreadRadius,
   }) {
     return ThemeStyle(
       shadowElevation: shadowElevation ?? this.shadowElevation,
@@ -31,6 +34,7 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
       shadowOpacity: shadowOpacity ?? this.shadowOpacity,
       shadowBlurRadius: shadowBlurRadius ?? this.shadowBlurRadius,
       borderRadius: borderRadius ?? this.borderRadius,
+      shadowSpreadRadius: shadowSpreadRadius ?? this.shadowSpreadRadius,
     );
   }
 
@@ -46,6 +50,8 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
       shadowBlurRadius:
           lerpDouble(shadowBlurRadius, other.shadowBlurRadius, t)!,
       borderRadius: lerpDouble(borderRadius, other.borderRadius, t)!,
+      shadowSpreadRadius:
+          lerpDouble(shadowSpreadRadius, other.shadowSpreadRadius, t)!,
     );
   }
 }

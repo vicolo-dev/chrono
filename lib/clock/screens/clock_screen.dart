@@ -6,6 +6,7 @@ import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
 class ClockScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class ClockScreen extends StatefulWidget {
 
 class _ClockScreenState extends State<ClockScreen> {
   bool shouldShowSeconds = false;
+  late Setting showSecondsSetting;
 
   final _listController = PersistentListController<City>();
 
@@ -29,13 +31,17 @@ class _ClockScreenState extends State<ClockScreen> {
   @override
   void initState() {
     super.initState();
-    setShowSeconds(appSettings.getSetting("Show Seconds").value);
-    appSettings.addSettingListener("Show Seconds", setShowSeconds);
+    showSecondsSetting = appSettings
+        .getSettingGroup("General")
+        .getSettingGroup("Display")
+        .getSetting("Show Seconds");
+    setShowSeconds(showSecondsSetting.value);
+    appSettings.addSettingListener(showSecondsSetting, setShowSeconds);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener("Show Seconds", setShowSeconds);
+    appSettings.removeSettingListener(showSecondsSetting, setShowSeconds);
     super.dispose();
   }
 
