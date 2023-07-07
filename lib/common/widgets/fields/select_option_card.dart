@@ -17,31 +17,35 @@ class SelectTextOptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => onSelect(index),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: choice.description.isNotEmpty ? 8.0 : 2.0),
-        child: Row(
-          children: [
-            Radio(
-              value: index,
-              groupValue: selectedIndex,
-              onChanged: (dynamic value) => onSelect(index),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(choice.value,
-                    style: Theme.of(context).textTheme.headlineMedium),
-                if (choice.description.isNotEmpty) const SizedBox(height: 4.0),
-                if (choice.description.isNotEmpty)
-                  Text(choice.description,
-                      style: Theme.of(context).textTheme.bodyMedium),
-              ],
-            ),
-          ],
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => onSelect(index),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: choice.description.isNotEmpty ? 8.0 : 2.0),
+          child: Row(
+            children: [
+              Radio(
+                value: index,
+                groupValue: selectedIndex,
+                onChanged: (dynamic value) => onSelect(index),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(choice.value,
+                      style: Theme.of(context).textTheme.headlineMedium),
+                  if (choice.description.isNotEmpty)
+                    const SizedBox(height: 4.0),
+                  if (choice.description.isNotEmpty)
+                    Text(choice.description,
+                        style: Theme.of(context).textTheme.bodyMedium),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

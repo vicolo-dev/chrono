@@ -31,7 +31,7 @@ Future<List<T>> loadList<T extends JsonSerializable>(String key) async {
     try {
       return file.readAsString();
     } catch (error) {
-      throw Exception("Failed to load list from file '$key': $error");
+      return '';
     }
   });
   return decodeList<T>(encodedList);

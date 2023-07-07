@@ -10,6 +10,7 @@ class SelectField<T> extends StatefulWidget {
     this.description,
     required this.choices,
     required this.onChanged,
+    this.shouldCloseOnSelect = true,
     this.type = SelectType.string,
     this.onSelect,
   }) : super(key: key);
@@ -21,6 +22,7 @@ class SelectField<T> extends StatefulWidget {
   final List<SelectChoice> choices;
   final void Function(int index) onChanged;
   final Function(int index)? onSelect;
+  final bool shouldCloseOnSelect;
 
   @override
   State<SelectField<T>> createState() => _SelectFieldState<T>();
@@ -56,7 +58,9 @@ class _SelectFieldState<T> extends State<SelectField<T>> {
                   widget.onSelect?.call(index);
                 });
                 //close bottom sheet
-                Navigator.pop(context);
+                if (widget.shouldCloseOnSelect) {
+                  Navigator.pop(context);
+                }
               }
 
               return SelectBottomSheet(

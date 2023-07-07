@@ -38,6 +38,7 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
         widget.onChanged?.call(widget.setting.value);
       },
       onSelect: (index) => widget.setting.onSelectOption(context, index),
+      shouldCloseOnSelect: widget.setting.shouldCloseOnSelect,
     );
 
     return widget.showSummaryView

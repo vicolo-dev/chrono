@@ -8,6 +8,7 @@ import 'package:clock_app/theme/color.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/theme_extension.dart';
 import 'package:clock_app/timer/data/timer_settings_schema.dart';
+import 'package:clock_app/timer/screens/presets_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -161,6 +162,7 @@ List<SettingItem> settingsItems = [
         description: "Set default settings for new timers",
         icon: Icons.settings,
       ),
+      SettingLink("Presets", const PresetsScreen())
     ],
     icon: FluxIcons.timer,
   ),

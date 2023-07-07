@@ -31,6 +31,7 @@ Settings timerSettingsSchema = Settings(
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },
+              shouldCloseOnSelect: false,
             ),
             SliderSetting("Volume", 0, 100, 100, unit: "%"),
             SwitchSetting("Rising Volume", false,

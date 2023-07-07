@@ -95,6 +95,7 @@ Settings alarmSettingsSchema = Settings(
                       SelectSettingOption(ringtone.title, ringtone.uri))
                   .toList(),
               onSelect: (context, index, uri) {
+                print(uri);
                 if (RingtoneManager.lastPlayedRingtoneUri == uri) {
                   RingtonePlayer.stop();
                 } else {
@@ -104,6 +105,7 @@ Settings alarmSettingsSchema = Settings(
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },
+              shouldCloseOnSelect: false,
             ),
             SliderSetting("Volume", 0, 100, 100, unit: "%"),
             SwitchSetting("Rising Volume", false,

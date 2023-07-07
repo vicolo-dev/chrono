@@ -54,8 +54,9 @@ class RingtonePlayer {
       Vibration.vibrate(pattern: [500, 1000], repeat: 0);
     }
     await activePlayer?.stop();
-    await activePlayer?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
     await activePlayer?.setLoopMode(loopMode);
+    await activePlayer?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
+
     if (secondsToMaxVolume > 0) {
       for (int i = 0; i <= 10; i++) {
         Future.delayed(
@@ -67,7 +68,6 @@ class RingtonePlayer {
       }
     }
     activePlayer?.play();
-
     // secondsToMaxVolume = 10
     // 0 - 0
     // 1 - 1000

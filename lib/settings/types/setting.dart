@@ -21,6 +21,27 @@ abstract class SettingItem {
   void deserialize(dynamic value);
 }
 
+class SettingLink extends SettingItem {
+  Widget screen;
+
+  SettingLink(String name, this.screen) : super(name);
+
+  @override
+  SettingLink copy() {
+    return SettingLink(name, screen);
+  }
+
+  @override
+  dynamic serialize() {
+    return null;
+  }
+
+  @override
+  void deserialize(dynamic value) {
+    return;
+  }
+}
+
 class SettingGroup extends SettingItem {
   String description;
   IconData? icon;
@@ -273,6 +294,7 @@ class SliderSetting extends Setting<double> {
 class SelectSetting<T> extends Setting<int> {
   final List<SelectSettingOption<T>> _options;
   void Function(BuildContext, int, T)? onSelect;
+  final bool shouldCloseOnSelect;
 
   List<SelectSettingOption<T>> get options => _options;
   int get selectedIndex => _value;
@@ -300,6 +322,7 @@ class SelectSetting<T> extends Setting<int> {
     int defaultValue = 0,
     String description = "",
     List<SettingEnableCondition> enableConditions = const [],
+    this.shouldCloseOnSelect = true,
   }) : super(name, description, defaultValue, onChange, enableConditions);
 
   @override
@@ -329,6 +352,7 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
     void Function(BuildContext, int index, T value)? onSelect,
     int defaultValue = 0,
     String description = "",
+    bool shouldCloseOnSelect = true,
     List<SettingEnableCondition> enableConditions = const [],
   }) : super(
           name,
@@ -338,6 +362,7 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
           onSelect: onSelect,
           description: description,
           enableConditions: enableConditions,
+          shouldCloseOnSelect: shouldCloseOnSelect,
         );
 
   @override
@@ -350,6 +375,7 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
       description: description,
       defaultValue: _value,
       enableConditions: enableConditions,
+      shouldCloseOnSelect: shouldCloseOnSelect,
     );
   }
 }
