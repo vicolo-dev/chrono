@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 abstract class SettingItem {
   String name;
   String id;
-  SettingItem? _parent;
+  SettingGroup? _parent;
 
-  SettingItem? get parent => _parent;
-  void set parent(SettingItem? parent) {
+  SettingGroup? get parent => _parent;
+  set parent(SettingGroup? parent) {
     _parent = parent;
     id = "${_parent?.id}{$name}";
   }

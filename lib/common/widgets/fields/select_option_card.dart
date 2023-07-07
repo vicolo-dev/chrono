@@ -75,7 +75,9 @@ class SelectColorOptionCard extends StatelessWidget {
           height: 64.0,
           decoration: BoxDecoration(
             color: choice.value,
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius:
+                (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
+                    .borderRadius,
           ),
           child: InkWell(
             onTap: () => onSelect(index),

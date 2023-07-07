@@ -117,7 +117,9 @@ class _SelectFieldState<T> extends State<SelectField<T>> {
                       height: 36.0,
                       decoration: BoxDecoration(
                         color: widget.choices[_currentSelectedIndex].value,
-                        borderRadius: BorderRadius.circular(12.0),
+                        borderRadius: (Theme.of(context).cardTheme.shape
+                                as RoundedRectangleBorder)
+                            .borderRadius,
                       ),
                     )
             ],

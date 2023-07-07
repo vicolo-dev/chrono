@@ -266,6 +266,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
+  fuzzywuzzy:
+    dependency: "direct main"
+    description:
+      name: fuzzywuzzy
+      sha256: "46d2b9642e31121362ee2ed435d7ffe7bfa0f18b3df8176d5b6c3c3e9c77dce7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   get:
     dependency: transitive
     description:
