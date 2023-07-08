@@ -52,14 +52,14 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
     _alarm = Alarm.fromAlarm(widget.initialAlarm);
 
     dateFormatSetting = appSettings
-        .getSettingGroup("General")
-        .getSettingGroup("Display")
+        .getGroup("General")
+        .getGroup("Display")
         .getSetting("Date Format");
 
     appSettings.addSettingListener(dateFormatSetting, setDateFormat);
     setDateFormat(dateFormatSetting.value);
 
-    SettingGroup scheduleSettings = _alarm.settings.getSettingGroup("Schedule");
+    SettingGroup scheduleSettings = _alarm.settings.getGroup("Schedule");
 
     weekDaysSetting = scheduleSettings.getSetting("Week Days");
     datesSetting = scheduleSettings.getSetting("Dates");

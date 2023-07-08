@@ -4,6 +4,7 @@ import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/input.dart';
 import 'package:clock_app/theme/theme_extension.dart';
@@ -75,17 +76,31 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   ThemeData _theme = defaultTheme;
 
+  late SettingGroup _appearanceSettings;
+  late SettingGroup _colorSettings;
+  late SettingGroup _shapeSettings;
+  late SettingGroup _shadowSettings;
+  late SettingGroup _borderSettings;
+
   @override
   void initState() {
     NotificationController.setListeners();
 
-    setColorScheme(appSettings.getSetting("Color Scheme").value);
-    setAccentColor(appSettings.getSetting("Accent Color").value);
-    setCardRadius(appSettings.getSetting("Corner Roundness").value);
-    setCardElevation(appSettings.getSetting("Elevation").value);
-    setShadowBlurRadius(appSettings.getSetting("Blur").value);
-    setShadowOpacity(appSettings.getSetting("Opacity").value / 100);
-    setShadowSpreadRadius(appSettings.getSetting("Spread").value);
+    _appearanceSettings = appSettings.getGroup("Appearance");
+    _colorSettings = _appearanceSettings.getGroup("Colors");
+    _shapeSettings = _appearanceSettings.getGroup("Shapes");
+    _shadowSettings = _appearanceSettings.getGroup("Shadows");
+    _borderSettings = _appearanceSettings.getGroup("Outlines");
+
+    setColorScheme(_colorSettings.getSetting("Color Scheme").value);
+    setAccentColor(_colorSettings.getSetting("Accent Color").value);
+    setCardRadius(_shapeSettings.getSetting("Corner Roundness").value);
+    setCardElevation(_shadowSettings.getSetting("Elevation").value);
+    setShadowBlurRadius(_shadowSettings.getSetting("Blur").value);
+    setShadowOpacity(_shadowSettings.getSetting("Opacity").value / 100);
+    setShadowSpreadRadius(_shadowSettings.getSetting("Spread").value);
+    setBorderWidth(_borderSettings.getSetting("Width").value);
+    // setBorderColor(_borderSettings.getSetting("Color").value);
 
     super.initState();
   }
@@ -108,6 +123,14 @@ class _AppState extends State<App> {
         inputDecorationTheme:
             getInputTheme(colorScheme, _theme.toggleButtonsTheme.borderRadius!),
       );
+
+      if (!_borderSettings.getSetting("Use Accent Color").value) {
+        setBorderColor(Theme.of(context).colorScheme.onBackground);
+      }
+
+      setBorderColor(appSettings.getSetting("Use Accent Color").value
+          ? _theme.colorScheme.primary
+          : Theme.of(context).colorScheme.onBackground);
     });
   }
 
@@ -119,6 +142,10 @@ class _AppState extends State<App> {
     setShadowColor(appSettings.getSetting("Use Accent Color").value
         ? _theme.colorScheme.primary
         : Colors.black);
+
+    setBorderColor(appSettings.getSetting("Use Accent Color").value
+        ? _theme.colorScheme.primary
+        : Theme.of(context).colorScheme.onBackground);
   }
 
   setCardRadius(double radius) {

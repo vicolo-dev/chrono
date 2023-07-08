@@ -33,8 +33,8 @@ class Alarm extends ListItem {
   DateTime? _snoozeTime;
   bool _isFinished = false;
   TimeOfDay _timeOfDay;
-  Settings _settings = Settings(
-      appSettings.getSettingGroup("Default Settings").copy().settingItems);
+  Settings _settings =
+      Settings(appSettings.getGroup("Default Settings").copy().settingItems);
 
   late List<AlarmSchedule> _schedules;
 
@@ -203,10 +203,8 @@ class Alarm extends ListItem {
         _snoozeTime = json['snoozeTime'] != 0
             ? DateTime.fromMillisecondsSinceEpoch(json['snoozeTime'])
             : null,
-        _settings = Settings(appSettings
-            .getSettingGroup("Default Settings")
-            .copy()
-            .settingItems) {
+        _settings = Settings(
+            appSettings.getGroup("Default Settings").copy().settingItems) {
     _settings.fromJson(json['settings']);
     _schedules = [
       OnceAlarmSchedule.fromJson(json['schedules'][0]),

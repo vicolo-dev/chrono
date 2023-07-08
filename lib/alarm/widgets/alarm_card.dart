@@ -38,8 +38,8 @@ class _AlarmCardState extends State<AlarmCard> {
   void initState() {
     super.initState();
     dateFormatSetting = appSettings
-        .getSettingGroup("General")
-        .getSettingGroup("Display")
+        .getGroup("General")
+        .getGroup("Display")
         .getSetting("Date Format");
     appSettings.addSettingListener(dateFormatSetting, setDateFormat);
     setDateFormat(appSettings.getSetting("Date Format").value);

@@ -48,8 +48,8 @@ class _ClockDisplayState extends State<ClockDisplay> {
   void initState() {
     super.initState();
     timeFormatSetting = appSettings
-        .getSettingGroup("General")
-        .getSettingGroup("Display")
+        .getGroup("General")
+        .getGroup("Display")
         .getSetting("Time Format");
     setTimeFormat(timeFormatSetting.value);
     appSettings.addSettingListener(timeFormatSetting, setTimeFormat);

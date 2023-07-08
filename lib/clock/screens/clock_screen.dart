@@ -32,8 +32,8 @@ class _ClockScreenState extends State<ClockScreen> {
   void initState() {
     super.initState();
     showSecondsSetting = appSettings
-        .getSettingGroup("General")
-        .getSettingGroup("Display")
+        .getGroup("General")
+        .getGroup("Display")
         .getSetting("Show Seconds");
     setShowSeconds(showSecondsSetting.value);
     appSettings.addSettingListener(showSecondsSetting, setShowSeconds);

@@ -40,8 +40,8 @@ class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
   void initState() {
     super.initState();
     dateFormatSetting = appSettings
-        .getSettingGroup("General")
-        .getSettingGroup("Display")
+        .getGroup("General")
+        .getGroup("Display")
         .getSetting("Date Format");
     appSettings.addSettingListener(dateFormatSetting, setDateFormat);
     setDateFormat(dateFormatSetting.value);

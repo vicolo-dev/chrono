@@ -61,7 +61,7 @@ class Settings {
     return _settings.firstWhere((setting) => setting.name == name);
   }
 
-  SettingGroup getSettingGroup(String name) {
+  SettingGroup getGroup(String name) {
     return _settingGroups
         .firstWhere((settingGroup) => settingGroup.name == name);
   }

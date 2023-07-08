@@ -46,7 +46,7 @@ class CardContainer extends StatelessWidget {
             (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
                 .borderRadius,
         boxShadow: [
-          if (showShadow)
+          if (showShadow && (themeStyle?.shadowOpacity ?? 0) > 0)
             BoxShadow(
               blurStyle: blurStyle,
               color: themeStyle?.shadowColor

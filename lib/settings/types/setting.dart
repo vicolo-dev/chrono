@@ -107,7 +107,7 @@ class SettingGroup extends SettingItem {
     return allSettingGroups;
   }
 
-  SettingGroup getSettingGroup(String name) {
+  SettingGroup getGroup(String name) {
     return settingItems
         .whereType<SettingGroup>()
         .firstWhere((item) => item.name == name);

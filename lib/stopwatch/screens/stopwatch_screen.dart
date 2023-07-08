@@ -70,16 +70,15 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     super.initState();
     _stopwatch = loadListSync<ClockStopwatch>('stopwatches').first;
     _showMillisecondsSetting = appSettings
-        .getSettingGroup("Stopwatch")
-        .getSettingGroup("Time Format")
+        .getGroup("Stopwatch")
+        .getGroup("Time Format")
         .getSetting("Show Milliseconds");
     _setShowMilliseconds(_showMillisecondsSetting.value);
     appSettings.addSettingListener(
         _showMillisecondsSetting, _setShowMilliseconds);
 
-    SettingGroup lapComparisonSettings = appSettings
-        .getSettingGroup("Stopwatch")
-        .getSettingGroup("Comparison Lap Bars");
+    SettingGroup lapComparisonSettings =
+        appSettings.getGroup("Stopwatch").getGroup("Comparison Lap Bars");
 
     _showPreviousLapBarSetting =
         lapComparisonSettings.getSetting("Show Previous Lap");

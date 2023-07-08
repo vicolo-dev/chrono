@@ -55,7 +55,7 @@ List<SettingItem> settingsItems = [
     "Appearance",
     [
       SettingGroup(
-        "Color",
+        "Colors",
         [
           SelectSetting<ColorScheme>(
             "Color Scheme",

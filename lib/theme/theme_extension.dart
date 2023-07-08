@@ -59,7 +59,8 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
           lerpDouble(shadowBlurRadius, other.shadowBlurRadius, t)!,
       borderRadius: lerpDouble(borderRadius, other.borderRadius, t)!,
       borderWidth: lerpDouble(borderWidth, other.borderWidth, t)!,
-      borderColor: Color.lerp(borderColor, other.borderColor, t)!,
+      borderColor:
+          Color.lerp(borderColor ?? Colors.transparent, other.borderColor, t)!,
       shadowSpreadRadius:
           lerpDouble(shadowSpreadRadius, other.shadowSpreadRadius, t)!,
     );
