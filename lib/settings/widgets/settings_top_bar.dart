@@ -25,12 +25,19 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
       if (_filterController.text.isEmpty) {
         widget.onSearch([]);
       } else {
+        // final searchableItems = appSettings.settings.map((setting) =>
+        //   TextSearchItem(setting.name,  setting.path);
+
+        // final placeTypeSearch = TextSearch(searchableItems);
+        // print(placeTypeSearch.search('icecream'));
         var results = extractTop<SettingItem>(
             query: _filterController.text,
             choices: appSettings.settings,
             limit: 10,
             cutoff: 50,
-            getter: (item) => item.name);
+            getter: (item) {
+              return "${item.name} ${item.path.map((group) => group.name).join(" ")}";
+            });
 
         widget.onSearch(results.map((result) => result.choice).toList());
       }
@@ -42,7 +49,7 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
     if (_searching) {
       return AppTopBar(
         title: TextField(
-          autofocus: true,
+          autofocus: _filterController.text.isEmpty,
           controller: _filterController,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -57,34 +64,33 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                setState(() {
-                  _searching = false;
-                });
-              },
-              icon: Icon(Icons.close))
+            onPressed: () {
+              _filterController.clear();
+              setState(() {
+                _searching = false;
+              });
+            },
+            icon: Icon(Icons.close),
+          )
         ],
       );
     } else {
       return AppTopBar(
-        title: Row(
-          children: [
-            Text("Settings", style: Theme.of(context).textTheme.titleMedium),
-            Spacer(),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  _searching = true;
-                });
-              },
-              icon: Icon(
-                Icons.search,
-                color:
-                    Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
-              ),
-            )
-          ],
-        ),
+        title: Text("Settings", style: Theme.of(context).textTheme.titleMedium),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _searching = true;
+              });
+            },
+            icon: Icon(
+              Icons.search,
+              color:
+                  Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+            ),
+          )
+        ],
       );
     }
   }

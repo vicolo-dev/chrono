@@ -33,52 +33,59 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     List<Widget> _getSearchItemWidgets() {
       return searchedItems.map((item) {
-        String pathString = "";
-        SettingGroup? currentParent = item.parent;
-        while (currentParent != null) {
-          pathString = "${currentParent.name} > ${pathString}";
-          currentParent = currentParent.parent;
-        }
+        String pathString = item.path.fold("", (previousValue, group) {
+          return "${previousValue}${previousValue.isNotEmpty ? " > " : ""}${group.name}";
+        });
+        Widget settingWidget =
+            getSettingWidget(appSettings, item, showSummaryView: true) ??
+                Container();
         return CardContainer(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return SettingGroupScreen(
-                  settingsGroup: item.parent!,
-                  settings: appSettings,
-                );
-              }));
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return SettingGroupScreen(
+                        settingsGroup: item.parent!,
+                        settings: appSettings,
+                      );
+                    }));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 16),
+                    child: Row(
                       children: [
-                        Text(
-                          pathString,
-                          style: textTheme.titleSmall?.copyWith(
-                              color: colorScheme.onBackground.withOpacity(0.6)),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            pathString,
+                            style: textTheme.titleSmall?.copyWith(
+                                color:
+                                    colorScheme.onBackground.withOpacity(0.6)),
+                          ),
                         ),
-                        SizedBox(height: 2),
-                        Text(
-                          item.name,
-                          style: textTheme.displaySmall,
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          color: colorScheme.onBackground.withOpacity(0.6),
                         ),
-                        // const Spacer(),
                       ],
                     ),
                   ),
-                  // Spacer(),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    color: colorScheme.onBackground.withOpacity(0.6),
-                  ),
-                ],
-              ),
-            ));
+                ),
+                settingWidget
+                // Text(
+                //   item.name,
+                //   style: textTheme.displaySmall,
+                // ),
+                // const Spacer(),
+              ],
+            ),
+          ),
+        );
       }).toList();
     }
 
