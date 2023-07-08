@@ -113,8 +113,10 @@ class AlarmNotificationManager {
 
   static Future<void> stopAlarm(int scheduleId, ScheduledNotificationType type,
       AlarmStopAction action) async {
+    // Send a message to tell the alarm isolate to run the code to stop alarm
     SendPort? sendPort = IsolateNameServer.lookupPortByName(stopAlarmPortName);
     sendPort?.send([scheduleId, type.name, action.name]);
+
     closeNotification(type);
   }
 

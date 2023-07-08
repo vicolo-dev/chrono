@@ -1,3 +1,4 @@
+import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
@@ -111,6 +112,12 @@ class Alarm extends ListItem {
     _snoozeTime = DateTime.now().add(
       Duration(minutes: snoozeLength.toInt()),
     );
+    _isEnabled = true;
+    scheduleSnoozeAlarm(
+      id,
+      Duration(minutes: snoozeLength.floor()),
+      ScheduledNotificationType.alarm,
+    );
   }
 
   void unSnooze() {
@@ -136,7 +143,6 @@ class Alarm extends ListItem {
   }
 
   void enable() {
-    _isEnabled = true;
     schedule();
   }
 

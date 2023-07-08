@@ -136,7 +136,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             _showNextScheduleSnackBar(alarm);
           },
           onDeleteItem: (alarm) => setState(() {
-            (alarm).disable();
+            alarm.disable();
           }),
           duplicateItem: (alarm) => Alarm.fromAlarm(alarm),
           placeholderText: "No alarms created",

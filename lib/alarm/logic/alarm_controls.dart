@@ -108,11 +108,6 @@ void triggerAlarm(int scheduleId, Map<String, dynamic> params) async {
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
   if (action == AlarmStopAction.snooze) {
     Alarm alarm = getAlarmByScheduleId(scheduleId);
-    scheduleSnoozeAlarm(
-      scheduleId,
-      Duration(minutes: alarm.snoozeLength.floor()),
-      ScheduledNotificationType.alarm,
-    );
     await updateAlarmById(scheduleId, (alarm) => alarm.snooze());
   } else if (action == AlarmStopAction.dismiss) {
     // updateAlarms();

@@ -25,17 +25,13 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
       if (_filterController.text.isEmpty) {
         widget.onSearch([]);
       } else {
-        // final searchableItems = appSettings.settings.map((setting) =>
-        //   TextSearchItem(setting.name,  setting.path);
-
-        // final placeTypeSearch = TextSearch(searchableItems);
-        // print(placeTypeSearch.search('icecream'));
         var results = extractTop<SettingItem>(
             query: _filterController.text,
             choices: appSettings.settings,
             limit: 10,
             cutoff: 50,
             getter: (item) {
+              // Search term includes the setting name, as well as the parent group names
               return "${item.name} ${item.path.map((group) => group.name).join(" ")}";
             });
 
@@ -70,7 +66,7 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
                 _searching = false;
               });
             },
-            icon: Icon(Icons.close),
+            icon: const Icon(Icons.close),
           )
         ],
       );
