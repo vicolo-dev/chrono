@@ -12,6 +12,11 @@ import 'package:clock_app/timer/screens/presets_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+SelectSettingOption<String> _getDateSettingOption(String format) {
+  return SelectSettingOption(
+      "${DateFormat(format).format(DateTime.now())} ($format)", format);
+}
+
 List<SettingItem> settingsItems = [
   SettingGroup(
     "General",
@@ -20,22 +25,14 @@ List<SettingItem> settingsItems = [
         DynamicSelectSetting<String>(
           "Date Format",
           () => [
-            SelectSettingOption(
-                DateFormat("dd/MM/yyyy").format(DateTime.now()), "dd/MM/yyyy"),
-            SelectSettingOption(
-                DateFormat("d/M/yy").format(DateTime.now()), "d/M/yy"),
-            SelectSettingOption(
-                DateFormat("d/M/yyyy").format(DateTime.now()), "d/M/yyyy"),
-            SelectSettingOption(
-                DateFormat("MM/dd/yyyy").format(DateTime.now()), "MM/dd/yyyy"),
-            SelectSettingOption(
-                DateFormat("M/d/yy").format(DateTime.now()), "M/d/yy"),
-            SelectSettingOption(
-                DateFormat("M/d/yyyy").format(DateTime.now()), "M/d/yyyy"),
-            SelectSettingOption(
-                DateFormat("yyyy-dd-MM").format(DateTime.now()), "yyyy-dd-MM"),
-            SelectSettingOption(
-                DateFormat("d-MMM-yyyy").format(DateTime.now()), "d-MMM-yyyy"),
+            _getDateSettingOption("dd/MM/yyyy"),
+            _getDateSettingOption("dd/MM/yyyy"),
+            _getDateSettingOption("d/M/yyyy"),
+            _getDateSettingOption("MM/dd/yyyy"),
+            _getDateSettingOption("M/d/yy"),
+            _getDateSettingOption("M/d/yyyy"),
+            _getDateSettingOption("yyyy-dd-MM"),
+            _getDateSettingOption("d-MMM-yyyy"),
           ],
           description: "How to display the dates",
         ),
@@ -135,6 +132,24 @@ List<SettingItem> settingsItems = [
             (defaultTheme.extension<ThemeStyle>()?.shadowSpreadRadius)!,
             onChange: (context, spread) {
           App.setShadowSpreadRadius(context, spread);
+        }),
+      ]),
+      SettingGroup("Outlines", [
+        SwitchSetting(
+          "Use Accent Color",
+          false,
+          onChange: (context, value) {
+            App.setBorderColor(
+                context,
+                value
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onBackground);
+          },
+        ),
+        SliderSetting(
+            "Width", 0, 8, (defaultTheme.extension<ThemeStyle>()?.borderWidth)!,
+            onChange: (context, width) {
+          App.setBorderWidth(context, width);
         }),
       ])
     ],

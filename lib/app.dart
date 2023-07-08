@@ -60,6 +60,16 @@ class App extends StatefulWidget {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
     state.setShadowSpreadRadius(radius);
   }
+
+  static void setBorderWidth(BuildContext context, double width) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setBorderWidth(width);
+  }
+
+  static void setBorderColor(BuildContext context, Color color) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.setBorderColor(color);
+  }
 }
 
 class _AppState extends State<App> {
@@ -191,6 +201,28 @@ class _AppState extends State<App> {
       _theme = _theme.copyWith(extensions: [
         _theme.extension<ThemeStyle>()?.copyWith(
                   shadowSpreadRadius: blurRadius,
+                ) ??
+            const ThemeStyle(),
+      ]);
+    });
+  }
+
+  setBorderWidth(double width) {
+    setState(() {
+      _theme = _theme.copyWith(extensions: [
+        _theme.extension<ThemeStyle>()?.copyWith(
+                  borderWidth: width,
+                ) ??
+            const ThemeStyle(),
+      ]);
+    });
+  }
+
+  setBorderColor(Color color) {
+    setState(() {
+      _theme = _theme.copyWith(extensions: [
+        _theme.extension<ThemeStyle>()?.copyWith(
+                  borderColor: color,
                 ) ??
             const ThemeStyle(),
       ]);

@@ -95,7 +95,6 @@ Settings alarmSettingsSchema = Settings(
                       SelectSettingOption(ringtone.title, ringtone.uri))
                   .toList(),
               onSelect: (context, index, uri) {
-                print(uri);
                 if (RingtoneManager.lastPlayedRingtoneUri == uri) {
                   RingtonePlayer.stop();
                 } else {
