@@ -31,10 +31,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    List<Widget> _getSearchItemWidgets() {
+    List<Widget> getSearchItemWidgets() {
       return searchedItems.map((item) {
         String pathString = item.path.fold("", (previousValue, group) {
-          return "${previousValue}${previousValue.isNotEmpty ? " > " : ""}${group.name}";
+          return "$previousValue${previousValue.isNotEmpty ? " > " : ""}${group.name}";
         });
         Widget settingWidget =
             getSettingWidget(appSettings, item, showSummaryView: true) ??
@@ -112,7 +112,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 16),
                   ]
                 : [
-                    ..._getSearchItemWidgets(),
+                    ...getSearchItemWidgets(),
                     const SizedBox(height: 16),
                   ],
           ),

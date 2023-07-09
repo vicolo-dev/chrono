@@ -46,6 +46,9 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
       return AppTopBar(
         title: TextField(
           autofocus: _filterController.text.isEmpty,
+          onTapOutside: ((event) {
+            FocusScope.of(context).unfocus();
+          }),
           controller: _filterController,
           decoration: InputDecoration(
             border: InputBorder.none,

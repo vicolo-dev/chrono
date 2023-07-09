@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SliderField extends StatefulWidget {
   const SliderField(
@@ -23,6 +24,43 @@ class SliderField extends StatefulWidget {
 }
 
 class _SliderFieldState extends State<SliderField> {
+  late final TextEditingController _filterController;
+  double _value = 0;
+
+  // _SliderFieldState() {
+
+  // }
+
+  void changeValue(double value) {
+    setState(() {
+      _value = value;
+    });
+    widget.onChanged(_value);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.value;
+    // _filterController =
+    //     TextEditingController();
+    _filterController = TextEditingController(text: _value.toStringAsFixed(1));
+    _filterController.addListener(() {
+      setState(() {
+        _value = _filterController.text.isEmpty
+            ? 0.0
+            : double.parse(_filterController.text);
+      });
+      widget.onChanged(_value);
+    });
+  }
+
+  @override
+  void dispose() {
+    _filterController.dispose();
+    super.dispose();
+  }
+
   Size calcTextSize(int length, TextStyle style) {
     String text = '0' * length;
     final TextPainter textPainter = TextPainter(
@@ -35,8 +73,12 @@ class _SliderFieldState extends State<SliderField> {
 
   @override
   Widget build(BuildContext context) {
-    String valueString = '${widget.value.toStringAsFixed(0)} ${widget.unit}';
-    String maxValueString = '0000 ${widget.unit}';
+    ThemeData theme = Theme.of(context);
+    TextTheme textTheme = theme.textTheme;
+    ColorScheme colorScheme = theme.colorScheme;
+
+    String unitText = widget.unit.isEmpty ? '  ' : widget.unit;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
@@ -50,18 +92,43 @@ class _SliderFieldState extends State<SliderField> {
           Row(
             children: [
               SizedBox(
-                width: calcTextSize(maxValueString.length,
-                        Theme.of(context).textTheme.bodyMedium!)
+                width: calcTextSize('0 $unitText'.length, textTheme.bodyMedium!)
                     .width,
-                child: Text(valueString,
-                    style: Theme.of(context).textTheme.bodyMedium),
+                // width: 50,
+                child: TextField(
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  autofocus: false,
+                  onTapOutside: ((event) {
+                    FocusScope.of(context).unfocus();
+                  }),
+                  controller: _filterController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
+                    fillColor: Colors.transparent,
+                    contentPadding: EdgeInsets.zero,
+                    suffixStyle: textTheme.bodyMedium,
+                    suffixText: unitText,
+                  ),
+                  style: textTheme.bodyMedium,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'^\d+\.?\d{0,1}'),
+                    ),
+                    NumericalRangeFormatter(min: widget.min, max: widget.max),
+                  ],
+                ),
               ),
-              // const SizedBox(width: 8.0),
               Expanded(
                 flex: 7,
                 child: Slider(
-                  value: widget.value,
-                  onChanged: widget.onChanged,
+                  value: _value,
+                  onChanged: (double value) {
+                    _filterController.text = value.toStringAsFixed(1);
+                    changeValue(value);
+                  },
                   min: widget.min,
                   max: widget.max,
                 ),
@@ -73,5 +140,26 @@ class _SliderFieldState extends State<SliderField> {
         ],
       ),
     );
+  }
+}
+
+class NumericalRangeFormatter extends TextInputFormatter {
+  final double min;
+  final double max;
+
+  NumericalRangeFormatter({required this.min, required this.max});
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text == '') {
+      return newValue;
+    } else if (double.parse(newValue.text) < min) {
+      return TextEditingValue().copyWith(text: min.toStringAsFixed(1));
+    } else {
+      return double.parse(newValue.text) > max ? oldValue : newValue;
+    }
   }
 }
