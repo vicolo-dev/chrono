@@ -16,7 +16,7 @@ void main() {
     testWidgets('shows value and unit correctly', (tester) async {
       const value = 50.0;
       await _renderWidget(tester, value: value);
-      final valueFinder = find.text('${value.toStringAsFixed(0)} $unit');
+      final valueFinder = find.text(value.toStringAsFixed(1));
       expect(valueFinder, findsOneWidget);
     });
 

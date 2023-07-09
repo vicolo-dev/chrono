@@ -1,14 +1,14 @@
 import 'package:clock_app/common/types/select_choice.dart';
-import 'package:clock_app/common/widgets/fields/select_field.dart';
-import 'package:clock_app/common/widgets/fields/select_option_card.dart';
+import 'package:clock_app/common/widgets/fields/select_field/option_cards/text_option_card.dart';
+import 'package:clock_app/common/widgets/fields/select_field/select_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const title = 'Test';
 final choices = [
-  SelectChoice(value: "Test1", description: "Test1Description"),
-  SelectChoice(value: "Test2", description: "Test2Description"),
-  SelectChoice(value: "Test3", description: "Test3Description"),
+  SelectChoice(name: "Test1", value: "Test1", description: "Test1Description"),
+  SelectChoice(name: "Test2", value: "Test2", description: "Test2Description"),
+  SelectChoice(name: "Test3", value: "Test3", description: "Test3Description"),
 ];
 
 void main() {
