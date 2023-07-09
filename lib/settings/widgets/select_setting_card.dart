@@ -1,6 +1,6 @@
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/fields/select_field.dart';
+import 'package:clock_app/common/widgets/fields/select_field/select_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
@@ -22,14 +22,14 @@ class SelectSettingCard<T> extends StatefulWidget {
 class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
   @override
   Widget build(BuildContext context) {
-    SelectField selectWidget = SelectField<T>(
+    SelectField selectWidget = SelectField(
       selectedIndex: widget.setting.selectedIndex,
       title: widget.setting.name,
       choices: widget.setting.options
-          .map((option) => widget.setting.isColor
-              ? SelectChoice(value: option.value)
-              : SelectChoice(
-                  value: option.name, description: option.description))
+          .map((option) => SelectChoice(
+              name: option.name,
+              value: option.value,
+              description: option.description))
           .toList(),
       onChanged: (value) {
         setState(() {

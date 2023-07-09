@@ -1,8 +1,12 @@
+import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/common/types/select_choice.dart';
-import 'package:clock_app/common/widgets/fields/select_bottom_sheet.dart';
+import 'package:clock_app/common/widgets/fields/select_field/field_cards/audio_field_card.dart';
+import 'package:clock_app/common/widgets/fields/select_field/field_cards/color_field_card.dart';
+import 'package:clock_app/common/widgets/fields/select_field/field_cards/text_field_card.dart';
+import 'package:clock_app/common/widgets/fields/select_field/select_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-class SelectField<T> extends StatefulWidget {
+class SelectField extends StatefulWidget {
   const SelectField({
     Key? key,
     required this.selectedIndex,
@@ -11,30 +15,56 @@ class SelectField<T> extends StatefulWidget {
     required this.choices,
     required this.onChanged,
     this.shouldCloseOnSelect = true,
-    this.type = SelectType.string,
     this.onSelect,
   }) : super(key: key);
 
   final int selectedIndex;
   final String title;
   final String? description;
-  final SelectType type;
   final List<SelectChoice> choices;
   final void Function(int index) onChanged;
   final Function(int index)? onSelect;
   final bool shouldCloseOnSelect;
 
   @override
-  State<SelectField<T>> createState() => _SelectFieldState<T>();
+  State<SelectField> createState() => _SelectFieldState();
 }
 
-class _SelectFieldState<T> extends State<SelectField<T>> {
+class _SelectFieldState<T> extends State<SelectField> {
   late int _currentSelectedIndex;
 
   @override
   void initState() {
     super.initState();
     _currentSelectedIndex = widget.selectedIndex;
+  }
+
+  Widget _getFieldCard() {
+    SelectChoice choice = widget.choices[_currentSelectedIndex];
+
+    if (choice.value is Color) {
+      return ColorFieldCard(
+        choice: SelectChoice<Color>(
+            name: choice.name,
+            value: choice.value,
+            description: choice.description),
+        title: widget.title,
+      );
+    }
+    if (choice.value is Audio) {
+      return AudioFieldCard(
+        choice: SelectChoice<Audio>(
+            name: choice.name,
+            value: choice.value,
+            description: choice.description),
+        title: widget.title,
+      );
+    }
+
+    return TextFieldCard(
+      choice: choice,
+      title: widget.title,
+    );
   }
 
   @override
@@ -44,11 +74,6 @@ class _SelectFieldState<T> extends State<SelectField<T>> {
         context: context,
         isScrollControlled: true,
         enableDrag: true,
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.vertical(
-        //     top: Radius.circular(16),
-        //   ),
-        // ),
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
@@ -79,51 +104,15 @@ class _SelectFieldState<T> extends State<SelectField<T>> {
       });
     }
 
+    SelectChoice choice = widget.choices[_currentSelectedIndex];
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: showSelect,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.title,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 4.0),
-                  if (widget.choices[_currentSelectedIndex].type ==
-                      SelectType.string)
-                    Text(
-                      widget.choices[_currentSelectedIndex].value,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                ],
-              ),
-              const Spacer(),
-              widget.choices[_currentSelectedIndex].type == SelectType.string
-                  ? Icon(
-                      Icons.arrow_drop_down_rounded,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.6),
-                    )
-                  : Container(
-                      width: 36.0,
-                      height: 36.0,
-                      decoration: BoxDecoration(
-                        color: widget.choices[_currentSelectedIndex].value,
-                        borderRadius: (Theme.of(context).cardTheme.shape
-                                as RoundedRectangleBorder)
-                            .borderRadius,
-                      ),
-                    )
-            ],
-          ),
+          child: _getFieldCard(),
         ),
       ),
     );

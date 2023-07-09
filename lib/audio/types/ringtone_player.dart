@@ -16,15 +16,16 @@ class RingtonePlayer {
     _vibratorIsAvailable = (await Vibration.hasVibrator()) ?? false;
   }
 
-  static void playUri(String ringtoneUri,
+  static Future<void> playUri(String ringtoneUri,
       {bool vibrate = false, LoopMode loopMode = LoopMode.one}) async {
     activePlayer = _alarmPlayer;
-    _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
+    await _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
   }
 
-  static void playAlarm(Alarm alarm, {LoopMode loopMode = LoopMode.one}) async {
+  static Future<void> playAlarm(Alarm alarm,
+      {LoopMode loopMode = LoopMode.one}) async {
     activePlayer = _alarmPlayer;
-    _play(
+    await _play(
       alarm.ringtoneUri,
       vibrate: alarm.vibrate,
       loopMode: LoopMode.one,
@@ -32,10 +33,10 @@ class RingtonePlayer {
     );
   }
 
-  static void playTimer(ClockTimer timer,
+  static Future<void> playTimer(ClockTimer timer,
       {LoopMode loopMode = LoopMode.one}) async {
     activePlayer = _timerPlayer;
-    _play(
+    await _play(
       timer.ringtoneUri,
       vibrate: timer.vibrate,
       loopMode: LoopMode.one,
@@ -43,7 +44,7 @@ class RingtonePlayer {
     );
   }
 
-  static void _play(
+  static Future<void> _play(
     String ringtoneUri, {
     bool vibrate = false,
     LoopMode loopMode = LoopMode.one,
@@ -68,28 +69,19 @@ class RingtonePlayer {
       }
     }
     activePlayer?.play();
-    // secondsToMaxVolume = 10
-    // 0 - 0
-    // 1 - 1000
-    // 2 - 2000
-
-    // secondsToMaxVolume = 5
-    // 0 - 0
-    // 1 - 500
-    // 2 - 1000
   }
 
-  static void pause() async {
+  static Future<void> pause() async {
     await activePlayer?.pause();
     if (_vibratorIsAvailable) {
-      Vibration.cancel();
+      await Vibration.cancel();
     }
   }
 
-  static void stop() async {
+  static Future<void> stop() async {
     await activePlayer?.stop();
     if (_vibratorIsAvailable) {
-      Vibration.cancel();
+      await Vibration.cancel();
     }
     RingtoneManager.lastPlayedRingtoneUri = "";
   }

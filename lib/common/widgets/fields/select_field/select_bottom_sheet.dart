@@ -1,5 +1,8 @@
+import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/common/types/select_choice.dart';
-import 'package:clock_app/common/widgets/fields/select_option_card.dart';
+import 'package:clock_app/common/widgets/fields/select_field/option_cards/audio_option_card.dart';
+import 'package:clock_app/common/widgets/fields/select_field/option_cards/color_option_card.dart';
+import 'package:clock_app/common/widgets/fields/select_field/option_cards/text_option_card.dart';
 import 'package:flutter/material.dart';
 
 class SelectBottomSheet extends StatelessWidget {
@@ -17,6 +20,52 @@ class SelectBottomSheet extends StatelessWidget {
   final List<SelectChoice> choices;
   final int currentSelectedIndex;
   final void Function(int) onSelect;
+
+  Widget _getOptionCard() {
+    if (choices[0].value is Color) {
+      return GridView.builder(
+        itemCount: choices.length,
+        padding: const EdgeInsets.all(16.0),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+        ),
+        itemBuilder: (context, index) {
+          return SelectColorOptionCard(
+            index: index,
+            choice: choices[index],
+            selectedIndex: currentSelectedIndex,
+            onSelect: onSelect,
+          );
+        },
+      );
+    }
+
+    if (choices[0].value is Audio) {
+      return ListView.builder(
+          itemCount: choices.length,
+          itemBuilder: (context, index) {
+            return SelectAudioOptionCard(
+              index: index,
+              choice: choices[index],
+              selectedIndex: currentSelectedIndex,
+              onSelect: onSelect,
+            );
+          });
+    }
+
+    return ListView.builder(
+        itemCount: choices.length,
+        itemBuilder: (context, index) {
+          return SelectTextOptionCard(
+            index: index,
+            choice: choices[index],
+            selectedIndex: currentSelectedIndex,
+            onSelect: onSelect,
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,35 +117,7 @@ class SelectBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Flexible(
-              child: choices[0].type == SelectType.string
-                  ? ListView.builder(
-                      itemCount: choices.length,
-                      itemBuilder: (context, index) {
-                        return SelectTextOptionCard(
-                          index: index,
-                          choice: choices[index],
-                          selectedIndex: currentSelectedIndex,
-                          onSelect: onSelect,
-                        );
-                      })
-                  : GridView.builder(
-                      itemCount: choices.length,
-                      padding: const EdgeInsets.all(16.0),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 5,
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 8.0,
-                      ),
-                      itemBuilder: (context, index) {
-                        return SelectColorOptionCard(
-                          index: index,
-                          choice: choices[index],
-                          selectedIndex: currentSelectedIndex,
-                          onSelect: onSelect,
-                        );
-                      },
-                    ),
+              child: _getOptionCard(),
             )
           ],
         ),

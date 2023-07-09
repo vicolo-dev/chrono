@@ -3,6 +3,7 @@ import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
+import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -88,19 +89,13 @@ Settings alarmSettingsSchema = Settings(
         SettingGroup(
           "Sound",
           [
-            DynamicSelectSetting<String>(
+            DynamicSelectSetting<Audio>(
               "Melody",
               () => RingtoneManager.ringtones
                   .map((ringtone) =>
-                      SelectSettingOption(ringtone.title, ringtone.uri))
+                      SelectSettingOption<Audio>(ringtone.title, ringtone))
                   .toList(),
-              onSelect: (context, index, uri) {
-                if (RingtoneManager.lastPlayedRingtoneUri == uri) {
-                  RingtonePlayer.stop();
-                } else {
-                  RingtonePlayer.playUri(uri, loopMode: LoopMode.off);
-                }
-              },
+              onSelect: (context, index, uri) {},
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },

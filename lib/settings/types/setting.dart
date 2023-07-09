@@ -310,7 +310,7 @@ class SelectSetting<T> extends Setting<int> {
   int get selectedIndex => _value;
   @override
   dynamic get value => options[selectedIndex].value;
-  bool get isColor => T == Color;
+  // bool get isColor => T == Color;
 
   int getIndexOfValue(T value) {
     return options.indexWhere((element) => element.value == value);
