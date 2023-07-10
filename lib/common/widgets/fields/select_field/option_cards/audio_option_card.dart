@@ -26,6 +26,19 @@ class SelectAudioOptionCard extends StatefulWidget {
 class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
   bool isPlaying = false;
 
+  @override
+  void initState() {
+    super.initState();
+    RingtoneManager.addListener(_updateIsPlaying);
+    _updateIsPlaying();
+  }
+
+  @override
+  void dispose() {
+    RingtoneManager.removeListener(_updateIsPlaying);
+    super.dispose();
+  }
+
   void _updateIsPlaying() {
     setState(() {
       isPlaying =
@@ -35,6 +48,10 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -54,12 +71,12 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(widget.choice.value.title,
-                      style: Theme.of(context).textTheme.headlineMedium),
+                      style: textTheme.headlineMedium),
                   if (widget.choice.description.isNotEmpty)
                     const SizedBox(height: 4.0),
                   if (widget.choice.description.isNotEmpty)
                     Text(widget.choice.description,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                        style: textTheme.bodyMedium),
                 ],
               ),
               const Spacer(),
@@ -75,9 +92,10 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
                       _updateIsPlaying();
                     }
                   },
-                  icon: Icon(isPlaying
-                      ? Icons.pause_rounded
-                      : Icons.play_arrow_rounded))
+                  icon: Icon(
+                    isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                    color: colorScheme.primary,
+                  ))
             ],
           ),
         ),

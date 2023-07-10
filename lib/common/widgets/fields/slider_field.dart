@@ -92,8 +92,9 @@ class _SliderFieldState extends State<SliderField> {
           Row(
             children: [
               SizedBox(
-                width: calcTextSize('0 $unitText'.length, textTheme.bodyMedium!)
-                    .width,
+                width:
+                    calcTextSize('00 $unitText'.length, textTheme.bodyMedium!)
+                        .width,
                 // width: 50,
                 child: TextField(
                   keyboardType:
