@@ -123,15 +123,15 @@ class _AppState extends State<App> {
         inputDecorationTheme:
             getInputTheme(colorScheme, _theme.toggleButtonsTheme.borderRadius!),
       );
-
-      if (!_borderSettings.getSetting("Use Accent Color").value) {
-        setBorderColor(Theme.of(context).colorScheme.onBackground);
-      }
-
-      setBorderColor(appSettings.getSetting("Use Accent Color").value
-          ? _theme.colorScheme.primary
-          : Theme.of(context).colorScheme.onBackground);
     });
+
+    setBorderColor(_borderSettings.getSetting("Use Accent Color").value
+        ? _theme.colorScheme.primary
+        : Theme.of(context).colorScheme.onBackground);
+
+    setShadowColor(_shadowSettings.getSetting("Use Accent Color").value
+        ? _theme.colorScheme.primary
+        : Colors.black);
   }
 
   setAccentColor(Color color) {
@@ -139,13 +139,6 @@ class _AppState extends State<App> {
       primary: color,
       secondary: color,
     ));
-    setShadowColor(appSettings.getSetting("Use Accent Color").value
-        ? _theme.colorScheme.primary
-        : Colors.black);
-
-    setBorderColor(appSettings.getSetting("Use Accent Color").value
-        ? _theme.colorScheme.primary
-        : Theme.of(context).colorScheme.onBackground);
   }
 
   setCardRadius(double radius) {

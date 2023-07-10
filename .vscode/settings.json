@@ -11,6 +11,7 @@
     "RGBO",
     "sublist",
     "Tappable",
+    "unfocus",
     "Unmanaged"
   ]
 }

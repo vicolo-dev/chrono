@@ -23,6 +23,10 @@ class SettingGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+
     void openSettingGroupScreen() {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return SettingGroupScreen(
@@ -46,17 +50,14 @@ class SettingGroupCard extends StatelessWidget {
                 children: [
                   Text(
                     settingGroup.name,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                    style: textTheme.headlineMedium?.copyWith(
+                      color: colorScheme.primary,
+                    ),
                   ),
                   const Spacer(),
                   Icon(
                     Icons.chevron_right_rounded,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.6),
+                    color: colorScheme.primary,
                   )
                 ],
               ),
@@ -92,10 +93,9 @@ class SettingGroupCard extends StatelessWidget {
                     tag: settingGroup.name,
                     child: Text(
                       settingGroup.name,
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                      style: textTheme.headlineMedium?.copyWith(
+                        color: colorScheme.primary,
+                      ),
                     ),
                   ),
                 ],
@@ -120,8 +120,7 @@ class SettingGroupCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(settingGroup.icon,
-                color: Theme.of(context).colorScheme.onBackground),
+            Icon(settingGroup.icon, color: colorScheme.onBackground),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -129,13 +128,13 @@ class SettingGroupCard extends StatelessWidget {
                 children: [
                   Text(
                     settingGroup.name,
-                    style: Theme.of(context).textTheme.displaySmall,
+                    style: textTheme.displaySmall,
                   ),
                   if (settingGroup.description.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
                       settingGroup.description,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: textTheme.bodyMedium,
                     )
                   ]
                 ],
@@ -143,8 +142,7 @@ class SettingGroupCard extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right_rounded,
-              color:
-                  Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+              color: colorScheme.primary,
             ),
           ],
         ),
