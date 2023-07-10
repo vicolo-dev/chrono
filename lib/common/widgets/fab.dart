@@ -2,6 +2,8 @@ import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:flutter/material.dart';
 
+enum FabPosition { bottomLeft, bottomRight }
+
 class FAB extends StatelessWidget {
   const FAB({
     Key? key,
@@ -10,6 +12,7 @@ class FAB extends StatelessWidget {
     this.index = 0,
     this.bottomPadding = 0,
     this.size = 1,
+    this.position = FabPosition.bottomRight,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
@@ -17,12 +20,16 @@ class FAB extends StatelessWidget {
   final int index;
   final double bottomPadding;
   final double size;
+  final FabPosition position;
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
       bottom: bottomPadding,
-      right: 16 + (index * 45 * size),
+      right:
+          position == FabPosition.bottomRight ? 16 + (index * 45 * size) : null,
+      left:
+          position == FabPosition.bottomLeft ? 16 + (index * 45 * size) : null,
       child: CardContainer(
         elevationMultiplier: 2,
         color: Theme.of(context).colorScheme.primary,

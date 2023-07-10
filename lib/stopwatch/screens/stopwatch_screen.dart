@@ -249,10 +249,11 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
           ),
         if (_stopwatch.isStarted)
           FAB(
-            index: 2,
+            index: 0,
+            position: FabPosition.bottomLeft,
             onPressed: _handleReset,
             icon: Icons.refresh_rounded,
-            size: 2,
+            size: 1,
           ),
       ],
     );
