@@ -1,6 +1,8 @@
 import 'package:clock_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
-RadioThemeData radioTheme = RadioThemeData(
-  fillColor: MaterialStateProperty.all(lightColorScheme.primary),
-);
+RadioThemeData getRadioTheme(ColorScheme colorScheme) {
+  return RadioThemeData(
+    fillColor: MaterialStateProperty.all(colorScheme.primary),
+  );
+}

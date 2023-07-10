@@ -7,6 +7,7 @@ import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/input.dart';
+import 'package:clock_app/theme/radio.dart';
 import 'package:clock_app/theme/theme_extension.dart';
 import 'package:clock_app/theme/snackbar.dart';
 import 'package:clock_app/theme/theme.dart';
@@ -111,6 +112,7 @@ class _AppState extends State<App> {
         colorScheme: colorScheme,
         scaffoldBackgroundColor: colorScheme.background,
         cardColor: colorScheme.surface,
+        radioTheme: getRadioTheme(colorScheme),
         dialogBackgroundColor: colorScheme.surface,
         bottomSheetTheme: getBottomSheetTheme(colorScheme,
             _theme.toggleButtonsTheme.borderRadius?.bottomLeft ?? Radius.zero),

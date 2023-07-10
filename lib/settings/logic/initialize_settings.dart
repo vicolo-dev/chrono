@@ -22,8 +22,9 @@ Future<void> _clearSettings() async {
 Future<void> initializeSettings() async {
   // await SettingsManager.initialize();
   await GetStorage.init();
-  // Used to clear the preferences in case of a change in format of the data
-  // Comment this out after the preferences are cleared
+
+  // // Used to clear the preferences in case of a change in format of the data
+  // // Comment this out after the preferences are cleared
   await _clearSettings();
 
   bool? firstLaunch = GetStorage().read('first_launch');
@@ -36,24 +37,6 @@ Future<void> initializeSettings() async {
     saveList<ClockTimer>('timers', []);
     saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
     appSettings.save("settings");
-
-    // for (SettingGroup group in settings) {
-    //   for (Setting setting in group.settings) {
-    //     if (setting is SwitchSetting) {
-    //       preferences?.setBool(setting.name, setting._value);
-    //     } else if (setting is NumberSetting) {
-    //       preferences?.setDouble(setting.name, setting._value);
-    //     } else if (setting is ColorSetting) {
-    //       preferences?.setInt(setting.name, setting._value.value);
-    //     } else if (setting is StringSetting) {
-    //       preferences?.setString(setting.name, setting._value);
-    //     } else if (setting is SliderSetting) {
-    //       preferences?.setDouble(setting.name, setting._value);
-    //     } else if (setting is SelectSetting) {
-    //       preferences?.setInt(setting.name, setting._value);
-    //     }
-    //   }
-    // }
   }
 
   appSettings.load("settings");

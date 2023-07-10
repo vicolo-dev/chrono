@@ -29,7 +29,7 @@ ThemeData defaultTheme = ThemeData(
   switchTheme: switchTheme,
   snackBarTheme: getSnackBarTheme(lightColorScheme, defaultBorderRadius),
   inputDecorationTheme: getInputTheme(lightColorScheme, defaultBorderRadius),
-  radioTheme: radioTheme,
+  radioTheme: getRadioTheme(lightColorScheme),
   sliderTheme: sliderTheme,
   bottomSheetTheme:
       getBottomSheetTheme(lightColorScheme, defaultBorderRadius.topLeft),
