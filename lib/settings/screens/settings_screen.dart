@@ -37,7 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return "$previousValue${previousValue.isNotEmpty ? " > " : ""}${group.name}";
         });
         Widget settingWidget =
-            getSettingWidget(appSettings, item, showSummaryView: true) ??
+            getSettingWidget(appSettings, item, showAsCard: false) ??
                 Container();
         return CardContainer(
           child: Padding(

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class SwitchSettingCard extends StatefulWidget {
   final SwitchSetting setting;
-  final bool showSummaryView;
+  final bool showAsCard;
   final void Function(bool)? onChanged;
 
   const SwitchSettingCard(
       {Key? key,
       required this.setting,
-      this.showSummaryView = false,
+      this.showAsCard = false,
       this.onChanged})
       : super(key: key);
 
@@ -33,8 +33,6 @@ class _SwitchSettingCardState extends State<SwitchSettingCard> {
       },
     );
 
-    return widget.showSummaryView
-        ? switchCard
-        : CardContainer(child: switchCard);
+    return widget.showAsCard ? CardContainer(child: switchCard) : switchCard;
   }
 }

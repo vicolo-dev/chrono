@@ -220,6 +220,9 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                               ),
                             ),
                           ),
+                          // rangeStartBuilder:
+                          //     dateLabelBuilder(colorScheme.onBackground),
+                          //     rangeHighlightBuilder: ,
                           todayBuilder: (context, day, focusedDay) => Container(
                             margin: const EdgeInsets.all(4.0),
                             decoration: BoxDecoration(

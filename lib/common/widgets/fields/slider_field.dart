@@ -24,35 +24,36 @@ class SliderField extends StatefulWidget {
 }
 
 class _SliderFieldState extends State<SliderField> {
-  late final TextEditingController _textController;
-  double _value = 0;
+  late final TextEditingController _textController =
+      TextEditingController(text: widget.value.toStringAsFixed(1));
+  // double _value = 0;
 
   void changeValue(double value) {
     setState(() {
-      _value = value;
+      // _value = value;
     });
-    widget.onChanged(_value);
+    widget.onChanged(value);
   }
 
   @override
   void initState() {
     super.initState();
-    _value = widget.value;
-    _textController = TextEditingController(text: _value.toStringAsFixed(1));
-    // _filterController.addListener(() {
-    //   setState(() {
-    //     _value = _filterController.text.isEmpty
-    //         ? 0.0
-    //         : double.parse(_filterController.text);
-    //   });
-    //   widget.onChanged(_value);
-    // });
+    // _value = widget.value;
+    // _textController
   }
 
   @override
   void dispose() {
     _textController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(SliderField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _textController.text = widget.value.toStringAsFixed(1);
+    }
   }
 
   Size calcTextSize(String text, TextStyle style) {
@@ -71,10 +72,10 @@ class _SliderFieldState extends State<SliderField> {
     TextTheme textTheme = theme.textTheme;
     ColorScheme colorScheme = theme.colorScheme;
 
-    Size textSize = calcTextSize('0000 ${widget.unit}', textTheme.bodyMedium!);
+    Size textSize = calcTextSize('000.0 ${widget.unit}', textTheme.bodyMedium!);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -143,7 +144,7 @@ class _SliderFieldState extends State<SliderField> {
               Expanded(
                 flex: 7,
                 child: Slider(
-                  value: _value,
+                  value: widget.value,
                   onChanged: (double value) {
                     _textController.text = value.toStringAsFixed(1);
                     changeValue(value);

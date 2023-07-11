@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:clock_app/common/logic/edit_tips.dart';
 import 'package:clock_app/common/widgets/circular_progress_bar.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class TimerCard extends StatefulWidget {
   const TimerCard({
@@ -45,6 +47,10 @@ class _TimerCardState extends State<TimerCard> {
   @override
   void initState() {
     super.initState();
+    if (GetStorage().read('first_timer_created') == false) {
+      GetStorage().write('first_timer_created', true);
+      showEditTip(context);
+    }
     valueNotifier = ValueNotifier(widget.timer.remainingSeconds.toDouble());
     remainingSeconds = widget.timer.remainingSeconds;
     valueNotifier.addListener(() {

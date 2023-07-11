@@ -31,16 +31,16 @@ class SelectField extends StatefulWidget {
 }
 
 class _SelectFieldState<T> extends State<SelectField> {
-  late int _currentSelectedIndex;
+  // late int _currentSelectedIndex;
 
   @override
   void initState() {
     super.initState();
-    _currentSelectedIndex = widget.selectedIndex;
+    // _currentSelectedIndex = widget.selectedIndex;
   }
 
   Widget _getFieldCard() {
-    SelectChoice choice = widget.choices[_currentSelectedIndex];
+    SelectChoice choice = widget.choices[widget.selectedIndex];
 
     if (choice.value is Color) {
       return ColorFieldCard(
@@ -70,29 +70,30 @@ class _SelectFieldState<T> extends State<SelectField> {
   @override
   Widget build(BuildContext context) {
     void showSelect() async {
-      await showModalBottomSheet<void>(
+      int? currentSelectedIndex = await showModalBottomSheet<int>(
         context: context,
         isScrollControlled: true,
         enableDrag: true,
         builder: (BuildContext context) {
+          int currentSelectedIndex = widget.selectedIndex;
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               void handleSelect(int index) {
                 setState(() {
-                  _currentSelectedIndex = index;
+                  currentSelectedIndex = index;
                   widget.onSelect?.call(index);
                 });
                 //close bottom sheet
-                if (widget.shouldCloseOnSelect) {
-                  Navigator.pop(context);
-                }
+                // if (widget.shouldCloseOnSelect) {
+                Navigator.pop(context, currentSelectedIndex);
+                // }
               }
 
               return SelectBottomSheet(
                 title: widget.title,
                 description: widget.description,
                 choices: widget.choices,
-                currentSelectedIndex: _currentSelectedIndex,
+                currentSelectedIndex: currentSelectedIndex,
                 onSelect: handleSelect,
               );
             },
@@ -100,11 +101,11 @@ class _SelectFieldState<T> extends State<SelectField> {
         },
       );
       setState(() {
-        widget.onChanged(_currentSelectedIndex);
+        widget.onChanged(currentSelectedIndex ?? widget.selectedIndex);
       });
     }
 
-    SelectChoice choice = widget.choices[_currentSelectedIndex];
+    SelectChoice choice = widget.choices[widget.selectedIndex];
 
     return Material(
       color: Colors.transparent,

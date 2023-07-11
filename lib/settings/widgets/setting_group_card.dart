@@ -10,6 +10,7 @@ class SettingGroupCard extends StatelessWidget {
   final Settings settings;
   final VoidCallback? checkDependentEnableConditions;
   final VoidCallback? onSettingChanged;
+  final bool isAppSettings;
 
   // final VoidCallback onTap;
 
@@ -19,6 +20,7 @@ class SettingGroupCard extends StatelessWidget {
     required this.settings,
     this.checkDependentEnableConditions,
     this.onSettingChanged,
+    this.isAppSettings = true,
   }) : super(key: key);
 
   @override
@@ -27,55 +29,28 @@ class SettingGroupCard extends StatelessWidget {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
+    bool showSummaryView = settingGroup.summarySettings.isNotEmpty;
+    bool showExpandedView = settingGroup.showExpandedView ??
+        settingGroup.settingItems
+                .every((item) => item.runtimeType != SettingGroup) ||
+            showSummaryView;
+
     void openSettingGroupScreen() {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return SettingGroupScreen(
           settingsGroup: settingGroup,
           settings: settings,
+          isAppSettings: isAppSettings,
         );
       })).then((value) => checkDependentEnableConditions?.call());
     }
 
-    CardContainer showSummaryView = CardContainer(
-      onTap: openSettingGroupScreen,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                children: [
-                  Text(
-                    settingGroup.name,
-                    style: textTheme.headlineMedium?.copyWith(
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                  const Spacer(),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    color: colorScheme.primary,
-                  )
-                ],
-              ),
-            ),
-            ...getSettingWidgets(
-              settings,
-              settingItems: settingGroup.settings
-                  .where((setting) =>
-                      settingGroup.summarySettings.contains(setting.name))
-                  .toList(),
-              showSummaryView: true,
-              checkDependentEnableConditions: checkDependentEnableConditions,
-              onSettingChanged: onSettingChanged,
-            )
-          ],
-        ),
-      ),
-    );
+    List<SettingItem> settingItems = showSummaryView
+        ? settingGroup.settings
+            .where((setting) =>
+                settingGroup.summarySettings.contains(setting.name))
+            .toList()
+        : settingGroup.settingItems;
 
     CardContainer expandedView = CardContainer(
       child: Padding(
@@ -83,28 +58,16 @@ class SettingGroupCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Hero(
-                    tag: settingGroup.name,
-                    child: Text(
-                      settingGroup.name,
-                      style: textTheme.headlineMedium?.copyWith(
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            SettingGroupHeader(
+              isAppSettings: isAppSettings,
+              settingGroup: settingGroup,
+              showSummaryView: showSummaryView,
+              onTap: openSettingGroupScreen,
             ),
             ...getSettingWidgets(
               settings,
-              settingItems: settingGroup.settingItems,
-              showSummaryView: true,
+              settingItems: settingItems,
+              showAsCard: !showExpandedView,
               checkDependentEnableConditions: checkDependentEnableConditions,
               onSettingChanged: onSettingChanged,
             )
@@ -142,21 +105,74 @@ class SettingGroupCard extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right_rounded,
-              color: colorScheme.primary,
+              color: colorScheme.onBackground.withOpacity(0.6),
             ),
           ],
         ),
       ),
     );
 
-    bool showExpandedView = settingGroup.showExpandedView ??
-        settingGroup.settingItems
-            .every((item) => item.runtimeType != SettingGroup);
+    return showExpandedView ? expandedView : cardView;
+  }
+}
 
-    return showExpandedView
-        ? expandedView
-        : settingGroup.summarySettings.isNotEmpty
-            ? showSummaryView
-            : cardView;
+class SettingGroupHeader extends StatelessWidget {
+  const SettingGroupHeader({
+    super.key,
+    required this.isAppSettings,
+    required this.settingGroup,
+    this.onTap,
+    required this.showSummaryView,
+  });
+
+  final bool isAppSettings;
+  final SettingGroup settingGroup;
+  final VoidCallback? onTap;
+  final bool showSummaryView;
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: isAppSettings || showSummaryView ? onTap : null,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            children: [
+              Text(
+                settingGroup.name,
+                style: textTheme.headlineMedium?.copyWith(
+                  color: colorScheme.primary,
+                ),
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  if (showSummaryView)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 6.0),
+                      child: Text(
+                        "More",
+                        style: textTheme.titleSmall?.copyWith(
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  if (isAppSettings || showSummaryView)
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      color: colorScheme.primary,
+                    ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

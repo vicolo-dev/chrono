@@ -85,6 +85,7 @@ class _CustomizeTimerScreenState extends State<CustomizeTimerScreen> {
                 checkDependentEnableConditions: () {
                   setState(() {});
                 },
+                isAppSettings: false,
               ),
             ],
           ),

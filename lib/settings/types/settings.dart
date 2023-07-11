@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 class Settings {
@@ -66,6 +67,12 @@ class Settings {
         .firstWhere((settingGroup) => settingGroup.name == name);
   }
 
+  void restoreDefaults(BuildContext context) {
+    for (var setting in settings) {
+      setting.restoreDefault(context);
+    }
+  }
+
   // Setting getSettingFromPath(List<String> path) {
   //   if (path.isEmpty) throw Exception("Setting path cannot be empty");
   //   if (path.length == 1) return getSetting(path[0]);
@@ -105,8 +112,8 @@ class Settings {
     }
   }
 
-  void save(String key) {
-    GetStorage().write(key, json.encode(toJson()));
+  Future<void> save(String key) {
+    return GetStorage().write(key, json.encode(toJson()));
   }
 
   void load(String key) {

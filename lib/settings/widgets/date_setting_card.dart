@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class DateSettingCard extends StatefulWidget {
   final DateTimeSetting setting;
-  final bool showSummaryView;
+  final bool showAsCard;
   final void Function(List<DateTime>)? onChanged;
 
   const DateSettingCard({
     Key? key,
     required this.setting,
-    this.showSummaryView = false,
+    this.showAsCard = false,
     this.onChanged,
   }) : super(key: key);
 
@@ -35,6 +35,6 @@ class _DateSettingCardState extends State<DateSettingCard> {
       },
     );
 
-    return widget.showSummaryView ? input : CardContainer(child: input);
+    return widget.showAsCard ? CardContainer(child: input) : input;
   }
 }

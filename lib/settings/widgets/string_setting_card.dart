@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class StringSettingCard extends StatefulWidget {
   final StringSetting setting;
-  final bool showSummaryView;
+  final bool showAsCard;
   final void Function(String)? onChanged;
 
   const StringSettingCard({
     Key? key,
     required this.setting,
-    this.showSummaryView = false,
+    this.showAsCard = false,
     this.onChanged,
   }) : super(key: key);
 
@@ -22,20 +22,6 @@ class StringSettingCard extends StatefulWidget {
 class _StringSettingCardState extends State<StringSettingCard> {
   @override
   Widget build(BuildContext context) {
-    // SliderCard sliderCard = SliderCard(
-    //   name: widget.setting.name,
-    //   value: widget.setting.value,
-    //   min: widget.setting.min,
-    //   max: widget.setting.max,
-    //   unit: widget.setting.unit,
-    //   onChanged: (value) {
-    //     setState(() {
-    //       widget.setting.setValue(context, value);
-    //     });
-    //     widget.onChanged?.call(widget.setting.value);
-    //   },
-    // );
-
     Widget input = InputField(
       title: widget.setting.name,
       description: widget.setting.description,
@@ -49,6 +35,6 @@ class _StringSettingCardState extends State<StringSettingCard> {
       hintText: "Add a label",
     );
 
-    return widget.showSummaryView ? input : CardContainer(child: input);
+    return widget.showAsCard ? CardContainer(child: input) : input;
   }
 }

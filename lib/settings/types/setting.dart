@@ -1,3 +1,4 @@
+import 'package:clock_app/settings/types/settings.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ abstract class SettingItem {
   SettingGroup? get parent => _parent;
   set parent(SettingGroup? parent) {
     _parent = parent;
-    id = "${_parent?.id}{$name}";
+    id = "${_parent?.id}/${name}";
   }
 
   List<SettingGroup> get path {
@@ -119,6 +120,33 @@ class SettingGroup extends SettingItem {
         .firstWhere((item) => item.name == name);
   }
 
+  void restoreDefault(
+    BuildContext context,
+    Settings appSettings,
+    Map<String, bool> settingsToRestore,
+  ) {
+    for (var setting in settingItems) {
+      if (setting is SettingLink) {
+        continue;
+      }
+      if (settingsToRestore.containsKey(setting.id)) {
+        if (!settingsToRestore[setting.id]!) {
+          continue;
+        }
+      }
+      if (setting is Setting) {
+        setting.restoreDefault(context);
+        if (appSettings.settingListeners.containsKey(setting.id)) {
+          for (var listener in appSettings.settingListeners[setting.id]!) {
+            listener(setting.value);
+          }
+        }
+      } else if (setting is SettingGroup) {
+        setting.restoreDefault(context, appSettings, settingsToRestore);
+      }
+    }
+  }
+
   @override
   dynamic serialize() {
     Map<String, dynamic> json = {};
@@ -146,12 +174,14 @@ class SettingEnableCondition {
 abstract class Setting<T> extends SettingItem {
   String description;
   T _value;
+  T _defaultValue;
   List<SettingEnableCondition> enableConditions;
   void Function(BuildContext context, T)? onChange;
 
   Setting(String name, this.description, T defaultValue, this.onChange,
       this.enableConditions)
       : _value = defaultValue,
+        _defaultValue = defaultValue,
         super(name);
 
   void setValue(BuildContext context, T value) {
@@ -159,11 +189,16 @@ abstract class Setting<T> extends SettingItem {
     onChange?.call(context, value);
   }
 
+  void restoreDefault(BuildContext context) {
+    setValue(context, _defaultValue);
+  }
+
   void setValueWithoutNotify(T value) {
     _value = value;
   }
 
   dynamic get value => _value;
+  dynamic get defaultValue => _defaultValue;
 
   @override
   dynamic serialize() {
@@ -322,6 +357,12 @@ class SelectSetting<T> extends Setting<int> {
 
   void onSelectOption(BuildContext context, int index) {
     onSelect?.call(context, index, options[index].value);
+  }
+
+  @override
+  void restoreDefault(BuildContext context) {
+    setValue(context, _defaultValue);
+    onSelectOption(context, _defaultValue);
   }
 
   SelectSetting(

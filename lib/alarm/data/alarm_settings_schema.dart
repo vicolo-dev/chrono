@@ -75,13 +75,13 @@ Settings alarmSettingsSchema = Settings(
         ),
       ],
       icon: Icons.timer,
-      summarySettings: [
-        "Type",
-        "Week Days",
-        "Dates",
-        "Date Range",
-        "Interval",
-      ],
+      // summarySettings: [
+      //   "Type",
+      //   "Week Days",
+      //   "Dates",
+      //   "Date Range",
+      //   "Interval",
+      // ],
     ),
     SettingGroup(
       "Sound and Vibration",

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class SliderSettingCard extends StatefulWidget {
   final SliderSetting setting;
-  final bool showSummaryView;
+  final bool showAsCard;
   final void Function(double)? onChanged;
 
   const SliderSettingCard({
     Key? key,
     required this.setting,
-    this.showSummaryView = false,
+    this.showAsCard = false,
     this.onChanged,
   }) : super(key: key);
 
@@ -36,8 +36,6 @@ class _SliderSettingCardState extends State<SliderSettingCard> {
       },
     );
 
-    return widget.showSummaryView
-        ? sliderCard
-        : CardContainer(child: sliderCard);
+    return widget.showAsCard ? CardContainer(child: sliderCard) : sliderCard;
   }
 }

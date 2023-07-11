@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 
 class DurationSettingCard extends StatefulWidget {
   final DurationSetting setting;
-  final bool showSummaryView;
+  final bool showAsCard;
   final void Function(TimeDuration)? onChanged;
 
   const DurationSettingCard({
     Key? key,
     required this.setting,
-    this.showSummaryView = false,
+    this.showAsCard = false,
     this.onChanged,
   }) : super(key: key);
 
@@ -35,6 +35,6 @@ class _DurationSettingCardState extends State<DurationSettingCard> {
       },
     );
 
-    return widget.showSummaryView ? input : CardContainer(child: input);
+    return widget.showAsCard ? CardContainer(child: input) : input;
   }
 }

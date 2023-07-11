@@ -32,15 +32,14 @@ class CardContainer extends StatelessWidget {
       margin: margin ?? const EdgeInsets.all(4),
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        border:
-            (themeStyle?.borderWidth != 0 && themeStyle?.borderColor != null)
-                ? Border.all(
-                    color: themeStyle?.borderColor ??
-                        Theme.of(context).colorScheme.onBackground,
-                    width: themeStyle?.borderWidth ?? 0.5,
-                    strokeAlign: BorderSide.strokeAlignInside,
-                  )
-                : null,
+        border: (themeStyle?.borderWidth != 0)
+            ? Border.all(
+                color: themeStyle?.borderColor ??
+                    Theme.of(context).colorScheme.onBackground,
+                width: themeStyle?.borderWidth ?? 0.5,
+                strokeAlign: BorderSide.strokeAlignInside,
+              )
+            : null,
         color: color ?? Theme.of(context).colorScheme.surface,
         borderRadius:
             (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)

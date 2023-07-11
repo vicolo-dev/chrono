@@ -31,6 +31,9 @@ Future<void> initializeSettings() async {
   if (firstLaunch == null) {
     GetStorage().write('first_launch', true);
 
+    GetStorage().write('first_alarm_created', false);
+    GetStorage().write('first_timer_created', false);
+
     initializeDefaultFavoriteCities();
     initializeDefaultTimerPresets();
     saveList<Alarm>('alarms', []);

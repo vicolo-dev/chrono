@@ -2,11 +2,14 @@ import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/logic/time_of_day_icon.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
+import 'package:clock_app/common/logic/edit_tips.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AlarmCard extends StatefulWidget {
   const AlarmCard({
@@ -37,6 +40,10 @@ class _AlarmCardState extends State<AlarmCard> {
   @override
   void initState() {
     super.initState();
+    if (GetStorage().read('first_alarm_created') == false) {
+      GetStorage().write('first_alarm_created', true);
+      showEditTip(context);
+    }
     dateFormatSetting = appSettings
         .getGroup("General")
         .getGroup("Display")

@@ -161,6 +161,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
                 checkDependentEnableConditions: () {
                   setState(() {});
                 },
+                isAppSettings: false,
               ),
             ],
           ),

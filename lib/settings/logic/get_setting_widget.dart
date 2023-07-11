@@ -1,3 +1,4 @@
+import 'package:clock_app/settings/screens/restore_defaults_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/settings.dart';
 import 'package:clock_app/settings/widgets/date_setting_card.dart';
@@ -11,16 +12,13 @@ import 'package:clock_app/settings/widgets/switch_setting_card.dart';
 import 'package:clock_app/settings/widgets/toggle_setting_card.dart';
 import 'package:flutter/material.dart';
 
-bool defaultFilter(SettingItem setting) {
-  return true;
-}
-
 List<Widget> getSettingWidgets(
   Settings settings, {
   List<SettingItem>? settingItems,
-  bool showSummaryView = false,
+  bool showAsCard = true,
   VoidCallback? checkDependentEnableConditions,
   VoidCallback? onSettingChanged,
+  bool isAppSettings = true,
 }) {
   List<SettingItem> items = settingItems ?? settings.items;
 
@@ -29,23 +27,40 @@ List<Widget> getSettingWidgets(
     Widget? widget = getSettingWidget(
       settings,
       item,
-      showSummaryView: showSummaryView,
+      showAsCard: showAsCard,
       checkDependentEnableConditions: checkDependentEnableConditions,
       onSettingChanged: onSettingChanged,
+      isAppSettings: isAppSettings,
     );
     if (widget != null) {
       widgets.add(widget);
     }
   }
+
+  // if (isAppSettings) {
+  //   widgets.add(SettingLinkCard(
+  //       setting: SettingLink(
+  //           'Restore default values',
+  //           RestoreDefaultScreen(
+  //             settingsGroup: widget.settingsGroup,
+  //             settings: widget.settings,
+  //             onRestore: () async {
+  //               widget.settings.save("settings");
+  //               setState(() {});
+  //             },
+  //           )));
+  // }
+
   return widgets;
 }
 
 Widget? getSettingWidget(
   Settings settings,
   SettingItem item, {
-  bool showSummaryView = false,
+  bool showAsCard = false,
   VoidCallback? checkDependentEnableConditions,
   VoidCallback? onSettingChanged,
+  bool isAppSettings = true,
 }) {
   if (item is SettingGroup) {
     return SettingGroupCard(
@@ -53,12 +68,15 @@ Widget? getSettingWidget(
       settingGroup: item,
       checkDependentEnableConditions: checkDependentEnableConditions,
       onSettingChanged: onSettingChanged,
+      isAppSettings: isAppSettings,
     );
   } else if (item is SettingLink) {
     return SettingLinkCard(
       setting: item,
     );
   } else if (item is Setting) {
+    // Each setting has enable conditions, a list of settings and
+    // the values they must be set to for this setting to be enabled
     if (item.enableConditions.isNotEmpty) {
       bool enabled = true;
       for (var condition in item.enableConditions) {
@@ -73,6 +91,7 @@ Widget? getSettingWidget(
       }
     }
 
+    // Check if this setting enables any other settings
     bool changesEnableConditions = settings.settings.any((setting) => setting
         .enableConditions
         .any((condition) => condition.settingName == item.name));
@@ -92,43 +111,43 @@ Widget? getSettingWidget(
     if (item is SelectSetting) {
       return SelectSettingCard(
         setting: item,
-        showSummaryView: showSummaryView,
+        showAsCard: showAsCard,
         onChanged: onChanged,
       );
     } else if (item is SwitchSetting) {
       return SwitchSettingCard(
         setting: item,
-        showSummaryView: showSummaryView,
+        showAsCard: showAsCard,
         onChanged: onChanged,
       );
     } else if (item is ToggleSetting) {
       return ToggleSettingCard(
         setting: item,
-        showSummaryView: showSummaryView,
+        showAsCard: showAsCard,
         onChanged: onChanged,
       );
     } else if (item is SliderSetting) {
       return SliderSettingCard(
         setting: item,
-        showSummaryView: showSummaryView,
+        showAsCard: showAsCard,
         onChanged: onChanged,
       );
     } else if (item is StringSetting) {
       return StringSettingCard(
         setting: item,
-        showSummaryView: showSummaryView,
+        showAsCard: showAsCard,
         onChanged: onChanged,
       );
     } else if (item is DurationSetting) {
       return DurationSettingCard(
         setting: item,
-        showSummaryView: showSummaryView,
+        showAsCard: showAsCard,
         onChanged: onChanged,
       );
     } else if (item is DateTimeSetting) {
       return DateSettingCard(
         setting: item,
-        showSummaryView: showSummaryView,
+        showAsCard: showAsCard,
         onChanged: onChanged,
       );
     }
