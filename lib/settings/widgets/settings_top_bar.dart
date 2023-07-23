@@ -1,6 +1,7 @@
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:flutter/material.dart';
 
@@ -8,9 +9,12 @@ class SettingsTopBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size(0, 56);
 
-  const SettingsTopBar({Key? key, required this.onSearch}) : super(key: key);
+  const SettingsTopBar(
+      {Key? key, required this.onSearch, this.showSearch = false})
+      : super(key: key);
 
   final void Function(List<SettingItem> settings) onSearch;
+  final bool showSearch;
 
   @override
   State<SettingsTopBar> createState() => _SettingsTopBarState();
@@ -77,18 +81,19 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
       return AppTopBar(
         title: Text("Settings", style: Theme.of(context).textTheme.titleMedium),
         actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _searching = true;
-              });
-            },
-            icon: Icon(
-              Icons.search,
-              color:
-                  Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
-            ),
-          )
+          if (widget.showSearch)
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _searching = true;
+                });
+              },
+              icon: Icon(
+                Icons.search,
+                color:
+                    Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+              ),
+            )
         ],
       );
     }

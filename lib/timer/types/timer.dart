@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:clock_app/settings/types/settings.dart';
-import 'package:clock_app/timer/data/timer_settings_schema.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -17,11 +17,18 @@ class ClockTimer extends ListItem {
   DateTime _startTime;
   TimerState _state;
   final int _id;
-  Settings _settings = timerSettingsSchema.copy();
+  SettingGroup _settings = SettingGroup(
+    "Timer Settings",
+    appSettings
+        .getGroup("Timer")
+        .getGroup("Default Settings")
+        .copy()
+        .settingItems,
+  );
 
   @override
   int get id => _id;
-  Settings get settings => _settings;
+  SettingGroup get settings => _settings;
   String get label => _settings.getSetting("Label").value.isNotEmpty
       ? _settings.getSetting("Label").value
       : '${_duration.toString()} timer';
@@ -155,7 +162,14 @@ class ClockTimer extends ListItem {
         _state =
             TimerState.values.firstWhere((e) => e.toString() == json['state']),
         _id = json['id'],
-        _settings = timerSettingsSchema.copy() {
+        _settings = SettingGroup(
+          "Timer Settings",
+          appSettings
+              .getGroup("Timer")
+              .getGroup("Default Settings")
+              .copy()
+              .settingItems,
+        ) {
     _settings.fromJson(json['settings']);
   }
 }

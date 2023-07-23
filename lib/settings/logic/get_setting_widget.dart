@@ -1,10 +1,14 @@
-import 'package:clock_app/settings/screens/restore_defaults_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:clock_app/settings/types/setting_item.dart';
+import 'package:clock_app/settings/types/setting_link.dart';
+import 'package:clock_app/settings/widgets/color_setting_card.dart';
+import 'package:clock_app/settings/widgets/custom_setting_card.dart';
+
 import 'package:clock_app/settings/widgets/date_setting_card.dart';
 import 'package:clock_app/settings/widgets/duration_setting_card.dart';
 import 'package:clock_app/settings/widgets/select_setting_card.dart';
-import 'package:clock_app/settings/widgets/setting_link_card.dart';
+import 'package:clock_app/settings/widgets/setting_page_link_card.dart';
 import 'package:clock_app/settings/widgets/setting_group_card.dart';
 import 'package:clock_app/settings/widgets/slider_setting_card.dart';
 import 'package:clock_app/settings/widgets/string_setting_card.dart';
@@ -13,19 +17,15 @@ import 'package:clock_app/settings/widgets/toggle_setting_card.dart';
 import 'package:flutter/material.dart';
 
 List<Widget> getSettingWidgets(
-  Settings settings, {
-  List<SettingItem>? settingItems,
+  List<SettingItem> settingItems, {
   bool showAsCard = true,
   VoidCallback? checkDependentEnableConditions,
   VoidCallback? onSettingChanged,
   bool isAppSettings = true,
 }) {
-  List<SettingItem> items = settingItems ?? settings.items;
-
   List<Widget> widgets = [];
-  for (var item in items) {
-    Widget? widget = getSettingWidget(
-      settings,
+  for (var item in settingItems) {
+    Widget? widget = getSettingItemWidget(
       item,
       showAsCard: showAsCard,
       checkDependentEnableConditions: checkDependentEnableConditions,
@@ -36,26 +36,10 @@ List<Widget> getSettingWidgets(
       widgets.add(widget);
     }
   }
-
-  // if (isAppSettings) {
-  //   widgets.add(SettingLinkCard(
-  //       setting: SettingLink(
-  //           'Restore default values',
-  //           RestoreDefaultScreen(
-  //             settingsGroup: widget.settingsGroup,
-  //             settings: widget.settings,
-  //             onRestore: () async {
-  //               widget.settings.save("settings");
-  //               setState(() {});
-  //             },
-  //           )));
-  // }
-
   return widgets;
 }
 
-Widget? getSettingWidget(
-  Settings settings,
+Widget? getSettingItemWidget(
   SettingItem item, {
   bool showAsCard = false,
   VoidCallback? checkDependentEnableConditions,
@@ -64,46 +48,22 @@ Widget? getSettingWidget(
 }) {
   if (item is SettingGroup) {
     return SettingGroupCard(
-      settings: settings,
       settingGroup: item,
       checkDependentEnableConditions: checkDependentEnableConditions,
       onSettingChanged: onSettingChanged,
       isAppSettings: isAppSettings,
     );
-  } else if (item is SettingLink) {
-    return SettingLinkCard(
+  } else if (item is SettingPageLink) {
+    return SettingPageLinkCard(
       setting: item,
+      showAsCard: showAsCard,
     );
   } else if (item is Setting) {
-    // Each setting has enable conditions, a list of settings and
-    // the values they must be set to for this setting to be enabled
-    if (item.enableConditions.isNotEmpty) {
-      bool enabled = true;
-      for (var condition in item.enableConditions) {
-        Setting setting = settings.getSetting(condition.settingName);
-        if (setting.value != condition.value) {
-          enabled = false;
-          break;
-        }
-      }
-      if (!enabled) {
-        return null;
-      }
-    }
-
-    // Check if this setting enables any other settings
-    bool changesEnableConditions = settings.settings.any((setting) => setting
-        .enableConditions
-        .any((condition) => condition.settingName == item.name));
+    if (!item.isEnabled || !item.isVisual) return null;
 
     onChanged(dynamic value) {
-      if (changesEnableConditions) {
+      if (item.changesEnableCondition) {
         checkDependentEnableConditions?.call();
-      }
-      if (settings.settingListeners.containsKey(item.id)) {
-        for (var listener in settings.settingListeners[item.id]!) {
-          listener(value);
-        }
       }
       onSettingChanged?.call();
     }
@@ -149,6 +109,17 @@ Widget? getSettingWidget(
         setting: item,
         showAsCard: showAsCard,
         onChanged: onChanged,
+      );
+    } else if (item is ColorSetting) {
+      return ColorSettingCard(
+        setting: item,
+        showAsCard: showAsCard,
+        onChanged: onChanged,
+      );
+    } else if (item is CustomSetting) {
+      return CustomSettingCard(
+        setting: item,
+        showAsCard: showAsCard,
       );
     }
   }

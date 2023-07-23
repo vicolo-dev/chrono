@@ -1,22 +1,24 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/settings/screens/restore_defaults_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/settings.dart';
-import 'package:clock_app/settings/widgets/setting_link_card.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:clock_app/settings/types/setting_item.dart';
+import 'package:clock_app/settings/types/setting_link.dart';
+
+import 'package:clock_app/settings/widgets/search_setting_card.dart';
+import 'package:clock_app/settings/widgets/setting_page_link_card.dart';
+import 'package:clock_app/settings/widgets/settings_top_bar.dart';
 import 'package:flutter/material.dart';
 
 class SettingGroupScreen extends StatefulWidget {
   const SettingGroupScreen(
-      {super.key,
-      required this.settingsGroup,
-      required this.settings,
-      this.isAppSettings = true});
+      {super.key, required this.settingGroup, this.isAppSettings = true});
 
-  final SettingGroup settingsGroup;
-  final Settings settings;
+  final SettingGroup settingGroup;
   final bool isAppSettings;
 
   @override
@@ -24,6 +26,8 @@ class SettingGroupScreen extends StatefulWidget {
 }
 
 class _SettingGroupScreenState extends State<SettingGroupScreen> {
+  List<SettingItem> searchedItems = [];
+
   @override
   void initState() {
     super.initState();
@@ -31,42 +35,54 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> getSearchItemWidgets() {
+      return searchedItems.map((item) {
+        return SearchSettingCard(settingItem: item);
+      }).toList();
+    }
+
     return Scaffold(
-      appBar: AppTopBar(
-        title: Hero(
-          tag: widget.settingsGroup.name,
-          child: Text(widget.settingsGroup.name,
-              style: Theme.of(context).textTheme.titleMedium),
-        ),
+      appBar: SettingsTopBar(
+        onSearch: (settingItems) {
+          setState(() {
+            searchedItems = settingItems;
+          });
+        },
+        showSearch: widget.settingGroup.isSearchable,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
-            children: [
-              ...getSettingWidgets(
-                widget.settings,
-                settingItems: widget.settingsGroup.settingItems,
-                checkDependentEnableConditions: () => setState(() {}),
-                onSettingChanged: () {
-                  widget.settings.save("settings");
-                },
-                isAppSettings: widget.isAppSettings,
-              ),
-              if (widget.isAppSettings)
-                SettingLinkCard(
-                    setting: SettingLink(
-                        'Restore default values',
-                        RestoreDefaultScreen(
-                          settingsGroup: widget.settingsGroup,
-                          settings: widget.settings,
-                          onRestore: () async {
-                            widget.settings.save("settings");
-                            // setState(() {});
-                          },
-                        ))),
-              const SizedBox(height: 16),
-            ],
+            children: searchedItems.isEmpty
+                ? [
+                    ...getSettingWidgets(
+                      widget.settingGroup.settingItems,
+                      checkDependentEnableConditions: () => setState(() {}),
+                      onSettingChanged: () {
+                        if (widget.isAppSettings) {
+                          appSettings.save();
+                        }
+                      },
+                      isAppSettings: widget.isAppSettings,
+                    ),
+                    if (widget.isAppSettings)
+                      SettingPageLinkCard(
+                          setting: SettingPageLink(
+                              'Restore default values',
+                              RestoreDefaultScreen(
+                                settingGroup: widget.settingGroup,
+                                onRestore: () async {
+                                  appSettings.save();
+                                  // setState(() {});
+                                },
+                              ))),
+                    const SizedBox(height: 16),
+                  ]
+                : [
+                    ...getSearchItemWidgets(),
+                    const SizedBox(height: 16),
+                  ],
           ),
         ),
       ),

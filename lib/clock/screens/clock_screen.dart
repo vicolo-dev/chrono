@@ -36,12 +36,12 @@ class _ClockScreenState extends State<ClockScreen> {
         .getGroup("Display")
         .getSetting("Show Seconds");
     setShowSeconds(showSecondsSetting.value);
-    appSettings.addSettingListener(showSecondsSetting, setShowSeconds);
+    showSecondsSetting.addListener(setShowSeconds);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener(showSecondsSetting, setShowSeconds);
+    showSecondsSetting.removeListener(setShowSeconds);
     super.dispose();
   }
 

@@ -24,11 +24,13 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
     this.onReorderItem,
     this.onDeleteItem,
     this.onAddItem,
+    this.isItemDeletable,
     this.placeholderText = '',
     this.onModifyList,
     this.isReorderable = true,
     this.isDeleteEnabled = true,
     this.isDuplicateEnabled = true,
+    this.shouldInsertOnTop = true,
   });
 
   final List<Item> items;
@@ -38,12 +40,14 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final void Function(Item item)? onReorderItem;
   final void Function(Item item)? onDeleteItem;
   final void Function(Item item)? onAddItem;
+  final bool Function(Item item)? isItemDeletable;
   final void Function()? onModifyList;
   final String placeholderText;
   final ListController<Item> listController;
   final bool isReorderable;
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
+  final bool shouldInsertOnTop;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -133,7 +137,9 @@ class _CustomListViewState<Item extends ListItem>
   }
 
   void _handleAddItem(Item item, {int index = -1}) {
-    if (index == -1) index = 0;
+    if (index == -1) {
+      index = widget.shouldInsertOnTop ? 0 : widget.items.length;
+    }
     setState(() => widget.items.insert(index, item));
     widget.onAddItem?.call(item);
     _controller.notifyInsertedRange(index, 1);
@@ -207,7 +213,9 @@ class _CustomListViewState<Item extends ListItem>
                       // stopwatch.stop();
                       // stopwatch.reset();
                     },
-                    isDeleteEnabled: widget.isDeleteEnabled,
+                    isDeleteEnabled:
+                        (widget.isItemDeletable?.call(item) ?? true) &&
+                            widget.isDeleteEnabled,
                     isDuplicateEnabled: widget.isDuplicateEnabled,
                     child: widget.itemBuilder(item),
                   );

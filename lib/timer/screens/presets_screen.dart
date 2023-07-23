@@ -30,7 +30,7 @@ class _PresetsScreenState extends State<PresetsScreen> {
             children: [
               Expanded(
                 child: PersistentListView<TimerPreset>(
-                  saveTag: 'timerPresets',
+                  saveTag: 'timer_presets',
                   listController: _listController,
                   itemBuilder: (preset) => TimerPresetCard(
                     key: ValueKey(preset),

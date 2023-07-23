@@ -3,7 +3,9 @@
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:clock_app/settings/types/setting_item.dart';
+
 import 'package:flutter/material.dart';
 
 class SettingCheckBox extends StatelessWidget {
@@ -39,14 +41,13 @@ class SettingCheckBox extends StatelessWidget {
 }
 
 class RestoreDefaultScreen extends StatefulWidget {
-  const RestoreDefaultScreen(
-      {super.key,
-      required this.settingsGroup,
-      required this.onRestore,
-      required this.settings});
+  const RestoreDefaultScreen({
+    super.key,
+    required this.settingGroup,
+    required this.onRestore,
+  });
 
-  final SettingGroup settingsGroup;
-  final Settings settings;
+  final SettingGroup settingGroup;
   final void Function() onRestore;
 
   @override
@@ -55,7 +56,7 @@ class RestoreDefaultScreen extends StatefulWidget {
 
 class _RestoreDefaultScreenState extends State<RestoreDefaultScreen> {
   late final Map<String, bool> _settingsToRestore = {
-    for (var settingItem in widget.settingsGroup.settingItems)
+    for (var settingItem in widget.settingGroup.settingItems)
       settingItem.id: true
   };
 
@@ -97,14 +98,14 @@ class _RestoreDefaultScreenState extends State<RestoreDefaultScreen> {
                   ),
                 ),
                 onTap: () {
-                  widget.settingsGroup.restoreDefault(
-                      context, widget.settings, _settingsToRestore);
+                  widget.settingGroup
+                      .restoreDefault(context, _settingsToRestore);
                   widget.onRestore();
                   Navigator.pop(context);
                 },
               ),
               SizedBox(height: 16),
-              ...widget.settingsGroup.settingItems
+              ...widget.settingGroup.settingItems
                   .map(
                     (settingItem) => SettingCheckBox(
                       settingItem: settingItem,

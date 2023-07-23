@@ -52,12 +52,12 @@ class _ClockDisplayState extends State<ClockDisplay> {
         .getGroup("Display")
         .getSetting("Time Format");
     setTimeFormat(timeFormatSetting.value);
-    appSettings.addSettingListener(timeFormatSetting, setTimeFormat);
+    timeFormatSetting.addListener(setTimeFormat);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener(timeFormatSetting, setTimeFormat);
+    timeFormatSetting.removeListener(setTimeFormat);
     super.dispose();
   }
 

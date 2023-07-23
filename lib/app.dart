@@ -5,12 +5,15 @@ import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/theme/bottom_sheet.dart';
+import 'package:clock_app/theme/color_scheme.dart';
 import 'package:clock_app/theme/input.dart';
 import 'package:clock_app/theme/radio.dart';
 import 'package:clock_app/theme/theme_extension.dart';
 import 'package:clock_app/theme/snackbar.dart';
 import 'package:clock_app/theme/theme.dart';
+import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -23,14 +26,10 @@ class App extends StatefulWidget {
   @override
   State<App> createState() => _AppState();
 
-  static void setColorScheme(BuildContext context, ColorScheme colorScheme) {
+  static void setColorScheme(BuildContext context,
+      [ColorSchemeData? colorScheme]) {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
     state.setColorScheme(colorScheme);
-  }
-
-  static void setAccentColor(BuildContext context, Color color) {
-    _AppState state = context.findAncestorStateOfType<_AppState>()!;
-    state.setAccentColor(color);
   }
 
   static void setCardRadius(BuildContext context, double radius) {
@@ -41,11 +40,6 @@ class App extends StatefulWidget {
   static void setCardElevation(BuildContext context, double elevation) {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
     state.setCardElevation(elevation);
-  }
-
-  static void setShadowColor(BuildContext context, Color color) {
-    _AppState state = context.findAncestorStateOfType<_AppState>()!;
-    state.setShadowColor(color);
   }
 
   static void setShadowOpacity(BuildContext context, double opacity) {
@@ -66,11 +60,6 @@ class App extends StatefulWidget {
   static void setBorderWidth(BuildContext context, double width) {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
     state.setBorderWidth(width);
-  }
-
-  static void setBorderColor(BuildContext context, Color color) {
-    _AppState state = context.findAncestorStateOfType<_AppState>()!;
-    state.setBorderColor(color);
   }
 }
 
@@ -94,7 +83,6 @@ class _AppState extends State<App> {
     _borderSettings = _appearanceSettings.getGroup("Outlines");
 
     setColorScheme(_colorSettings.getSetting("Color Scheme").value);
-    setAccentColor(_colorSettings.getSetting("Accent Color").value);
     setCardRadius(_shapeSettings.getSetting("Corner Roundness").value);
     setCardElevation(_shadowSettings.getSetting("Elevation").value);
     setShadowBlurRadius(_shadowSettings.getSetting("Blur").value);
@@ -106,44 +94,22 @@ class _AppState extends State<App> {
     super.initState();
   }
 
-  setColorScheme(ColorScheme colorScheme) {
+  setColorScheme(ColorSchemeData? colorSchemeDataParam) {
+    ColorSchemeData colorSchemeData =
+        colorSchemeDataParam ?? _colorSettings.getSetting("Color Scheme").value;
+    colorSchemeData = colorSchemeData.copy();
+    bool shouldOverrideAccent =
+        _colorSettings.getSetting("Override Accent Color").value;
+    Color overrideColor = _colorSettings.getSetting("Accent Color").value;
+    if (shouldOverrideAccent) colorSchemeData.accent = overrideColor;
     setState(() {
-      _theme = _theme.copyWith(
-        colorScheme: colorScheme,
-        scaffoldBackgroundColor: colorScheme.background,
-        cardColor: colorScheme.surface,
-        radioTheme: getRadioTheme(colorScheme),
-        dialogBackgroundColor: colorScheme.surface,
-        bottomSheetTheme: getBottomSheetTheme(colorScheme,
-            _theme.toggleButtonsTheme.borderRadius?.bottomLeft ?? Radius.zero),
-        textTheme: _theme.textTheme.apply(
-          bodyColor: colorScheme.onBackground,
-          displayColor: colorScheme.onBackground,
-        ),
-        snackBarTheme: getSnackBarTheme(
-            colorScheme, _theme.toggleButtonsTheme.borderRadius!),
-        inputDecorationTheme:
-            getInputTheme(colorScheme, _theme.toggleButtonsTheme.borderRadius!),
-      );
+      _theme = getThemeFromColorScheme(_theme, colorSchemeData);
     });
-
-    setBorderColor(_borderSettings.getSetting("Use Accent Color").value
-        ? _theme.colorScheme.primary
-        : Theme.of(context).colorScheme.onBackground);
-
-    setShadowColor(_shadowSettings.getSetting("Use Accent Color").value
-        ? _theme.colorScheme.primary
-        : Colors.black);
-  }
-
-  setAccentColor(Color color) {
-    setColorScheme(_theme.colorScheme.copyWith(
-      primary: color,
-      secondary: color,
-    ));
   }
 
   setCardRadius(double radius) {
+    ColorSchemeData colorSchemeData =
+        _colorSettings.getSetting("Color Scheme").value;
     setState(() {
       RoundedRectangleBorder shape = RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius),
@@ -151,7 +117,7 @@ class _AppState extends State<App> {
       _theme = _theme.copyWith(
         cardTheme: _theme.cardTheme.copyWith(shape: shape),
         bottomSheetTheme:
-            getBottomSheetTheme(_theme.colorScheme, Radius.circular(radius)),
+            getBottomSheetTheme(colorSchemeData, Radius.circular(radius)),
         timePickerTheme: _theme.timePickerTheme.copyWith(
           shape: shape,
           dayPeriodShape: shape,
@@ -161,9 +127,9 @@ class _AppState extends State<App> {
           borderRadius: BorderRadius.circular(radius),
         ),
         snackBarTheme:
-            getSnackBarTheme(_theme.colorScheme, BorderRadius.circular(radius)),
+            getSnackBarTheme(colorSchemeData, BorderRadius.circular(radius)),
         inputDecorationTheme:
-            getInputTheme(_theme.colorScheme, BorderRadius.circular(radius)),
+            getInputTheme(colorSchemeData, BorderRadius.circular(radius)),
         extensions: [
           _theme.extension<ThemeStyle>()?.copyWith(
                     borderRadius: radius,
@@ -179,17 +145,6 @@ class _AppState extends State<App> {
       _theme = _theme.copyWith(extensions: [
         _theme.extension<ThemeStyle>()?.copyWith(
                   shadowElevation: elevation,
-                ) ??
-            const ThemeStyle(),
-      ]);
-    });
-  }
-
-  setShadowColor(Color color) {
-    setState(() {
-      _theme = _theme.copyWith(extensions: [
-        _theme.extension<ThemeStyle>()?.copyWith(
-                  shadowColor: color,
                 ) ??
             const ThemeStyle(),
       ]);
@@ -240,16 +195,16 @@ class _AppState extends State<App> {
     });
   }
 
-  setBorderColor(Color color) {
-    setState(() {
-      _theme = _theme.copyWith(extensions: [
-        _theme.extension<ThemeStyle>()?.copyWith(
-                  borderColor: color,
-                ) ??
-            const ThemeStyle(),
-      ]);
-    });
-  }
+  // setBorderColor(Color color) {
+  //   setState(() {
+  //     _theme = _theme.copyWith(extensions: [
+  //       _theme.extension<ThemeStyle>()?.copyWith(
+  //                 borderColor: color,
+  //               ) ??
+  //           const ThemeStyle(),
+  //     ]);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

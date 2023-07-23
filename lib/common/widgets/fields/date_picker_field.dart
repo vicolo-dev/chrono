@@ -43,13 +43,13 @@ class _DatePickerFieldState<T> extends State<DatePickerField<T>> {
         .getGroup("General")
         .getGroup("Display")
         .getSetting("Date Format");
-    appSettings.addSettingListener(dateFormatSetting, setDateFormat);
+    dateFormatSetting.addListener(setDateFormat);
     setDateFormat(dateFormatSetting.value);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener(dateFormatSetting, setDateFormat);
+    dateFormatSetting.removeListener(setDateFormat);
     super.dispose();
   }
 

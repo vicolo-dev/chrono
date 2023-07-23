@@ -82,16 +82,6 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                                     .onBackground
                                     .withOpacity(0.6)),
                       ),
-                      // if (description != null) const SizedBox(height: 8.0),
-                      // if (description != null)
-                      //   Text(
-                      //     description!,
-                      //     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      //         color: Theme.of(context)
-                      //             .colorScheme
-                      //             .onBackground
-                      //             .withOpacity(0.6)),
-                      //   ),
                       const SizedBox(height: 4.0),
                       TextField(
                         controller: _controller,

@@ -16,6 +16,8 @@ class ToggleField<T> extends StatefulWidget {
     this.name,
     this.description,
     this.padding = 0,
+    this.innerPadding = 0,
+    this.square = true,
   }) : super(key: key);
 
   final String? name;
@@ -24,6 +26,8 @@ class ToggleField<T> extends StatefulWidget {
   final List<ToggleOption<T>> options;
   final void Function(int) onChange;
   final double padding;
+  final double innerPadding;
+  final bool square;
 
   @override
   State<ToggleField<T>> createState() => _ToggleFieldState<T>();
@@ -42,16 +46,24 @@ class _ToggleFieldState<T> extends State<ToggleField<T>> {
             selectedColor: Theme.of(context).colorScheme.onPrimary,
             renderBorder: false,
             constraints: BoxConstraints(
-              minHeight: (MediaQuery.of(context).size.width -
-                      (40 + widget.padding * 2)) /
-                  widget.options.length,
+              minHeight: widget.square
+                  ? (MediaQuery.of(context).size.width -
+                          (40 + widget.padding * 2)) /
+                      widget.options.length
+                  : 0.0,
               minWidth: (MediaQuery.of(context).size.width -
                       (40 + widget.padding * 2)) /
                   widget.options.length,
             ),
             isSelected: widget.selectedItems,
             onPressed: widget.onChange,
-            children: [for (final option in widget.options) Text(option.name)],
+            children: [
+              for (final option in widget.options)
+                Padding(
+                  padding: EdgeInsets.all(widget.innerPadding),
+                  child: Text(option.name),
+                )
+            ],
           ),
         ],
       ),

@@ -1,12 +1,15 @@
+import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
+
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
-Settings timerSettingsSchema = Settings(
+SettingGroup timerSettingsSchema = SettingGroup(
+  "Timer Setting",
   [
     StringSetting("Label", ""),
     SettingGroup(
@@ -15,19 +18,13 @@ Settings timerSettingsSchema = Settings(
         SettingGroup(
           "Sound",
           [
-            DynamicSelectSetting<String>(
+            DynamicSelectSetting<Audio>(
               "Melody",
               () => RingtoneManager.ringtones
                   .map((ringtone) =>
-                      SelectSettingOption(ringtone.title, ringtone.uri))
+                      SelectSettingOption<Audio>(ringtone.title, ringtone))
                   .toList(),
-              onSelect: (context, index, uri) {
-                if (RingtoneManager.lastPlayedRingtoneUri == uri) {
-                  RingtonePlayer.stop();
-                } else {
-                  RingtonePlayer.playUri(uri, loopMode: LoopMode.off);
-                }
-              },
+              onSelect: (context, index, uri) {},
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },
@@ -39,7 +36,7 @@ Settings timerSettingsSchema = Settings(
             DurationSetting(
                 "Time To Full Volume", const TimeDuration(minutes: 1),
                 enableConditions: [
-                  SettingEnableCondition("Rising Volume", true)
+                  SettingEnableConditionParameter("Rising Volume", true)
                 ]),
           ],
         ),

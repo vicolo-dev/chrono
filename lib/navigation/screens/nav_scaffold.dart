@@ -2,7 +2,8 @@ import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
 import 'package:clock_app/navigation/widgets/app_navigation_bar.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
-import 'package:clock_app/settings/screens/settings_screen.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavScaffold extends StatefulWidget {
@@ -41,7 +42,8 @@ class _NavScaffoldState extends State<NavScaffold> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SettingsScreen()));
+                      builder: (context) =>
+                          SettingGroupScreen(settingGroup: appSettings)));
             },
             icon: const Icon(FluxIcons.settings, semanticLabel: "Settings"),
             color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
+import 'package:clock_app/theme/color_scheme.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
 
@@ -12,6 +13,8 @@ final fromJsonFactories = <Type, Function>{
   ClockTimer: (Map<String, dynamic> json) => ClockTimer.fromJson(json),
   ClockStopwatch: (Map<String, dynamic> json) => ClockStopwatch.fromJson(json),
   TimerPreset: (Map<String, dynamic> json) => TimerPreset.fromJson(json),
+  ColorSchemeData: (Map<String, dynamic> json) =>
+      ColorSchemeData.fromJson(json),
 };
 
 abstract class JsonSerializable {

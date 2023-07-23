@@ -70,7 +70,6 @@ class _SliderFieldState extends State<SliderField> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     TextTheme textTheme = theme.textTheme;
-    ColorScheme colorScheme = theme.colorScheme;
 
     Size textSize = calcTextSize('000.0 ${widget.unit}', textTheme.bodyMedium!);
 

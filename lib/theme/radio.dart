@@ -1,8 +1,8 @@
-import 'package:clock_app/theme/color.dart';
+import 'package:clock_app/theme/color_scheme.dart';
 import 'package:flutter/material.dart';
 
-RadioThemeData getRadioTheme(ColorScheme colorScheme) {
+RadioThemeData getRadioTheme(ColorSchemeData colorScheme) {
   return RadioThemeData(
-    fillColor: MaterialStateProperty.all(colorScheme.primary),
+    fillColor: MaterialStateProperty.all(colorScheme.accent),
   );
 }

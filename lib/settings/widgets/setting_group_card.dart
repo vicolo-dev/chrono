@@ -1,27 +1,30 @@
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/settings/screens/settings_group_screen.dart';
-import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:flutter/material.dart';
 
-class SettingGroupCard extends StatelessWidget {
+class SettingGroupCard extends StatefulWidget {
   final SettingGroup settingGroup;
-  final Settings settings;
   final VoidCallback? checkDependentEnableConditions;
   final VoidCallback? onSettingChanged;
   final bool isAppSettings;
 
-  // final VoidCallback onTap;
-
   const SettingGroupCard({
     Key? key,
     required this.settingGroup,
-    required this.settings,
     this.checkDependentEnableConditions,
     this.onSettingChanged,
     this.isAppSettings = true,
   }) : super(key: key);
+
+  @override
+  State<SettingGroupCard> createState() => _SettingGroupCardState();
+}
+
+class _SettingGroupCardState extends State<SettingGroupCard> {
+  List<SettingItem> searchedItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -29,28 +32,26 @@ class SettingGroupCard extends StatelessWidget {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    bool showSummaryView = settingGroup.summarySettings.isNotEmpty;
-    bool showExpandedView = settingGroup.showExpandedView ??
-        settingGroup.settingItems
-                .every((item) => item.runtimeType != SettingGroup) ||
-            showSummaryView;
+    bool showSummaryView = widget.settingGroup.summarySettings.isNotEmpty;
+    bool showExpandedView = (widget.settingGroup.showExpandedView ??
+            widget.settingGroup.settingGroups.isEmpty) ||
+        showSummaryView;
 
     void openSettingGroupScreen() {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return SettingGroupScreen(
-          settingsGroup: settingGroup,
-          settings: settings,
-          isAppSettings: isAppSettings,
+          settingGroup: widget.settingGroup,
+          isAppSettings: widget.isAppSettings,
         );
-      })).then((value) => checkDependentEnableConditions?.call());
+      })).then((value) => widget.checkDependentEnableConditions?.call());
     }
 
     List<SettingItem> settingItems = showSummaryView
-        ? settingGroup.settings
+        ? widget.settingGroup.settings
             .where((setting) =>
-                settingGroup.summarySettings.contains(setting.name))
+                widget.settingGroup.summarySettings.contains(setting.name))
             .toList()
-        : settingGroup.settingItems;
+        : widget.settingGroup.settingItems;
 
     CardContainer expandedView = CardContainer(
       child: Padding(
@@ -59,17 +60,17 @@ class SettingGroupCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SettingGroupHeader(
-              isAppSettings: isAppSettings,
-              settingGroup: settingGroup,
+              isAppSettings: widget.isAppSettings,
+              settingGroup: widget.settingGroup,
               showSummaryView: showSummaryView,
               onTap: openSettingGroupScreen,
             ),
             ...getSettingWidgets(
-              settings,
-              settingItems: settingItems,
-              showAsCard: !showExpandedView,
-              checkDependentEnableConditions: checkDependentEnableConditions,
-              onSettingChanged: onSettingChanged,
+              settingItems,
+              showAsCard: false,
+              checkDependentEnableConditions:
+                  widget.checkDependentEnableConditions,
+              onSettingChanged: widget.onSettingChanged,
             )
           ],
         ),
@@ -83,20 +84,20 @@ class SettingGroupCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(settingGroup.icon, color: colorScheme.onBackground),
+            Icon(widget.settingGroup.icon, color: colorScheme.onBackground),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    settingGroup.name,
+                    widget.settingGroup.name,
                     style: textTheme.displaySmall,
                   ),
-                  if (settingGroup.description.isNotEmpty) ...[
+                  if (widget.settingGroup.description.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
-                      settingGroup.description,
+                      widget.settingGroup.description,
                       style: textTheme.bodyMedium,
                     )
                   ]

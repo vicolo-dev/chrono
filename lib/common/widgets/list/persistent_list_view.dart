@@ -55,6 +55,8 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
     this.isDeleteEnabled = true,
     this.isDuplicateEnabled = true,
     this.reloadOnPop = false,
+    this.shouldInsertOnTop = true,
+    this.isItemDeletable,
   });
 
   final Widget Function(Item item) itemBuilder;
@@ -63,6 +65,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final void Function(Item item)? onReorderItem;
   final void Function(Item item)? onDeleteItem;
   final void Function(Item item)? onAddItem;
+  final bool Function(Item item)? isItemDeletable;
   final String saveTag;
   final String placeholderText;
   final PersistentListController<Item> listController;
@@ -70,6 +73,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
   final bool reloadOnPop;
+  final bool shouldInsertOnTop;
 
   @override
   State<PersistentListView> createState() => _PersistentListViewState<Item>();
@@ -95,13 +99,6 @@ class _PersistentListViewState<Item extends ListItem>
     super.dispose();
   }
 
-  // @override
-  // void didPopNext() {
-  //   if (widget.reloadOnPop) {
-  //     loadItems();
-  //   }
-  // }
-
   void loadItems() {
     if (widget.saveTag.isNotEmpty) {
       widget.listController.changeItems(
@@ -109,7 +106,6 @@ class _PersistentListViewState<Item extends ListItem>
           List<Item> newList = loadListSync<Item>(widget.saveTag);
           items.clear();
           items.addAll(newList);
-          // print(encodeList(items));
         },
         callOnModifyList: false,
       );
@@ -132,12 +128,14 @@ class _PersistentListViewState<Item extends ListItem>
       onReorderItem: widget.onReorderItem,
       onDeleteItem: widget.onDeleteItem,
       onAddItem: widget.onAddItem,
+      isItemDeletable: widget.isItemDeletable,
       listController: widget.listController.listController,
       placeholderText: widget.placeholderText,
       onModifyList: saveItems,
       isReorderable: widget.isReorderable,
       isDeleteEnabled: widget.isDeleteEnabled,
       isDuplicateEnabled: widget.isDuplicateEnabled,
+      shouldInsertOnTop: widget.shouldInsertOnTop,
     );
   }
 }

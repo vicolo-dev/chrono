@@ -1,191 +1,69 @@
-import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:clock_app/settings/types/setting_item.dart';
+import 'package:clock_app/theme/color_scheme.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
-abstract class SettingItem {
-  String name;
-  String id;
-  SettingGroup? _parent;
-
-  SettingGroup? get parent => _parent;
-  set parent(SettingGroup? parent) {
-    _parent = parent;
-    id = "${_parent?.id}/${name}";
-  }
-
-  List<SettingGroup> get path {
-    List<SettingGroup> path = [];
-    SettingGroup? currentParent = parent;
-    while (currentParent != null) {
-      path.add(currentParent);
-      currentParent = currentParent.parent;
-    }
-    return path.reversed.toList();
-  }
-
-  SettingItem(this.name) : id = name;
-
-  SettingItem copy();
-
-  dynamic serialize();
-
-  void deserialize(dynamic value);
-}
-
-class SettingLink extends SettingItem {
-  Widget screen;
-
-  SettingLink(String name, this.screen) : super(name);
-
-  @override
-  SettingLink copy() {
-    return SettingLink(name, screen);
-  }
-
-  @override
-  dynamic serialize() {
-    return null;
-  }
-
-  @override
-  void deserialize(dynamic value) {
-    return;
-  }
-}
-
-class SettingGroup extends SettingItem {
-  String description;
-  IconData? icon;
-  List<String> summarySettings;
-  bool? showExpandedView;
-
-  List<SettingItem> settingItems;
-
-  SettingGroup(
-    String name,
-    this.settingItems, {
-    this.icon,
-    this.summarySettings = const [],
-    this.description = "",
-    this.showExpandedView,
-  }) : super(name) {
-    for (var item in settingItems) {
-      item.parent = this;
-    }
-  }
-
-  @override
-  SettingGroup copy() {
-    return SettingGroup(
-      name,
-      settingItems.map((setting) => setting.copy()).toList(),
-      icon: icon,
-      summarySettings: summarySettings,
-      description: description,
-    );
-  }
-
-  List<Setting> get settings {
-    List<Setting> allSettings = [];
-    for (var item in settingItems) {
-      if (item is Setting) {
-        allSettings.add(item);
-      } else if (item is SettingGroup) {
-        allSettings.addAll(item.settings);
-      }
-    }
-    return allSettings;
-  }
-
-  List<SettingGroup> get settingGroups {
-    List<SettingGroup> allSettingGroups = [];
-    for (var item in settingItems) {
-      if (item is SettingGroup) {
-        allSettingGroups.add(item);
-        allSettingGroups.addAll(item.settingGroups);
-      }
-    }
-    return allSettingGroups;
-  }
-
-  SettingGroup getGroup(String name) {
-    return settingItems
-        .whereType<SettingGroup>()
-        .firstWhere((item) => item.name == name);
-  }
-
-  Setting getSetting(String name) {
-    return settingItems
-        .whereType<Setting>()
-        .firstWhere((item) => item.name == name);
-  }
-
-  void restoreDefault(
-    BuildContext context,
-    Settings appSettings,
-    Map<String, bool> settingsToRestore,
-  ) {
-    for (var setting in settingItems) {
-      if (setting is SettingLink) {
-        continue;
-      }
-      if (settingsToRestore.containsKey(setting.id)) {
-        if (!settingsToRestore[setting.id]!) {
-          continue;
-        }
-      }
-      if (setting is Setting) {
-        setting.restoreDefault(context);
-        if (appSettings.settingListeners.containsKey(setting.id)) {
-          for (var listener in appSettings.settingListeners[setting.id]!) {
-            listener(setting.value);
-          }
-        }
-      } else if (setting is SettingGroup) {
-        setting.restoreDefault(context, appSettings, settingsToRestore);
-      }
-    }
-  }
-
-  @override
-  dynamic serialize() {
-    Map<String, dynamic> json = {};
-    for (var setting in settingItems) {
-      json[setting.name] = setting.serialize();
-    }
-    return json;
-  }
-
-  @override
-  void deserialize(dynamic value) {
-    for (var setting in settingItems) {
-      setting.deserialize(value[setting.name]);
-    }
-  }
-}
-
-class SettingEnableCondition {
+class SettingEnableConditionParameter {
   String settingName;
   dynamic value;
 
-  SettingEnableCondition(this.settingName, this.value);
+  SettingEnableConditionParameter(this.settingName, this.value);
+}
+
+class SettingEnableCondition {
+  Setting setting;
+  dynamic value;
+
+  SettingEnableCondition(this.setting, this.value);
 }
 
 abstract class Setting<T> extends SettingItem {
   String description;
   T _value;
-  T _defaultValue;
-  List<SettingEnableCondition> enableConditions;
+  final T _defaultValue;
+  List<SettingEnableConditionParameter> enableConditions;
+  // Settings which influence whether this setting is enabled
+  List<SettingEnableCondition> enableSettings;
+  // Whether another setting depends on the value of this setting
+  bool changesEnableCondition;
   void Function(BuildContext context, T)? onChange;
+  // Whether to show this setting in settings screen
+  final bool isVisual;
+
+  final List<void Function(dynamic)> _settingListeners;
+  List<void Function(dynamic)> get settingListeners => _settingListeners;
+  bool get isEnabled {
+    for (var enableSetting in enableSettings) {
+      if (enableSetting.setting.value != enableSetting.value) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   Setting(String name, this.description, T defaultValue, this.onChange,
-      this.enableConditions)
+      this.enableConditions, this.isVisual)
       : _value = defaultValue,
         _defaultValue = defaultValue,
+        _settingListeners = [],
+        enableSettings = [],
+        changesEnableCondition = false,
         super(name);
+
+  void addListener(void Function(dynamic) listener) {
+    _settingListeners.add(listener);
+  }
+
+  void removeListener(void Function(dynamic) listener) {
+    _settingListeners.remove(listener);
+  }
 
   void setValue(BuildContext context, T value) {
     _value = value;
+    for (var listener in _settingListeners) {
+      listener(value);
+    }
     onChange?.call(context, value);
   }
 
@@ -201,13 +79,62 @@ abstract class Setting<T> extends SettingItem {
   dynamic get defaultValue => _defaultValue;
 
   @override
-  dynamic serialize() {
+  dynamic toJson() {
     return _value;
   }
 
   @override
-  void deserialize(dynamic value) {
+  void fromJson(dynamic value) {
     _value = value;
+  }
+}
+
+class CustomSetting<T extends JsonSerializable> extends Setting<T> {
+  Widget Function(CustomSetting) builder;
+  String Function(CustomSetting) nameGetter;
+
+  CustomSetting(
+    String name,
+    T defaultValue,
+    this.builder,
+    this.nameGetter, {
+    String description = "",
+    void Function(BuildContext, T)? onChange,
+    bool isVisual = true,
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            isVisual);
+
+  Widget getWidget() {
+    return builder(this);
+  }
+
+  String getValueName() {
+    return nameGetter(this);
+  }
+
+  @override
+  CustomSetting<T> copy() {
+    return CustomSetting<T>(
+      name,
+      _defaultValue,
+      builder,
+      nameGetter,
+      description: description,
+      onChange: onChange,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+    );
+  }
+
+  @override
+  dynamic toJson() {
+    return _value.toJson();
+  }
+
+  @override
+  void fromJson(dynamic value) {
+    _value = fromJsonFactories[T]!(value);
   }
 }
 
@@ -217,18 +144,18 @@ class SwitchSetting extends Setting<bool> {
     bool defaultValue, {
     void Function(BuildContext, bool)? onChange,
     String description = "",
-    List<SettingEnableCondition> enableConditions = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions);
+    bool isVisual = true,
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            isVisual);
 
   @override
   SwitchSetting copy() {
-    return SwitchSetting(
-      name,
-      _value,
-      onChange: onChange,
-      description: description,
-      enableConditions: enableConditions,
-    );
+    return SwitchSetting(name, _value,
+        onChange: onChange,
+        description: description,
+        enableConditions: enableConditions,
+        isVisual: isVisual);
   }
 }
 
@@ -238,18 +165,18 @@ class NumberSetting extends Setting<double> {
     double defaultValue, {
     void Function(BuildContext, double)? onChange,
     String description = "",
-    List<SettingEnableCondition> enableConditions = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions);
+    bool isVisual = true,
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            isVisual);
 
   @override
   NumberSetting copy() {
-    return NumberSetting(
-      name,
-      _value,
-      onChange: onChange,
-      description: description,
-      enableConditions: enableConditions,
-    );
+    return NumberSetting(name, _value,
+        onChange: onChange,
+        description: description,
+        enableConditions: enableConditions,
+        isVisual: isVisual);
   }
 }
 
@@ -259,28 +186,28 @@ class ColorSetting extends Setting<Color> {
     Color defaultValue, {
     void Function(BuildContext, Color)? onChange,
     String description = "",
-    List<SettingEnableCondition> enableConditions = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions);
+    bool isVisual = true,
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            isVisual);
 
   @override
-  dynamic serialize() {
+  dynamic toJson() {
     return _value.value;
   }
 
   @override
-  void deserialize(dynamic value) {
+  void fromJson(dynamic value) {
     _value = Color(value);
   }
 
   @override
   ColorSetting copy() {
-    return ColorSetting(
-      name,
-      _value,
-      onChange: onChange,
-      description: description,
-      enableConditions: enableConditions,
-    );
+    return ColorSetting(name, _value,
+        onChange: onChange,
+        description: description,
+        enableConditions: enableConditions,
+        isVisual: isVisual);
   }
 }
 
@@ -290,18 +217,18 @@ class StringSetting extends Setting<String> {
     String defaultValue, {
     void Function(BuildContext, String)? onChange,
     String description = "",
-    List<SettingEnableCondition> enableConditions = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions);
+    bool isVisual = true,
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            isVisual);
 
   @override
   StringSetting copy() {
-    return StringSetting(
-      name,
-      _value,
-      onChange: onChange,
-      description: description,
-      enableConditions: enableConditions,
-    );
+    return StringSetting(name, _value,
+        onChange: onChange,
+        description: description,
+        enableConditions: enableConditions,
+        isVisual: isVisual);
   }
 }
 
@@ -317,22 +244,20 @@ class SliderSetting extends Setting<double> {
     double defaultValue, {
     void Function(BuildContext context, double)? onChange,
     String description = "",
+    bool isVisual = true,
     this.unit = "",
-    List<SettingEnableCondition> enableConditions = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions);
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            isVisual);
 
   @override
   SliderSetting copy() {
-    return SliderSetting(
-      name,
-      min,
-      max,
-      _value,
-      onChange: onChange,
-      description: description,
-      enableConditions: enableConditions,
-      unit: unit,
-    );
+    return SliderSetting(name, min, max, _value,
+        onChange: onChange,
+        description: description,
+        enableConditions: enableConditions,
+        unit: unit,
+        isVisual: isVisual);
   }
 }
 
@@ -372,21 +297,22 @@ class SelectSetting<T> extends Setting<int> {
     this.onSelect,
     int defaultValue = 0,
     String description = "",
-    List<SettingEnableCondition> enableConditions = const [],
+    bool isVisual = true,
+    List<SettingEnableConditionParameter> enableConditions = const [],
     this.shouldCloseOnSelect = true,
-  }) : super(name, description, defaultValue, onChange, enableConditions);
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            isVisual);
 
   @override
   SelectSetting<T> copy() {
-    return SelectSetting(
-      name,
-      _options,
-      defaultValue: _value,
-      onChange: onChange,
-      onSelect: onSelect,
-      description: description,
-      enableConditions: enableConditions,
-    );
+    return SelectSetting(name, _options,
+        defaultValue: _value,
+        onChange: onChange,
+        onSelect: onSelect,
+        description: description,
+        enableConditions: enableConditions,
+        shouldCloseOnSelect: shouldCloseOnSelect,
+        isVisual: isVisual);
   }
 }
 
@@ -403,8 +329,9 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
     void Function(BuildContext, int index, T value)? onSelect,
     int defaultValue = 0,
     String description = "",
+    bool isVisual = true,
     bool shouldCloseOnSelect = true,
-    List<SettingEnableCondition> enableConditions = const [],
+    List<SettingEnableConditionParameter> enableConditions = const [],
   }) : super(
           name,
           [],
@@ -414,20 +341,19 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
           description: description,
           enableConditions: enableConditions,
           shouldCloseOnSelect: shouldCloseOnSelect,
+          isVisual: isVisual,
         );
 
   @override
   DynamicSelectSetting<T> copy() {
-    return DynamicSelectSetting(
-      name,
-      optionsGetter,
-      onChange: onChange,
-      onSelect: onSelect,
-      description: description,
-      defaultValue: _value,
-      enableConditions: enableConditions,
-      shouldCloseOnSelect: shouldCloseOnSelect,
-    );
+    return DynamicSelectSetting(name, optionsGetter,
+        onChange: onChange,
+        onSelect: onSelect,
+        description: description,
+        defaultValue: _value,
+        enableConditions: enableConditions,
+        shouldCloseOnSelect: shouldCloseOnSelect,
+        isVisual: isVisual);
   }
 }
 
@@ -444,14 +370,13 @@ class ToggleSetting<T> extends Setting<List<bool>> {
     return values;
   }
 
-  ToggleSetting(
-    String name,
-    this.options, {
-    void Function(BuildContext, List<bool>)? onChange,
-    List<bool> defaultValue = const [],
-    String description = "",
-    List<SettingEnableCondition> enableConditions = const [],
-  }) : super(
+  ToggleSetting(String name, this.options,
+      {void Function(BuildContext, List<bool>)? onChange,
+      List<bool> defaultValue = const [],
+      String description = "",
+      bool isVisual = true,
+      List<SettingEnableConditionParameter> enableConditions = const []})
+      : super(
           name,
           description,
           defaultValue.length == options.length
@@ -459,18 +384,17 @@ class ToggleSetting<T> extends Setting<List<bool>> {
               : List.generate(options.length, (index) => index == 0),
           onChange,
           enableConditions,
+          isVisual,
         );
 
   @override
   ToggleSetting<T> copy() {
-    return ToggleSetting(
-      name,
-      options,
-      defaultValue: _value,
-      onChange: onChange,
-      description: description,
-      enableConditions: enableConditions,
-    );
+    return ToggleSetting(name, options,
+        defaultValue: _value,
+        onChange: onChange,
+        description: description,
+        enableConditions: enableConditions,
+        isVisual: isVisual);
   }
 
   void toggle(BuildContext context, int index) {
@@ -482,12 +406,12 @@ class ToggleSetting<T> extends Setting<List<bool>> {
   }
 
   @override
-  dynamic serialize() {
+  dynamic toJson() {
     return _value.map((e) => e ? "1" : "0").toList();
   }
 
   @override
-  void deserialize(dynamic value) {
+  void fromJson(dynamic value) {
     _value = (value as List).map((e) => e == "1").toList();
   }
 }
@@ -501,19 +425,19 @@ class DateTimeSetting extends Setting<List<DateTime>> {
     this.rangeOnly = false,
     void Function(BuildContext, List<DateTime>)? onChange,
     String description = "",
-    List<SettingEnableCondition> enableConditions = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions);
+    bool isVisual = true,
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            isVisual);
 
   @override
   DateTimeSetting copy() {
-    return DateTimeSetting(
-      name,
-      List.from(_value),
-      rangeOnly: rangeOnly,
-      onChange: onChange,
-      description: description,
-      enableConditions: enableConditions,
-    );
+    return DateTimeSetting(name, List.from(_value),
+        rangeOnly: rangeOnly,
+        onChange: onChange,
+        description: description,
+        enableConditions: enableConditions,
+        isVisual: isVisual);
   }
 
   @override
@@ -531,12 +455,12 @@ class DateTimeSetting extends Setting<List<DateTime>> {
   }
 
   @override
-  dynamic serialize() {
+  dynamic toJson() {
     return _value.map((e) => e.millisecondsSinceEpoch).toList();
   }
 
   @override
-  void deserialize(dynamic value) {
+  void fromJson(dynamic value) {
     _value = (value as List)
         .map((e) => DateTime.fromMillisecondsSinceEpoch(e))
         .toList();
@@ -559,27 +483,27 @@ class DurationSetting extends Setting<TimeDuration> {
     TimeDuration defaultValue, {
     void Function(BuildContext, TimeDuration)? onChange,
     String description = "",
-    List<SettingEnableCondition> enableConditions = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions);
+    bool isVisual = true,
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            isVisual);
 
   @override
   DurationSetting copy() {
-    return DurationSetting(
-      name,
-      _value,
-      onChange: onChange,
-      description: description,
-      enableConditions: enableConditions,
-    );
+    return DurationSetting(name, _value,
+        onChange: onChange,
+        description: description,
+        enableConditions: enableConditions,
+        isVisual: isVisual);
   }
 
   @override
-  dynamic serialize() {
+  dynamic toJson() {
     return _value.inMilliseconds;
   }
 
   @override
-  void deserialize(dynamic value) {
+  void fromJson(dynamic value) {
     _value = TimeDuration.fromMilliseconds(value);
   }
 }

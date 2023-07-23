@@ -11,6 +11,7 @@ import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
 class CustomizeAlarmScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
         .getGroup("Display")
         .getSetting("Date Format");
 
-    appSettings.addSettingListener(dateFormatSetting, setDateFormat);
+    dateFormatSetting.addListener(setDateFormat);
     setDateFormat(dateFormatSetting.value);
 
     SettingGroup scheduleSettings = _alarm.settings.getGroup("Schedule");
@@ -66,19 +67,19 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
     dateRangeSetting = scheduleSettings.getSetting("Date Range");
     intervalSetting = scheduleSettings.getSetting("Interval");
 
-    _alarm.settings.addSettingListener(weekDaysSetting, update);
-    _alarm.settings.addSettingListener(datesSetting, update);
-    _alarm.settings.addSettingListener(dateRangeSetting, update);
-    _alarm.settings.addSettingListener(intervalSetting, update);
+    weekDaysSetting.addListener(update);
+    datesSetting.addListener(update);
+    dateRangeSetting.addListener(update);
+    intervalSetting.addListener(update);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener(dateFormatSetting, setDateFormat);
-    _alarm.settings.removeSettingListener(weekDaysSetting, update);
-    _alarm.settings.removeSettingListener(datesSetting, update);
-    _alarm.settings.removeSettingListener(dateRangeSetting, update);
-    _alarm.settings.removeSettingListener(intervalSetting, update);
+    dateFormatSetting.removeListener(setDateFormat);
+    weekDaysSetting.removeListener(update);
+    datesSetting.removeListener(update);
+    dateRangeSetting.removeListener(update);
+    intervalSetting.removeListener(update);
     super.dispose();
   }
 
@@ -157,7 +158,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
               ),
               const SizedBox(height: 8),
               ...getSettingWidgets(
-                _alarm.settings,
+                _alarm.settings.settingItems,
                 checkDependentEnableConditions: () {
                   setState(() {});
                 },

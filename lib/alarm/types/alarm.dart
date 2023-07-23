@@ -11,11 +11,11 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/settings.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
-List<AlarmSchedule> createSchedules(Settings settings) {
+List<AlarmSchedule> createSchedules(SettingGroup settings) {
   return [
     OnceAlarmSchedule(),
     DailyAlarmSchedule(),
@@ -33,8 +33,14 @@ class Alarm extends ListItem {
   DateTime? _snoozeTime;
   bool _isFinished = false;
   TimeOfDay _timeOfDay;
-  Settings _settings =
-      Settings(appSettings.getGroup("Default Settings").copy().settingItems);
+  SettingGroup _settings = SettingGroup(
+    "Alarm Settings",
+    appSettings
+        .getGroup("Alarm")
+        .getGroup("Default Settings")
+        .copy()
+        .settingItems,
+  );
 
   late List<AlarmSchedule> _schedules;
 
@@ -45,7 +51,7 @@ class Alarm extends ListItem {
   bool get isSnoozed => _snoozeTime != null;
   DateTime? get snoozeTime => _snoozeTime;
   TimeOfDay get timeOfDay => _timeOfDay;
-  Settings get settings => _settings;
+  SettingGroup get settings => _settings;
   String get label => _settings.getSetting("Label").value;
   Type get scheduleType => _settings.getSetting("Type").value;
   String get ringtoneUri => _settings.getSetting("Melody").value;
@@ -203,8 +209,14 @@ class Alarm extends ListItem {
         _snoozeTime = json['snoozeTime'] != 0
             ? DateTime.fromMillisecondsSinceEpoch(json['snoozeTime'])
             : null,
-        _settings = Settings(
-            appSettings.getGroup("Default Settings").copy().settingItems) {
+        _settings = SettingGroup(
+          "Alarm Settings",
+          appSettings
+              .getGroup("Alarm")
+              .getGroup("Default Settings")
+              .copy()
+              .settingItems,
+        ) {
     _settings.fromJson(json['settings']);
     _schedules = [
       OnceAlarmSchedule.fromJson(json['schedules'][0]),

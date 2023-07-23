@@ -11,6 +11,7 @@ class CardContainer extends StatelessWidget {
     this.onTap,
     this.alignment,
     this.showShadow = true,
+    this.showLightBorder = false,
     this.blurStyle = BlurStyle.normal,
   });
 
@@ -22,24 +23,32 @@ class CardContainer extends StatelessWidget {
   final Alignment? alignment;
   final bool showShadow;
   final BlurStyle blurStyle;
+  final bool showLightBorder;
 
   @override
   Widget build(BuildContext context) {
-    ThemeStyle? themeStyle = Theme.of(context).extension<ThemeStyle>();
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    ThemeStyle? themeStyle = theme.extension<ThemeStyle>();
 
     return Container(
       alignment: alignment,
       margin: margin ?? const EdgeInsets.all(4),
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        border: (themeStyle?.borderWidth != 0)
+        border: showLightBorder
             ? Border.all(
-                color: themeStyle?.borderColor ??
-                    Theme.of(context).colorScheme.onBackground,
-                width: themeStyle?.borderWidth ?? 0.5,
+                color: colorScheme.outline.withOpacity(0.2),
+                width: 0.5,
                 strokeAlign: BorderSide.strokeAlignInside,
               )
-            : null,
+            : (themeStyle?.borderWidth != 0)
+                ? Border.all(
+                    color: colorScheme.outline,
+                    width: themeStyle?.borderWidth ?? 0.5,
+                    strokeAlign: BorderSide.strokeAlignInside,
+                  )
+                : null,
         color: color ?? Theme.of(context).colorScheme.surface,
         borderRadius:
             (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
@@ -48,9 +57,8 @@ class CardContainer extends StatelessWidget {
           if (showShadow && (themeStyle?.shadowOpacity ?? 0) > 0)
             BoxShadow(
               blurStyle: blurStyle,
-              color: themeStyle?.shadowColor
-                      .withOpacity(themeStyle.shadowOpacity) ??
-                  Theme.of(context).shadowColor,
+              color: colorScheme.shadow
+                  .withOpacity(themeStyle?.shadowOpacity ?? 1),
               blurRadius: themeStyle?.shadowBlurRadius ?? 5,
               spreadRadius: themeStyle?.shadowSpreadRadius ?? 0,
               offset: Offset(

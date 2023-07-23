@@ -81,7 +81,7 @@ class _CustomizeTimerScreenState extends State<CustomizeTimerScreen> {
               ),
               const SizedBox(height: 8),
               ...getSettingWidgets(
-                _timer.settings,
+                _timer.settings.settingItems,
                 checkDependentEnableConditions: () {
                   setState(() {});
                 },

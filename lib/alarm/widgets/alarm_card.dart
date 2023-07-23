@@ -48,13 +48,13 @@ class _AlarmCardState extends State<AlarmCard> {
         .getGroup("General")
         .getGroup("Display")
         .getSetting("Date Format");
-    appSettings.addSettingListener(dateFormatSetting, setDateFormat);
+    dateFormatSetting.addListener(setDateFormat);
     setDateFormat(appSettings.getSetting("Date Format").value);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener(dateFormatSetting, setDateFormat);
+    dateFormatSetting.removeListener(setDateFormat);
     super.dispose();
   }
 

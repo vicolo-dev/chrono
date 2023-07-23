@@ -5,6 +5,7 @@ import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/stopwatch/widgets/lap_card.dart';
@@ -74,8 +75,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
         .getGroup("Time Format")
         .getSetting("Show Milliseconds");
     _setShowMilliseconds(_showMillisecondsSetting.value);
-    appSettings.addSettingListener(
-        _showMillisecondsSetting, _setShowMilliseconds);
+    _showMillisecondsSetting.addListener(_setShowMilliseconds);
 
     SettingGroup lapComparisonSettings =
         appSettings.getGroup("Stopwatch").getGroup("Comparison Lap Bars");
@@ -94,29 +94,20 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     _setShowSlowestLapBar(_showSlowestLapBarSetting.value);
     _setShowAverageLapBar(_showAverageLapBarSetting.value);
 
-    appSettings.addSettingListener(
-        _showPreviousLapBarSetting, _setShowPreviousLapBar);
-    appSettings.addSettingListener(
-        _showFastestLapBarSetting, _setShowFastestLapBar);
-    appSettings.addSettingListener(
-        _showSlowestLapBarSetting, _setShowSlowestLapBar);
-    appSettings.addSettingListener(
-        _showAverageLapBarSetting, _setShowAverageLapBar);
+    _showPreviousLapBarSetting.addListener(_setShowPreviousLapBar);
+    _showFastestLapBarSetting.addListener(_setShowFastestLapBar);
+    _showSlowestLapBarSetting.addListener(_setShowSlowestLapBar);
+    _showAverageLapBarSetting.addListener(_setShowAverageLapBar);
   }
 
   @override
   void dispose() {
-    appSettings.removeSettingListener(
-        _showMillisecondsSetting, _setShowMilliseconds);
+    _showMillisecondsSetting.removeListener(_setShowMilliseconds);
 
-    appSettings.removeSettingListener(
-        _showPreviousLapBarSetting, _setShowPreviousLapBar);
-    appSettings.removeSettingListener(
-        _showFastestLapBarSetting, _setShowFastestLapBar);
-    appSettings.removeSettingListener(
-        _showSlowestLapBarSetting, _setShowSlowestLapBar);
-    appSettings.removeSettingListener(
-        _showAverageLapBarSetting, _setShowAverageLapBar);
+    _showPreviousLapBarSetting.removeListener(_setShowPreviousLapBar);
+    _showFastestLapBarSetting.removeListener(_setShowFastestLapBar);
+    _showSlowestLapBarSetting.removeListener(_setShowSlowestLapBar);
+    _showAverageLapBarSetting.removeListener(_setShowAverageLapBar);
 
     super.dispose();
   }

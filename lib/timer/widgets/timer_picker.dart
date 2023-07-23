@@ -23,7 +23,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
       ClockTimer timer = ClockTimer.from(
           initialTimer ?? ClockTimer(const TimeDuration(minutes: 5)));
 
-      List<TimerPreset> presets = loadListSync<TimerPreset>("timerPresets");
+      List<TimerPreset> presets = loadListSync<TimerPreset>("timer_presets");
       TimerPreset? selectedPreset;
 
       return StatefulBuilder(
@@ -87,7 +87,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                                 );
 
                                 List<TimerPreset> newPresets =
-                                    loadListSync<TimerPreset>("timerPresets");
+                                    loadListSync<TimerPreset>("timer_presets");
 
                                 setState(() {
                                   presets = newPresets;
