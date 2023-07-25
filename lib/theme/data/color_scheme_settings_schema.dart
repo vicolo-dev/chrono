@@ -6,21 +6,33 @@ SettingGroup colorSchemeSettingsSchema = SettingGroup(
   "Color Scheme",
   [
     StringSetting("Name", "Color Scheme"),
-    ColorSetting("Background", Colors.white),
-    ColorSetting("On Background", Colors.black),
-    ColorSetting("Card", Colors.white),
-    ColorSetting("On Card", Colors.black),
-    ColorSetting("Accent", Colors.cyan),
-    ColorSetting("On Accent", Colors.white),
-    SwitchSetting("Use Accent as Shadow", false),
-    ColorSetting("Shadow", Colors.black, enableConditions: [
-      SettingEnableConditionParameter("Use Accent as Shadow", false),
+    SettingGroup("Background", [
+      ColorSetting("Color", Colors.white),
+      ColorSetting("Text", Colors.black),
     ]),
-    SwitchSetting("Use Accent as Outline", false),
-    ColorSetting("Outline", Colors.black, enableConditions: [
-      SettingEnableConditionParameter("Use Accent as Outline", false),
+    SettingGroup("Card", [
+      ColorSetting("Color", Colors.white),
+      ColorSetting("Text", Colors.black),
     ]),
-    ColorSetting("Error", Colors.red),
-    ColorSetting("On Error", Colors.white),
+    SettingGroup("Accent", [
+      ColorSetting("Color", Colors.cyan),
+      ColorSetting("Text", Colors.white),
+    ]),
+    SettingGroup("Shadow", [
+      SwitchSetting("Use Accent as Shadow", false),
+      ColorSetting("Color", Colors.black, enableConditions: [
+        SettingEnableConditionParameter("Use Accent as Shadow", false),
+      ]),
+    ]),
+    SettingGroup("Outline", [
+      SwitchSetting("Use Accent as Outline", false),
+      ColorSetting("Color", Colors.black, enableConditions: [
+        SettingEnableConditionParameter("Use Accent as Outline", false),
+      ]),
+    ]),
+    SettingGroup("Error", [
+      ColorSetting("Color", Colors.red),
+      ColorSetting("Text", Colors.white),
+    ]),
   ],
 );

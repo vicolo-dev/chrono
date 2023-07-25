@@ -6,10 +6,14 @@ import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
-import 'package:clock_app/theme/color_scheme.dart';
-import 'package:clock_app/theme/screens/color_schemes_screen.dart';
+import 'package:clock_app/theme/types/color_scheme.dart';
+import 'package:clock_app/theme/data/default_style_themes.dart';
+import 'package:clock_app/theme/screens/themes_screen.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/theme_extension.dart';
+import 'package:clock_app/theme/types/style_theme.dart';
+import 'package:clock_app/theme/utils/color_scheme.dart';
+import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:clock_app/timer/data/timer_settings_schema.dart';
 import 'package:clock_app/timer/screens/presets_screen.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +88,14 @@ SettingGroup appSettings = SettingGroup(
             CustomSetting(
               "Color Scheme",
               defaultColorScheme,
-              (setting) => ColorSchemesScreen(setting: setting),
+              (setting) => ThemesScreen(
+                saveTag: 'color_schemes',
+                setting: setting,
+                getThemeFromItem: (theme, themeItem) =>
+                    getThemeFromColorScheme(theme, themeItem),
+                createThemItem: () => ColorSchemeData(),
+                fromItem: (themeItem) => ColorSchemeData.from(themeItem),
+              ),
               (setting) => setting.value.name,
               onChange: (context, colorScheme) {
                 App.setColorScheme(context, colorScheme);
@@ -110,44 +121,26 @@ SettingGroup appSettings = SettingGroup(
           ],
         ),
         SettingGroup(
-          "Shapes",
+          "Style",
           [
-            SliderSetting("Corner Roundness", 0, 36,
-                (defaultTheme.extension<ThemeStyle>()?.borderRadius)!,
-                onChange: (context, radius) {
-              App.setCardRadius(context, radius);
-            }),
+            CustomSetting<StyleTheme>(
+              "Style Theme",
+              defaultStyleTheme,
+              (setting) => ThemesScreen(
+                saveTag: 'style_themes',
+                setting: setting,
+                getThemeFromItem: (theme, themeItem) =>
+                    getThemeFromStyleTheme(theme, themeItem),
+                createThemItem: () => StyleTheme(),
+                fromItem: (themeItem) => StyleTheme.from(themeItem),
+              ),
+              (setting) => setting.value.name,
+              onChange: (context, styleTheme) {
+                App.setStyleTheme(context, styleTheme);
+              },
+            ),
           ],
         ),
-        SettingGroup("Shadows", [
-          SliderSetting("Elevation", 0, 10,
-              (defaultTheme.extension<ThemeStyle>()?.shadowElevation)!,
-              onChange: (context, elevation) {
-            App.setCardElevation(context, elevation);
-          }),
-          SliderSetting("Opacity", 0, 100,
-              (defaultTheme.extension<ThemeStyle>()?.shadowOpacity)! * 100,
-              onChange: (context, opacity) {
-            App.setShadowOpacity(context, opacity / 100);
-          }),
-          SliderSetting("Blur", 0, 16,
-              (defaultTheme.extension<ThemeStyle>()?.shadowBlurRadius)!,
-              onChange: (context, blur) {
-            App.setShadowBlurRadius(context, blur);
-          }),
-          SliderSetting("Spread", 0, 8,
-              (defaultTheme.extension<ThemeStyle>()?.shadowSpreadRadius)!,
-              onChange: (context, spread) {
-            App.setShadowSpreadRadius(context, spread);
-          }),
-        ]),
-        SettingGroup("Outlines", [
-          SliderSetting("Width", 0, 8,
-              (defaultTheme.extension<ThemeStyle>()?.borderWidth)!,
-              onChange: (context, width) {
-            App.setBorderWidth(context, width);
-          }),
-        ])
       ],
       icon: FluxIcons.settings,
       description: "Set themes, colors and change layout",

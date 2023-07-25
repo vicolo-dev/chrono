@@ -1,6 +1,6 @@
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
-import 'package:clock_app/theme/color_scheme.dart';
+import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
@@ -90,8 +90,8 @@ abstract class Setting<T> extends SettingItem {
 }
 
 class CustomSetting<T extends JsonSerializable> extends Setting<T> {
-  Widget Function(CustomSetting) builder;
-  String Function(CustomSetting) nameGetter;
+  Widget Function(CustomSetting<T>) builder;
+  String Function(CustomSetting<T>) nameGetter;
 
   CustomSetting(
     String name,

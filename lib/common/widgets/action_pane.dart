@@ -17,7 +17,7 @@ ActionPane getDeleteActionPane(VoidCallback onDelete, BuildContext context) =>
               const SizedBox(height: 4),
               Text('Delete',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: Theme.of(context).colorScheme.onError,
                       )),
             ],
           ),

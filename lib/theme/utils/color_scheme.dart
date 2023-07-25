@@ -1,5 +1,5 @@
 import 'package:clock_app/theme/bottom_sheet.dart';
-import 'package:clock_app/theme/color_scheme.dart';
+import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/input.dart';
 import 'package:clock_app/theme/radio.dart';
 import 'package:clock_app/theme/snackbar.dart';

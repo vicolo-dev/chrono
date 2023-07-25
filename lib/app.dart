@@ -4,16 +4,12 @@ import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
-import 'package:clock_app/theme/bottom_sheet.dart';
-import 'package:clock_app/theme/color_scheme.dart';
-import 'package:clock_app/theme/input.dart';
-import 'package:clock_app/theme/radio.dart';
-import 'package:clock_app/theme/theme_extension.dart';
-import 'package:clock_app/theme/snackbar.dart';
+import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/theme.dart';
+import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
+import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -32,34 +28,9 @@ class App extends StatefulWidget {
     state.setColorScheme(colorScheme);
   }
 
-  static void setCardRadius(BuildContext context, double radius) {
+  static void setStyleTheme(BuildContext context, StyleTheme styleTheme) {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
-    state.setCardRadius(radius);
-  }
-
-  static void setCardElevation(BuildContext context, double elevation) {
-    _AppState state = context.findAncestorStateOfType<_AppState>()!;
-    state.setCardElevation(elevation);
-  }
-
-  static void setShadowOpacity(BuildContext context, double opacity) {
-    _AppState state = context.findAncestorStateOfType<_AppState>()!;
-    state.setShadowOpacity(opacity);
-  }
-
-  static void setShadowBlurRadius(BuildContext context, double radius) {
-    _AppState state = context.findAncestorStateOfType<_AppState>()!;
-    state.setShadowBlurRadius(radius);
-  }
-
-  static void setShadowSpreadRadius(BuildContext context, double radius) {
-    _AppState state = context.findAncestorStateOfType<_AppState>()!;
-    state.setShadowSpreadRadius(radius);
-  }
-
-  static void setBorderWidth(BuildContext context, double width) {
-    _AppState state = context.findAncestorStateOfType<_AppState>()!;
-    state.setBorderWidth(width);
+    state.setStyleTheme(styleTheme);
   }
 }
 
@@ -68,9 +39,7 @@ class _AppState extends State<App> {
 
   late SettingGroup _appearanceSettings;
   late SettingGroup _colorSettings;
-  late SettingGroup _shapeSettings;
-  late SettingGroup _shadowSettings;
-  late SettingGroup _borderSettings;
+  late SettingGroup _styleSettings;
 
   @override
   void initState() {
@@ -78,18 +47,10 @@ class _AppState extends State<App> {
 
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
-    _shapeSettings = _appearanceSettings.getGroup("Shapes");
-    _shadowSettings = _appearanceSettings.getGroup("Shadows");
-    _borderSettings = _appearanceSettings.getGroup("Outlines");
+    _styleSettings = _appearanceSettings.getGroup("Style");
 
     setColorScheme(_colorSettings.getSetting("Color Scheme").value);
-    setCardRadius(_shapeSettings.getSetting("Corner Roundness").value);
-    setCardElevation(_shadowSettings.getSetting("Elevation").value);
-    setShadowBlurRadius(_shadowSettings.getSetting("Blur").value);
-    setShadowOpacity(_shadowSettings.getSetting("Opacity").value / 100);
-    setShadowSpreadRadius(_shadowSettings.getSetting("Spread").value);
-    setBorderWidth(_borderSettings.getSetting("Width").value);
-    // setBorderColor(_borderSettings.getSetting("Color").value);
+    setStyleTheme(_styleSettings.getSetting("Style Theme").value);
 
     super.initState();
   }
@@ -107,104 +68,14 @@ class _AppState extends State<App> {
     });
   }
 
-  setCardRadius(double radius) {
-    ColorSchemeData colorSchemeData =
-        _colorSettings.getSetting("Color Scheme").value;
+  setStyleTheme(StyleTheme? styleThemeParam) {
+    StyleTheme styleTheme =
+        styleThemeParam ?? _styleSettings.getSetting("Style Theme").value;
+    styleTheme = styleTheme.copy();
     setState(() {
-      RoundedRectangleBorder shape = RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radius),
-      );
-      _theme = _theme.copyWith(
-        cardTheme: _theme.cardTheme.copyWith(shape: shape),
-        bottomSheetTheme:
-            getBottomSheetTheme(colorSchemeData, Radius.circular(radius)),
-        timePickerTheme: _theme.timePickerTheme.copyWith(
-          shape: shape,
-          dayPeriodShape: shape,
-          hourMinuteShape: shape,
-        ),
-        toggleButtonsTheme: _theme.toggleButtonsTheme.copyWith(
-          borderRadius: BorderRadius.circular(radius),
-        ),
-        snackBarTheme:
-            getSnackBarTheme(colorSchemeData, BorderRadius.circular(radius)),
-        inputDecorationTheme:
-            getInputTheme(colorSchemeData, BorderRadius.circular(radius)),
-        extensions: [
-          _theme.extension<ThemeStyle>()?.copyWith(
-                    borderRadius: radius,
-                  ) ??
-              const ThemeStyle(),
-        ],
-      );
+      _theme = getThemeFromStyleTheme(_theme, styleTheme);
     });
   }
-
-  setCardElevation(double elevation) {
-    setState(() {
-      _theme = _theme.copyWith(extensions: [
-        _theme.extension<ThemeStyle>()?.copyWith(
-                  shadowElevation: elevation,
-                ) ??
-            const ThemeStyle(),
-      ]);
-    });
-  }
-
-  setShadowOpacity(double opacity) {
-    setState(() {
-      _theme = _theme.copyWith(extensions: [
-        _theme.extension<ThemeStyle>()?.copyWith(
-                  shadowOpacity: opacity,
-                ) ??
-            const ThemeStyle(),
-      ]);
-    });
-  }
-
-  setShadowBlurRadius(double blurRadius) {
-    setState(() {
-      _theme = _theme.copyWith(extensions: [
-        _theme.extension<ThemeStyle>()?.copyWith(
-                  shadowBlurRadius: blurRadius,
-                ) ??
-            const ThemeStyle(),
-      ]);
-    });
-  }
-
-  setShadowSpreadRadius(blurRadius) {
-    setState(() {
-      _theme = _theme.copyWith(extensions: [
-        _theme.extension<ThemeStyle>()?.copyWith(
-                  shadowSpreadRadius: blurRadius,
-                ) ??
-            const ThemeStyle(),
-      ]);
-    });
-  }
-
-  setBorderWidth(double width) {
-    setState(() {
-      _theme = _theme.copyWith(extensions: [
-        _theme.extension<ThemeStyle>()?.copyWith(
-                  borderWidth: width,
-                ) ??
-            const ThemeStyle(),
-      ]);
-    });
-  }
-
-  // setBorderColor(Color color) {
-  //   setState(() {
-  //     _theme = _theme.copyWith(extensions: [
-  //       _theme.extension<ThemeStyle>()?.copyWith(
-  //                 borderColor: color,
-  //               ) ??
-  //           const ThemeStyle(),
-  //     ]);
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
