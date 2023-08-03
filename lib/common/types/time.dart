@@ -28,7 +28,7 @@ class Time extends JsonSerializable {
   DateTime toDateTime() {
     DateTime currentDateTime = DateTime.now();
     return DateTime(currentDateTime.year, currentDateTime.month,
-        currentDateTime.day, hour, minute);
+        currentDateTime.day, hour, minute, second);
   }
 
   Time.fromJson(Json json)
