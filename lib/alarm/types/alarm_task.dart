@@ -1,34 +1,39 @@
-import 'package:clock_app/alarm/widgets/tasks/arithmetic_task_widget.dart';
+import 'package:clock_app/alarm/data/alarm_task_schemas.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
 enum AlarmTaskType {
-  arithmetic,
-  shake,
+  math,
+  retype,
 }
 
-typedef AlarmTaskBuilder = Widget Function(Function() onSolve);
+typedef AlarmTaskBuilder = Widget Function(
+    Function() onSolve, SettingGroup settings);
 
 class AlarmTaskSchema extends JsonSerializable {
   final String name;
   final SettingGroup settings;
-  final AlarmTaskBuilder builder;
+  final AlarmTaskBuilder _builder;
 
-  const AlarmTaskSchema(this.name, this.settings, this.builder);
+  const AlarmTaskSchema(this.name, this.settings, this._builder);
+
+  AlarmTaskSchema.from(AlarmTaskSchema schema)
+      : name = schema.name,
+        settings = schema.settings.copy(),
+        _builder = schema._builder;
+
+  Widget getBuilder(Function() onSolve) {
+    return _builder(onSolve, settings);
+  }
 
   void loadFromJson(Json json) {
     settings.loadValueFromJson(json['settings']);
   }
 
   AlarmTaskSchema copy() {
-    return AlarmTaskSchema(
-      name,
-      settings.copy(),
-      builder,
-    );
+    return AlarmTaskSchema.from(this);
   }
 
   @override
@@ -39,33 +44,6 @@ class AlarmTaskSchema extends JsonSerializable {
   }
 }
 
-Map<AlarmTaskType, AlarmTaskSchema> alarmTaskSchemasMap = {
-  AlarmTaskType.arithmetic: AlarmTaskSchema(
-    "Arithmetic",
-    SettingGroup("Arithmetic Task Settings", []),
-    (onSolve) {
-      return ArithmeticTask(
-        onSolve: onSolve,
-      );
-    },
-  )
-};
-
-// class AlarmTaskList extends JsonSerializable {
-//   final List<AlarmTask> tasks;
-
-//   AlarmTaskList(this.tasks);
-
-//   AlarmTaskList.fromJson(Json json) : tasks = listFromString(json['tasks']);
-
-//   @override
-//   Json toJson() {
-//     return {
-//       'tasks': listToString(tasks),
-//     };
-//   }
-// }
-
 class AlarmTask extends ListItem {
   final int _id;
   final AlarmTaskType type;
@@ -74,6 +52,11 @@ class AlarmTask extends ListItem {
   AlarmTask(this.type)
       : _id = UniqueKey().hashCode,
         _schema = alarmTaskSchemasMap[type]!.copy();
+
+  AlarmTask.from(AlarmTask task)
+      : _id = UniqueKey().hashCode,
+        type = task.type,
+        _schema = task._schema.copy();
 
   AlarmTask.fromJson(Json json)
       : _id = json['id'],
@@ -84,7 +67,7 @@ class AlarmTask extends ListItem {
 
   @override
   copy() {
-    return AlarmTask(type);
+    return AlarmTask.from(this);
   }
 
   @override
@@ -94,7 +77,7 @@ class AlarmTask extends ListItem {
   AlarmTaskSchema get schema => _schema;
   String get name => _schema.name;
   SettingGroup get settings => _schema.settings;
-  AlarmTaskBuilder get builder => _schema.builder;
+  Widget Function(Function() onSolve) get builder => _schema.getBuilder;
 
   @override
   Json toJson() {

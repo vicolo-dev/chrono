@@ -88,10 +88,14 @@ class ColorSchemeData extends ThemeItem {
       .getGroup("Accent")
       .getSetting("Color")
       .setValueWithoutNotify(value);
+  set name(String value) =>
+      settings.getSetting("Name").setValueWithoutNotify(value);
 
   @override
   ColorSchemeData copy() {
-    return ColorSchemeData.from(this);
+    ColorSchemeData newColorScheme = ColorSchemeData.from(this);
+    newColorScheme.name = "Copy of $name";
+    return newColorScheme;
   }
 
   ColorSchemeData.fromJson(Json json)

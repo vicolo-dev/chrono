@@ -9,3 +9,7 @@ Size calcTextSize(String text, TextStyle style) {
   )..layout();
   return textPainter.size;
 }
+
+Size calcTextSizeFromLength(int length, TextStyle style) {
+  return calcTextSize('0' * length, style);
+}

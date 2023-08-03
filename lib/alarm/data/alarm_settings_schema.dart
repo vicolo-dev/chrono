@@ -1,3 +1,4 @@
+import 'package:clock_app/alarm/data/alarm_task_schemas.dart';
 import 'package:clock_app/alarm/types/alarm_task.dart';
 import 'package:clock_app/alarm/types/range_interval.dart';
 import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
@@ -130,10 +131,11 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         "Length",
       ],
     ),
-    ListSetting<AlarmTask>("Tasks", [], [AlarmTask(AlarmTaskType.arithmetic)],
+    ListSetting<AlarmTask>("Tasks", [],
+        alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
         getSettings: (item) => item.settings,
-        addCardBuilder: (item) => AlarmTaskCard(task: item),
-        cardBuilder: (item) => AlarmTaskCard(task: item),
+        addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
+        cardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: false),
         valueDisplayBuilder: (context, setting) {
           return Text("${setting.value.length} tasks");
         }),
