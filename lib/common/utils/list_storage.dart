@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:clock_app/common/data/paths.dart';
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:path/path.dart' as path;
 import 'package:queue/queue.dart';
@@ -15,7 +16,7 @@ List<T> loadListSync<T extends JsonSerializable>(String key) {
   File file = File(path.join(appDataDirectory, '$key.txt'));
   try {
     final String encodedList = file.readAsStringSync();
-    return decodeList<T>(encodedList);
+    return listFromString<T>(encodedList);
   } catch (error) {
     throw Exception("Failed to load list from file '$key': $error");
   }
@@ -34,7 +35,7 @@ Future<List<T>> loadList<T extends JsonSerializable>(String key) async {
       return '';
     }
   });
-  return decodeList<T>(encodedList);
+  return listFromString<T>(encodedList);
 }
 
 Future<void> saveList<T extends JsonSerializable>(
@@ -49,7 +50,7 @@ Future<void> saveList<T extends JsonSerializable>(
     if (!file.existsSync()) {
       file.createSync();
     }
-    String encodedList = encodeList(list);
+    String encodedList = listToString(list);
 
     await file.writeAsString(encodedList, mode: FileMode.writeOnly);
   });

@@ -1,3 +1,4 @@
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/timer_state.dart';
 import 'package:clock_app/common/utils/duration.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
@@ -111,7 +112,7 @@ class ClockStopwatch extends JsonSerializable {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Json toJson() {
     return {
       'id': _id,
       '_elapsedMillisecondsOnPause': _elapsedMillisecondsOnPause,
@@ -121,7 +122,7 @@ class ClockStopwatch extends JsonSerializable {
     };
   }
 
-  ClockStopwatch.fromJson(Map<String, dynamic> json)
+  ClockStopwatch.fromJson(Json json)
       : _elapsedMillisecondsOnPause = json['_elapsedMillisecondsOnPause'],
         _startTime = DateTime.parse(json['startTime']),
         _state =

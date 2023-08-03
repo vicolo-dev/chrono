@@ -1,17 +1,18 @@
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
+import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const testKey = Key('key');
-var sampleAlarm = Alarm(const TimeOfDay(hour: 2, minute: 30));
+var sampleAlarm = Alarm(const Time(hour: 2, minute: 30));
 
 void main() {
   group('AlarmCard', () {
     setUp(
       () async {
-        sampleAlarm = Alarm(const TimeOfDay(hour: 2, minute: 30));
+        sampleAlarm = Alarm(const Time(hour: 2, minute: 30));
       },
     );
 

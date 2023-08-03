@@ -2,6 +2,8 @@ import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';
+import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/types/weekday.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -14,12 +16,12 @@ class WeekdaySchedule extends JsonSerializable {
 
   WeekdaySchedule(this.weekday) : alarmRunner = AlarmRunner();
 
-  WeekdaySchedule.fromJson(Map<String, dynamic> json)
+  WeekdaySchedule.fromJson(Json json)
       : weekday = json['weekday'],
         alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
 
   @override
-  Map<String, dynamic> toJson() => {
+  Json toJson() => {
         'weekday': weekday,
         'alarmRunner': alarmRunner.toJson(),
       };
@@ -63,7 +65,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
         super();
 
   @override
-  Future<bool> schedule(TimeOfDay timeOfDay) async {
+  Future<bool> schedule(Time time) async {
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       weekdaySchedule.alarmRunner.cancel();
     }
@@ -78,9 +80,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
     }
 
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
-      DateTime alarmDate =
-          getWeeklyAlarmDate(timeOfDay, weekdaySchedule.weekday);
-
+      DateTime alarmDate = getWeeklyAlarmDate(time, weekdaySchedule.weekday);
       weekdaySchedule.alarmRunner.schedule(alarmDate);
     }
 
@@ -101,8 +101,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
     };
   }
 
-  WeeklyAlarmSchedule.fromJson(
-      Map<String, dynamic> json, Setting weekdaySetting)
+  WeeklyAlarmSchedule.fromJson(Json json, Setting weekdaySetting)
       : _weekdaySchedules = (json['weekdaySchedules'] as List)
             .map((e) => WeekdaySchedule.fromJson(e))
             .toList(),

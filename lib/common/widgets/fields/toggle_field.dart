@@ -36,13 +36,14 @@ class ToggleField<T> extends StatefulWidget {
 class _ToggleFieldState<T> extends State<ToggleField<T>> {
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: widget.padding),
       child: Column(
         children: [
           if (widget.name != null) Text(widget.name!),
           ToggleButtons(
-            fillColor: Theme.of(context).colorScheme.primary,
+            fillColor: theme.colorScheme.primary,
             selectedColor: Theme.of(context).colorScheme.onPrimary,
             renderBorder: false,
             constraints: BoxConstraints(

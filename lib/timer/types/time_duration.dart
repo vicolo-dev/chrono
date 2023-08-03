@@ -1,3 +1,4 @@
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 
 class TimeDuration extends JsonSerializable {
@@ -84,14 +85,14 @@ class TimeDuration extends JsonSerializable {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
+  Json toJson() => {
         'hours': hours,
         'minutes': minutes,
         'seconds': seconds,
         'milliseconds': milliseconds,
       };
 
-  TimeDuration.fromJson(Map<String, dynamic> json)
+  TimeDuration.fromJson(Json json)
       : hours = json['hours'],
         minutes = json['minutes'],
         seconds = json['seconds'],

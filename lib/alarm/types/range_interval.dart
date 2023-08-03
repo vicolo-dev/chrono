@@ -1,0 +1,4 @@
+enum RangeInterval {
+  daily,
+  weekly,
+}

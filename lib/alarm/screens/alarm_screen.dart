@@ -1,10 +1,15 @@
 import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
+import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/picker_result.dart';
+import 'package:clock_app/common/types/time.dart';
+import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:great_list_view/great_list_view.dart';
 
@@ -23,33 +28,52 @@ class AlarmScreen extends StatefulWidget {
 
 class _AlarmScreenState extends State<AlarmScreen> {
   final _listController = PersistentListController<Alarm>();
+  late Setting showInstantAlarmButton;
+
+  void update(value) {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    showInstantAlarmButton = appSettings
+        .getGroup("Developer Options")
+        .getSetting("Show Instant Alarm Button");
+
+    showInstantAlarmButton.addListener(update);
+  }
+
+  @override
+  void dispose() {
+    showInstantAlarmButton.removeListener(update);
+    super.dispose();
+  }
 
   _handleEnableChangeAlarm(Alarm alarm, bool value) {
     int index = _listController.getItemIndex(alarm);
     _listController.changeItems((alarms) => alarms[index].setIsEnabled(value));
   }
 
-  Future<Alarm?> _openCustomizeAlarmScreen(Alarm alarm) async {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-    return await Navigator.push(
+  Future<Alarm?> _openCustomizeAlarmScreen(
+    Alarm alarm, {
+    void Function(Alarm)? onSave,
+  }) async {
+    return openCustomizeScreen(
       context,
-      MaterialPageRoute(
-          builder: (context) => CustomizeAlarmScreen(initialAlarm: alarm)),
+      CustomizeAlarmScreen(alarm: alarm),
+      onSave: onSave,
     );
   }
 
   _handleCustomizeAlarm(Alarm alarm) async {
     int index = _listController.getItemIndex(alarm);
-    Alarm? newAlarm = await _openCustomizeAlarmScreen(alarm);
-
-    if (newAlarm == null) return;
-
-    newAlarm.update();
-
-    _listController.changeItems((alarms) => alarms[index] = newAlarm);
-
-    _showNextScheduleSnackBar(newAlarm);
+    await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) {
+      newAlarm.update();
+      _listController.changeItems((alarms) => alarms[index] = newAlarm);
+      _showNextScheduleSnackBar(newAlarm);
+    });
   }
 
   _showNextScheduleSnackBar(Alarm alarm) {
@@ -100,7 +124,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> selectTime(Future<Alarm?> Function(Alarm) onCustomize) async {
+    Future<void> selectTime() async {
       final PickerResult<TimeOfDay>? timePickerResult =
           await showTimePickerDialog(
         context: context,
@@ -112,11 +136,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
       );
 
       if (timePickerResult != null) {
-        Alarm alarm = Alarm(timePickerResult.value);
+        Alarm alarm = Alarm.fromTimeOfDay(timePickerResult.value);
         if (timePickerResult.isCustomize) {
-          alarm = await onCustomize(alarm) ?? alarm;
+          await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) {
+            _listController.addItem(newAlarm);
+          });
+        } else {
+          _listController.addItem(alarm);
         }
-        _listController.addItem(alarm);
       }
     }
 
@@ -138,16 +165,24 @@ class _AlarmScreenState extends State<AlarmScreen> {
           onDeleteItem: (alarm) => setState(() {
             alarm.disable();
           }),
-          duplicateItem: (alarm) => Alarm.fromAlarm(alarm),
           placeholderText: "No alarms created",
           reloadOnPop: true,
         ),
         FAB(
           onPressed: () {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            selectTime(_openCustomizeAlarmScreen);
+            selectTime();
           },
-        )
+        ),
+        if (showInstantAlarmButton.value)
+          FAB(
+            onPressed: () {
+              Alarm alarm = Alarm(Time.fromNow(const Duration(seconds: 5)));
+              _listController.addItem(alarm);
+            },
+            index: 1,
+            icon: Icons.alarm,
+          )
       ],
     );
   }

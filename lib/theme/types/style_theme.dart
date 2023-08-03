@@ -1,3 +1,4 @@
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/theme/data/style_theme_settings_schema.dart';
 import 'package:clock_app/theme/types/theme_item.dart';
 
@@ -57,10 +58,11 @@ class StyleTheme extends ThemeItem {
   double get borderWidth =>
       settings.getGroup("Outline").getSetting("Width").value;
 
+  @override
   StyleTheme copy() {
     return StyleTheme.from(this);
   }
 
-  StyleTheme.fromJson(Map<String, dynamic> json)
+  StyleTheme.fromJson(Json json)
       : super.fromJson(json, styleThemeSettingsSchema.copy());
 }

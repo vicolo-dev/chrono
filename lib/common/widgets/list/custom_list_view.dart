@@ -19,13 +19,12 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
     required this.items,
     required this.itemBuilder,
     required this.listController,
-    this.duplicateItem,
     this.onTapItem,
     this.onReorderItem,
     this.onDeleteItem,
     this.onAddItem,
-    this.isItemDeletable,
     this.placeholderText = '',
+    // Called whenever an item is added, deleted or reordered
     this.onModifyList,
     this.isReorderable = true,
     this.isDeleteEnabled = true,
@@ -35,12 +34,11 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
 
   final List<Item> items;
   final Widget Function(Item item) itemBuilder;
-  final Item Function(Item item)? duplicateItem;
   final void Function(Item item, int index)? onTapItem;
   final void Function(Item item)? onReorderItem;
   final void Function(Item item)? onDeleteItem;
   final void Function(Item item)? onAddItem;
-  final bool Function(Item item)? isItemDeletable;
+  // Called whenever an item is added, deleted or reordered
   final void Function()? onModifyList;
   final String placeholderText;
   final ListController<Item> listController;
@@ -199,10 +197,8 @@ class _CustomListViewState<Item extends ListItem>
                     onDelete: widget.isDeleteEnabled
                         ? () => _handleDeleteItem(item)
                         : null,
-                    onDuplicate: widget.duplicateItem != null
-                        ? () => _handleAddItem(widget.duplicateItem!(item),
-                            index: _getItemIndex(item) + 1)
-                        : null,
+                    onDuplicate: () => _handleAddItem(item.copy(),
+                        index: _getItemIndex(item) + 1),
                     onInit: () {
                       // if (_getItemIndex(item) == 0 &&
                       //     widget.items.length > lastListLength) {
@@ -213,9 +209,7 @@ class _CustomListViewState<Item extends ListItem>
                       // stopwatch.stop();
                       // stopwatch.reset();
                     },
-                    isDeleteEnabled:
-                        (widget.isItemDeletable?.call(item) ?? true) &&
-                            widget.isDeleteEnabled,
+                    isDeleteEnabled: item.isDeletable && widget.isDeleteEnabled,
                     isDuplicateEnabled: widget.isDuplicateEnabled,
                     child: widget.itemBuilder(item),
                   );

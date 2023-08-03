@@ -47,7 +47,6 @@ class _PresetsScreenState extends State<PresetsScreen> {
                     });
                   },
                   // onDeleteItem: _handleDeleteTimer,
-                  duplicateItem: (preset) => TimerPreset.from(preset),
                   placeholderText: "No timers created",
                   reloadOnPop: true,
                 ),

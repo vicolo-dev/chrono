@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,8 @@ class ClockTimer extends ListItem {
 
   @override
   int get id => _id;
+  @override
+  bool get isDeletable => true;
   SettingGroup get settings => _settings;
   String get label => _settings.getSetting("Label").value.isNotEmpty
       ? _settings.getSetting("Label").value
@@ -142,7 +145,7 @@ class ClockTimer extends ListItem {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Json toJson() {
     return {
       'duration': _duration.inSeconds,
       'currentDuration': _currentDuration.inSeconds,
@@ -150,11 +153,11 @@ class ClockTimer extends ListItem {
       'durationRemainingOnPause': _secondsRemainingOnPause,
       'startTime': _startTime.toIso8601String(),
       'state': _state.toString(),
-      'settings': _settings.toJson(),
+      'settings': _settings.valueToJson(),
     };
   }
 
-  ClockTimer.fromJson(Map<String, dynamic> json)
+  ClockTimer.fromJson(Json json)
       : _duration = TimeDuration.fromSeconds(json['duration']),
         _currentDuration = TimeDuration.fromSeconds(json['currentDuration']),
         _secondsRemainingOnPause = json['durationRemainingOnPause'],
@@ -170,6 +173,11 @@ class ClockTimer extends ListItem {
               .copy()
               .settingItems,
         ) {
-    _settings.fromJson(json['settings']);
+    _settings.loadValueFromJson(json['settings']);
+  }
+
+  @override
+  copy() {
+    return ClockTimer.from(this);
   }
 }

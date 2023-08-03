@@ -12,12 +12,12 @@ class SettingPageLink extends SettingItem {
   }
 
   @override
-  dynamic toJson() {
+  dynamic valueToJson() {
     return null;
   }
 
   @override
-  void fromJson(dynamic value) {
+  void loadValueFromJson(dynamic value) {
     return;
   }
 }

@@ -1,16 +1,13 @@
 import 'package:clock_app/alarm/data/alarm_settings_schema.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
-import 'package:clock_app/theme/types/color_scheme.dart';
-import 'package:clock_app/theme/data/default_style_themes.dart';
 import 'package:clock_app/theme/screens/themes_screen.dart';
 import 'package:clock_app/theme/theme.dart';
-import 'package:clock_app/theme/theme_extension.dart';
+import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/theme/utils/style_theme.dart';
@@ -67,36 +64,20 @@ SettingGroup appSettings = SettingGroup(
         SettingGroup(
           "Colors",
           [
-            // DynamicSelectSetting<ColorSchemeData>(
-            //   "Color Scheme",
-            //   () {
-            //     List<ColorSchemeData> colorSchemes =
-            //         loadListSync("color_schemes");
-            //     return colorSchemes
-            //         .map((e) => SelectSettingOption(e.name, e))
-            //         .toList();
-            //   },
-            //   onSelect: (context, index, colorScheme) {
-            //     App.setColorScheme(
-            //       context,
-            //       colorScheme,
-            //     );
-            //   },
-            //   isVisual: false,
-            // ),
-            // SettingPageLink("Color Scheme", const ColorSchemesScreen()),
             CustomSetting(
               "Color Scheme",
               defaultColorScheme,
-              (setting) => ThemesScreen(
+              (context, setting) => ThemesScreen(
                 saveTag: 'color_schemes',
                 setting: setting,
                 getThemeFromItem: (theme, themeItem) =>
                     getThemeFromColorScheme(theme, themeItem),
-                createThemItem: () => ColorSchemeData(),
-                fromItem: (themeItem) => ColorSchemeData.from(themeItem),
+                createThemeItem: () => ColorSchemeData(),
               ),
-              (setting) => setting.value.name,
+              (context, setting) => Text(
+                setting.value.name,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               onChange: (context, colorScheme) {
                 App.setColorScheme(context, colorScheme);
               },
@@ -126,15 +107,17 @@ SettingGroup appSettings = SettingGroup(
             CustomSetting<StyleTheme>(
               "Style Theme",
               defaultStyleTheme,
-              (setting) => ThemesScreen(
+              (context, setting) => ThemesScreen(
                 saveTag: 'style_themes',
                 setting: setting,
                 getThemeFromItem: (theme, themeItem) =>
                     getThemeFromStyleTheme(theme, themeItem),
-                createThemItem: () => StyleTheme(),
-                fromItem: (themeItem) => StyleTheme.from(themeItem),
+                createThemeItem: () => StyleTheme(),
               ),
-              (setting) => setting.value.name,
+              (context, setting) => Text(
+                setting.value.name,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               onChange: (context, styleTheme) {
                 App.setStyleTheme(context, styleTheme);
               },
@@ -194,7 +177,21 @@ SettingGroup appSettings = SettingGroup(
         ),
       ],
       icon: FluxIcons.stopwatch,
-    )
+    ),
+    SettingGroup(
+      "Developer Options",
+      [
+        SettingGroup("Alarm", [
+          SwitchSetting(
+            "Show Instant Alarm Button",
+            false,
+            description:
+                "Show a button on the alarm screen that creates an alarm that rings one second in the future",
+          ),
+        ]),
+      ],
+      icon: Icons.code,
+    ),
   ],
 );
 

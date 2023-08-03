@@ -1,4 +1,8 @@
+import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:clock_app/common/utils/list_item.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
@@ -31,8 +35,8 @@ abstract class Setting<T> extends SettingItem {
   // Whether to show this setting in settings screen
   final bool isVisual;
 
-  final List<void Function(dynamic)> _settingListeners;
-  List<void Function(dynamic)> get settingListeners => _settingListeners;
+  final T Function(T)? _valueCopyGetter;
+
   bool get isEnabled {
     for (var enableSetting in enableSettings) {
       if (enableSetting.setting.value != enableSetting.value) {
@@ -43,27 +47,18 @@ abstract class Setting<T> extends SettingItem {
   }
 
   Setting(String name, this.description, T defaultValue, this.onChange,
-      this.enableConditions, this.isVisual)
-      : _value = defaultValue,
-        _defaultValue = defaultValue,
-        _settingListeners = [],
+      this.enableConditions, this.isVisual,
+      {T Function(T)? valueCopyGetter})
+      : _value = valueCopyGetter?.call(defaultValue) ?? defaultValue,
+        _defaultValue = valueCopyGetter?.call(defaultValue) ?? defaultValue,
         enableSettings = [],
         changesEnableCondition = false,
+        _valueCopyGetter = valueCopyGetter,
         super(name);
 
-  void addListener(void Function(dynamic) listener) {
-    _settingListeners.add(listener);
-  }
-
-  void removeListener(void Function(dynamic) listener) {
-    _settingListeners.remove(listener);
-  }
-
   void setValue(BuildContext context, T value) {
-    _value = value;
-    for (var listener in _settingListeners) {
-      listener(value);
-    }
+    _value = _valueCopyGetter?.call(value) ?? value;
+    callListeners(this);
     onChange?.call(context, value);
   }
 
@@ -72,54 +67,145 @@ abstract class Setting<T> extends SettingItem {
   }
 
   void setValueWithoutNotify(T value) {
-    _value = value;
+    _value = _valueCopyGetter?.call(value) ?? value;
   }
 
   dynamic get value => _value;
   dynamic get defaultValue => _defaultValue;
 
   @override
-  dynamic toJson() {
+  dynamic valueToJson() {
     return _value;
   }
 
   @override
-  void fromJson(dynamic value) {
+  void loadValueFromJson(dynamic value) {
     _value = value;
   }
 }
 
+class ListSetting<T extends ListItem> extends Setting<List<T>> {
+  List<T> possibleItems;
+  SettingGroup Function(T item) getSettings;
+  Widget Function(T item) cardBuilder;
+  Widget Function(T item) addCardBuilder;
+  // The widget that will be used to display the value of this setting.
+  Widget Function(BuildContext context, ListSetting<T> setting)
+      valueDisplayBuilder;
+
+  ListSetting(
+    String name,
+    List<T> defaultValue,
+    this.possibleItems, {
+    required this.getSettings,
+    required this.cardBuilder,
+    required this.valueDisplayBuilder,
+    required this.addCardBuilder,
+    String description = "",
+    void Function(BuildContext, List<T>)? onChange,
+    bool isVisual = true,
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(
+          name,
+          description,
+          copyItemList(defaultValue),
+          onChange,
+          enableConditions,
+          isVisual,
+          valueCopyGetter: copyItemList,
+        );
+
+  @override
+  ListSetting<T> copy() {
+    return ListSetting<T>(
+      name,
+      _value,
+      possibleItems,
+      getSettings: getSettings,
+      valueDisplayBuilder: valueDisplayBuilder,
+      cardBuilder: cardBuilder,
+      addCardBuilder: addCardBuilder,
+      description: description,
+      onChange: onChange,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+    );
+  }
+
+  Widget getValueDisplayWidget(BuildContext context) {
+    return valueDisplayBuilder(context, this);
+  }
+
+  Widget getItemAddCard(T item) {
+    return addCardBuilder(item);
+  }
+
+  Widget getItemCard(T item) {
+    return cardBuilder(item);
+  }
+
+  SettingGroup getItemSettings(T item) {
+    return getSettings(item);
+  }
+  //  return _value.map((e) => e.millisecondsSinceEpoch).toList();
+  // }
+
+  // @override
+  // void loadValueFromJson(dynamic value) {
+  //   _value = (value as List)
+  //       .map((e) => DateTime.fromMillisecondsSinceEpoch(e))
+  //       .toList();
+  // }
+
+  @override
+  dynamic valueToJson() {
+    return _value.map((e) => e.toJson()).toList();
+  }
+
+  @override
+  void loadValueFromJson(dynamic value) {
+    _value = (value as List).map((e) => fromJsonFactories[T]!(e) as T).toList();
+    // _value = [];
+  }
+}
+
 class CustomSetting<T extends JsonSerializable> extends Setting<T> {
-  Widget Function(CustomSetting<T>) builder;
-  String Function(CustomSetting<T>) nameGetter;
+  // The screen that will be navigated to when this setting is tapped.
+  Widget Function(BuildContext, CustomSetting<T>) screenBuilder;
+  // The widget that will be used to display the value of this setting.
+  Widget Function(BuildContext, CustomSetting<T>) valueDisplayBuilder;
+  T Function(T)? copyValue;
 
   CustomSetting(
     String name,
     T defaultValue,
-    this.builder,
-    this.nameGetter, {
+    this.screenBuilder,
+    this.valueDisplayBuilder, {
     String description = "",
     void Function(BuildContext, T)? onChange,
+    this.copyValue,
     bool isVisual = true,
     List<SettingEnableConditionParameter> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
-            isVisual);
-
-  Widget getWidget() {
-    return builder(this);
+            isVisual) {
+    copyValue ??= (T value) => value;
   }
 
-  String getValueName() {
-    return nameGetter(this);
+  Widget getScreenBuilder(BuildContext context) {
+    return screenBuilder(context, this);
+  }
+
+  Widget getValueDisplayWidget(BuildContext context) {
+    return valueDisplayBuilder(context, this);
   }
 
   @override
   CustomSetting<T> copy() {
     return CustomSetting<T>(
       name,
-      _defaultValue,
-      builder,
-      nameGetter,
+      copyValue?.call(_value) ?? _value,
+      screenBuilder,
+      valueDisplayBuilder,
       description: description,
       onChange: onChange,
       enableConditions: enableConditions,
@@ -128,12 +214,12 @@ class CustomSetting<T extends JsonSerializable> extends Setting<T> {
   }
 
   @override
-  dynamic toJson() {
+  dynamic valueToJson() {
     return _value.toJson();
   }
 
   @override
-  void fromJson(dynamic value) {
+  void loadValueFromJson(dynamic value) {
     _value = fromJsonFactories[T]!(value);
   }
 }
@@ -192,12 +278,12 @@ class ColorSetting extends Setting<Color> {
             isVisual);
 
   @override
-  dynamic toJson() {
+  dynamic valueToJson() {
     return _value.value;
   }
 
   @override
-  void fromJson(dynamic value) {
+  void loadValueFromJson(dynamic value) {
     _value = Color(value);
   }
 
@@ -233,9 +319,11 @@ class StringSetting extends Setting<String> {
 }
 
 class SliderSetting extends Setting<double> {
-  double min;
-  double max;
-  String unit;
+  final double min;
+  final double max;
+  final bool maxIsInfinity;
+  final double? snapLength;
+  final String unit;
 
   SliderSetting(
     String name,
@@ -245,16 +333,24 @@ class SliderSetting extends Setting<double> {
     void Function(BuildContext context, double)? onChange,
     String description = "",
     bool isVisual = true,
+    this.maxIsInfinity = false,
+    this.snapLength,
     this.unit = "",
     List<SettingEnableConditionParameter> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             isVisual);
+
+  // @override
+  // dynamic get value =>
+  //     (maxIsInfinity && _value >= max - 0.0001) ? double.infinity : _value;
 
   @override
   SliderSetting copy() {
     return SliderSetting(name, min, max, _value,
         onChange: onChange,
         description: description,
+        snapLength: snapLength,
+        maxIsInfinity: maxIsInfinity,
         enableConditions: enableConditions,
         unit: unit,
         isVisual: isVisual);
@@ -380,11 +476,12 @@ class ToggleSetting<T> extends Setting<List<bool>> {
           name,
           description,
           defaultValue.length == options.length
-              ? defaultValue
+              ? List.from(defaultValue)
               : List.generate(options.length, (index) => index == 0),
           onChange,
           enableConditions,
           isVisual,
+          valueCopyGetter: List.from,
         );
 
   @override
@@ -406,12 +503,12 @@ class ToggleSetting<T> extends Setting<List<bool>> {
   }
 
   @override
-  dynamic toJson() {
+  dynamic valueToJson() {
     return _value.map((e) => e ? "1" : "0").toList();
   }
 
   @override
-  void fromJson(dynamic value) {
+  void loadValueFromJson(dynamic value) {
     _value = (value as List).map((e) => e == "1").toList();
   }
 }
@@ -428,39 +525,29 @@ class DateTimeSetting extends Setting<List<DateTime>> {
     bool isVisual = true,
     List<SettingEnableConditionParameter> enableConditions = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
-            isVisual);
+            isVisual,
+            valueCopyGetter: List.from);
 
   @override
   DateTimeSetting copy() {
-    return DateTimeSetting(name, List.from(_value),
-        rangeOnly: rangeOnly,
-        onChange: onChange,
-        description: description,
-        enableConditions: enableConditions,
-        isVisual: isVisual);
+    return DateTimeSetting(
+      name,
+      _value,
+      rangeOnly: rangeOnly,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+    );
   }
 
   @override
-  List<DateTime> get value => List.from(_value);
-
-  @override
-  void setValue(BuildContext context, List<DateTime> value) {
-    _value = List.from(value);
-    onChange?.call(context, _value);
-  }
-
-  @override
-  void setValueWithoutNotify(List<DateTime> value) {
-    _value = List.from(value);
-  }
-
-  @override
-  dynamic toJson() {
+  dynamic valueToJson() {
     return _value.map((e) => e.millisecondsSinceEpoch).toList();
   }
 
   @override
-  void fromJson(dynamic value) {
+  void loadValueFromJson(dynamic value) {
     _value = (value as List)
         .map((e) => DateTime.fromMillisecondsSinceEpoch(e))
         .toList();
@@ -498,12 +585,12 @@ class DurationSetting extends Setting<TimeDuration> {
   }
 
   @override
-  dynamic toJson() {
+  dynamic valueToJson() {
     return _value.inMilliseconds;
   }
 
   @override
-  void fromJson(dynamic value) {
+  void loadValueFromJson(dynamic value) {
     _value = TimeDuration.fromMilliseconds(value);
   }
 }

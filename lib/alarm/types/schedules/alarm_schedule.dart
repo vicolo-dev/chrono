@@ -1,6 +1,6 @@
 import 'package:clock_app/alarm/types/alarm_runner.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
-import 'package:flutter/material.dart';
+import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/time.dart';
 
 abstract class AlarmSchedule extends JsonSerializable {
   DateTime? get currentScheduleDateTime;
@@ -11,7 +11,7 @@ abstract class AlarmSchedule extends JsonSerializable {
   AlarmSchedule();
 
   List<AlarmRunner> get alarmRunners;
-  Future<bool> schedule(TimeOfDay timeOfDay);
+  Future<bool> schedule(Time time);
   void cancel();
   bool hasId(int id);
 }

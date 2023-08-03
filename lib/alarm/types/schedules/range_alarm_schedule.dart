@@ -1,16 +1,18 @@
 import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
+import 'package:clock_app/alarm/types/range_interval.dart';
 import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';
+import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:flutter/material.dart';
 
 class RangeAlarmSchedule extends AlarmSchedule {
   late final AlarmRunner _alarmRunner;
   final DateTimeSetting _datesRangeSetting;
-  final SelectSetting<Duration> _intervalSetting;
+  final SelectSetting<RangeInterval> _intervalSetting;
   bool _isFinished = false;
 
-  Duration get interval => _intervalSetting.value;
+  RangeInterval get interval => _intervalSetting.value;
   DateTime get startDate => _datesRangeSetting.value.first;
   DateTime get endDate => _datesRangeSetting.value.last;
 
@@ -28,7 +30,7 @@ class RangeAlarmSchedule extends AlarmSchedule {
 
   RangeAlarmSchedule(Setting datesRangeSetting, Setting intervalSetting)
       : _datesRangeSetting = datesRangeSetting as DateTimeSetting,
-        _intervalSetting = intervalSetting as SelectSetting<Duration>,
+        _intervalSetting = intervalSetting as SelectSetting<RangeInterval>,
         _alarmRunner = AlarmRunner(),
         super() {
     if (_datesRangeSetting.value.isEmpty) {
@@ -40,9 +42,11 @@ class RangeAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  Future<bool> schedule(TimeOfDay timeOfDay) async {
-    // Da
-    DateTime alarmDate = getDailyAlarmDate(timeOfDay, scheduledDate: startDate);
+  Future<bool> schedule(Time time) async {
+    // All the dates are not scheduled at once
+    // Instead we schedule the next date after the current one is finished
+
+    DateTime alarmDate = getDailyAlarmDate(time, scheduledDate: startDate);
     if (alarmDate.day <= endDate.day) {
       return _alarmRunner.schedule(alarmDate);
     } else {
@@ -61,11 +65,11 @@ class RangeAlarmSchedule extends AlarmSchedule {
         'alarmRunner': _alarmRunner.toJson(),
       };
 
-  RangeAlarmSchedule.fromJson(Map<String, dynamic> json,
-      Setting datesRangeSetting, Setting intervalSetting)
+  RangeAlarmSchedule.fromJson(
+      Json json, Setting datesRangeSetting, Setting intervalSetting)
       : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
         _datesRangeSetting = datesRangeSetting as DateTimeSetting,
-        _intervalSetting = intervalSetting as SelectSetting<Duration>,
+        _intervalSetting = intervalSetting as SelectSetting<RangeInterval>,
         super();
 
   @override

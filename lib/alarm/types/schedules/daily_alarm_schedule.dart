@@ -1,7 +1,8 @@
 import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';
-import 'package:flutter/material.dart';
+import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/time.dart';
 
 class DailyAlarmSchedule extends AlarmSchedule {
   final AlarmRunner _alarmRunner;
@@ -23,8 +24,8 @@ class DailyAlarmSchedule extends AlarmSchedule {
         super();
 
   @override
-  Future<bool> schedule(TimeOfDay timeOfDay) async {
-    DateTime alarmDate = getDailyAlarmDate(timeOfDay);
+  Future<bool> schedule(Time time) async {
+    DateTime alarmDate = getDailyAlarmDate(time);
     return _alarmRunner.schedule(alarmDate);
   }
 
@@ -38,7 +39,7 @@ class DailyAlarmSchedule extends AlarmSchedule {
         'alarmRunner': _alarmRunner.toJson(),
       };
 
-  DailyAlarmSchedule.fromJson(Map<String, dynamic> json)
+  DailyAlarmSchedule.fromJson(Json json)
       : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
         super();
 

@@ -1,3 +1,4 @@
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
@@ -19,23 +20,25 @@ abstract class ThemeItem extends ListItem {
 
   @override
   int get id => _id;
+  @override
+  bool get isDeletable => !_isDefault;
   SettingGroup get settings => _settings;
   bool get isDefault => _isDefault;
   String get name;
 
   @override
-  Map<String, dynamic> toJson() {
+  Json toJson() {
     return {
       'id': id,
       'isDefault': isDefault,
-      'settings': settings.toJson(),
+      'settings': settings.valueToJson(),
     };
   }
 
-  ThemeItem.fromJson(Map<String, dynamic> json, SettingGroup settings)
+  ThemeItem.fromJson(Json json, SettingGroup settings)
       : _id = json['id'],
         _isDefault = json['isDefault'],
         _settings = settings {
-    settings.fromJson(json['settings']);
+    settings.loadValueFromJson(json['settings']);
   }
 }

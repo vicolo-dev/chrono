@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -83,12 +85,14 @@ class SettingGroup extends SettingItem {
     try {
       return _settings.firstWhere((item) => item.name == name);
     } catch (e) {
-      print("Could not find setting ${name}: ${e}");
+      if (kDebugMode) {
+        print("Could not find setting $name: $e");
+      }
       rethrow;
     }
   }
 
-  void restoreDefault(
+  void restoreDefaults(
     BuildContext context,
     Map<String, bool> settingsToRestore,
   ) {
@@ -104,32 +108,32 @@ class SettingGroup extends SettingItem {
       if (settingItem is Setting) {
         settingItem.restoreDefault(context);
       } else if (settingItem is SettingGroup) {
-        settingItem.restoreDefault(context, settingsToRestore);
+        settingItem.restoreDefaults(context, settingsToRestore);
       }
     }
   }
 
   @override
-  dynamic toJson() {
-    Map<String, dynamic> json = {};
+  dynamic valueToJson() {
+    Json json = {};
     for (var setting in _settingItems) {
-      json[setting.name] = setting.toJson();
+      json[setting.name] = setting.valueToJson();
     }
     return json;
   }
 
   @override
-  void fromJson(dynamic value) {
+  void loadValueFromJson(dynamic value) {
     for (var setting in _settingItems) {
-      setting.fromJson(value[setting.name]);
+      setting.loadValueFromJson(value[setting.name]);
     }
   }
 
   Future<void> save() {
-    return GetStorage().write(id, json.encode(toJson()));
+    return GetStorage().write(id, json.encode(valueToJson()));
   }
 
   void load() {
-    fromJson(json.decode(GetStorage().read(id)));
+    loadValueFromJson(json.decode(GetStorage().read(id)));
   }
 }

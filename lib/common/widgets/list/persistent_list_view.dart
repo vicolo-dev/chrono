@@ -45,7 +45,6 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
     required this.itemBuilder,
     required this.saveTag,
     required this.listController,
-    this.duplicateItem,
     this.onTapItem,
     this.onReorderItem,
     this.onDeleteItem,
@@ -56,16 +55,13 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
     this.isDuplicateEnabled = true,
     this.reloadOnPop = false,
     this.shouldInsertOnTop = true,
-    this.isItemDeletable,
   });
 
   final Widget Function(Item item) itemBuilder;
-  final Item Function(Item item)? duplicateItem;
   final void Function(Item item, int index)? onTapItem;
   final void Function(Item item)? onReorderItem;
   final void Function(Item item)? onDeleteItem;
   final void Function(Item item)? onAddItem;
-  final bool Function(Item item)? isItemDeletable;
   final String saveTag;
   final String placeholderText;
   final PersistentListController<Item> listController;
@@ -123,12 +119,10 @@ class _PersistentListViewState<Item extends ListItem>
     return CustomListView<Item>(
       items: _items,
       itemBuilder: widget.itemBuilder,
-      duplicateItem: widget.duplicateItem,
       onTapItem: widget.onTapItem,
       onReorderItem: widget.onReorderItem,
       onDeleteItem: widget.onDeleteItem,
       onAddItem: widget.onAddItem,
-      isItemDeletable: widget.isItemDeletable,
       listController: widget.listController.listController,
       placeholderText: widget.placeholderText,
       onModifyList: saveItems,

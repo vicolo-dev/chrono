@@ -1,10 +1,11 @@
+import 'package:clock_app/common/types/time.dart';
 import 'package:flutter/material.dart';
 
-class TimeOfDayIcon {
+class TimeIcon {
   final IconData icon;
   final Color color;
-  final TimeOfDay startTime;
-  final TimeOfDay endTime;
+  final Time startTime;
+  final Time endTime;
 
-  TimeOfDayIcon(this.icon, this.color, this.startTime, this.endTime);
+  TimeIcon(this.icon, this.color, this.startTime, this.endTime);
 }

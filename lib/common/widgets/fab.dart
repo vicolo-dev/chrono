@@ -26,10 +26,12 @@ class FAB extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       bottom: bottomPadding,
-      right:
-          position == FabPosition.bottomRight ? 16 + (index * 45 * size) : null,
-      left:
-          position == FabPosition.bottomLeft ? 16 + (index * 45 * size) : null,
+      right: position == FabPosition.bottomRight
+          ? 16 + (index * 24 * size) + index * 36
+          : null,
+      left: position == FabPosition.bottomLeft
+          ? 16 + (index * 24 * size) + index * 36
+          : null,
       child: CardContainer(
         elevationMultiplier: 2,
         color: Theme.of(context).colorScheme.primary,

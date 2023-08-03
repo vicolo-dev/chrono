@@ -22,11 +22,36 @@ class AlarmNotificationScreen extends StatefulWidget {
 
 class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   late Alarm alarm;
+  late Widget _currentWidget;
+  int _currentIndex = 0;
+
+  void _setNextWidget() {
+    setState(() {
+      if (_currentIndex >= alarm.tasks.length) {
+        _currentWidget = Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: () {
+                AlarmNotificationManager.dismissAlarm(
+                    widget.scheduleId, ScheduledNotificationType.alarm);
+              },
+              child: const Text("Dismiss"),
+            ),
+          ],
+        );
+      } else {
+        _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
+        _currentIndex++;
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     alarm = getAlarmByScheduleId(widget.scheduleId);
+    _setNextWidget();
   }
 
   @override
@@ -39,31 +64,18 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClockDisplay(
-              dateTime: alarm.timeOfDay.toDateTime(),
+              dateTime: alarm.time.toDateTime(),
               horizontalAlignment: ElementAlignment.center,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    AlarmNotificationManager.snoozeAlarm(
-                        widget.scheduleId, ScheduledNotificationType.alarm);
-                    // dismissAlarm(widget.id);
-                    // Navigator.pop(context);
-                  },
-                  child: const Text("Snooze"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    AlarmNotificationManager.dismissAlarm(
-                        widget.scheduleId, ScheduledNotificationType.alarm);
-                    // Navigator.pop(context);
-                  },
-                  child: const Text("Dismiss"),
-                ),
-              ],
-            ),
+            _currentWidget,
+            if (!alarm.maxSnoozeIsReached)
+              TextButton(
+                onPressed: () {
+                  AlarmNotificationManager.snoozeAlarm(
+                      widget.scheduleId, ScheduledNotificationType.alarm);
+                },
+                child: const Text("Snooze"),
+              ),
           ],
         ),
       ),

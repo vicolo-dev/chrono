@@ -1,3 +1,5 @@
+import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/time.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -24,7 +26,7 @@ extension TimeOfDayUtils on TimeOfDay {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  static TimeOfDay fromJson(Map<String, dynamic> json) => TimeOfDay(
+  static TimeOfDay fromJson(Json json) => TimeOfDay(
         hour: json['hour'],
         minute: json['minute'],
       );
@@ -35,8 +37,9 @@ extension TimeOfDayUtils on TimeOfDay {
         currentDateTime.day, hour, minute);
   }
 
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{'hour': hour, 'minute': minute};
+  Time toTime() => Time.fromTimeOfDay(this);
+
+  Json toJson() => <String, dynamic>{'hour': hour, 'minute': minute};
 
   String encode() => toHours().toString();
 

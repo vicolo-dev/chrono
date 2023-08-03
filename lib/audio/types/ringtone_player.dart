@@ -11,8 +11,8 @@ class RingtonePlayer {
   static bool _vibratorIsAvailable = false;
 
   static Future<void> initialize() async {
-    _alarmPlayer ??= AudioPlayer();
-    _timerPlayer ??= AudioPlayer();
+    _alarmPlayer ??= AudioPlayer(handleInterruptions: false);
+    _timerPlayer ??= AudioPlayer(handleInterruptions: false);
     _vibratorIsAvailable = (await Vibration.hasVibrator()) ?? false;
   }
 
@@ -26,7 +26,7 @@ class RingtonePlayer {
       {LoopMode loopMode = LoopMode.one}) async {
     activePlayer = _alarmPlayer;
     await _play(
-      alarm.ringtoneUri,
+      alarm.ringtone.uri,
       vibrate: alarm.vibrate,
       loopMode: LoopMode.one,
       secondsToMaxVolume: alarm.risingVolumeDuration.inSeconds,
@@ -54,6 +54,7 @@ class RingtonePlayer {
     if (_vibratorIsAvailable && vibrate) {
       Vibration.vibrate(pattern: [500, 1000], repeat: 0);
     }
+    // activePlayer?.
     await activePlayer?.stop();
     await activePlayer?.setLoopMode(loopMode);
     await activePlayer?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));

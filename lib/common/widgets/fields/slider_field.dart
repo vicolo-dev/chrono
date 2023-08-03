@@ -1,3 +1,4 @@
+import 'package:clock_app/common/utils/text_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,7 +10,8 @@ class SliderField extends StatefulWidget {
       required this.min,
       required this.max,
       required this.title,
-      this.unit = ''})
+      this.unit = '',
+      this.snapLength})
       : super(key: key);
 
   final String title;
@@ -17,6 +19,7 @@ class SliderField extends StatefulWidget {
   final double min;
   final double max;
   final String unit;
+  final double? snapLength;
   final void Function(double value) onChanged;
 
   @override
@@ -25,7 +28,8 @@ class SliderField extends StatefulWidget {
 
 class _SliderFieldState extends State<SliderField> {
   late final TextEditingController _textController =
-      TextEditingController(text: widget.value.toStringAsFixed(1));
+      TextEditingController(text: valueToString(widget.value));
+
   // double _value = 0;
 
   void changeValue(double value) {
@@ -48,33 +52,37 @@ class _SliderFieldState extends State<SliderField> {
     super.dispose();
   }
 
+  String valueToString(double value) {
+    // if (value.isInfinite) return '∞';
+    final bool isIntegerOnly =
+        (widget.snapLength != null) && (widget.snapLength! % 1 <= 0.001);
+    return isIntegerOnly ? value.toInt().toString() : value.toStringAsFixed(1);
+  }
+
   @override
   void didUpdateWidget(SliderField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.value != widget.value) {
-      _textController.text = widget.value.toStringAsFixed(1);
+      _textController.text = valueToString(widget.value);
     }
-  }
-
-  Size calcTextSize(String text, TextStyle style) {
-    // String text = '0' * length;
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: TextDirection.ltr,
-      textScaleFactor: WidgetsBinding.instance.window.textScaleFactor,
-    )..layout();
-    return textPainter.size;
   }
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    TextTheme textTheme = theme.textTheme;
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
 
-    Size textSize = calcTextSize('000.0 ${widget.unit}', textTheme.bodyMedium!);
+    final Size textSize =
+        calcTextSize('000.0 ${widget.unit}', textTheme.bodyMedium!);
+    final int? divisions = widget.snapLength != null
+        ? ((widget.max - widget.min) / widget.snapLength!).round()
+        : null;
+
+    final bool isIntegerOnly =
+        (widget.snapLength != null) && (widget.snapLength! % 1 <= 0.001);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -99,13 +107,14 @@ class _SliderFieldState extends State<SliderField> {
                         }),
                         onChanged: (textValue) {
                           if (textValue.isEmpty) {
-                            textValue = '0.0';
+                            textValue = valueToString(widget.min);
                           }
                           changeValue(double.parse(textValue));
                         },
                         onSubmitted: (textValue) {
                           if (textValue.isEmpty) {
-                            _textController.text = textValue = '0.0';
+                            _textController.text =
+                                textValue = valueToString(widget.min);
                           }
                           changeValue(double.parse(textValue));
                         },
@@ -124,11 +133,17 @@ class _SliderFieldState extends State<SliderField> {
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,1}'),
-                          ),
+                          if (isIntegerOnly)
+                            FilteringTextInputFormatter.digitsOnly
+                          else
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,1}'),
+                            ),
                           NumericalRangeFormatter(
-                              min: widget.min, max: widget.max),
+                            min: widget.min,
+                            max: widget.max,
+                            valueToString: valueToString,
+                          ),
                         ],
                       ),
                     ),
@@ -145,11 +160,12 @@ class _SliderFieldState extends State<SliderField> {
                 child: Slider(
                   value: widget.value,
                   onChanged: (double value) {
-                    _textController.text = value.toStringAsFixed(1);
+                    _textController.text = valueToString(value);
                     changeValue(value);
                   },
                   min: widget.min,
                   max: widget.max,
+                  divisions: divisions,
                 ),
               ),
               const SizedBox(width: 10),
@@ -165,8 +181,10 @@ class _SliderFieldState extends State<SliderField> {
 class NumericalRangeFormatter extends TextInputFormatter {
   final double min;
   final double max;
+  final String Function(double value) valueToString;
 
-  NumericalRangeFormatter({required this.min, required this.max});
+  NumericalRangeFormatter(
+      {required this.valueToString, required this.min, required this.max});
 
   @override
   TextEditingValue formatEditUpdate(
@@ -176,7 +194,7 @@ class NumericalRangeFormatter extends TextInputFormatter {
     if (newValue.text == '') {
       return newValue;
     } else if (double.parse(newValue.text) < min) {
-      return const TextEditingValue().copyWith(text: min.toStringAsFixed(1));
+      return const TextEditingValue().copyWith(text: valueToString(min));
     } else {
       return double.parse(newValue.text) > max ? oldValue : newValue;
     }

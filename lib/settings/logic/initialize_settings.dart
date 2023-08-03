@@ -27,8 +27,8 @@ Future<void> initializeSettings() async {
   // await SettingsManager.initialize();
   await GetStorage.init();
 
-  // // Used to clear the preferences in case of a change in format of the data
-  // // Comment this out after the preferences are cleared
+  // Used to clear the preferences in case of a change in format of the data
+  // Comment this out after the preferences are cleared
   await _clearSettings();
 
   bool? firstLaunch = GetStorage().read('first_launch');

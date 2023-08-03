@@ -1,35 +1,42 @@
 import 'dart:convert';
 
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/alarm/types/alarm_task.dart';
+import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/clock/types/city.dart';
+import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
+import 'package:flutter/material.dart';
+import 'package:clock_app/common/utils/time_of_day.dart';
 
 final fromJsonFactories = <Type, Function>{
-  Alarm: (Map<String, dynamic> json) => Alarm.fromJson(json),
-  City: (Map<String, dynamic> json) => City.fromJson(json),
-  ClockTimer: (Map<String, dynamic> json) => ClockTimer.fromJson(json),
-  ClockStopwatch: (Map<String, dynamic> json) => ClockStopwatch.fromJson(json),
-  TimerPreset: (Map<String, dynamic> json) => TimerPreset.fromJson(json),
-  ColorSchemeData: (Map<String, dynamic> json) =>
-      ColorSchemeData.fromJson(json),
-  StyleTheme: (Map<String, dynamic> json) => StyleTheme.fromJson(json),
+  Alarm: (Json json) => Alarm.fromJson(json),
+  City: (Json json) => City.fromJson(json),
+  ClockTimer: (Json json) => ClockTimer.fromJson(json),
+  ClockStopwatch: (Json json) => ClockStopwatch.fromJson(json),
+  TimerPreset: (Json json) => TimerPreset.fromJson(json),
+  ColorSchemeData: (Json json) => ColorSchemeData.fromJson(json),
+  StyleTheme: (Json json) => StyleTheme.fromJson(json),
+  AlarmTask: (Json json) => AlarmTask.fromJson(json),
+  Time: (Json json) => Time.fromJson(json),
+  TimeOfDay: (Json json) => TimeOfDayUtils.fromJson(json),
+  // AlarmTaskList: (Json json) => AlarmTaskList.fromJson(json),
 };
 
-abstract class JsonSerializable {
-  const JsonSerializable();
-  JsonSerializable.fromJson(Map<String, dynamic> json);
-  Map<String, dynamic> toJson();
-}
+// Json listToJson<T extends JsonSerializable>(List<T> items) => Json(
+//       items.map<Json>((item) => item.toJson()).toList(),
+//     );
 
-String encodeList<T extends JsonSerializable>(List<T> items) => json.encode(
-      items.map<Map<String, dynamic>>((item) => item.toJson()).toList(),
+String listToString<T extends JsonSerializable>(List<T> items) => json.encode(
+      items.map<Json>((item) => item.toJson()).toList(),
     );
 
-List<T> decodeList<T extends JsonSerializable>(String encodedItems) {
+List<T> listFromString<T extends JsonSerializable>(String encodedItems) {
   if (!fromJsonFactories.containsKey(T)) {
     throw Exception("No fromJson factory for type '$T'");
   }

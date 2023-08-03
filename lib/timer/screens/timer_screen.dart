@@ -1,3 +1,4 @@
+import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/timer/screens/customize_timer_screen.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
@@ -51,23 +52,26 @@ class _TimerScreenState extends State<TimerScreen> {
     _listController.changeItems((timers) => timers[index] = timer);
   }
 
-  Future<ClockTimer?> _openCustomizeTimerScreen(ClockTimer timer) async {
-    return await Navigator.push(
+  Future<ClockTimer?> _openCustomizeTimerScreen(
+    ClockTimer timer, {
+    void Function(ClockTimer)? onSave,
+    void Function()? onCancel,
+  }) async {
+    return openCustomizeScreen(
       context,
-      MaterialPageRoute(
-          builder: (context) => CustomizeTimerScreen(initialTimer: timer)),
+      CustomizeTimerScreen(timer: timer),
+      onSave: onSave,
+      onCancel: onCancel,
     );
   }
 
-  Future<ClockTimer> _handleCustomizeTimer(ClockTimer timer) async {
+  Future<ClockTimer?> _handleCustomizeTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    ClockTimer? newTimer = await _openCustomizeTimerScreen(timer);
-    if (newTimer == null) return timer;
-    newTimer.reset();
-    newTimer.start();
-
-    _listController.changeItems((timers) => timers[index] = newTimer);
-    return newTimer;
+    return await _openCustomizeTimerScreen(timer, onSave: (newTimer) {
+      newTimer.reset();
+      newTimer.start();
+      _listController.changeItems((timers) => timers[index] = newTimer);
+    });
   }
 
   @override
@@ -101,7 +105,6 @@ class _TimerScreenState extends State<TimerScreen> {
                 // _listController.changeItems((item) {});
               },
               onDeleteItem: _handleDeleteTimer,
-              duplicateItem: (timer) => ClockTimer.from(timer),
               placeholderText: "No timers created",
               reloadOnPop: true,
             ),
@@ -115,10 +118,11 @@ class _TimerScreenState extends State<TimerScreen> {
           if (pickerResult != null) {
             ClockTimer timer = ClockTimer.from(pickerResult.value);
             if (pickerResult.isCustomize) {
-              timer = await _openCustomizeTimerScreen(timer) ?? timer;
+              await _openCustomizeTimerScreen(timer, onSave: (timer) {
+                timer.start();
+                _listController.addItem(timer);
+              });
             }
-            timer.start();
-            _listController.addItem(timer);
           }
         },
       )

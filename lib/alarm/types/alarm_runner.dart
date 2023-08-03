@@ -1,5 +1,5 @@
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:clock_app/common/types/json.dart';
 import 'package:flutter/material.dart';
 
 class AlarmRunner extends JsonSerializable {
@@ -18,7 +18,12 @@ class AlarmRunner extends JsonSerializable {
     return await scheduleAlarm(_id, dateTime);
   }
 
-  AlarmRunner.fromJson(Map<String, dynamic> json) : _id = json['id'] {
+  void cancel() {
+    _currentScheduleDateTime = null;
+    cancelAlarm(_id);
+  }
+
+  AlarmRunner.fromJson(Json json) : _id = json['id'] {
     int millisecondsSinceEpoch = json['currentScheduleDateTime'];
 
     _currentScheduleDateTime = millisecondsSinceEpoch == 0
@@ -27,14 +32,9 @@ class AlarmRunner extends JsonSerializable {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
+  Json toJson() => {
         'id': _id,
         'currentScheduleDateTime':
             _currentScheduleDateTime?.millisecondsSinceEpoch ?? 0,
       };
-
-  void cancel() {
-    _currentScheduleDateTime = null;
-    cancelAlarm(_id);
-  }
 }

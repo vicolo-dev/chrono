@@ -1,8 +1,9 @@
+import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/theme/screens/customize_theme_settings_screen.dart';
+import 'package:clock_app/theme/screens/customize_theme_screen.dart';
 import 'package:clock_app/theme/types/theme_item.dart';
 import 'package:clock_app/theme/widgets/theme_card.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +14,13 @@ class ThemesScreen<Item extends ThemeItem> extends StatefulWidget {
     required this.saveTag,
     required this.setting,
     required this.getThemeFromItem,
-    required this.createThemItem,
-    required this.fromItem,
+    required this.createThemeItem,
   });
 
   final String saveTag;
   final CustomSetting<Item> setting;
   final ThemeData Function(ThemeData, Item) getThemeFromItem;
-  final Item Function() createThemItem;
-  final Item Function(Item) fromItem;
+  final Item Function() createThemeItem;
 
   @override
   State<ThemesScreen> createState() => _ThemesScreenState<Item>();
@@ -33,19 +32,15 @@ class _ThemesScreenState<Item extends ThemeItem>
 
   Future<Item?> _openCustomizeItemScreen(
     Item themeItem, {
-    void Function()? onThemeSettingsChanged,
+    void Function(Item)? onSave,
   }) async {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-    return await Navigator.push(
+    return openCustomizeScreen(
       context,
-      MaterialPageRoute(
-        builder: (context) => CustomizeThemeSettingsScreen(
-          themeItem: themeItem,
-          onSettingsChanged: onThemeSettingsChanged,
-          getThemeFromItem: widget.getThemeFromItem,
-        ),
+      CustomizeThemeScreen(
+        themeItem: themeItem,
+        getThemeFromItem: widget.getThemeFromItem,
       ),
+      onSave: onSave,
     );
   }
 
@@ -53,15 +48,14 @@ class _ThemesScreenState<Item extends ThemeItem>
     int index = _listController.getItemIndex(themeItem);
     await _openCustomizeItemScreen(
       themeItem,
-      onThemeSettingsChanged: () {
+      onSave: (newThemItem) {
         if (widget.setting.value.id == themeItem.id) {
-          widget.setting.setValue(context, themeItem);
+          widget.setting.setValue(context, newThemItem);
         }
+        _listController
+            .changeItems((colorSchemes) => colorSchemes[index] = newThemItem);
       },
     );
-
-    _listController
-        .changeItems((colorSchemes) => colorSchemes[index] = themeItem);
   }
 
   @override
@@ -91,16 +85,12 @@ class _ThemesScreenState<Item extends ThemeItem>
                     widget.setting.setValue(context, themeItem);
                     _listController.reload();
                   },
-                  isItemDeletable: (themeItem) {
-                    return !themeItem.isDefault;
-                  },
                   onDeleteItem: (themeItem) {
                     // If the theme item is currently selected, change the theme item to the default one
                     if (widget.setting.value.id == themeItem.id) {
                       widget.setting.restoreDefault(context);
                     }
                   },
-                  duplicateItem: (themeItem) => widget.fromItem(themeItem),
                   placeholderText: "No custom color schemes",
                   reloadOnPop: true,
                 ),
@@ -110,9 +100,10 @@ class _ThemesScreenState<Item extends ThemeItem>
           FAB(
             bottomPadding: 8,
             onPressed: () async {
-              Item? newItem = widget.createThemItem();
-              await _openCustomizeItemScreen(newItem);
-              _listController.addItem(newItem);
+              Item? themeItem = widget.createThemeItem();
+              await _openCustomizeItemScreen(themeItem, onSave: (newThemeItem) {
+                _listController.addItem(newThemeItem);
+              });
             },
           )
         ],

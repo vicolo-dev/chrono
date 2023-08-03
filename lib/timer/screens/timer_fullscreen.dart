@@ -24,7 +24,7 @@ class TimerFullscreen extends StatefulWidget {
   final void Function(ClockTimer) onToggleState;
   final void Function(ClockTimer) onReset;
   final void Function(ClockTimer) onAddTime;
-  final Future<ClockTimer> Function(ClockTimer) onCustomize;
+  final Future<ClockTimer?> Function(ClockTimer) onCustomize;
 
   @override
   State<TimerFullscreen> createState() => _TimerFullscreenState();
@@ -87,11 +87,13 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
       appBar: AppTopBar(actions: [
         TextButton(
             onPressed: () async {
-              ClockTimer newTimer = await widget.onCustomize(timer);
-              setState(() {
-                timer = newTimer;
-                updateTimer();
-              });
+              ClockTimer? newTimer = await widget.onCustomize(timer);
+              if (newTimer != null) {
+                setState(() {
+                  timer = newTimer;
+                  updateTimer();
+                });
+              }
             },
             child: const Text("Edit"))
       ]),

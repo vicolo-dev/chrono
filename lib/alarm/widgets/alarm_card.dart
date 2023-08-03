@@ -1,5 +1,5 @@
 import 'package:clock_app/alarm/logic/schedule_description.dart';
-import 'package:clock_app/alarm/logic/time_of_day_icon.dart';
+import 'package:clock_app/alarm/logic/time_icon.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
 import 'package:clock_app/common/logic/edit_tips.dart';
@@ -60,7 +60,7 @@ class _AlarmCardState extends State<AlarmCard> {
 
   @override
   Widget build(BuildContext context) {
-    TimeOfDayIcon timeOfDayIcon = getTimeOfDayIcon(widget.alarm.timeOfDay);
+    TimeIcon timeOfDayIcon = getTimeIcon(widget.alarm.time);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -91,7 +91,7 @@ class _AlarmCardState extends State<AlarmCard> {
                 Row(
                   children: [
                     ClockDisplay(
-                        dateTime: widget.alarm.timeOfDay.toDateTime(),
+                        dateTime: widget.alarm.time.toDateTime(),
                         scale: 0.6,
                         color: widget.alarm.isEnabled
                             ? null

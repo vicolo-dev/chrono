@@ -1,3 +1,4 @@
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/theme/data/color_scheme_settings_schema.dart';
 import 'package:clock_app/theme/types/theme_item.dart';
 import 'package:flutter/material.dart';
@@ -88,11 +89,12 @@ class ColorSchemeData extends ThemeItem {
       .getSetting("Color")
       .setValueWithoutNotify(value);
 
+  @override
   ColorSchemeData copy() {
     return ColorSchemeData.from(this);
   }
 
-  ColorSchemeData.fromJson(Map<String, dynamic> json)
+  ColorSchemeData.fromJson(Json json)
       : super.fromJson(json, colorSchemeSettingsSchema.copy());
 }
 

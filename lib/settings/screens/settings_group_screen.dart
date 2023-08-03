@@ -73,8 +73,8 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
                               RestoreDefaultScreen(
                                 settingGroup: widget.settingGroup,
                                 onRestore: () async {
-                                  appSettings.save();
-                                  // setState(() {});
+                                  await appSettings.save();
+                                  setState(() {});
                                 },
                               ))),
                     const SizedBox(height: 16),

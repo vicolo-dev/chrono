@@ -23,7 +23,7 @@ String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
   }
   switch (alarm.scheduleType) {
     case OnceAlarmSchedule:
-      return 'Just ${alarm.timeOfDay.toHours() > TimeOfDay.now().toHours() ? 'today' : 'tomorrow'}';
+      return 'Just ${alarm.time.toHours() > TimeOfDay.now().toHours() ? 'today' : 'tomorrow'}';
     case DailyAlarmSchedule:
       return 'Every day';
     case WeeklyAlarmSchedule:

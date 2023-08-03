@@ -1,7 +1,8 @@
 import 'package:clock_app/alarm/logic/alarm_time.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';
-import 'package:flutter/material.dart';
+import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/time.dart';
 
 class OnceAlarmSchedule extends AlarmSchedule {
   late final AlarmRunner _alarmRunner;
@@ -24,12 +25,13 @@ class OnceAlarmSchedule extends AlarmSchedule {
         super();
 
   @override
-  Future<bool> schedule(TimeOfDay timeOfDay) async {
+  Future<bool> schedule(Time time) async {
+    // If the alarm has already been scheduled in the past, disable it.
     if (currentScheduleDateTime?.isBefore(DateTime.now()) ?? false) {
       _isDisabled = true;
       return false;
     }
-    DateTime alarmDate = getDailyAlarmDate(timeOfDay);
+    DateTime alarmDate = getDailyAlarmDate(time);
     return _alarmRunner.schedule(alarmDate);
   }
 
@@ -44,7 +46,7 @@ class OnceAlarmSchedule extends AlarmSchedule {
         'isDisabled': _isDisabled,
       };
 
-  OnceAlarmSchedule.fromJson(Map<String, dynamic> json)
+  OnceAlarmSchedule.fromJson(Json json)
       : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
         _isDisabled = json['isDisabled'],
         super();

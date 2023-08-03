@@ -1,17 +1,18 @@
+import 'package:clock_app/alarm/types/alarm_task.dart';
+import 'package:clock_app/alarm/types/range_interval.dart';
 import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
+import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
 import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
-
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 
 SettingGroup alarmSettingsSchema = SettingGroup(
   "AlarmSettings",
@@ -65,11 +66,11 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             SettingEnableConditionParameter("Type", RangeAlarmSchedule)
           ],
         ),
-        SelectSetting<Duration>(
+        SelectSetting<RangeInterval>(
           "Interval",
           [
-            SelectSettingOption("Daily", const Duration(days: 1)),
-            SelectSettingOption("Weekly", const Duration(days: 7)),
+            SelectSettingOption("Daily", RangeInterval.daily),
+            SelectSettingOption("Weekly", RangeInterval.weekly),
           ],
           enableConditions: [
             SettingEnableConditionParameter("Type", RangeAlarmSchedule)
@@ -77,13 +78,6 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         ),
       ],
       icon: Icons.timer,
-      // summarySettings: [
-      //   "Type",
-      //   "Week Days",
-      //   "Dates",
-      //   "Date Range",
-      //   "Interval",
-      // ],
     ),
     SettingGroup(
       "Sound and Vibration",
@@ -125,11 +119,29 @@ SettingGroup alarmSettingsSchema = SettingGroup(
       "Snooze",
       [
         SliderSetting("Length", 1, 30, 5, unit: "minutes"),
+        SliderSetting("Max Snoozes", 1, 10, 3,
+            unit: "times",
+            snapLength: 1,
+            description:
+                "The maximum number of times the alarm can be snoozed before it is dismissed"),
       ],
       icon: Icons.snooze_rounded,
       summarySettings: [
         "Length",
       ],
-    )
+    ),
+    ListSetting<AlarmTask>("Tasks", [], [AlarmTask(AlarmTaskType.arithmetic)],
+        getSettings: (item) => item.settings,
+        addCardBuilder: (item) => AlarmTaskCard(task: item),
+        cardBuilder: (item) => AlarmTaskCard(task: item),
+        valueDisplayBuilder: (context, setting) {
+          return Text("${setting.value.length} tasks");
+        }),
+    // CustomSetting<AlarmTaskList>("Tasks", AlarmTaskList([]),
+    //     (context, setting) {
+    //   return CustomizeAlarmTasksScreen(setting: setting);
+    // }, (context, setting) {
+    //   return Text("${setting.value.tasks.length} tasks");
+    // }),
   ],
 );

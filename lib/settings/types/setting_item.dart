@@ -1,9 +1,12 @@
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 
 abstract class SettingItem {
   String name;
   String id;
   SettingGroup? _parent;
+  final List<void Function(dynamic)> _settingListeners;
+  List<void Function(dynamic)> get settingListeners => _settingListeners;
 
   SettingGroup? get parent => _parent;
   set parent(SettingGroup? parent) {
@@ -21,11 +24,28 @@ abstract class SettingItem {
     return path.reversed.toList();
   }
 
-  SettingItem(this.name) : id = name;
+  SettingItem(this.name)
+      : id = name,
+        _settingListeners = [];
 
   SettingItem copy();
 
-  dynamic toJson();
+  dynamic valueToJson();
 
-  void fromJson(dynamic value);
+  void loadValueFromJson(dynamic value);
+
+  void addListener(void Function(dynamic) listener) {
+    _settingListeners.add(listener);
+  }
+
+  void removeListener(void Function(dynamic) listener) {
+    _settingListeners.remove(listener);
+  }
+
+  void callListeners(Setting setting) {
+    for (var listener in _settingListeners) {
+      listener(setting.value);
+    }
+    parent?.callListeners(setting);
+  }
 }

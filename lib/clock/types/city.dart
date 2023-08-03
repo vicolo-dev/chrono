@@ -1,3 +1,4 @@
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:flutter/material.dart';
 
@@ -10,19 +11,27 @@ class City extends ListItem {
   String get name => _name;
   String get country => _country;
   String get timezone => _timezone;
+
   @override
   int get id => _id;
+  @override
+  bool get isDeletable => true;
 
   City(this._name, this._country, this._timezone) : _id = UniqueKey().hashCode;
 
-  City.fromJson(Map<String, dynamic> jsonData)
+  @override
+  copy() {
+    return City(name, country, timezone);
+  }
+
+  City.fromJson(Json jsonData)
       : _name = jsonData['name'],
         _country = jsonData['country'],
         _timezone = jsonData['timezone'],
         _id = jsonData['id'];
 
   @override
-  Map<String, dynamic> toJson() => {
+  Json toJson() => {
         'name': name,
         'country': country,
         'timezone': timezone,

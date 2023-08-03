@@ -99,7 +99,7 @@ class _RestoreDefaultScreenState extends State<RestoreDefaultScreen> {
                 ),
                 onTap: () {
                   widget.settingGroup
-                      .restoreDefault(context, _settingsToRestore);
+                      .restoreDefaults(context, _settingsToRestore);
                   widget.onRestore();
                   Navigator.pop(context);
                 },

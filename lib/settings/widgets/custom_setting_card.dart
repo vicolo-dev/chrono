@@ -23,12 +23,13 @@ class _CustomSettingCardState<T> extends State<CustomSettingCard> {
     Widget inner = Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
+        onTap: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => widget.setting.getWidget(),
+              builder: (context) => widget.setting.getScreenBuilder(context),
             ),
           );
+          setState(() {});
         },
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -43,10 +44,7 @@ class _CustomSettingCardState<T> extends State<CustomSettingCard> {
                   ),
                   const SizedBox(height: 4.0),
                   // const Spacer(),
-                  Text(
-                    widget.setting.getValueName(),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  widget.setting.getValueDisplayWidget(context),
                 ],
               ),
               const Spacer(),
