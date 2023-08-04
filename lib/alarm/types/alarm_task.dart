@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 enum AlarmTaskType {
   math,
   retype,
+  sequence,
+  shake,
+  memory,
 }
 
 typedef AlarmTaskBuilder = Widget Function(

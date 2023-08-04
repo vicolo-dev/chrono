@@ -22,10 +22,11 @@ class MathTaskDifficultyLevel {
 
   MathTaskDifficultyLevel(this.operators) {
     assert(operators.isNotEmpty);
+  }
 
+  void generateProblem() {
     _numbers = List.generate(
         operators.length + 1, (index) => getRandomIntInRange(1, 20));
-
     _answer = _calculateAnswer();
     _equation = _getEquationString();
   }
@@ -91,6 +92,7 @@ class _MathTaskState extends State<MathTask> {
         widget.onSolve.call();
       }
     });
+    _difficultyLevel.generateProblem();
   }
 
   @override

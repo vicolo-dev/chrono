@@ -3,6 +3,7 @@ import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
 import 'package:clock_app/theme/screens/themes_screen.dart';
@@ -13,6 +14,7 @@ import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:clock_app/timer/data/timer_settings_schema.dart';
 import 'package:clock_app/timer/screens/presets_screen.dart';
+import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -53,7 +55,15 @@ SettingGroup appSettings = SettingGroup(
             description: "12 or 24 hour time",
           ),
           SwitchSetting("Show Seconds", true),
-        ])
+        ]),
+        SettingAction("Disable battery optimizations", () async {
+          print("testing");
+          await DisableBatteryOptimization.showDisableAllOptimizationsSettings(
+              "Enable Auto Start",
+              "Follow the steps and enable the auto start of this app",
+              "Your device has additional battery optimization",
+              "Follow the steps and disable the optimizations to allow smooth functioning of this app");
+        })
       ],
       icon: FluxIcons.settings,
       description: "Set app wide settings like time format",
@@ -184,7 +194,7 @@ SettingGroup appSettings = SettingGroup(
         SettingGroup("Alarm", [
           SwitchSetting(
             "Show Instant Alarm Button",
-            false,
+            true,
             description:
                 "Show a button on the alarm screen that creates an alarm that rings one second in the future",
           ),

@@ -1,6 +1,7 @@
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
@@ -22,27 +23,27 @@ class AlarmNotificationScreen extends StatefulWidget {
 class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   late Alarm alarm;
   late Widget _currentWidget;
-  int _currentIndex = 0;
+  int _currentIndex = -1;
 
   void _setNextWidget() {
     setState(() {
-      if (_currentIndex >= alarm.tasks.length) {
+      if (_currentIndex == -1) {
         _currentWidget = Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
-              onPressed: () {
-                AlarmNotificationManager.dismissAlarm(
-                    widget.scheduleId, ScheduledNotificationType.alarm);
-              },
+              onPressed: _setNextWidget,
               child: const Text("Dismiss"),
             ),
           ],
         );
+      } else if (_currentIndex >= alarm.tasks.length) {
+        AlarmNotificationManager.dismissAlarm(
+            widget.scheduleId, ScheduledNotificationType.alarm);
       } else {
         _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
-        _currentIndex++;
       }
+      _currentIndex++;
     });
   }
 
@@ -55,27 +56,36 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ClockDisplay(
-              dateTime: alarm.time.toDateTime(),
-              horizontalAlignment: ElementAlignment.center,
+    return WillPopScope(
+      onWillPop: () async {
+        Routes.pop(onlyUpdateRoute: true);
+        return true;
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (_currentIndex <= 0)
+                  ClockDisplay(
+                    dateTime: alarm.time.toDateTime(),
+                    horizontalAlignment: ElementAlignment.center,
+                  ),
+                _currentWidget,
+                if (!alarm.maxSnoozeIsReached)
+                  TextButton(
+                    onPressed: () {
+                      AlarmNotificationManager.snoozeAlarm(
+                          widget.scheduleId, ScheduledNotificationType.alarm);
+                    },
+                    child: const Text("Snooze"),
+                  ),
+              ],
             ),
-            _currentWidget,
-            if (!alarm.maxSnoozeIsReached)
-              TextButton(
-                onPressed: () {
-                  AlarmNotificationManager.snoozeAlarm(
-                      widget.scheduleId, ScheduledNotificationType.alarm);
-                },
-                child: const Text("Snooze"),
-              ),
-          ],
+          ),
         ),
       ),
     );

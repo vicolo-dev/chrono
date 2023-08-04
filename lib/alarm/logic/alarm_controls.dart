@@ -94,7 +94,9 @@ void triggerAlarm(int scheduleId, Json params) async {
         ScheduledNotificationType.alarm);
   }
 
-  RingtonePlayer.playAlarm(getAlarmByScheduleId(scheduleId));
+  Alarm alarm = getAlarmByScheduleId(scheduleId);
+
+  RingtonePlayer.playAlarm(alarm);
   RingingManager.ringAlarm(scheduleId);
 
   AlarmNotificationManager.showFullScreenNotification(
@@ -102,6 +104,8 @@ void triggerAlarm(int scheduleId, Json params) async {
     scheduleIds: [scheduleId],
     title: "Alarm Ringing...",
     body: TimeOfDayUtils.decode(params['timeOfDay']).formatToString('h:mm a'),
+    showSnoozeButton: !alarm.maxSnoozeIsReached,
+    tasksRequired: alarm.tasks.isNotEmpty,
   );
 }
 

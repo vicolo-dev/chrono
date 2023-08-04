@@ -13,6 +13,7 @@ import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 SettingGroup alarmSettingsSchema = SettingGroup(
@@ -131,7 +132,11 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         "Length",
       ],
     ),
-    ListSetting<AlarmTask>("Tasks", [],
+    ListSetting<AlarmTask>(
+        "Tasks",
+        kDebugMode
+            ? alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList()
+            : [],
         alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
         getSettings: (item) => item.settings,
         addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),

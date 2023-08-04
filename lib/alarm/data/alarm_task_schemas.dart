@@ -1,6 +1,7 @@
 import 'package:clock_app/alarm/types/alarm_task.dart';
 import 'package:clock_app/alarm/widgets/tasks/math_task.dart';
 import 'package:clock_app/alarm/widgets/tasks/retype_task.dart';
+import 'package:clock_app/alarm/widgets/tasks/sequence_task.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 
@@ -36,6 +37,16 @@ Map<AlarmTaskType, AlarmTaskSchema> alarmTaskSchemasMap = {
     ]),
     (onSolve, settings) {
       return RetypeTask(onSolve: onSolve, settings: settings);
+    },
+  ),
+  AlarmTaskType.sequence: AlarmTaskSchema(
+    "Sequence",
+    SettingGroup("Sequence Settings", [
+      SliderSetting("Sequence length", 3, 10, 3, snapLength: 1),
+      SliderSetting("Grid size", 2, 5, 3, snapLength: 1),
+    ]),
+    (onSolve, settings) {
+      return SequenceTask(onSolve: onSolve, settings: settings);
     },
   ),
 };

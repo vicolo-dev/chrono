@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -25,53 +26,62 @@ class AlarmNotificationManager {
   static void showFullScreenNotification({
     required ScheduledNotificationType type,
     required List<int> scheduleIds,
+    bool showSnoozeButton = true,
+    bool tasksRequired = false,
     required String title,
     required String body,
   }) {
     FullScreenNotificationData data = alarmNotificationData[type]!;
+
+    List<NotificationActionButton> actionButtons = [];
+
+    if (scheduleIds.length > 1) {
+      actionButtons.add(NotificationActionButton(
+        showInCompactView: true,
+        key: _dismissActionKey,
+        label: '${data.dismissActionLabel} All',
+        actionType: ActionType.SilentAction,
+        autoDismissible: true,
+      ));
+    } else {
+      if (showSnoozeButton) {
+        actionButtons.add(NotificationActionButton(
+          showInCompactView: true,
+          key: _snoozeActionKey,
+          label: data.snoozeActionLabel,
+          actionType: ActionType.SilentAction,
+          autoDismissible: true,
+        ));
+      }
+
+      actionButtons.add(NotificationActionButton(
+        showInCompactView: true,
+        key: _dismissActionKey,
+        label:
+            "${tasksRequired ? "Solve tasks to " : ""}${data.dismissActionLabel}",
+        actionType: ActionType.SilentAction,
+        autoDismissible: true,
+      ));
+    }
+
     AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: data.id,
-        channelKey: alarmNotificationChannelKey,
-        title: title,
-        body: body,
-        payload: {
-          "scheduleIds": json.encode(scheduleIds),
-          "type": type.name,
-        },
-        category: NotificationCategory.Alarm,
-        fullScreenIntent: true,
-        autoDismissible: false,
-        wakeUpScreen: true,
-        locked: true,
-      ),
-      actionButtons: scheduleIds.length == 1
-          ? [
-              NotificationActionButton(
-                showInCompactView: true,
-                key: _snoozeActionKey,
-                label: data.snoozeActionLabel,
-                actionType: ActionType.SilentAction,
-                autoDismissible: true,
-              ),
-              NotificationActionButton(
-                showInCompactView: true,
-                key: _dismissActionKey,
-                label: data.dismissActionLabel,
-                actionType: ActionType.SilentAction,
-                autoDismissible: true,
-              ),
-            ]
-          : [
-              NotificationActionButton(
-                showInCompactView: true,
-                key: _dismissActionKey,
-                label: '${data.dismissActionLabel} All',
-                actionType: ActionType.SilentAction,
-                autoDismissible: true,
-              ),
-            ],
-    );
+        content: NotificationContent(
+          id: data.id,
+          channelKey: alarmNotificationChannelKey,
+          title: title,
+          body: body,
+          payload: {
+            "scheduleIds": json.encode(scheduleIds),
+            "type": type.name,
+            "tasksRequired": tasksRequired.toString(),
+          },
+          category: NotificationCategory.Alarm,
+          fullScreenIntent: true,
+          autoDismissible: false,
+          wakeUpScreen: true,
+          locked: true,
+        ),
+        actionButtons: actionButtons);
   }
 
   static Future<void> removeNotification(ScheduledNotificationType type) async {
@@ -125,10 +135,27 @@ class AlarmNotificationManager {
     GetStorage().write("fullScreenNotificationRecentlyShown", false);
   }
 
+  static Future<void> openNotificationScreen(
+      FullScreenNotificationData data, List<int> scheduleIds) async {
+    await LockScreenFlagManager.setLockScreenFlags();
+
+    // If we're already on the same notification screen, pop it off the
+    // stack so we don't have two of them on the stack.
+    if (Routes.currentRoute == data.route) {
+      Routes.pop();
+    }
+    App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      data.route,
+      (route) => (route.settings.name != data.route) || route.isFirst,
+      arguments: scheduleIds,
+    );
+  }
+
   static Future<void> handleNotificationAction(ReceivedAction action) async {
     Payload payload = action.payload!;
     final type = ScheduledNotificationType.values.byName((payload['type'])!);
     FullScreenNotificationData data = alarmNotificationData[type]!;
+    bool tasksRequired = payload['tasksRequired'] == 'true';
 
     List<int> scheduleIds =
         (json.decode((payload['scheduleIds'])!) as List<dynamic>).cast<int>();
@@ -139,22 +166,15 @@ class AlarmNotificationManager {
         break;
 
       case _dismissActionKey:
-        dismissAlarm(scheduleIds.first, type);
+        if (tasksRequired) {
+          await openNotificationScreen(data, scheduleIds);
+        } else {
+          dismissAlarm(scheduleIds.first, type);
+        }
         break;
 
       default:
-        await LockScreenFlagManager.setLockScreenFlags();
-
-        // If we're already on the same notification screen, pop it off the
-        // stack so we don't have two of them on the stack.
-        if (Routes.currentRoute == data.route) {
-          Routes.pop();
-        }
-        App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
-          data.route,
-          (route) => (route.settings.name != data.route) || route.isFirst,
-          arguments: scheduleIds,
-        );
+        await openNotificationScreen(data, scheduleIds);
         break;
     }
   }

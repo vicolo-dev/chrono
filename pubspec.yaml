@@ -50,8 +50,6 @@ dependencies:
     git:
       url: https://github.com/AhsanSarwar45/android_alarm_manager_plus
       ref: main
-  # android_alarm_manager_plus:
-  #   path: ../android_alarm_manager_plus
   just_audio: ^0.9.31
   awesome_notifications: ^0.7.4+1
   audio_session: ^0.1.13
@@ -64,8 +62,6 @@ dependencies:
     git:
       url: https://github.com/AhsanSarwar45/great_list_view
       ref: master
-  # great_list_view:
-  #   path: ../great_list_view
   get_storage: ^2.1.1
   queue: ^3.1.0+2
   table_calendar: ^3.0.8

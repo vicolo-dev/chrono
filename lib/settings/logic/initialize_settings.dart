@@ -9,6 +9,7 @@ import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:clock_app/timer/logic/initialize_default_timer_presets.dart';
 import 'package:clock_app/timer/types/timer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
 Future<void> _clearSettings() async {
@@ -29,7 +30,7 @@ Future<void> initializeSettings() async {
 
   // Used to clear the preferences in case of a change in format of the data
   // Comment this out after the preferences are cleared
-  await _clearSettings();
+  if (kDebugMode) await _clearSettings();
 
   bool? firstLaunch = GetStorage().read('first_launch');
   if (firstLaunch == null) {

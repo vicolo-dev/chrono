@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -35,7 +36,7 @@ class ClockTimer extends ListItem {
   String get label => _settings.getSetting("Label").value.isNotEmpty
       ? _settings.getSetting("Label").value
       : '${_duration.toString()} timer';
-  String get ringtoneUri => _settings.getSetting("Melody").value;
+  Audio get ringtone => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
   TimeDuration get risingVolumeDuration =>
       _settings.getSetting("Rising Volume").value

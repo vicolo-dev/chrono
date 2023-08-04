@@ -122,6 +122,9 @@ class _TimerScreenState extends State<TimerScreen> {
                 timer.start();
                 _listController.addItem(timer);
               });
+            } else {
+              timer.start();
+              _listController.addItem(timer);
             }
           }
         },

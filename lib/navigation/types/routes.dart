@@ -6,19 +6,22 @@ class Routes {
   static const String timerNotificationRoute = '/timer-notification-screen';
 
   static String _currentRoute = rootRoute;
-  static String _previousRoute = '';
+  static final List<String> _previousRoutes = [];
 
   static String get currentRoute => _currentRoute;
-  static String get previousRoute => _previousRoute;
+  static List<String> get previousRoutes => _previousRoutes;
 
   static void push(String route) {
-    _previousRoute = _currentRoute;
+    _previousRoutes.add(_currentRoute);
     _currentRoute = route;
   }
 
-  static void pop() {
-    App.navigatorKey.currentState?.pop();
-    _currentRoute = _previousRoute;
+  static void pop({bool onlyUpdateRoute = false}) {
+    if (!onlyUpdateRoute) {
+      App.navigatorKey.currentState?.pop();
+    }
+
+    _currentRoute = _previousRoutes.removeLast();
   }
 
   static void popIf(String? route) {

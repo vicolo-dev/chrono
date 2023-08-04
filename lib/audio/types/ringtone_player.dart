@@ -37,7 +37,7 @@ class RingtonePlayer {
       {LoopMode loopMode = LoopMode.one}) async {
     activePlayer = _timerPlayer;
     await _play(
-      timer.ringtoneUri,
+      timer.ringtone.uri,
       vibrate: timer.vibrate,
       loopMode: LoopMode.one,
       secondsToMaxVolume: timer.risingVolumeDuration.inSeconds,

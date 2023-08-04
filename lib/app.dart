@@ -12,6 +12,7 @@ import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -43,6 +44,8 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
+    super.initState();
+
     NotificationController.setListeners();
 
     _appearanceSettings = appSettings.getGroup("Appearance");
@@ -52,7 +55,11 @@ class _AppState extends State<App> {
     setColorScheme(_colorSettings.getSetting("Color Scheme").value);
     setStyleTheme(_styleSettings.getSetting("Style Theme").value);
 
-    super.initState();
+    // DisableBatteryOptimization.showDisableAllOptimizationsSettings(
+    //     "Enable Auto Start",
+    //     "Follow the steps and enable the auto start of this app",
+    //     "Your device has additional battery optimization",
+    //     "Follow the steps and disable the optimizations to allow smooth functioning of this app");
   }
 
   setColorScheme(ColorSchemeData? colorSchemeDataParam) {
