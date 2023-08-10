@@ -2,6 +2,7 @@ import 'package:clock_app/theme/border.dart';
 import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/card.dart';
 import 'package:clock_app/theme/data/default_style_themes.dart';
+import 'package:clock_app/theme/popup_menu.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/data/default_color_schemes.dart';
 import 'package:clock_app/theme/dialog.dart';
@@ -31,12 +32,12 @@ ThemeData defaultTheme = ThemeData(
   timePickerTheme: timePickerTheme,
   dialogTheme: dialogTheme,
   switchTheme: switchTheme,
-  snackBarTheme: getSnackBarTheme(defaultColorScheme, defaultBorderRadius),
-  inputDecorationTheme: getInputTheme(defaultColorScheme, defaultBorderRadius),
+  snackBarTheme: getSnackBarTheme(defaultColorScheme, defaultStyleTheme),
+  inputDecorationTheme: getInputTheme(defaultColorScheme, defaultStyleTheme),
   radioTheme: getRadioTheme(defaultColorScheme),
   sliderTheme: sliderTheme,
-  bottomSheetTheme:
-      getBottomSheetTheme(defaultColorScheme, defaultBorderRadius.topLeft),
+  bottomSheetTheme: getBottomSheetTheme(defaultColorScheme, defaultStyleTheme),
   toggleButtonsTheme: toggleButtonsTheme,
   extensions: const <ThemeExtension<dynamic>>[ThemeStyle()],
+  popupMenuTheme: getPopupMenuTheme(defaultColorScheme, defaultStyleTheme),
 );

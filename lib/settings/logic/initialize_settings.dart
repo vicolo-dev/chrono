@@ -15,6 +15,8 @@ import 'package:get_storage/get_storage.dart';
 Future<void> _clearSettings() async {
   List<ClockTimer> timers = await loadList<ClockTimer>('timers');
   List<Alarm> alarms = await loadList<Alarm>('alarms');
+  // We need to remove all scheduled alarms and timers before clearing the data
+  // Otherwise, there would be no way to remove them in the future
   for (var alarm in alarms) {
     alarm.cancel();
   }
@@ -25,7 +27,6 @@ Future<void> _clearSettings() async {
 }
 
 Future<void> initializeSettings() async {
-  // await SettingsManager.initialize();
   await GetStorage.init();
 
   // Used to clear the preferences in case of a change in format of the data
@@ -36,18 +37,25 @@ Future<void> initializeSettings() async {
   if (firstLaunch == null) {
     GetStorage().write('first_launch', true);
 
+    // This is used to show alarm and timer edit animations
     GetStorage().write('first_alarm_created', false);
     GetStorage().write('first_timer_created', false);
 
     initializeDefaultFavoriteCities();
     initializeDefaultTimerPresets();
-    saveList<Alarm>('alarms', []);
+    initializeDefaultAlarms();
     saveList<ClockTimer>('timers', []);
     saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
     saveList<ColorSchemeData>('color_schemes', defaultColorSchemes);
     saveList<StyleTheme>('style_themes', defaultStyleThemes);
+
+    // Save the schema to disk on first launch
     appSettings.save();
   }
 
   appSettings.load();
+}
+
+void initializeDefaultAlarms() {
+  saveList<Alarm>('alarms', []);
 }

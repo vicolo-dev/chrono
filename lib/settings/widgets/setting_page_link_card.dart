@@ -20,6 +20,9 @@ class SettingPageLinkCard extends StatefulWidget {
 class _SettingPageLinkCardState<T> extends State<SettingPageLinkCard> {
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    TextTheme textTheme = theme.textTheme;
+    ColorScheme colorScheme = theme.colorScheme;
     Widget inner = Material(
       color: Colors.transparent,
       child: InkWell(
@@ -34,15 +37,27 @@ class _SettingPageLinkCardState<T> extends State<SettingPageLinkCard> {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Text(
-                widget.setting.name,
-                style: Theme.of(context).textTheme.displaySmall,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.setting.name,
+                      style: textTheme.displaySmall,
+                    ),
+                    if (widget.setting.description.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.setting.description,
+                        style: textTheme.bodyMedium,
+                      )
+                    ]
+                  ],
+                ),
               ),
-              const Spacer(),
               Icon(
                 Icons.chevron_right_rounded,
-                color:
-                    Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                color: colorScheme.onBackground.withOpacity(0.6),
               ),
             ],
           ),

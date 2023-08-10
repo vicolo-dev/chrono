@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 class SettingPageLink extends SettingItem {
   Widget screen;
 
-  SettingPageLink(String name, this.screen) : super(name);
+  SettingPageLink(
+    String name,
+    this.screen, {
+    String description = "",
+    List<String> searchTags = const [],
+  }) : super(name, description, searchTags);
 
   @override
   SettingPageLink copy() {

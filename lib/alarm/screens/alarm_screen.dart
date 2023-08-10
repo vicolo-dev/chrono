@@ -156,6 +156,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             alarm: alarm,
             onEnabledChange: (value) => _handleEnableChangeAlarm(alarm, value),
             onPressDelete: () => _listController.deleteItem(alarm),
+            onPressDuplicate: () => _listController.duplicateItem(alarm),
           ),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
           onAddItem: (alarm) {

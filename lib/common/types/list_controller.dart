@@ -5,6 +5,7 @@ class ListController<T> {
   ItemChanger<T>? _changeItems;
   void Function(T item)? _addItem;
   void Function(T item)? _deleteItem;
+  void Function(T item)? _duplicateItem;
   int Function(T item)? _getItemIndex;
 
   ListController();
@@ -21,6 +22,10 @@ class ListController<T> {
     _addItem = callback;
   }
 
+  void setDuplicateItem(void Function(T item) callback) {
+    _duplicateItem = callback;
+  }
+
   void setDeleteItem(void Function(T item) callback) {
     _deleteItem = callback;
   }
@@ -28,6 +33,10 @@ class ListController<T> {
   void changeItems(ItemChangerCallback<T> callback,
       {bool callOnModifyList = true}) {
     _changeItems?.call(callback, callOnModifyList);
+  }
+
+  void duplicateItem(T item) {
+    _duplicateItem?.call(item);
   }
 
   void addItem(T item) {

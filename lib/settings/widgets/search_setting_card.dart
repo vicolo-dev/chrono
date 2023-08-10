@@ -19,7 +19,8 @@ class SearchSettingCard extends StatelessWidget {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    String pathString = settingItem.path.fold("", (previousValue, group) {
+    String pathString =
+        settingItem.path.sublist(1).fold("", (previousValue, group) {
       return "$previousValue${previousValue.isNotEmpty ? " > " : ""}${group.name}";
     });
     Widget settingWidget =

@@ -877,8 +877,8 @@ class _RenderInputPadding extends RenderShiftedBox {
   }
 }
 
-class _TappableLabel {
-  _TappableLabel({
+class TappableLabel {
+  TappableLabel({
     required this.value,
     required this.painter,
     required this.onTap,
@@ -906,8 +906,8 @@ class DialPainter extends CustomPainter {
     required this.selectedValue,
   }) : super(repaint: PaintingBinding.instance.systemFonts);
 
-  final List<_TappableLabel> primaryLabels;
-  final List<_TappableLabel> secondaryLabels;
+  final List<TappableLabel> primaryLabels;
+  final List<TappableLabel> secondaryLabels;
   final Color backgroundColor;
   final Color accentColor;
   final Color dotColor;
@@ -930,14 +930,14 @@ class DialPainter extends CustomPainter {
           Offset(labelRadius * math.cos(theta), -labelRadius * math.sin(theta));
     }
 
-    void paintLabels(List<_TappableLabel>? labels) {
+    void paintLabels(List<TappableLabel>? labels) {
       if (labels == null) {
         return;
       }
       final double labelThetaIncrement = -_kTwoPi / labels.length;
       double labelTheta = math.pi / 2.0;
 
-      for (final _TappableLabel label in labels) {
+      for (final TappableLabel label in labels) {
         final TextPainter labelPainter = label.painter;
         final Offset labelOffset =
             Offset(-labelPainter.width / 2.0, -labelPainter.height / 2.0);
@@ -1254,12 +1254,12 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     TimeOfDay(hour: 22, minute: 0),
   ];
 
-  _TappableLabel _buildTappableLabel(TextTheme textTheme, Color color,
-      int value, String label, VoidCallback onTap) {
+  TappableLabel _buildTappableLabel(TextTheme textTheme, Color color, int value,
+      String label, VoidCallback onTap) {
     final TextStyle style = textTheme.bodyLarge!.copyWith(color: color);
     final double labelScaleFactor =
         math.min(MediaQuery.of(context).textScaleFactor, 2.0);
-    return _TappableLabel(
+    return TappableLabel(
       value: value,
       painter: TextPainter(
         text: TextSpan(style: style, text: label),
@@ -1270,8 +1270,8 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     );
   }
 
-  List<_TappableLabel> _build24HourRing(TextTheme textTheme, Color color) =>
-      <_TappableLabel>[
+  List<TappableLabel> _build24HourRing(TextTheme textTheme, Color color) =>
+      <TappableLabel>[
         for (final TimeOfDay timeOfDay in _twentyFourHours)
           _buildTappableLabel(
             textTheme,
@@ -1285,8 +1285,8 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
           ),
       ];
 
-  List<_TappableLabel> _build12HourRing(TextTheme textTheme, Color color) =>
-      <_TappableLabel>[
+  List<TappableLabel> _build12HourRing(TextTheme textTheme, Color color) =>
+      <TappableLabel>[
         for (final TimeOfDay timeOfDay in _amHours)
           _buildTappableLabel(
             textTheme,
@@ -1300,7 +1300,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
           ),
       ];
 
-  List<_TappableLabel> _buildMinutes(TextTheme textTheme, Color color) {
+  List<TappableLabel> _buildMinutes(TextTheme textTheme, Color color) {
     const List<TimeOfDay> minuteMarkerValues = <TimeOfDay>[
       TimeOfDay(hour: 0, minute: 0),
       TimeOfDay(hour: 0, minute: 5),
@@ -1316,7 +1316,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
       TimeOfDay(hour: 0, minute: 55),
     ];
 
-    return <_TappableLabel>[
+    return <TappableLabel>[
       for (final TimeOfDay timeOfDay in minuteMarkerValues)
         _buildTappableLabel(
           textTheme,
@@ -1345,8 +1345,8 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
             pickerTheme.dialTextColor,
             <MaterialState>{MaterialState.selected}) ??
         themeData.colorScheme.onPrimary;
-    List<_TappableLabel> primaryLabels;
-    List<_TappableLabel> secondaryLabels;
+    List<TappableLabel> primaryLabels;
+    List<TappableLabel> secondaryLabels;
     final int selectedDialValue;
     switch (widget.mode) {
       case _TimePickerMode.hour:

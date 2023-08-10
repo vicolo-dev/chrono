@@ -3,12 +3,11 @@ import 'package:clock_app/alarm/logic/time_icon.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
 import 'package:clock_app/common/logic/edit_tips.dart';
-import 'package:clock_app/common/utils/time_of_day.dart';
+import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_storage/get_storage.dart';
 
 class AlarmCard extends StatefulWidget {
@@ -17,11 +16,13 @@ class AlarmCard extends StatefulWidget {
     required this.onEnabledChange,
     required this.alarm,
     required this.onPressDelete,
+    required this.onPressDuplicate,
   });
 
   final Alarm alarm;
   final void Function(bool) onEnabledChange;
   final VoidCallback onPressDelete;
+  final VoidCallback onPressDuplicate;
 
   @override
   State<AlarmCard> createState() => _AlarmCardState();
@@ -61,6 +62,11 @@ class _AlarmCardState extends State<AlarmCard> {
   @override
   Widget build(BuildContext context) {
     TimeIcon timeOfDayIcon = getTimeIcon(widget.alarm.time);
+
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -73,19 +79,14 @@ class _AlarmCardState extends State<AlarmCard> {
                 if (widget.alarm.label.isNotEmpty)
                   Row(
                     children: [
-                      Text(widget.alarm.label,
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: widget.alarm.isEnabled
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onBackground
-                                            .withOpacity(0.8)
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .onBackground
-                                            .withOpacity(0.6),
-                                  )),
+                      Text(
+                        widget.alarm.label,
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: widget.alarm.isEnabled
+                              ? colorScheme.onBackground.withOpacity(0.8)
+                              : colorScheme.onBackground.withOpacity(0.6),
+                        ),
+                      ),
                     ],
                   ),
                 Row(
@@ -95,10 +96,7 @@ class _AlarmCardState extends State<AlarmCard> {
                         scale: 0.6,
                         color: widget.alarm.isEnabled
                             ? null
-                            : Theme.of(context)
-                                .colorScheme
-                                .onBackground
-                                .withOpacity(0.6)),
+                            : colorScheme.onBackground.withOpacity(0.6)),
                   ],
                 ),
                 Row(
@@ -107,10 +105,7 @@ class _AlarmCardState extends State<AlarmCard> {
                       timeOfDayIcon.icon,
                       color: widget.alarm.isEnabled
                           ? timeOfDayIcon.color
-                          : Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.6),
+                          : colorScheme.onBackground.withOpacity(0.6),
                       size: 24,
                     ),
                     const SizedBox(width: 8),
@@ -118,17 +113,11 @@ class _AlarmCardState extends State<AlarmCard> {
                       child: Text(
                         getAlarmScheduleDescription(widget.alarm, dateFormat),
                         maxLines: 2,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: widget.alarm.isEnabled
-                                  ? Theme.of(context)
-                                      .colorScheme
-                                      .onBackground
-                                      .withOpacity(0.8)
-                                  : Theme.of(context)
-                                      .colorScheme
-                                      .onBackground
-                                      .withOpacity(0.6),
-                            ),
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: widget.alarm.isEnabled
+                              ? colorScheme.onBackground.withOpacity(0.8)
+                              : colorScheme.onBackground.withOpacity(0.6),
+                        ),
                       ),
                     ),
                   ],
@@ -149,7 +138,7 @@ class _AlarmCardState extends State<AlarmCard> {
                           onPressed: widget.onPressDelete,
                           icon: Icon(
                             Icons.delete_rounded,
-                            color: Theme.of(context).colorScheme.error,
+                            color: colorScheme.error,
                             size: 32,
                           ),
                         ),
@@ -158,6 +147,10 @@ class _AlarmCardState extends State<AlarmCard> {
                         value: widget.alarm.isEnabled,
                         onChanged: widget.onEnabledChange,
                       ),
+                CardEditMenu(
+                  onPressDelete: widget.onPressDelete,
+                  onPressDuplicate: widget.onPressDuplicate,
+                ),
               ],
             ),
           )

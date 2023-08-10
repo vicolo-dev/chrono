@@ -3,7 +3,7 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
-abstract class ThemeItem extends ListItem {
+abstract class ThemeItem extends CustomizableListItem {
   final int _id;
   final SettingGroup _settings;
   final bool _isDefault;
@@ -22,6 +22,7 @@ abstract class ThemeItem extends ListItem {
   int get id => _id;
   @override
   bool get isDeletable => !_isDefault;
+  @override
   SettingGroup get settings => _settings;
   bool get isDefault => _isDefault;
   String get name;

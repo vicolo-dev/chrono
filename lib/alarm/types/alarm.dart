@@ -31,7 +31,7 @@ List<AlarmSchedule> createSchedules(SettingGroup settings) {
   ];
 }
 
-class Alarm extends ListItem {
+class Alarm extends CustomizableListItem {
   Time _time;
   bool _isEnabled = true;
   bool _isFinished = false;
@@ -64,6 +64,7 @@ class Alarm extends ListItem {
   /// The date and time when the snoozed alarm will ring again.
   /// Will return null if the alarm is not snoozed.
   DateTime? get snoozeTime => _snoozeTime;
+  @override
   SettingGroup get settings => _settings;
   String get label => _settings.getSetting("Label").value;
   Type get scheduleType => _settings.getSetting("Type").value;

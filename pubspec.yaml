@@ -68,6 +68,8 @@ dependencies:
   vector_math: ^2.1.4
   fuzzywuzzy: ^1.1.2
   flex_color_picker: ^3.2.2
+  auto_start_flutter: ^0.1.1
+  app_settings: ^5.0.0
 
 dev_dependencies:
   flutter_test:

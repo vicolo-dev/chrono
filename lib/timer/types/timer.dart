@@ -12,7 +12,7 @@ import 'package:clock_app/common/types/timer_state.dart';
 import 'package:clock_app/common/utils/duration.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 
-class ClockTimer extends ListItem {
+class ClockTimer extends CustomizableListItem {
   TimeDuration _duration;
   TimeDuration _currentDuration;
   int _secondsRemainingOnPause;

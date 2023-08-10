@@ -1117,16 +1117,8 @@ class _ColorPickerState extends State<ColorPicker> {
   // should update.
   bool _wheelShouldUpdate = true;
 
-  // The tonal picker should only update its tonal palette whe we click on
-  // colors in other color picker, not when we select a color in the
-  // tonal palette. This local state is used to send the update signal.
-  bool _tonalShouldUpdate = true;
-
   // Color wheel picker should request focus.
   bool _wheelShouldFocus = false;
-
-  // Set to true when we are drag and operating the wheel picker.
-  bool _onWheel = false;
 
   // Becomes true when we have more than one ColorPickerType available in
   // the `widget.pickersEnabled` property. If there is just one picker enabled
@@ -1209,8 +1201,6 @@ class _ColorPickerState extends State<ColorPicker> {
     // Always update the wheel and edit field when ColorPicker is initialized.
     _wheelShouldUpdate = true;
     _editShouldUpdate = true;
-    // Always update tonal when ColorPicker is initialized.
-    _tonalShouldUpdate = true;
     // If there are no shade or tonal colors displayed, the wheel must
     // focus on init.
     _wheelShouldFocus =
@@ -1355,8 +1345,6 @@ class _ColorPickerState extends State<ColorPicker> {
       // Wheel and edit needs to update.
       _wheelShouldUpdate = true;
       _editShouldUpdate = true;
-      // Tonal picker should update from external change.
-      _tonalShouldUpdate = true;
       // We need to find the right picker again.
       shouldFindPickerAndSwatch = true;
     }
@@ -1498,19 +1486,6 @@ class _ColorPickerState extends State<ColorPicker> {
     final TextStyle effectiveCodeStyle =
         (widget.colorCodeTextStyle ?? Theme.of(context).textTheme.bodyMedium) ??
             const TextStyle();
-
-    // The logic below is used to determine if we will have a context menu
-    // present at all in the Widget tree.
-    final bool useContextMenu = widget.copyPasteBehavior.longPressMenu ||
-        widget.copyPasteBehavior.secondaryMenu ||
-        widget.copyPasteBehavior.secondaryOnDesktopLongOnDevice ||
-        widget.copyPasteBehavior.secondaryOnDesktopLongOnDeviceAndWeb;
-
-    // Should keyboard listener grab focus? If neither copy and paste keyboard
-    // shortcuts are enabled, there is no need to autofocus, so let's skip it
-    // then too, regardless of autofocus setting.
-    final bool autoFocus = widget.copyPasteBehavior.autoFocus &&
-        (widget.copyPasteBehavior.ctrlC || widget.copyPasteBehavior.ctrlV);
 
     // We start with a RawKeyboardListener that is used to handle keyboard
     // copy and paste events.
@@ -1660,7 +1635,6 @@ class _ColorPickerState extends State<ColorPicker> {
                       _selectedColor = color.withOpacity(_opacity);
                       _wheelShouldUpdate = false;
                       _editShouldUpdate = true;
-                      _tonalShouldUpdate = true;
                       _selectedShouldFocus = true;
                       _wheelShouldFocus = false;
                       _updateActiveSwatch();
@@ -1673,9 +1647,7 @@ class _ColorPickerState extends State<ColorPicker> {
                     );
                   },
                   onWheel: (bool value) {
-                    setState(() {
-                      _onWheel = value;
-                    });
+                    setState(() {});
                   },
                 ),
               ),
@@ -1948,8 +1920,6 @@ class _ColorPickerState extends State<ColorPicker> {
       // selected outside the wheel and edit field, they should update!
       _wheelShouldUpdate = true;
       _editShouldUpdate = true;
-      // Tonal palette should be updated.
-      _tonalShouldUpdate = true;
 
       // Find best matching picker of the enabled ones for _selectedColor.
       if (findPicker) {

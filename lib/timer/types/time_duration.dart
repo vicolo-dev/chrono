@@ -56,7 +56,7 @@ class TimeDuration extends JsonSerializable {
     String minutesString = minutes > 0 ? '${minutes}m ' : '';
     String secondsString = seconds > 0 ? '${seconds}s' : '';
     String millisecondsString = milliseconds > 0 ? '${milliseconds}ms' : '';
-    return "$hoursString$minutesString$secondsString$millisecondsString";
+    return "$hoursString$minutesString$secondsString$millisecondsString".trim();
   }
 
   String toReadableString() {

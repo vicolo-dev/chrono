@@ -69,7 +69,7 @@ class _InputFieldState<T> extends State<InputField> {
                 ],
               ),
               const Spacer(),
-              Icon(Icons.arrow_drop_down_rounded,
+              Icon(Icons.keyboard_arrow_down_rounded,
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.6))
             ],

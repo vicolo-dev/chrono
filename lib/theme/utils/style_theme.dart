@@ -1,6 +1,7 @@
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/input.dart';
+import 'package:clock_app/theme/popup_menu.dart';
 import 'package:clock_app/theme/snackbar.dart';
 import 'package:clock_app/theme/theme_extension.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
@@ -18,8 +19,7 @@ ThemeData getThemeFromStyleTheme(ThemeData theme, StyleTheme styleTheme) {
   );
   return theme = theme.copyWith(
     cardTheme: theme.cardTheme.copyWith(shape: shape),
-    bottomSheetTheme: getBottomSheetTheme(
-        colorSchemeData, Radius.circular(styleTheme.borderRadius)),
+    bottomSheetTheme: getBottomSheetTheme(colorSchemeData, styleTheme),
     timePickerTheme: theme.timePickerTheme.copyWith(
       shape: shape,
       dayPeriodShape: shape,
@@ -28,10 +28,9 @@ ThemeData getThemeFromStyleTheme(ThemeData theme, StyleTheme styleTheme) {
     toggleButtonsTheme: theme.toggleButtonsTheme.copyWith(
       borderRadius: BorderRadius.circular(styleTheme.borderRadius),
     ),
-    snackBarTheme: getSnackBarTheme(
-        colorSchemeData, BorderRadius.circular(styleTheme.borderRadius)),
-    inputDecorationTheme: getInputTheme(
-        colorSchemeData, BorderRadius.circular(styleTheme.borderRadius)),
+    snackBarTheme: getSnackBarTheme(colorSchemeData, styleTheme),
+    inputDecorationTheme: getInputTheme(colorSchemeData, styleTheme),
+    popupMenuTheme: getPopupMenuTheme(colorSchemeData, styleTheme),
     extensions: [
       theme.extension<ThemeStyle>()?.copyWith(
                 borderRadius: styleTheme.borderRadius,

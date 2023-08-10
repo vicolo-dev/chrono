@@ -31,12 +31,16 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
       } else {
         var results = extractTop<SettingItem>(
             query: _filterController.text,
-            choices: appSettings.settings,
+            choices: [
+              ...appSettings.settings,
+              ...appSettings.settingPageLinks,
+              ...appSettings.settingActions
+            ],
             limit: 10,
             cutoff: 50,
             getter: (item) {
               // Search term includes the setting name, as well as the parent group names
-              return "${item.name} ${item.path.map((group) => group.name).join(" ")}";
+              return "${item.name} ${item.path.map((group) => group.name).join(" ")} ${item.searchTags.join(" ")}";
             });
 
         widget.onSearch(results.map((result) => result.choice).toList());

@@ -1,10 +1,9 @@
-import 'package:clock_app/alarm/types/alarm_task.dart';
-import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
-class ListSettingAddBottomSheet<Item extends ListItem> extends StatelessWidget {
+class ListSettingAddBottomSheet<Item extends CustomizableListItem>
+    extends StatelessWidget {
   const ListSettingAddBottomSheet({
     required this.setting,
     super.key,

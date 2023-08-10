@@ -94,6 +94,7 @@ Future<void> _renderWidget(WidgetTester tester, [Alarm? alarm]) async {
           alarm: alarm ?? sampleAlarm,
           onEnabledChange: (value) {},
           onPressDelete: () {},
+          onPressDuplicate: () {},
           key: testKey,
         ),
       ),

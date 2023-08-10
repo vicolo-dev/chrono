@@ -1,4 +1,10 @@
+import 'package:app_settings/app_settings.dart';
+import 'package:auto_start_flutter/auto_start_flutter.dart';
 import 'package:clock_app/alarm/data/alarm_settings_schema.dart';
+import 'package:clock_app/alarm/types/notification_action.dart';
+import 'package:clock_app/alarm/widgets/notification_actions/area_notification_action.dart';
+import 'package:clock_app/alarm/widgets/notification_actions/buttons_notification_action.dart';
+import 'package:clock_app/alarm/widgets/notification_actions/slide_notification_action.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/icons/flux_icons.dart';
@@ -14,8 +20,8 @@ import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:clock_app/timer/data/timer_settings_schema.dart';
 import 'package:clock_app/timer/screens/presets_screen.dart';
-import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 SelectSettingOption<String> _getDateSettingOption(String format) {
@@ -56,14 +62,30 @@ SettingGroup appSettings = SettingGroup(
           ),
           SwitchSetting("Show Seconds", true),
         ]),
-        SettingAction("Disable battery optimizations", () async {
-          print("testing");
-          await DisableBatteryOptimization.showDisableAllOptimizationsSettings(
-              "Enable Auto Start",
-              "Follow the steps and enable the auto start of this app",
-              "Your device has additional battery optimization",
-              "Follow the steps and disable the optimizations to allow smooth functioning of this app");
-        })
+        SettingGroup("Reliability", [
+          SettingAction(
+            "Disable Battery Optimization",
+            () async {
+              AppSettings.openAppSettings(
+                  type: AppSettingsType.batteryOptimization);
+            },
+            description:
+                "Disable battery optimization for this app to prevent alarms from being delayed",
+          ),
+          SettingAction(
+            "Auto Start",
+            () async {
+              try {
+                //check auto-start availability.
+                var test = await isAutoStartAvailable ?? false;
+                //if available then navigate to auto-start setting page.
+                if (test) await getAutoStartPermission();
+              } on PlatformException catch (e) {}
+            },
+            description:
+                "Enable auto start to allow alarms to go off when the app is closed",
+          )
+        ]),
       ],
       icon: FluxIcons.settings,
       description: "Set app wide settings like time format",
@@ -91,6 +113,7 @@ SettingGroup appSettings = SettingGroup(
               onChange: (context, colorScheme) {
                 App.setColorScheme(context, colorScheme);
               },
+              searchTags: ["theme", "style", "visual", "dark mode"],
             ),
             SwitchSetting(
               "Override Accent Color",
@@ -131,6 +154,7 @@ SettingGroup appSettings = SettingGroup(
               onChange: (context, styleTheme) {
                 App.setStyleTheme(context, styleTheme);
               },
+              searchTags: ["scheme", "visual"],
             ),
           ],
         ),
@@ -147,6 +171,35 @@ SettingGroup appSettings = SettingGroup(
           description: "Set default settings for new alarms",
           icon: Icons.settings,
         ),
+        SelectSetting<NotificationAction>("Dismiss Action Type", [
+          SelectSettingOption(
+            "Slide",
+            NotificationAction(
+              builder: (onDismiss, onSnooze) => SlideNotificationAction(
+                onDismiss: onDismiss,
+                onSnooze: onSnooze,
+              ),
+            ),
+          ),
+          SelectSettingOption(
+            "Buttons",
+            NotificationAction(
+              builder: (onDismiss, onSnooze) => ButtonsNotificationAction(
+                onDismiss: onDismiss,
+                onSnooze: onSnooze,
+              ),
+            ),
+          ),
+          SelectSettingOption(
+            "Area Buttons",
+            NotificationAction(
+              builder: (onDismiss, onSnooze) => AreaNotificationAction(
+                onDismiss: onDismiss,
+                onSnooze: onSnooze,
+              ),
+            ),
+          )
+        ])
       ],
       icon: FluxIcons.alarm,
     ),

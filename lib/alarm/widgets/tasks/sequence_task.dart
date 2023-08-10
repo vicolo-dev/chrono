@@ -1,10 +1,8 @@
 import 'dart:math';
 
-import 'package:clock_app/common/utils/text_size.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class SequenceTask extends StatefulWidget {
   const SequenceTask({
@@ -146,7 +144,8 @@ class _SequenceTaskState extends State<SequenceTask>
                       children: [
                         for (int i = 0; i < _sequenceLength; i++)
                           Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.only(
+                                left: 4.0, right: 4.0, top: 4.0),
                             child: Icon(
                               _enteredSequence.length > i
                                   ? Icons.circle
@@ -155,32 +154,35 @@ class _SequenceTaskState extends State<SequenceTask>
                           ),
                       ],
                     ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: _gridSize,
-                        crossAxisSpacing: 2.0,
-                        mainAxisSpacing: 2.0,
-                      ),
-                      itemCount: _gridSize * _gridSize,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () => onTap(index),
-                          child: AnimatedBuilder(
-                            animation: _colorTweenList[index],
-                            builder: (context, child) => CardContainer(
-                              color: _colorTweenList[index].value,
-                              child: Center(
-                                child: Text(
-                                  (index + 1).toString(),
-                                  style: textTheme.headlineMedium,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: _gridSize,
+                          crossAxisSpacing: 2.0,
+                          mainAxisSpacing: 2.0,
+                        ),
+                        itemCount: _gridSize * _gridSize,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () => onTap(index),
+                            child: AnimatedBuilder(
+                              animation: _colorTweenList[index],
+                              builder: (context, child) => CardContainer(
+                                color: _colorTweenList[index].value,
+                                child: Center(
+                                  child: Text(
+                                    (index + 1).toString(),
+                                    style: textTheme.headlineMedium,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                     const SizedBox(height: 8.0),
                     TextButton(

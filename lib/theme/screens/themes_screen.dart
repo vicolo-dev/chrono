@@ -1,4 +1,6 @@
 import 'package:clock_app/common/logic/customize_screen.dart';
+import 'package:clock_app/common/widgets/card_container.dart';
+import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
@@ -6,6 +8,7 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/theme/screens/customize_theme_screen.dart';
 import 'package:clock_app/theme/types/theme_item.dart';
 import 'package:clock_app/theme/widgets/theme_card.dart';
+import 'package:clock_app/theme/widgets/theme_preview_card.dart';
 import 'package:flutter/material.dart';
 
 class ThemesScreen<Item extends ThemeItem> extends StatefulWidget {
@@ -36,10 +39,27 @@ class _ThemesScreenState<Item extends ThemeItem>
   }) async {
     return openCustomizeScreen(
       context,
-      CustomizeThemeScreen(
-        themeItem: themeItem,
-        getThemeFromItem: widget.getThemeFromItem,
+      CustomizeListItemScreen(
+        getSettings: (item) => item.settings,
+        item: themeItem,
+        itemPreviewBuilder: (item) {
+          ThemeData theme = Theme.of(context);
+          ThemeData themeData = widget.getThemeFromItem(theme, item);
+          return CardContainer(
+            showShadow: false,
+            showLightBorder: true,
+            color: themeData.colorScheme.background,
+            child: Theme(
+              data: themeData,
+              child: const ThemePreviewCard(),
+            ),
+          );
+        },
       ),
+      // CustomizeThemeScreen(
+      //   themeItem: themeItem,
+      //   getThemeFromItem: widget.getThemeFromItem,
+      // ),
       onSave: onSave,
     );
   }
@@ -56,6 +76,13 @@ class _ThemesScreenState<Item extends ThemeItem>
             .changeItems((colorSchemes) => colorSchemes[index] = newThemItem);
       },
     );
+  }
+
+  void _onDeleteItem(ThemeItem themeItem) {
+    // If the theme item is currently selected, change the theme item to the default one
+    if (widget.setting.value.id == themeItem.id) {
+      widget.setting.restoreDefault(context);
+    }
   }
 
   @override
@@ -76,21 +103,17 @@ class _ThemesScreenState<Item extends ThemeItem>
                     key: ValueKey(themeItem),
                     themeItem: themeItem,
                     isSelected: widget.setting.value.id == themeItem.id,
-                    onPressEdit: () {
-                      _handleCustomizeItem(themeItem);
-                    },
+                    onPressEdit: () => _handleCustomizeItem(themeItem),
+                    onPressDelete: () => _listController.deleteItem(themeItem),
+                    onPressDuplicate: () =>
+                        _listController.duplicateItem(themeItem),
                     getThemeFromItem: widget.getThemeFromItem,
                   ),
                   onTapItem: (themeItem, index) {
                     widget.setting.setValue(context, themeItem);
                     _listController.reload();
                   },
-                  onDeleteItem: (themeItem) {
-                    // If the theme item is currently selected, change the theme item to the default one
-                    if (widget.setting.value.id == themeItem.id) {
-                      widget.setting.restoreDefault(context);
-                    }
-                  },
+                  onDeleteItem: _onDeleteItem,
                   placeholderText: "No custom color schemes",
                   reloadOnPop: true,
                 ),

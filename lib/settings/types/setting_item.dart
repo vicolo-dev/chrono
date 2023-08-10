@@ -3,10 +3,12 @@ import 'package:clock_app/settings/types/setting_group.dart';
 
 abstract class SettingItem {
   String name;
+  String description;
   String id;
   SettingGroup? _parent;
   final List<void Function(dynamic)> _settingListeners;
   List<void Function(dynamic)> get settingListeners => _settingListeners;
+  List<String> searchTags = [];
 
   SettingGroup? get parent => _parent;
   set parent(SettingGroup? parent) {
@@ -24,7 +26,7 @@ abstract class SettingItem {
     return path.reversed.toList();
   }
 
-  SettingItem(this.name)
+  SettingItem(this.name, this.description, this.searchTags)
       : id = name,
         _settingListeners = [];
 

@@ -93,9 +93,7 @@ class ColorSchemeData extends ThemeItem {
 
   @override
   ColorSchemeData copy() {
-    ColorSchemeData newColorScheme = ColorSchemeData.from(this);
-    newColorScheme.name = "Copy of $name";
-    return newColorScheme;
+    return ColorSchemeData.from(this);
   }
 
   ColorSchemeData.fromJson(Json json)

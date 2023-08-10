@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 class SettingAction extends SettingItem {
   VoidCallback action;
 
-  SettingAction(String name, this.action) : super(name);
+  SettingAction(
+    String name,
+    this.action, {
+    String description = "",
+    List<String> searchTags = const [],
+  }) : super(name, description, searchTags);
 
   @override
   SettingAction copy() {

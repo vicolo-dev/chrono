@@ -47,23 +47,18 @@ class AlarmTaskSchema extends JsonSerializable {
   }
 }
 
-class AlarmTask extends ListItem {
-  final int _id;
+class AlarmTask extends CustomizableListItem {
   final AlarmTaskType type;
   late final AlarmTaskSchema _schema;
 
-  AlarmTask(this.type)
-      : _id = UniqueKey().hashCode,
-        _schema = alarmTaskSchemasMap[type]!.copy();
+  AlarmTask(this.type) : _schema = alarmTaskSchemasMap[type]!.copy();
 
   AlarmTask.from(AlarmTask task)
-      : _id = UniqueKey().hashCode,
-        type = task.type,
+      : type = task.type,
         _schema = task._schema.copy();
 
   AlarmTask.fromJson(Json json)
-      : _id = json['id'],
-        type = AlarmTaskType.values.byName(json['type']) {
+      : type = AlarmTaskType.values.byName(json['type']) {
     _schema = alarmTaskSchemasMap[type]!.copy();
     _schema.loadFromJson(json['schema']);
   }
@@ -74,18 +69,18 @@ class AlarmTask extends ListItem {
   }
 
   @override
-  int get id => _id;
+  int get id => _schema.name.hashCode;
   @override
   bool get isDeletable => true;
   AlarmTaskSchema get schema => _schema;
   String get name => _schema.name;
+  @override
   SettingGroup get settings => _schema.settings;
   Widget Function(Function() onSolve) get builder => _schema.getBuilder;
 
   @override
   Json toJson() {
     return {
-      'id': _id,
       'schema': _schema.toJson(),
       'type': type.name,
     };

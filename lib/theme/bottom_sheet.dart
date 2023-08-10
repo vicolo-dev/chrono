@@ -1,13 +1,14 @@
 import 'package:clock_app/theme/types/color_scheme.dart';
+import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:flutter/material.dart';
 
 BottomSheetThemeData getBottomSheetTheme(
-        ColorSchemeData colorScheme, Radius borderRadius) =>
+        ColorSchemeData colorScheme, StyleTheme styleTheme) =>
     BottomSheetThemeData(
       backgroundColor: colorScheme.background,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: borderRadius,
+          top: Radius.circular(styleTheme.borderRadius),
         ),
       ),
     );

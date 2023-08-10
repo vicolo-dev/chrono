@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clock_app/common/logic/edit_tips.dart';
+import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/circular_progress_bar.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -12,10 +13,14 @@ class TimerCard extends StatefulWidget {
     Key? key,
     required this.timer,
     required this.onToggleState,
+    required this.onPressDelete,
+    required this.onPressDuplicate,
   }) : super(key: key);
 
   final ClockTimer timer;
   final VoidCallback onToggleState;
+  final VoidCallback onPressDelete;
+  final VoidCallback onPressDuplicate;
 
   @override
   State<TimerCard> createState() => _TimerCardState();
@@ -78,28 +83,8 @@ class _TimerCardState extends State<TimerCard> {
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.timer.label,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onBackground
-                            .withOpacity(0.6),
-                      ),
-                ),
-                Text(
-                  TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontSize: remainingSeconds > 3600 ? 40 : 48,
-                      ),
-                ),
-              ],
-            ),
-            const Spacer(),
             CircularProgressBar(
               size: 64,
               valueNotifier: valueNotifier,
@@ -132,6 +117,32 @@ class _TimerCardState extends State<TimerCard> {
               },
               progressColors: [Theme.of(context).colorScheme.primary],
               backColor: Colors.black.withOpacity(0.15),
+            ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.timer.label,
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onBackground
+                            .withOpacity(0.6),
+                      ),
+                ),
+                Text(
+                  TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                        fontSize: remainingSeconds > 3600 ? 40 : 48,
+                      ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            CardEditMenu(
+              onPressDelete: widget.onPressDelete,
+              onPressDuplicate: widget.onPressDuplicate,
             ),
           ],
         ));

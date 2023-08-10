@@ -2,9 +2,6 @@ import 'package:clock_app/common/utils/color_picker.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 
-/// MainColors widget.
-///
-/// Not library exposed, private to the library.
 class MainColors extends StatelessWidget {
   /// Default const constructor.
   const MainColors({

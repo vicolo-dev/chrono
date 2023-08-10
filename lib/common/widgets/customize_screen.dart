@@ -2,7 +2,13 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:flutter/material.dart';
 
-class CustomizeScreen<Item extends ListItem> extends StatefulWidget {
+class CustomizeState {
+  bool isSaved = false;
+  bool isChanged = false;
+}
+
+class CustomizeScreen<Item extends CustomizableListItem>
+    extends StatefulWidget {
   const CustomizeScreen({
     super.key,
     required this.item,
@@ -18,16 +24,16 @@ class CustomizeScreen<Item extends ListItem> extends StatefulWidget {
   State<CustomizeScreen> createState() => _CustomizeScreenState<Item>();
 }
 
-class _CustomizeScreenState<Item extends ListItem>
+class _CustomizeScreenState<Item extends CustomizableListItem>
     extends State<CustomizeScreen<Item>> {
   late final Item _item = widget.item.copy();
+  bool _isSaved = false;
 
   @override
   void initState() {
     super.initState();
   }
 
-  bool _isSaved = false;
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -60,6 +66,7 @@ class _CustomizeScreenState<Item extends ListItem>
       body: WillPopScope(
         onWillPop: () async {
           if (_isSaved) return true;
+          if (_item.hasSameSettingsAs(widget.item)) return true;
           bool? shouldPop = await showDialog<bool>(
             context: context,
             builder: (buildContext) {

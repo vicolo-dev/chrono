@@ -26,6 +26,10 @@ class PersistentListController<T> {
     _listController.addItem(item);
   }
 
+  void duplicateItem(T item) {
+    _listController.duplicateItem(item);
+  }
+
   void deleteItem(T item) {
     _listController.deleteItem(item);
   }

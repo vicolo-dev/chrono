@@ -7,6 +7,7 @@ import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
+import 'package:clock_app/alarm/widgets/try_alarm_task_button.dart';
 import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
@@ -133,17 +134,19 @@ SettingGroup alarmSettingsSchema = SettingGroup(
       ],
     ),
     ListSetting<AlarmTask>(
-        "Tasks",
-        kDebugMode
-            ? alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList()
-            : [],
-        alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
-        getSettings: (item) => item.settings,
-        addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
-        cardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: false),
-        valueDisplayBuilder: (context, setting) {
-          return Text("${setting.value.length} tasks");
-        }),
+      "Tasks",
+      kDebugMode
+          ? alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList()
+          : [],
+      alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
+      getSettings: (item) => item.settings,
+      addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
+      cardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: false),
+      valueDisplayBuilder: (context, setting) {
+        return Text("${setting.value.length} tasks");
+      },
+      itemPreviewBuilder: (item) => TryAlarmTaskButton(alarmTask: item),
+    ),
     // CustomSetting<AlarmTaskList>("Tasks", AlarmTaskList([]),
     //     (context, setting) {
     //   return CustomizeAlarmTasksScreen(setting: setting);

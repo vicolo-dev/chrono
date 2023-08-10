@@ -82,6 +82,8 @@ Future<void> _renderWidget(WidgetTester tester, [ClockTimer? timer]) async {
         body: TimerCard(
           timer: timer ?? sampleTimer,
           onToggleState: () {},
+          onPressDelete: () {},
+          onPressDuplicate: () {},
           key: testKey,
         ),
       ),

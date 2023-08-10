@@ -14,7 +14,7 @@ void main() {
     });
     group('opens correctly', () {
       testWidgets('in landscape mode', (WidgetTester tester) async {
-        binding.window.physicalSizeTestValue = Size(1920, 1080);
+        binding.window.physicalSizeTestValue = const Size(1920, 1080);
         binding.window.devicePixelRatioTestValue = 1.0;
         await _renderWidget(tester);
         await tester.tap(find.text('Open Time Picker'));
@@ -26,7 +26,7 @@ void main() {
         //     TimeOfDay(hour: 12, minute: 0).replacing(hour: DateTime.now().hour));
       });
       testWidgets('in portrait mode', (WidgetTester tester) async {
-        binding.window.physicalSizeTestValue = Size(1080, 1920);
+        binding.window.physicalSizeTestValue = const Size(1080, 1920);
         binding.window.devicePixelRatioTestValue = 1.0;
         await _renderWidget(tester);
         await tester.tap(find.text('Open Time Picker'));

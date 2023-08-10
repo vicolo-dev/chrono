@@ -1,15 +1,16 @@
 import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/widgets/customize_list_item_screen.dart';
 import 'package:clock_app/settings/widgets/list_setting_add_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-class ListSettingScreen<Item extends ListItem> extends StatefulWidget {
+class ListSettingScreen<Item extends CustomizableListItem>
+    extends StatefulWidget {
   const ListSettingScreen({
     super.key,
     required this.setting,
@@ -21,7 +22,7 @@ class ListSettingScreen<Item extends ListItem> extends StatefulWidget {
   State<ListSettingScreen> createState() => _ListSettingScreenState<Item>();
 }
 
-class _ListSettingScreenState<Item extends ListItem>
+class _ListSettingScreenState<Item extends CustomizableListItem>
     extends State<ListSettingScreen<Item>> {
   final _listController = ListController<Item>();
 

@@ -29,7 +29,7 @@ class AudioFieldCard extends StatelessWidget {
         ),
         const Spacer(),
         Icon(
-          Icons.arrow_drop_down_rounded,
+          Icons.keyboard_arrow_down_rounded,
           color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
         )
       ],

@@ -65,6 +65,7 @@ class _CustomListViewState<Item extends ListItem>
     widget.listController.setAddItem(_handleAddItem);
     widget.listController.setDeleteItem(_handleDeleteItem);
     widget.listController.setGetItemIndex(_getItemIndex);
+    widget.listController.setDuplicateItem(_handleDuplicateItem);
   }
 
   int _getItemIndex(Item item) =>
@@ -149,6 +150,10 @@ class _CustomListViewState<Item extends ListItem>
     widget.onModifyList?.call();
   }
 
+  void _handleDuplicateItem(Item item) {
+    _handleAddItem(item.copy(), index: _getItemIndex(item) + 1);
+  }
+
   void _scrollToIndex(int index) {
     // if (_scrollController.offset == 0) {
     //   _scrollController.jumpTo(1);
@@ -197,8 +202,7 @@ class _CustomListViewState<Item extends ListItem>
                     onDelete: widget.isDeleteEnabled
                         ? () => _handleDeleteItem(item)
                         : null,
-                    onDuplicate: () => _handleAddItem(item.copy(),
-                        index: _getItemIndex(item) + 1),
+                    onDuplicate: () => _handleDuplicateItem(item),
                     onInit: () {
                       // if (_getItemIndex(item) == 0 &&
                       //     widget.items.length > lastListLength) {
