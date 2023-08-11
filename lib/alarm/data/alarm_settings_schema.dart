@@ -39,6 +39,13 @@ SettingGroup alarmSettingsSchema = SettingGroup(
                 description: "Will repeat during the specified date range"),
           ],
         ),
+        SwitchSetting(
+          "Delete after ringing",
+          false,
+          enableConditions: [
+            SettingEnableConditionParameter("Type", OnceAlarmSchedule)
+          ],
+        ),
         ToggleSetting(
           "Week Days",
           [
@@ -139,7 +146,6 @@ SettingGroup alarmSettingsSchema = SettingGroup(
           ? alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList()
           : [],
       alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
-      getSettings: (item) => item.settings,
       addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
       cardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: false),
       valueDisplayBuilder: (context, setting) {

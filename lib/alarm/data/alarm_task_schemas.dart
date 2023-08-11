@@ -34,6 +34,8 @@ Map<AlarmTaskType, AlarmTaskSchema> alarmTaskSchemasMap = {
     "Retype Text",
     SettingGroup("Retype Text Settings", [
       SliderSetting("Number of characters", 5, 20, 5, snapLength: 1),
+      SwitchSetting("Include numbers", false),
+      SwitchSetting("Include lowercase", false),
     ]),
     (onSolve, settings) {
       return RetypeTask(onSolve: onSolve, settings: settings);

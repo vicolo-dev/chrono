@@ -33,7 +33,8 @@ class _SequenceTaskState extends State<SequenceTask>
   late final List<Animation> _colorTweenList = List.generate(
       _itemCount,
       (index) => ColorTween(
-              begin: theme.colorScheme.surface, end: theme.colorScheme.primary)
+              begin: theme.colorScheme.background,
+              end: theme.colorScheme.primary)
           .animate(_animationControllerList[index]));
   late final List<int> _sequence = _generateSequence(_sequenceLength);
   final List<int> _enteredSequence = [];
@@ -97,9 +98,9 @@ class _SequenceTaskState extends State<SequenceTask>
           content: Container(
             alignment: Alignment.centerLeft,
             height: 28,
-            child: const Text('Wrong Sequence. Please try again.'),
+            child: const Text('Oops, wrong sequence! Please try again.'),
           ),
-          margin: const EdgeInsets.only(left: 20, right: 20, bottom: 4),
+          margin: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
           elevation: 2,
           dismissDirection: DismissDirection.none,
         );
@@ -118,6 +119,7 @@ class _SequenceTaskState extends State<SequenceTask>
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
     return Padding(
@@ -144,16 +146,17 @@ class _SequenceTaskState extends State<SequenceTask>
                       children: [
                         for (int i = 0; i < _sequenceLength; i++)
                           Padding(
-                            padding: const EdgeInsets.only(
-                                left: 4.0, right: 4.0, top: 4.0),
+                            padding: const EdgeInsets.all(4.0),
                             child: Icon(
                               _enteredSequence.length > i
                                   ? Icons.circle
                                   : Icons.circle_outlined,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                       ],
                     ),
+                    const SizedBox(height: 4),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: GridView.builder(

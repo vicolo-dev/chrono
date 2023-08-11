@@ -1,8 +1,6 @@
 import 'package:clock_app/common/types/list_item.dart';
-import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/customize_screen.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
-import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
 class CustomizeListItemScreen<Item extends CustomizableListItem>
@@ -10,15 +8,15 @@ class CustomizeListItemScreen<Item extends CustomizableListItem>
   const CustomizeListItemScreen({
     super.key,
     required this.item,
-    required this.getSettings,
     this.itemPreviewBuilder,
     required this.isNewItem,
+    this.headerBuilder,
   });
 
   final Item item;
   final bool isNewItem;
-  final SettingGroup Function(Item item) getSettings;
-  final Widget Function(Item item)? itemPreviewBuilder;
+  final Widget? Function(Item item)? itemPreviewBuilder;
+  final Widget Function(Item item)? headerBuilder;
 
   @override
   State<CustomizeListItemScreen> createState() =>
@@ -29,7 +27,6 @@ class _CustomizeListItemScreenState<Item extends CustomizableListItem>
     extends State<CustomizeListItemScreen<Item>> {
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
     return CustomizeScreen(
         item: widget.item,
         isNewItem: widget.isNewItem,
@@ -48,11 +45,13 @@ class _CustomizeListItemScreenState<Item extends CustomizableListItem>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 8.0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          if (widget.headerBuilder != null)
+                            widget.headerBuilder!(item),
                           const SizedBox(height: 8),
                           ...getSettingWidgets(
-                            widget.getSettings(item).settingItems,
+                            item.settings.settingItems,
                             checkDependentEnableConditions: () {
                               setState(() {});
                             },

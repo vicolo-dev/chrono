@@ -37,6 +37,12 @@ class _SliderSettingCardState extends State<SliderSettingCard> {
       },
     );
 
-    return widget.showAsCard ? CardContainer(child: sliderCard) : sliderCard;
+    return widget.showAsCard
+        ? CardContainer(
+            child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: sliderCard,
+          ))
+        : sliderCard;
   }
 }

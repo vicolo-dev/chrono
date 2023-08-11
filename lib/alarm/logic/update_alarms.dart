@@ -21,7 +21,6 @@ Future<void> updateAlarm(int scheduleId) async {
 Future<void> updateAlarms() async {
   List<Alarm> alarms = await loadList("alarms");
   alarms.where((alarm) => alarm.isEnabled).forEach((alarm) {
-    alarm.unSnooze();
     alarm.update();
   });
   await saveList("alarms", alarms);

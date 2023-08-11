@@ -42,7 +42,11 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
     );
 
     return widget.showAsCard
-        ? CardContainer(child: selectWidget)
+        ? CardContainer(
+            child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: selectWidget,
+          ))
         : selectWidget;
   }
 }

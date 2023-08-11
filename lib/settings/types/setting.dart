@@ -91,7 +91,6 @@ abstract class Setting<T> extends SettingItem {
 
 class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
   List<T> possibleItems;
-  SettingGroup Function(T item) getSettings;
   Widget Function(T item) cardBuilder;
   Widget Function(T item) addCardBuilder;
   Widget Function(T item)? itemPreviewBuilder;
@@ -103,7 +102,6 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
     String name,
     List<T> defaultValue,
     this.possibleItems, {
-    required this.getSettings,
     required this.cardBuilder,
     required this.valueDisplayBuilder,
     required this.addCardBuilder,
@@ -130,7 +128,6 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
       name,
       _value,
       possibleItems,
-      getSettings: getSettings,
       valueDisplayBuilder: valueDisplayBuilder,
       cardBuilder: cardBuilder,
       addCardBuilder: addCardBuilder,
@@ -138,6 +135,8 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
       onChange: onChange,
       enableConditions: enableConditions,
       isVisual: isVisual,
+      itemPreviewBuilder: itemPreviewBuilder,
+      searchTags: searchTags,
     );
   }
 
@@ -153,8 +152,8 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
     return cardBuilder(item);
   }
 
-  SettingGroup getItemSettings(T item) {
-    return getSettings(item);
+  Widget? getPreviewCard(T item) {
+    return itemPreviewBuilder?.call(item);
   }
 
   @override
@@ -210,6 +209,8 @@ class CustomSetting<T extends JsonSerializable> extends Setting<T> {
       onChange: onChange,
       enableConditions: enableConditions,
       isVisual: isVisual,
+      searchTags: searchTags,
+      copyValue: copyValue,
     );
   }
 
@@ -245,6 +246,7 @@ class SwitchSetting extends Setting<bool> {
       description: description,
       enableConditions: enableConditions,
       isVisual: isVisual,
+      searchTags: searchTags,
     );
   }
 }
@@ -263,11 +265,15 @@ class NumberSetting extends Setting<double> {
 
   @override
   NumberSetting copy() {
-    return NumberSetting(name, _value,
-        onChange: onChange,
-        description: description,
-        enableConditions: enableConditions,
-        isVisual: isVisual);
+    return NumberSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
   }
 }
 
@@ -295,11 +301,15 @@ class ColorSetting extends Setting<Color> {
 
   @override
   ColorSetting copy() {
-    return ColorSetting(name, _value,
-        onChange: onChange,
-        description: description,
-        enableConditions: enableConditions,
-        isVisual: isVisual);
+    return ColorSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
   }
 }
 
@@ -317,11 +327,15 @@ class StringSetting extends Setting<String> {
 
   @override
   StringSetting copy() {
-    return StringSetting(name, _value,
-        onChange: onChange,
-        description: description,
-        enableConditions: enableConditions,
-        isVisual: isVisual);
+    return StringSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
   }
 }
 
@@ -354,14 +368,20 @@ class SliderSetting extends Setting<double> {
 
   @override
   SliderSetting copy() {
-    return SliderSetting(name, min, max, _value,
-        onChange: onChange,
-        description: description,
-        snapLength: snapLength,
-        maxIsInfinity: maxIsInfinity,
-        enableConditions: enableConditions,
-        unit: unit,
-        isVisual: isVisual);
+    return SliderSetting(
+      name,
+      min,
+      max,
+      _value,
+      onChange: onChange,
+      description: description,
+      snapLength: snapLength,
+      maxIsInfinity: maxIsInfinity,
+      enableConditions: enableConditions,
+      unit: unit,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
   }
 }
 
@@ -410,14 +430,18 @@ class SelectSetting<T> extends Setting<int> {
 
   @override
   SelectSetting<T> copy() {
-    return SelectSetting(name, _options,
-        defaultValue: _value,
-        onChange: onChange,
-        onSelect: onSelect,
-        description: description,
-        enableConditions: enableConditions,
-        shouldCloseOnSelect: shouldCloseOnSelect,
-        isVisual: isVisual);
+    return SelectSetting(
+      name,
+      _options,
+      defaultValue: _value,
+      onChange: onChange,
+      onSelect: onSelect,
+      description: description,
+      enableConditions: enableConditions,
+      shouldCloseOnSelect: shouldCloseOnSelect,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
   }
 }
 
@@ -448,6 +472,7 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
           enableConditions: enableConditions,
           shouldCloseOnSelect: shouldCloseOnSelect,
           isVisual: isVisual,
+          searchTags: searchTags,
         );
 
   @override
@@ -459,7 +484,8 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
         defaultValue: _value,
         enableConditions: enableConditions,
         shouldCloseOnSelect: shouldCloseOnSelect,
-        isVisual: isVisual);
+        isVisual: isVisual,
+        searchTags: searchTags);
   }
 }
 
@@ -500,12 +526,16 @@ class ToggleSetting<T> extends Setting<List<bool>> {
 
   @override
   ToggleSetting<T> copy() {
-    return ToggleSetting(name, options,
-        defaultValue: _value,
-        onChange: onChange,
-        description: description,
-        enableConditions: enableConditions,
-        isVisual: isVisual);
+    return ToggleSetting(
+      name,
+      options,
+      defaultValue: _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
   }
 
   void toggle(BuildContext context, int index) {
@@ -539,9 +569,16 @@ class DateTimeSetting extends Setting<List<DateTime>> {
     bool isVisual = true,
     List<SettingEnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual,
-            valueCopyGetter: List.from);
+  }) : super(
+          name,
+          description,
+          defaultValue,
+          onChange,
+          enableConditions,
+          searchTags,
+          isVisual,
+          valueCopyGetter: List.from,
+        );
 
   @override
   DateTimeSetting copy() {
@@ -553,6 +590,7 @@ class DateTimeSetting extends Setting<List<DateTime>> {
       description: description,
       enableConditions: enableConditions,
       isVisual: isVisual,
+      searchTags: searchTags,
     );
   }
 
@@ -593,11 +631,15 @@ class DurationSetting extends Setting<TimeDuration> {
 
   @override
   DurationSetting copy() {
-    return DurationSetting(name, _value,
-        onChange: onChange,
-        description: description,
-        enableConditions: enableConditions,
-        isVisual: isVisual);
+    return DurationSetting(
+      name,
+      _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
   }
 
   @override

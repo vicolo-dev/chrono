@@ -1,13 +1,12 @@
 import 'package:clock_app/common/logic/customize_screen.dart';
-import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
-import 'package:clock_app/timer/screens/customize_timer_screen.dart';
+import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
+import 'package:clock_app/timer/data/timer_list_filters.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
+import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
 import 'package:clock_app/timer/widgets/timer_picker.dart';
 import 'package:flutter/material.dart';
-
 import 'package:great_list_view/great_list_view.dart';
-
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -28,24 +27,6 @@ class TimerScreen extends StatefulWidget {
 
 class _TimerScreenState extends State<TimerScreen> {
   final _listController = PersistentListController<ClockTimer>();
-  final List<ListFilter<ClockTimer>> _listFilters = [
-    ListFilter(
-      'All',
-      (timer) => true,
-    ),
-    ListFilter(
-      'Running',
-      (timer) => timer.isRunning,
-    ),
-    ListFilter(
-      'Paused',
-      (timer) => timer.isPaused,
-    ),
-    ListFilter(
-      'Stopped',
-      (timer) => timer.isStopped,
-    ),
-  ];
 
   void _handleDeleteTimer(ClockTimer deletedTimer) {
     int index = _listController.getItemIndex(deletedTimer);
@@ -79,7 +60,11 @@ class _TimerScreenState extends State<TimerScreen> {
   }) async {
     return openCustomizeScreen(
       context,
-      CustomizeTimerScreen(timer: timer, isNewItem: isNewTimer),
+      CustomizeListItemScreen(
+        item: timer,
+        isNewItem: isNewTimer,
+        headerBuilder: (timerItem) => TimerDurationPicker(timer: timerItem),
+      ),
       onSave: onSave,
       onCancel: onCancel,
     );
@@ -129,7 +114,7 @@ class _TimerScreenState extends State<TimerScreen> {
               onDeleteItem: _handleDeleteTimer,
               placeholderText: "No timers created",
               reloadOnPop: true,
-              listFilters: _listFilters,
+              listFilters: timerListFilters,
             ),
           ),
         ],

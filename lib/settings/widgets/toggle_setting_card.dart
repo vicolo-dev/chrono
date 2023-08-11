@@ -23,7 +23,7 @@ class _ToggleSettingCardState<T> extends State<ToggleSettingCard<T>> {
   @override
   Widget build(BuildContext context) {
     ToggleField<T> toggleCard = ToggleField<T>(
-      // name: widget.setting.name,
+      name: widget.setting.name,
       description: widget.setting.description,
       selectedItems: widget.setting.value,
       options: widget.setting.options
@@ -36,7 +36,7 @@ class _ToggleSettingCardState<T> extends State<ToggleSettingCard<T>> {
 
         widget.onChanged?.call(widget.setting.value);
       },
-      padding: widget.showAsCard ? 16 : 0,
+      // padding: widget.showAsCard ? 16 : 0,
     );
 
     return widget.showAsCard ? CardContainer(child: toggleCard) : toggleCard;

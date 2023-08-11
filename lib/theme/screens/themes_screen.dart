@@ -40,7 +40,6 @@ class _ThemesScreenState<Item extends ThemeItem>
     return openCustomizeScreen(
       context,
       CustomizeListItemScreen(
-        getSettings: (item) => item.settings,
         item: themeItem,
         isNewItem: isNewItem,
         itemPreviewBuilder: (item) {

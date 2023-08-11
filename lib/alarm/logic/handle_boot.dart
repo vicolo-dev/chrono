@@ -6,7 +6,6 @@ import 'package:clock_app/common/data/paths.dart';
 
 @pragma('vm:entry-point')
 void handleBoot() async {
-  // Code to run when the function is called
   String appDataDirectory = await getAppDataDirectoryPath();
 
   String message = '[${DateTime.now().toString()}] Test2\n';

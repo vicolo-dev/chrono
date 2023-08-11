@@ -106,6 +106,8 @@ class Alarm extends CustomizableListItem {
       : _isEnabled = alarm._isEnabled,
         _isFinished = alarm._isFinished,
         _time = alarm._time,
+        _snoozeCount = alarm._snoozeCount,
+        _snoozeTime = alarm._snoozeTime,
         _settings = alarm._settings.copy() {
     _schedules = createSchedules(_settings);
   }
@@ -151,6 +153,10 @@ class Alarm extends CustomizableListItem {
     _snoozeTime = DateTime.now().add(
       Duration(minutes: snoozeLength.toInt()),
     );
+    _scheduleSnooze();
+  }
+
+  void _scheduleSnooze() {
     scheduleSnoozeAlarm(
       id,
       Duration(minutes: snoozeLength.floor()),
@@ -197,8 +203,16 @@ class Alarm extends CustomizableListItem {
   }
 
   void update() {
-    if (_isEnabled) {
+    if (isEnabled) {
       schedule();
+
+      if (isSnoozed) {
+        if (DateTime.now().isAfter(_snoozeTime!)) {
+          unSnooze();
+        } else {
+          _scheduleSnooze();
+        }
+      }
 
       // A disable active schedule means that the schedule is not active, but can be
       // activated again. This is the case for one-time alarms that have already rung.

@@ -22,19 +22,29 @@ class RetypeTask extends StatefulWidget {
 
 class _RetypeTaskState extends State<RetypeTask> {
   final TextEditingController _textController = TextEditingController();
+  final Random _random = Random();
+
   late final int characterCount =
       widget.settings.getSetting("Number of characters").value.toInt();
-  late final String string;
+  late final bool includeNumbers =
+      widget.settings.getSetting("Include numbers").value;
+  late final bool includeLowercase =
+      widget.settings.getSetting("Include lowercase").value;
+  late final String _chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ${includeLowercase ? "abcdefghijklmnopqrstuvwxyz" : ""}${includeNumbers ? "0123456789" : ""}";
+
+  late final String string = _generateRandomString(characterCount);
+  bool _isSolved = false;
 
   @override
   void initState() {
     super.initState();
     _textController.addListener(() {
-      if (_textController.text == string) {
+      if (_textController.text == string && !_isSolved) {
+        _isSolved = true;
         widget.onSolve.call();
       }
     });
-    string = _generateRandomString(characterCount);
   }
 
   @override
@@ -42,10 +52,6 @@ class _RetypeTaskState extends State<RetypeTask> {
     _textController.dispose();
     super.dispose();
   }
-
-  static const _chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  final Random _random = Random();
 
   String _generateRandomString(int length) {
     return String.fromCharCodes(

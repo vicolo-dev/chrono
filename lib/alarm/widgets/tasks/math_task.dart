@@ -83,12 +83,14 @@ class _MathTaskState extends State<MathTask> {
   final TextEditingController _textController = TextEditingController();
   late final MathTaskDifficultyLevel _difficultyLevel =
       widget.settings.getSetting("Difficulty").value;
+  bool _isSolved = false;
 
   @override
   void initState() {
     super.initState();
     _textController.addListener(() {
-      if (_textController.text == _difficultyLevel._answer) {
+      if (_textController.text == _difficultyLevel._answer && !_isSolved) {
+        _isSolved = true;
         widget.onSolve.call();
       }
     });
@@ -113,7 +115,7 @@ class _MathTaskState extends State<MathTask> {
         children: [
           Text(
             "Solve the equation",
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: textTheme.headlineMedium,
           ),
           const SizedBox(height: 16.0),
           CardContainer(
@@ -126,7 +128,7 @@ class _MathTaskState extends State<MathTask> {
                   children: [
                     Text(
                       _difficultyLevel.equation,
-                      style: Theme.of(context).textTheme.displayMedium,
+                      style: textTheme.displayMedium,
                     ),
                     SizedBox(
                       width: textSize.width + 16,
@@ -141,7 +143,7 @@ class _MathTaskState extends State<MathTask> {
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 16.0),
                         ),
-                        style: Theme.of(context).textTheme.displayMedium,
+                        style: textTheme.displayMedium,
                         keyboardType: TextInputType.number,
                       ),
                     )

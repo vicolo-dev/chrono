@@ -1,12 +1,14 @@
-import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
+import 'package:clock_app/alarm/data/alarm_list_filters.dart';
+import 'package:clock_app/alarm/logic/new_alarm_snackbar.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
+import 'package:clock_app/alarm/widgets/alarm_description.dart';
+import 'package:clock_app/alarm/widgets/alarm_time_picker.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
-import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/time.dart';
-import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/widgets/fab.dart';
+import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -30,32 +32,6 @@ class AlarmScreen extends StatefulWidget {
 class _AlarmScreenState extends State<AlarmScreen> {
   final _listController = PersistentListController<Alarm>();
   late Setting showInstantAlarmButton;
-
-  final List<ListFilter<Alarm>> _listFilters = [
-    ListFilter(
-      'All',
-      (alarm) => true,
-    ),
-    ListFilter(
-      'Today',
-      (alarm) {
-        if (alarm.currentScheduleDateTime == null) return false;
-        return alarm.currentScheduleDateTime!.isToday();
-      },
-    ),
-    ListFilter('Tomorrow', (alarm) {
-      if (alarm.currentScheduleDateTime == null) return false;
-      return alarm.currentScheduleDateTime!.isTomorrow();
-    }),
-    ListFilter(
-      'Completed',
-      (alarm) => alarm.isFinished,
-    ),
-    ListFilter(
-      'Disabled',
-      (alarm) => !alarm.isEnabled,
-    ),
-  ];
 
   void update(value) {
     setState(() {});
@@ -90,7 +66,19 @@ class _AlarmScreenState extends State<AlarmScreen> {
   }) async {
     return openCustomizeScreen(
       context,
-      CustomizeAlarmScreen(alarm: alarm, isNewAlarm: isNewAlarm),
+      CustomizeListItemScreen(
+        item: alarm,
+        isNewItem: isNewAlarm,
+        headerBuilder: (alarmItem) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Column(
+            children: [
+              AlarmTimePicker(alarm: alarmItem),
+              AlarmDescription(alarm: alarmItem),
+            ],
+          ),
+        ),
+      ),
       onSave: onSave,
     );
   }
@@ -109,37 +97,12 @@ class _AlarmScreenState extends State<AlarmScreen> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
       if (nextScheduleDateTime == null) return;
-      Duration etaNextAlarm =
-          alarm.currentScheduleDateTime!.difference(DateTime.now().toLocal());
-
-      String etaText = '';
-
-      if (etaNextAlarm.inDays > 0) {
-        int days = etaNextAlarm.inDays;
-        String dayTextSuffix = days <= 1 ? 'day' : 'days';
-        etaText = '$days $dayTextSuffix';
-      } else if (etaNextAlarm.inHours > 0) {
-        int hours = etaNextAlarm.inHours;
-        int minutes = etaNextAlarm.inMinutes % 60;
-        String hourTextSuffix = hours <= 1 ? 'hour' : 'hours';
-        String minuteTextSuffix = minutes <= 1 ? 'minute' : 'minutes';
-        String hoursText = '$hours $hourTextSuffix';
-        String minutesText =
-            minutes == 0 ? '' : ' and $minutes $minuteTextSuffix';
-        etaText = '$hoursText$minutesText';
-      } else if (etaNextAlarm.inMinutes > 0) {
-        int minutes = etaNextAlarm.inMinutes;
-        String minuteTextSuffix = minutes <= 1 ? 'minute' : 'minutes';
-        etaText = '$minutes $minuteTextSuffix';
-      } else {
-        etaText = 'less than 1 minute';
-      }
 
       SnackBar snackBar = SnackBar(
         content: Container(
           alignment: Alignment.centerLeft,
           height: 28,
-          child: Text('Alarm will ring in $etaText'),
+          child: Text(getNewAlarmSnackbarText(alarm)),
         ),
         margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
         elevation: 2,
@@ -196,7 +159,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
           }),
           placeholderText: "No alarms created",
           reloadOnPop: true,
-          listFilters: _listFilters,
+          listFilters: alarmListFilters,
         ),
         FAB(
           onPressed: () {

@@ -35,14 +35,14 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
     );
   }
 
-  _handleCustomizeTask(Item item) async {
-    int index = _listController.getItemIndex(item);
+  _handleCustomizeItem(Item itemToCustomize) async {
+    int index = _listController.getItemIndex(itemToCustomize);
     openCustomizeScreen<Item>(
       context,
-      CustomizeListItemScreen(
-        getSettings: (item) => widget.setting.getItemSettings(item),
-        item: item,
+      CustomizeListItemScreen<Item>(
+        item: itemToCustomize,
         isNewItem: false,
+        itemPreviewBuilder: (item) => widget.setting.getPreviewCard(item),
       ),
       onSave: (newItem) {
         _listController.changeItems((items) => items[index] = newItem);
@@ -66,7 +66,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
                   items: widget.setting.value,
                   itemBuilder: (item) => widget.setting.getItemCard(item),
                   onTapItem: (task, index) {
-                    _handleCustomizeTask(task);
+                    _handleCustomizeItem(task);
                   },
                   onModifyList: () {},
                   placeholderText:
