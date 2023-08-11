@@ -5,7 +5,6 @@ import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/theme/screens/customize_theme_screen.dart';
 import 'package:clock_app/theme/types/theme_item.dart';
 import 'package:clock_app/theme/widgets/theme_card.dart';
 import 'package:clock_app/theme/widgets/theme_preview_card.dart';
@@ -36,12 +35,14 @@ class _ThemesScreenState<Item extends ThemeItem>
   Future<Item?> _openCustomizeItemScreen(
     Item themeItem, {
     void Function(Item)? onSave,
+    bool isNewItem = false,
   }) async {
     return openCustomizeScreen(
       context,
       CustomizeListItemScreen(
         getSettings: (item) => item.settings,
         item: themeItem,
+        isNewItem: isNewItem,
         itemPreviewBuilder: (item) {
           ThemeData theme = Theme.of(context);
           ThemeData themeData = widget.getThemeFromItem(theme, item);
@@ -56,10 +57,6 @@ class _ThemesScreenState<Item extends ThemeItem>
           );
         },
       ),
-      // CustomizeThemeScreen(
-      //   themeItem: themeItem,
-      //   getThemeFromItem: widget.getThemeFromItem,
-      // ),
       onSave: onSave,
     );
   }
@@ -124,9 +121,13 @@ class _ThemesScreenState<Item extends ThemeItem>
             bottomPadding: 8,
             onPressed: () async {
               Item? themeItem = widget.createThemeItem();
-              await _openCustomizeItemScreen(themeItem, onSave: (newThemeItem) {
-                _listController.addItem(newThemeItem);
-              });
+              await _openCustomizeItemScreen(
+                themeItem,
+                onSave: (newThemeItem) {
+                  _listController.addItem(newThemeItem);
+                },
+                isNewItem: true,
+              );
             },
           )
         ],

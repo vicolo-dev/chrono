@@ -1,4 +1,5 @@
 import 'package:clock_app/common/logic/customize_screen.dart';
+import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/timer/screens/customize_timer_screen.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
@@ -27,6 +28,24 @@ class TimerScreen extends StatefulWidget {
 
 class _TimerScreenState extends State<TimerScreen> {
   final _listController = PersistentListController<ClockTimer>();
+  final List<ListFilter<ClockTimer>> _listFilters = [
+    ListFilter(
+      'All',
+      (timer) => true,
+    ),
+    ListFilter(
+      'Running',
+      (timer) => timer.isRunning,
+    ),
+    ListFilter(
+      'Paused',
+      (timer) => timer.isPaused,
+    ),
+    ListFilter(
+      'Stopped',
+      (timer) => timer.isStopped,
+    ),
+  ];
 
   void _handleDeleteTimer(ClockTimer deletedTimer) {
     int index = _listController.getItemIndex(deletedTimer);
@@ -56,10 +75,11 @@ class _TimerScreenState extends State<TimerScreen> {
     ClockTimer timer, {
     void Function(ClockTimer)? onSave,
     void Function()? onCancel,
+    bool isNewTimer = false,
   }) async {
     return openCustomizeScreen(
       context,
-      CustomizeTimerScreen(timer: timer),
+      CustomizeTimerScreen(timer: timer, isNewItem: isNewTimer),
       onSave: onSave,
       onCancel: onCancel,
     );
@@ -109,6 +129,7 @@ class _TimerScreenState extends State<TimerScreen> {
               onDeleteItem: _handleDeleteTimer,
               placeholderText: "No timers created",
               reloadOnPop: true,
+              listFilters: _listFilters,
             ),
           ),
         ],
@@ -120,10 +141,14 @@ class _TimerScreenState extends State<TimerScreen> {
           if (pickerResult != null) {
             ClockTimer timer = ClockTimer.from(pickerResult.value);
             if (pickerResult.isCustomize) {
-              await _openCustomizeTimerScreen(timer, onSave: (timer) {
-                timer.start();
-                _listController.addItem(timer);
-              });
+              await _openCustomizeTimerScreen(
+                timer,
+                onSave: (timer) {
+                  timer.start();
+                  _listController.addItem(timer);
+                },
+                isNewTimer: true,
+              );
             } else {
               timer.start();
               _listController.addItem(timer);

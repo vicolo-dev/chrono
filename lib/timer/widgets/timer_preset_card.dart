@@ -34,7 +34,7 @@ class _TimerPresetCardState extends State<TimerPresetCard> {
             const Spacer(),
             IconButton(
               onPressed: widget.onPressDelete,
-              icon: Icon(Icons.close_rounded,
+              icon: Icon(Icons.delete,
                   color: Theme.of(context).colorScheme.error),
             ),
           ],

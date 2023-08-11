@@ -11,4 +11,16 @@ extension DateTimeUtils on DateTime {
   static DateTime fromNow(Duration duration) => DateTime.now().add(duration);
   static Time getTimeFromNow(Duration duration) =>
       Time.fromDateTime(fromNow(duration));
+
+  bool isToday() {
+    final now = DateTime.now();
+    return year == now.year && month == now.month && day == now.day;
+  }
+
+  bool isTomorrow() {
+    final tomorrow = DateTime.now().add(const Duration(days: 1));
+    return year == tomorrow.year &&
+        month == tomorrow.month &&
+        day == tomorrow.day;
+  }
 }

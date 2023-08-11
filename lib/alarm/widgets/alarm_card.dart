@@ -68,7 +68,7 @@ class _AlarmCardState extends State<AlarmCard> {
     TextTheme textTheme = theme.textTheme;
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Row(
         children: [
           Expanded(
@@ -79,12 +79,15 @@ class _AlarmCardState extends State<AlarmCard> {
                 if (widget.alarm.label.isNotEmpty)
                   Row(
                     children: [
-                      Text(
-                        widget.alarm.label,
-                        style: textTheme.bodyLarge?.copyWith(
-                          color: widget.alarm.isEnabled
-                              ? colorScheme.onBackground.withOpacity(0.8)
-                              : colorScheme.onBackground.withOpacity(0.6),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          widget.alarm.label,
+                          style: textTheme.bodyLarge?.copyWith(
+                            color: widget.alarm.isEnabled
+                                ? colorScheme.onBackground.withOpacity(0.8)
+                                : colorScheme.onBackground.withOpacity(0.6),
+                          ),
                         ),
                       ),
                     ],
@@ -99,28 +102,31 @@ class _AlarmCardState extends State<AlarmCard> {
                             : colorScheme.onBackground.withOpacity(0.6)),
                   ],
                 ),
-                Row(
-                  children: [
-                    Icon(
-                      timeOfDayIcon.icon,
-                      color: widget.alarm.isEnabled
-                          ? timeOfDayIcon.color
-                          : colorScheme.onBackground.withOpacity(0.6),
-                      size: 24,
-                    ),
-                    const SizedBox(width: 8),
-                    Flexible(
-                      child: Text(
-                        getAlarmScheduleDescription(widget.alarm, dateFormat),
-                        maxLines: 2,
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: widget.alarm.isEnabled
-                              ? colorScheme.onBackground.withOpacity(0.8)
-                              : colorScheme.onBackground.withOpacity(0.6),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        timeOfDayIcon.icon,
+                        color: widget.alarm.isEnabled
+                            ? timeOfDayIcon.color
+                            : colorScheme.onBackground.withOpacity(0.6),
+                        size: 24,
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          getAlarmScheduleDescription(widget.alarm, dateFormat),
+                          maxLines: 2,
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: widget.alarm.isEnabled
+                                ? colorScheme.onBackground.withOpacity(0.8)
+                                : colorScheme.onBackground.withOpacity(0.6),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 )
               ],
             ),
@@ -129,18 +135,16 @@ class _AlarmCardState extends State<AlarmCard> {
           Expanded(
             flex: 2,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // const SizedBox(width: 8),
                 widget.alarm.isFinished
-                    ? Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: IconButton(
-                          onPressed: widget.onPressDelete,
-                          icon: Icon(
-                            Icons.delete_rounded,
-                            color: colorScheme.error,
-                            size: 32,
-                          ),
+                    ? IconButton(
+                        onPressed: widget.onPressDelete,
+                        icon: Icon(
+                          Icons.delete_rounded,
+                          color: colorScheme.error,
+                          size: 32,
                         ),
                       )
                     : Switch(

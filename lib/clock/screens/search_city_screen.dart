@@ -25,25 +25,25 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
 
   _SearchCityScreenState() {
     _filterController.addListener(() async {
-      setState(() {
-        if (_isDatabaseLoaded) {
-          if (_filterController.text.isEmpty) {
-            _filteredCities = [];
-          } else {
-            _db
-                ?.rawQuery(
-                    "SELECT * FROM Timezones WHERE City || Country LIKE '%${_filterController.text}%' LIMIT 10")
-                .then((results) {
-              _filteredCities = results
-                  .map((result) => City(
+      if (_isDatabaseLoaded) {
+        if (_filterController.text.isEmpty) {
+          setState(() => _filteredCities = []);
+        } else {
+          if (_db == null) return;
+          String query =
+              "SELECT * FROM Timezones WHERE City || Country LIKE '%${_filterController.text}%' LIMIT 10";
+          final results = await _db!.rawQuery(query);
+          setState(() {
+            _filteredCities = results
+                .map((result) => City(
                       result['City'] as String,
                       result['Country'] as String,
-                      result['Timezone'] as String))
-                  .toList();
-            });
-          }
+                      result['Timezone'] as String,
+                    ))
+                .toList();
+          });
         }
-      });
+      }
     });
   }
 
@@ -86,20 +86,18 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ListView.builder(
-          itemCount: _filteredCities.length,
-          itemBuilder: (BuildContext context, int index) {
-            City city = _filteredCities[index];
-            return TimeZoneSearchCard(
-              city: city,
-              disabled: _favoriteCities.any((favoriteCity) =>
-                  favoriteCity.name == city.name &&
-                  favoriteCity.country == city.country),
-              onTap: () {
-                Navigator.pop(context, city);
-              },
-            );
-          },
+        child: ListView(
+          children: _filteredCities
+              .map((city) => TimeZoneSearchCard(
+                    city: city,
+                    disabled: _favoriteCities.any((favoriteCity) =>
+                        favoriteCity.name == city.name &&
+                        favoriteCity.country == city.country),
+                    onTap: () {
+                      Navigator.pop(context, city);
+                    },
+                  ))
+              .toList(),
         ),
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:clock_app/common/types/list_controller.dart';
+import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
+import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/list/list_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -30,6 +32,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
     this.isDeleteEnabled = true,
     this.isDuplicateEnabled = true,
     this.shouldInsertOnTop = true,
+    this.listFilters = const [],
   });
 
   final List<Item> items;
@@ -46,6 +49,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
   final bool shouldInsertOnTop;
+  final List<ListFilter<Item>> listFilters;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -57,6 +61,9 @@ class _CustomListViewState<Item extends ListItem>
   late int lastListLength = widget.items.length;
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
+  late ListFilter<Item> _selectedFilter = widget.listFilters.isEmpty
+      ? ListFilter("Default", (item) => true)
+      : widget.listFilters[0];
 
   @override
   void initState() {
@@ -162,82 +169,141 @@ class _CustomListViewState<Item extends ListItem>
         duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
   }
 
+  _getItemBuilder(ListFilter<Item> filter) {
+    return (BuildContext context, Item item, data) {
+      if (!filter.filterFunction(item)) return Container();
+      return data.measuring
+          ? SizedBox(height: _itemCardHeight)
+          : ListItemCard<Item>(
+              key: ValueKey(item),
+              onTap: () {
+                return widget.onTapItem?.call(item, _getItemIndex(item));
+              },
+              onDelete:
+                  widget.isDeleteEnabled ? () => _handleDeleteItem(item) : null,
+              onDuplicate: () => _handleDuplicateItem(item),
+              isDeleteEnabled: item.isDeletable && widget.isDeleteEnabled,
+              isDuplicateEnabled: widget.isDuplicateEnabled,
+              child: widget.itemBuilder(item),
+            );
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     timeDilation = 0.75;
-    return Stack(children: [
-      widget.items.isEmpty
-          ? SizedBox(
-              height: double.infinity,
-              width: double.infinity,
-              child: Center(
-                child: Text(
-                  widget.placeholderText,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onBackground
-                            .withOpacity(0.6),
-                      ),
-                ),
-              ),
-            )
-          : Container(),
-      SlidableAutoCloseBehavior(
-        child: AutomaticAnimatedListView<Item>(
-          list: widget.items,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          comparator: AnimatedListDiffListComparator<Item>(
-            sameItem: (a, b) => a.id == b.id,
-            sameContent: (a, b) => a.id == b.id,
+    return Column(
+      children: [
+        Expanded(
+          flex: 0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                  children: widget.listFilters
+                      .map((filter) => ListFilterChip<Item>(
+                            listFilter: filter,
+                            onTap: () {
+                              setState(() {
+                                _selectedFilter = filter;
+                                _notifyChangeList();
+                              });
+                            },
+                            isSelected: _selectedFilter == filter,
+                          ))
+                      .toList()),
+            ),
           ),
-          itemBuilder: (BuildContext context, Item item, data) {
-            return data.measuring
-                ? SizedBox(height: _itemCardHeight)
-                : ListItemCard<Item>(
-                    key: ValueKey(item),
-                    onTap: () {
-                      return widget.onTapItem?.call(item, _getItemIndex(item));
-                    },
-                    onDelete: widget.isDeleteEnabled
-                        ? () => _handleDeleteItem(item)
-                        : null,
-                    onDuplicate: () => _handleDuplicateItem(item),
-                    onInit: () {
-                      // if (_getItemIndex(item) == 0 &&
-                      //     widget.items.length > lastListLength) {
-                      //   lastListLength = widget.items.length;
-                      //   _scrollToIndex(0);
-                      // }
-                      // print(stopwatch.elapsedMilliseconds);
-                      // stopwatch.stop();
-                      // stopwatch.reset();
-                    },
-                    isDeleteEnabled: item.isDeletable && widget.isDeleteEnabled,
-                    isDuplicateEnabled: widget.isDuplicateEnabled,
-                    child: widget.itemBuilder(item),
-                  );
-          },
-          // animator: DefaultAnimatedListAnimator,
-          listController: _controller,
-          scrollController: _scrollController,
-          addLongPressReorderable: widget.isReorderable,
-          reorderModel: widget.isReorderable
-              ? AnimatedListReorderModel(
-                  onReorderStart: (index, dx, dy) => true,
-                  onReorderFeedback: (int index, int dropIndex, double offset,
-                          double dx, double dy) =>
-                      null,
-                  onReorderMove: (int index, int dropIndex) => true,
-                  onReorderComplete: _handleReorderItems,
-                )
-              : null,
-          reorderDecorationBuilder:
-              widget.isReorderable ? reorderableListDecorator : null,
-          footer: const SizedBox(height: 64),
-          // cacheExtent: double.infinity,
+        ),
+        Expanded(
+          flex: 1,
+          child: Stack(children: [
+            widget.items.isEmpty
+                ? SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: Center(
+                      child: Text(
+                        widget.placeholderText,
+                        style:
+                            Theme.of(context).textTheme.displaySmall?.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground
+                                      .withOpacity(0.6),
+                                ),
+                      ),
+                    ),
+                  )
+                : Container(),
+            SlidableAutoCloseBehavior(
+              child: AutomaticAnimatedListView<Item>(
+                list: widget.items,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                comparator: AnimatedListDiffListComparator<Item>(
+                  sameItem: (a, b) => a.id == b.id,
+                  sameContent: (a, b) => a.id == b.id,
+                ),
+                itemBuilder: _getItemBuilder(_selectedFilter),
+                // animator: DefaultAnimatedListAnimator,
+                listController: _controller,
+                scrollController: _scrollController,
+                addLongPressReorderable: widget.isReorderable,
+                reorderModel: widget.isReorderable
+                    ? AnimatedListReorderModel(
+                        onReorderStart: (index, dx, dy) => true,
+                        onReorderFeedback: (int index, int dropIndex,
+                                double offset, double dx, double dy) =>
+                            null,
+                        onReorderMove: (int index, int dropIndex) => true,
+                        onReorderComplete: _handleReorderItems,
+                      )
+                    : null,
+                reorderDecorationBuilder:
+                    widget.isReorderable ? reorderableListDecorator : null,
+                footer: const SizedBox(height: 64),
+                // cacheExtent: double.infinity,
+              ),
+            ),
+          ]),
+        ),
+      ],
+    );
+  }
+}
+
+class ListFilterChip<Item extends ListItem> extends StatelessWidget {
+  const ListFilterChip(
+      {Key? key,
+      required this.listFilter,
+      required this.onTap,
+      required this.isSelected})
+      : super(key: key);
+
+  final ListFilter<Item> listFilter;
+  final VoidCallback onTap;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+
+    return CardContainer(
+      color: isSelected ? colorScheme.primary : colorScheme.surface,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Text(
+          listFilter.name,
+          style: textTheme.headlineSmall?.copyWith(
+            color: isSelected ? colorScheme.onPrimary : colorScheme.onSurface,
+          ),
         ),
       ),
-    ]);
+    );
   }
 }

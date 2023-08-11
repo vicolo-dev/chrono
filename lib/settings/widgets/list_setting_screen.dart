@@ -42,6 +42,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
       CustomizeListItemScreen(
         getSettings: (item) => widget.setting.getItemSettings(item),
         item: item,
+        isNewItem: false,
       ),
       onSave: (newItem) {
         _listController.changeItems((items) => items[index] = newItem);

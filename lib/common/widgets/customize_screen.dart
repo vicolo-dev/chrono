@@ -14,11 +14,13 @@ class CustomizeScreen<Item extends CustomizableListItem>
     required this.item,
     this.onSave,
     required this.builder,
+    required this.isNewItem,
   });
 
   final Item item;
   final void Function(Item item)? onSave;
   final Widget Function(BuildContext context, Item item) builder;
+  final bool isNewItem;
 
   @override
   State<CustomizeScreen> createState() => _CustomizeScreenState<Item>();
@@ -66,7 +68,9 @@ class _CustomizeScreenState<Item extends CustomizableListItem>
       body: WillPopScope(
         onWillPop: () async {
           if (_isSaved) return true;
-          if (_item.hasSameSettingsAs(widget.item)) return true;
+          if (_item.hasSameSettingsAs(widget.item) && !widget.isNewItem) {
+            return true;
+          }
           bool? shouldPop = await showDialog<bool>(
             context: context,
             builder: (buildContext) {

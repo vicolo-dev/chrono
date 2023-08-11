@@ -13,6 +13,8 @@ class AlarmTaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     TextTheme textTheme = themeData.textTheme;
+    ColorScheme colorScheme = themeData.colorScheme;
+
     return Column(
       children: [
         Padding(
@@ -33,7 +35,8 @@ class AlarmTaskCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              if (!isAddCard) const Icon(FluxIcons.settings),
+              if (!isAddCard)
+                Icon(FluxIcons.settings, color: colorScheme.onSurface),
             ],
           ),
         ),

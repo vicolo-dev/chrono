@@ -61,7 +61,7 @@ class ThemeCard<Item extends ThemeItem> extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               height: 28,
                               child: const Text(
-                                  "Default themes cannot be edited. You can duplicate the theme by swiping right on it."),
+                                  "Default themes cannot be edited. You can duplicate it to edit."),
                             ),
                             margin: const EdgeInsets.only(
                                 left: 20, right: 64 + 16, bottom: 12),

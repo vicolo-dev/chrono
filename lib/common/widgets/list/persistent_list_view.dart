@@ -1,4 +1,5 @@
 import 'package:clock_app/common/types/list_controller.dart';
+import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
@@ -59,6 +60,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
     this.isDuplicateEnabled = true,
     this.reloadOnPop = false,
     this.shouldInsertOnTop = true,
+    this.listFilters = const [],
   });
 
   final Widget Function(Item item) itemBuilder;
@@ -74,6 +76,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final bool isDuplicateEnabled;
   final bool reloadOnPop;
   final bool shouldInsertOnTop;
+  final List<ListFilter<Item>> listFilters;
 
   @override
   State<PersistentListView> createState() => _PersistentListViewState<Item>();
@@ -134,6 +137,7 @@ class _PersistentListViewState<Item extends ListItem>
       isDeleteEnabled: widget.isDeleteEnabled,
       isDuplicateEnabled: widget.isDuplicateEnabled,
       shouldInsertOnTop: widget.shouldInsertOnTop,
+      listFilters: widget.listFilters,
     );
   }
 }

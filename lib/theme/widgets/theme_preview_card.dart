@@ -12,14 +12,14 @@ class ThemePreviewCard extends StatelessWidget {
     TextTheme textTheme = theme.textTheme;
     ColorScheme colorScheme = theme.colorScheme;
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
-              "Background",
+              "Preview",
               style: textTheme.headlineMedium?.copyWith(
                 color: colorScheme.onBackground,
               ),

@@ -57,6 +57,8 @@ class ClockTimer extends CustomizableListItem {
   }
 
   bool get isRunning => _state == TimerState.running;
+  bool get isStopped => _state == TimerState.stopped;
+  bool get isPaused => _state == TimerState.paused;
   TimerState get state => _state;
 
   ClockTimer(this._duration)

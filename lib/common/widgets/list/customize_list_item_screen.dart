@@ -12,9 +12,11 @@ class CustomizeListItemScreen<Item extends CustomizableListItem>
     required this.item,
     required this.getSettings,
     this.itemPreviewBuilder,
+    required this.isNewItem,
   });
 
   final Item item;
+  final bool isNewItem;
   final SettingGroup Function(Item item) getSettings;
   final Widget Function(Item item)? itemPreviewBuilder;
 
@@ -30,6 +32,7 @@ class _CustomizeListItemScreenState<Item extends CustomizableListItem>
     ThemeData theme = Theme.of(context);
     return CustomizeScreen(
         item: widget.item,
+        isNewItem: widget.isNewItem,
         builder: (context, item) {
           return Stack(children: [
             Column(
@@ -37,18 +40,7 @@ class _CustomizeListItemScreenState<Item extends CustomizableListItem>
                 if (widget.itemPreviewBuilder != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: CardContainer(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text("Preview",
-                                style: theme.textTheme.titleMedium),
-                          ),
-                          widget.itemPreviewBuilder?.call(item) ?? Container(),
-                        ],
-                      ),
-                    ),
+                    child: widget.itemPreviewBuilder?.call(item) ?? Container(),
                   ),
                 Expanded(
                   child: SingleChildScrollView(

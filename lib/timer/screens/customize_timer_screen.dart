@@ -9,9 +9,11 @@ class CustomizeTimerScreen extends StatefulWidget {
   const CustomizeTimerScreen({
     super.key,
     required this.timer,
+    required this.isNewItem,
   });
 
   final ClockTimer timer;
+  final bool isNewItem;
 
   @override
   State<CustomizeTimerScreen> createState() => _CustomizeTimerScreenState();
@@ -22,6 +24,7 @@ class _CustomizeTimerScreenState extends State<CustomizeTimerScreen> {
   Widget build(BuildContext context) {
     return CustomizeScreen(
       item: widget.timer,
+      isNewItem: widget.isNewItem,
       builder: (context, timer) {
         return SingleChildScrollView(
           child: Padding(

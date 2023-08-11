@@ -17,9 +17,11 @@ class CustomizeAlarmScreen extends StatefulWidget {
   const CustomizeAlarmScreen({
     super.key,
     required this.alarm,
+    this.isNewAlarm = true,
   });
 
   final Alarm alarm;
+  final bool isNewAlarm;
 
   @override
   State<CustomizeAlarmScreen> createState() => _CustomizeAlarmScreenState();
@@ -52,6 +54,7 @@ class _CustomizeAlarmScreenState extends State<CustomizeAlarmScreen> {
   Widget build(BuildContext context) {
     return CustomizeScreen(
       item: widget.alarm,
+      isNewItem: widget.isNewAlarm,
       builder: (context, alarm) {
         return SingleChildScrollView(
           child: Padding(

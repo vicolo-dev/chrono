@@ -2,6 +2,7 @@ import 'package:clock_app/alarm/screens/customize_alarm_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
+import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/utils/date_time.dart';
@@ -29,6 +30,32 @@ class AlarmScreen extends StatefulWidget {
 class _AlarmScreenState extends State<AlarmScreen> {
   final _listController = PersistentListController<Alarm>();
   late Setting showInstantAlarmButton;
+
+  final List<ListFilter<Alarm>> _listFilters = [
+    ListFilter(
+      'All',
+      (alarm) => true,
+    ),
+    ListFilter(
+      'Today',
+      (alarm) {
+        if (alarm.currentScheduleDateTime == null) return false;
+        return alarm.currentScheduleDateTime!.isToday();
+      },
+    ),
+    ListFilter('Tomorrow', (alarm) {
+      if (alarm.currentScheduleDateTime == null) return false;
+      return alarm.currentScheduleDateTime!.isTomorrow();
+    }),
+    ListFilter(
+      'Completed',
+      (alarm) => alarm.isFinished,
+    ),
+    ListFilter(
+      'Disabled',
+      (alarm) => !alarm.isEnabled,
+    ),
+  ];
 
   void update(value) {
     setState(() {});
@@ -59,10 +86,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
   Future<Alarm?> _openCustomizeAlarmScreen(
     Alarm alarm, {
     void Function(Alarm)? onSave,
+    bool isNewAlarm = false,
   }) async {
     return openCustomizeScreen(
       context,
-      CustomizeAlarmScreen(alarm: alarm),
+      CustomizeAlarmScreen(alarm: alarm, isNewAlarm: isNewAlarm),
       onSave: onSave,
     );
   }
@@ -140,7 +168,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
         if (timePickerResult.isCustomize) {
           await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) {
             _listController.addItem(newAlarm);
-          });
+          }, isNewAlarm: true);
         } else {
           _listController.addItem(alarm);
         }
@@ -168,6 +196,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
           }),
           placeholderText: "No alarms created",
           reloadOnPop: true,
+          listFilters: _listFilters,
         ),
         FAB(
           onPressed: () {
