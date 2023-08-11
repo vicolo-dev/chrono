@@ -20,16 +20,12 @@ import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
 
-// For some reason, the ports stop stops working when we hot restart the app and only works
-// again when we close and reopen the app. As a workaround, we can update the port
-// name to a new value before hot restarting the app.
 const String stopAlarmPortName = "stopAlarmPort";
 const String updatePortName = "updatePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
   if (kDebugMode) {
-    print("ringingAlarmId: ${RingingManager.ringingAlarmId}");
     print("Alarm triggered: $scheduleId");
   }
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
@@ -38,9 +34,6 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
       ScheduledNotificationType.values.byName(params['type']);
 
   // This code listens for a message from the main isolate to stop the notification
-  // For some reason, this stops working when we hot restart the app and only works
-  // again when we close and reopen the app. As a workaround, we can update the port
-  // name to a new value before hot restarting the app.
   ReceivePort receivePort = ReceivePort();
   IsolateNameServer.removePortNameMapping(stopAlarmPortName);
   IsolateNameServer.registerPortWithName(

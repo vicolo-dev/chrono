@@ -164,7 +164,7 @@ class Alarm extends CustomizableListItem {
     );
   }
 
-  void unSnooze() {
+  void _unSnooze() {
     _snoozeTime = null;
   }
 
@@ -208,15 +208,16 @@ class Alarm extends CustomizableListItem {
 
       if (isSnoozed) {
         if (DateTime.now().isAfter(_snoozeTime!)) {
-          unSnooze();
+          _unSnooze();
         } else {
           _scheduleSnooze();
         }
       }
 
-      // A disable active schedule means that the schedule is not active, but can be
+      // A disabled active schedule means that the schedule is not active, but can be
       // activated again. This is the case for one-time alarms that have already rung.
-      // This is opposed to a finished schedule, which is not active and cannot be activated again.
+      // This is different from a finished schedule, which is not active and cannot be activated again.
+      // (Date schedules, for which all dates have already passed etc.)
       // We disable this alarm only if there are no active schedules and it is not snoozed
       // Disabling it if it is snoozed will cancel the snooze. This should only be
       // done by the user.

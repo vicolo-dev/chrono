@@ -39,13 +39,6 @@ SettingGroup alarmSettingsSchema = SettingGroup(
                 description: "Will repeat during the specified date range"),
           ],
         ),
-        SwitchSetting(
-          "Delete after ringing",
-          false,
-          enableConditions: [
-            SettingEnableConditionParameter("Type", OnceAlarmSchedule)
-          ],
-        ),
         ToggleSetting(
           "Week Days",
           [

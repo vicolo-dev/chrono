@@ -53,7 +53,6 @@ Future<void> _renderWidget(WidgetTester tester,
     List<bool>? selectedItems,
     String? description,
     List<ToggleOption<int>>? options,
-    double padding = 0,
     void Function(int)? onChange}) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -63,7 +62,6 @@ Future<void> _renderWidget(WidgetTester tester,
           selectedItems: selectedItems ?? [false, false, false],
           description: description,
           options: options ?? testOptions,
-          padding: padding,
           onChange: onChange ?? (int index) {},
         ),
       ),

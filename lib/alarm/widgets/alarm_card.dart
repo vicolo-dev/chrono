@@ -73,15 +73,15 @@ class _AlarmCardState extends State<AlarmCard> {
         children: [
           Expanded(
             flex: 8,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (widget.alarm.label.isNotEmpty)
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.alarm.label.isNotEmpty)
+                    Row(
+                      children: [
+                        Text(
                           widget.alarm.label,
                           style: textTheme.bodyLarge?.copyWith(
                             color: widget.alarm.isEnabled
@@ -89,22 +89,19 @@ class _AlarmCardState extends State<AlarmCard> {
                                 : colorScheme.onBackground.withOpacity(0.6),
                           ),
                         ),
-                      ),
+                      ],
+                    ),
+                  Row(
+                    children: [
+                      ClockDisplay(
+                          dateTime: widget.alarm.time.toDateTime(),
+                          scale: 0.6,
+                          color: widget.alarm.isEnabled
+                              ? null
+                              : colorScheme.onBackground.withOpacity(0.6)),
                     ],
                   ),
-                Row(
-                  children: [
-                    ClockDisplay(
-                        dateTime: widget.alarm.time.toDateTime(),
-                        scale: 0.6,
-                        color: widget.alarm.isEnabled
-                            ? null
-                            : colorScheme.onBackground.withOpacity(0.6)),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
+                  Row(
                     children: [
                       Icon(
                         timeOfDayIcon.icon,
@@ -126,9 +123,9 @@ class _AlarmCardState extends State<AlarmCard> {
                         ),
                       ),
                     ],
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
           const Spacer(),
