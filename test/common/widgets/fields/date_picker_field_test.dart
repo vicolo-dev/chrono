@@ -8,7 +8,7 @@ const title = 'Test';
 const hintText = 'TestHint';
 
 void main() {
-  group('DatePickerField Widget', () {
+  group('DatePickerField', () {
     group('shows input field', () {
       testWidgets('title correctly', (tester) async {
         await _renderWidget(tester);

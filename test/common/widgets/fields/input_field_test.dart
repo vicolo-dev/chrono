@@ -7,7 +7,7 @@ const title = 'Test';
 const hintText = 'TestHint';
 
 void main() {
-  group('InputField Widget', () {
+  group('InputField', () {
     group('shows input field', () {
       testWidgets('title correctly', (tester) async {
         await _renderWidget(tester);

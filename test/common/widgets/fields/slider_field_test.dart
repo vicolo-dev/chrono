@@ -6,7 +6,7 @@ const name = 'Test Slider';
 const unit = 'unit';
 
 void main() {
-  group('SliderField Widget', () {
+  group('SliderField', () {
     testWidgets('shows name correctly', (tester) async {
       await _renderWidget(tester);
       final nameFinder = find.text(name);

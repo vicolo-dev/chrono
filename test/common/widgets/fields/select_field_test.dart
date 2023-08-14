@@ -12,7 +12,7 @@ final choices = [
 ];
 
 void main() {
-  group('SelectField Widget', () {
+  group('SelectField', () {
     group('shows select field', () {
       testWidgets('title correctly', (tester) async {
         await _renderWidget(tester);
