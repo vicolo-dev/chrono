@@ -1,4 +1,3 @@
-import 'package:clock_app/theme/border.dart';
 import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/card.dart';
 import 'package:clock_app/theme/data/default_style_themes.dart';
@@ -12,10 +11,10 @@ import 'package:clock_app/theme/slider.dart';
 import 'package:clock_app/theme/snackbar.dart';
 import 'package:clock_app/theme/switch.dart';
 import 'package:clock_app/theme/text.dart';
-import 'package:clock_app/theme/theme_extension.dart';
 import 'package:clock_app/theme/time_picker.dart';
 import 'package:clock_app/theme/toggle_buttons.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
+import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 ColorSchemeData defaultColorScheme = defaultColorSchemes[0];
@@ -38,6 +37,6 @@ ThemeData defaultTheme = ThemeData(
   sliderTheme: sliderTheme,
   bottomSheetTheme: getBottomSheetTheme(defaultColorScheme, defaultStyleTheme),
   toggleButtonsTheme: toggleButtonsTheme,
-  extensions: const <ThemeExtension<dynamic>>[ThemeStyle()],
+  extensions: const <ThemeExtension<dynamic>>[ThemeStyleExtension()],
   popupMenuTheme: getPopupMenuTheme(defaultColorScheme, defaultStyleTheme),
 );

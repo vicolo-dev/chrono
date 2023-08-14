@@ -2,7 +2,6 @@ import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
-import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/list/list_filter_chip.dart';
 import 'package:clock_app/common/widgets/list/list_item_card.dart';
 import 'package:flutter/material.dart';

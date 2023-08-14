@@ -32,6 +32,7 @@ class ClockTimer extends CustomizableListItem {
   int get id => _id;
   @override
   bool get isDeletable => true;
+  @override
   SettingGroup get settings => _settings;
   String get label => _settings.getSetting("Label").value.isNotEmpty
       ? _settings.getSetting("Label").value

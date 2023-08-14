@@ -1,5 +1,4 @@
 import 'package:clock_app/common/types/json.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 
 class TimeDuration extends JsonSerializable {
   final int hours;

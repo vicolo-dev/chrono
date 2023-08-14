@@ -43,7 +43,7 @@ void main() {
               (widget) => widget is Switch && widget.value == true,
               description: 'Switch is enabled');
 
-          // expect(finder, findsOneWidget);
+          expect(finder, findsOneWidget);
         },
       );
 

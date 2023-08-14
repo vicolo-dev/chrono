@@ -1264,7 +1264,6 @@ class _ColorPickerState extends State<ColorPicker> {
     if (widget.customColorSwatchesAndNames.toString() !=
             oldWidget.customColorSwatchesAndNames.toString() ||
         !mapEquals(widget.pickersEnabled, oldWidget.pickersEnabled)) {
-      // TODO(rydmike): Investigate the mapEquals issue.
       // In above un-equality check, the mapEquals, or with map != operator,
       // does not work if you provide a map made with createPrimarySwatch or
       // createAccentSwatch. It should, not sure why it does not. The Wheel
@@ -1964,67 +1963,6 @@ class _ColorPickerState extends State<ColorPicker> {
     widget.onRecentColorsChanged?.call(_recentColors);
   }
 
-  // Handle the keyboard events from the RawKeyboardListener.
-  void _handleKeyEvent(RawKeyEvent event) {
-    // If edit color code is focused and we do not use the parsed paste feature,
-    // we exit out of here. The TextField's normal paste action will then handle
-    // the paste as before in v1.x and normally in a TextField.
-    if (_editCodeFocused && !widget.copyPasteBehavior.editUsesParsedPaste) {
-      return;
-    }
-    // Make an OS independent copy/paste shortcut modifier key.
-    //
-    // Found the usage of these in the SDK TextField copy/paste implementation.
-    final bool isRawKeyMacOS = event.data is RawKeyEventDataMacOs;
-    if (_debug) {
-      debugPrint('KeyEvent isRawKeyMacOS: $isRawKeyMacOS');
-    }
-    final bool isRawKeyIos = event.data is RawKeyEventDataIos;
-    // **BUT**
-    // The above RawKeyEventData did not seem to work on Web when using an
-    // iPad+Safari and an Apple 10.5 Pro iPad keyboard, isRawKeyIos did not
-    // become true!
-    // So CMD modifier did not get used, only CTRL worked. We can use context
-    // based Theme.platform instead here and skip RawKeyEventData, or just
-    // combine it with RawKeyEventData. Since we have a context it works too.
-    final TargetPlatform platform = Theme.of(context).platform;
-    // Should COMMAND modifier be used instead of CTRL for keyboard COPY-PASTE?
-    // Use all sources we have to determine if it is iOS or macOS that should
-    // use CMD for copy/paste instead of CTRL.
-    final bool useCommandModifier = isRawKeyMacOS ||
-        isRawKeyIos ||
-        platform == TargetPlatform.iOS ||
-        platform == TargetPlatform.macOS;
-
-    // isModifierPressed will be true when COMMAND key is pressed on macOS/iOS
-    // OR when CTRL key is pressed on other platforms.
-    final bool isModifierPressed =
-        useCommandModifier ? event.isMetaPressed : event.isControlPressed;
-
-    // The raw keyboard listener reacts to both up and down events, we only use
-    // down, so that we only execute the copy and paste keyboard command once
-    // when the keys are pressed down. We do not want to do it 2nd time when
-    // the key goes up.
-    if (event.runtimeType == RawKeyDownEvent) {
-      // If logical key is paste OR modifier+V and we use ctrlV paste behavior,
-      // we get the latest clipboard data.
-      if ((event.logicalKey == LogicalKeyboardKey.paste ||
-              (isModifierPressed &&
-                  event.logicalKey == LogicalKeyboardKey.keyV)) &&
-          widget.copyPasteBehavior.ctrlV) {
-        unawaited(_getClipboard());
-      }
-      // If logical key is copy or modifier+C and we used ctrlC copy behavior,
-      // we set the current color to the clipboard data.
-      if ((event.logicalKey == LogicalKeyboardKey.copy ||
-              (isModifierPressed &&
-                  event.logicalKey == LogicalKeyboardKey.keyC)) &&
-          widget.copyPasteBehavior.ctrlC) {
-        unawaited(_setClipboard());
-      }
-    }
-  }
-
   // Get the current clipboard data. Try to parse it to a Color object.
   // If successful, set the current color to the resulting Color.
   Future<void> _getClipboard() async {
@@ -2071,7 +2009,6 @@ class _ColorPickerState extends State<ColorPicker> {
     }
     // ELSE FOR: Clipboard could not parsed to a Color()
     else {
-      // TODO(rydmike): Improve sound when it can be done with SDK features.
       // This is a nice idea, but it does not do much on most platforms.
       // Would just like to get a nice "error bleep" sound on all platforms
       // without any plugin by using SDK only, but not doable, bummer.

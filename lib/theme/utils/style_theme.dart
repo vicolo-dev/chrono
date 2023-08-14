@@ -3,9 +3,9 @@ import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/input.dart';
 import 'package:clock_app/theme/popup_menu.dart';
 import 'package:clock_app/theme/snackbar.dart';
-import 'package:clock_app/theme/theme_extension.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
+import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 ThemeData getThemeFromStyleTheme(ThemeData theme, StyleTheme styleTheme) {
@@ -32,7 +32,7 @@ ThemeData getThemeFromStyleTheme(ThemeData theme, StyleTheme styleTheme) {
     inputDecorationTheme: getInputTheme(colorSchemeData, styleTheme),
     popupMenuTheme: getPopupMenuTheme(colorSchemeData, styleTheme),
     extensions: [
-      theme.extension<ThemeStyle>()?.copyWith(
+      theme.extension<ThemeStyleExtension>()?.copyWith(
                 borderRadius: styleTheme.borderRadius,
                 shadowElevation: styleTheme.shadowElevation,
                 shadowBlurRadius: styleTheme.shadowBlurRadius,
@@ -40,7 +40,7 @@ ThemeData getThemeFromStyleTheme(ThemeData theme, StyleTheme styleTheme) {
                 shadowSpreadRadius: styleTheme.shadowSpreadRadius,
                 borderWidth: styleTheme.borderWidth,
               ) ??
-          const ThemeStyle(),
+          const ThemeStyleExtension(),
     ],
   );
 }

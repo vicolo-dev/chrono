@@ -6,7 +6,6 @@ import 'package:clock_app/settings/types/setting_group.dart';
 
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 
 SettingGroup timerSettingsSchema = SettingGroup(
   "Timer Setting",

@@ -1,8 +1,5 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
-import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 
@@ -104,7 +101,7 @@ class _RestoreDefaultScreenState extends State<RestoreDefaultScreen> {
                   Navigator.pop(context);
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ...widget.settingGroup.settingItems
                   .map(
                     (settingItem) => SettingCheckBox(

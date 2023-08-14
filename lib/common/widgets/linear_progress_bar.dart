@@ -1,4 +1,4 @@
-import 'package:clock_app/theme/theme_extension.dart';
+import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -352,7 +352,8 @@ class _LinearProgressIndicatorState extends State<LinearProgressBar>
         indicatorTheme.linearMinHeight ??
         defaults.linearMinHeight!;
 
-    ThemeStyle? themeStyle = Theme.of(context).extension<ThemeStyle>();
+    ThemeStyleExtension? themeStyle =
+        Theme.of(context).extension<ThemeStyleExtension>();
 
     return widget._buildSemanticsWrapper(
       context: context,

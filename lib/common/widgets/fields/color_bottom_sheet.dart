@@ -1,4 +1,3 @@
-import 'package:clock_app/common/types/color_picker_type.dart';
 import 'package:clock_app/common/widgets/color_picker/color_picker.dart';
 import 'package:flex_color_picker/flex_color_picker.dart' show ColorPickerType;
 import 'package:flutter/material.dart';

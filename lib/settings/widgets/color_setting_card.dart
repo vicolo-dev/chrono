@@ -1,6 +1,5 @@
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/fields/color_field.dart';
-import 'package:clock_app/common/widgets/fields/toggle_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 

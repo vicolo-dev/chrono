@@ -6,9 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 const title = 'Test';
 final choices = [
-  SelectChoice(name: "Test1", value: "Test1", description: "Test1Description"),
-  SelectChoice(name: "Test2", value: "Test2", description: "Test2Description"),
-  SelectChoice(name: "Test3", value: "Test3", description: "Test3Description"),
+  const SelectChoice(
+      name: "Test1", value: "Test1", description: "Test1Description"),
+  const SelectChoice(
+      name: "Test2", value: "Test2", description: "Test2Description"),
+  const SelectChoice(
+      name: "Test3", value: "Test3", description: "Test3Description"),
 ];
 
 void main() {

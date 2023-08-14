@@ -1,6 +1,3 @@
-import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/widgets/alarm_card.dart';
-import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';

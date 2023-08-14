@@ -1,4 +1,4 @@
-import 'package:clock_app/theme/theme_extension.dart';
+import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
@@ -29,7 +29,7 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
-    ThemeStyle? themeStyle = theme.extension<ThemeStyle>();
+    ThemeStyleExtension? themeStyle = theme.extension<ThemeStyleExtension>();
 
     return Container(
       alignment: alignment,

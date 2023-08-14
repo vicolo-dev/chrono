@@ -1,5 +1,4 @@
 import 'package:clock_app/common/logic/customize_screen.dart';
-import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
@@ -45,14 +44,9 @@ class _ThemesScreenState<Item extends ThemeItem>
         itemPreviewBuilder: (item) {
           ThemeData theme = Theme.of(context);
           ThemeData themeData = widget.getThemeFromItem(theme, item);
-          return CardContainer(
-            showShadow: false,
-            showLightBorder: true,
-            color: themeData.colorScheme.background,
-            child: Theme(
-              data: themeData,
-              child: const ThemePreviewCard(),
-            ),
+          return Theme(
+            data: themeData,
+            child: const ThemePreviewCard(),
           );
         },
       ),

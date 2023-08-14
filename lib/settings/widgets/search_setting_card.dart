@@ -1,5 +1,4 @@
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/logic/get_setting_widget.dart';
 import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:clock_app/settings/types/setting_item.dart';

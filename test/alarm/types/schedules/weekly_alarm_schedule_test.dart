@@ -1,7 +1,6 @@
 import 'package:clock_app/alarm/data/alarm_settings_schema.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';

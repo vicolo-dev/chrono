@@ -1,4 +1,4 @@
-import 'package:clock_app/theme/theme_extension.dart';
+import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -47,7 +47,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
-    ThemeStyle? themeStyle = theme.extension<ThemeStyle>();
+    ThemeStyleExtension? themeStyle = theme.extension<ThemeStyleExtension>();
     TextStyle? dateTextStyle = theme.textTheme.labelSmall;
 
     Widget Function(BuildContext, DateTime, DateTime) dateLabelBuilder(

@@ -20,6 +20,7 @@ import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:clock_app/timer/data/timer_settings_schema.dart';
 import 'package:clock_app/timer/screens/presets_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -80,7 +81,9 @@ SettingGroup appSettings = SettingGroup(
                 var test = await isAutoStartAvailable ?? false;
                 //if available then navigate to auto-start setting page.
                 if (test) await getAutoStartPermission();
-              } on PlatformException catch (e) {}
+              } on PlatformException catch (e) {
+                if (kDebugMode) print(e.message);
+              }
             },
             description:
                 "Enable auto start to allow alarms to go off when the app is closed",

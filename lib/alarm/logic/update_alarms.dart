@@ -2,7 +2,6 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 
 import 'alarm_controls.dart';

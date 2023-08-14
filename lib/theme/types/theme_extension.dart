@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-class ThemeStyle extends ThemeExtension<ThemeStyle> {
+class ThemeStyleExtension extends ThemeExtension<ThemeStyleExtension> {
   final double shadowElevation;
   final double shadowOpacity;
   final double shadowBlurRadius;
@@ -10,7 +10,7 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
   final double borderRadius;
   final double borderWidth;
 
-  const ThemeStyle({
+  const ThemeStyleExtension({
     this.shadowElevation = 1,
     this.shadowOpacity = 0.2,
     this.shadowBlurRadius = 1,
@@ -20,7 +20,7 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
   });
 
   @override
-  ThemeExtension<ThemeStyle> copyWith({
+  ThemeExtension<ThemeStyleExtension> copyWith({
     double? shadowElevation,
     double? shadowOpacity,
     double? shadowBlurRadius,
@@ -28,7 +28,7 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
     double? borderRadius,
     double? borderWidth,
   }) {
-    return ThemeStyle(
+    return ThemeStyleExtension(
       shadowElevation: shadowElevation ?? this.shadowElevation,
       shadowOpacity: shadowOpacity ?? this.shadowOpacity,
       shadowBlurRadius: shadowBlurRadius ?? this.shadowBlurRadius,
@@ -39,11 +39,11 @@ class ThemeStyle extends ThemeExtension<ThemeStyle> {
   }
 
   @override
-  ThemeExtension<ThemeStyle> lerp(
-      covariant ThemeExtension<ThemeStyle>? other, double t) {
-    if (other is! ThemeStyle) return this;
+  ThemeExtension<ThemeStyleExtension> lerp(
+      covariant ThemeExtension<ThemeStyleExtension>? other, double t) {
+    if (other is! ThemeStyleExtension) return this;
 
-    return ThemeStyle(
+    return ThemeStyleExtension(
       shadowElevation: lerpDouble(shadowElevation, other.shadowElevation, t)!,
       shadowOpacity: lerpDouble(shadowOpacity, other.shadowOpacity, t)!,
       shadowBlurRadius:

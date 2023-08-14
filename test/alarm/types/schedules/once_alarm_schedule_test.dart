@@ -2,7 +2,6 @@ import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/utils/date_time.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 OnceAlarmSchedule schedule = OnceAlarmSchedule();

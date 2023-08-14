@@ -1,4 +1,3 @@
-import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/theme/types/theme_item.dart';
 import 'package:clock_app/theme/widgets/theme_preview_card.dart';
@@ -82,14 +81,9 @@ class ThemeCard<Item extends ThemeItem> extends StatelessWidget {
             ],
           ),
         ),
-        CardContainer(
-          showShadow: false,
-          showLightBorder: true,
-          color: themeData.colorScheme.background,
-          child: Theme(
-            data: themeData,
-            child: const ThemePreviewCard(),
-          ),
+        Theme(
+          data: themeData,
+          child: const ThemePreviewCard(),
         ),
       ],
     );

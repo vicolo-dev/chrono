@@ -978,12 +978,12 @@ class DialPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(DialPainter oldPainter) {
-    return oldPainter.primaryLabels != primaryLabels ||
-        oldPainter.secondaryLabels != secondaryLabels ||
-        oldPainter.backgroundColor != backgroundColor ||
-        oldPainter.accentColor != accentColor ||
-        oldPainter.theta != theta;
+  bool shouldRepaint(DialPainter oldDelegate) {
+    return oldDelegate.primaryLabels != primaryLabels ||
+        oldDelegate.secondaryLabels != secondaryLabels ||
+        oldDelegate.backgroundColor != backgroundColor ||
+        oldDelegate.accentColor != accentColor ||
+        oldDelegate.theta != theta;
   }
 }
 

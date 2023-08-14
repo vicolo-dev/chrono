@@ -1,8 +1,6 @@
 import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/types/time.dart';
-import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 

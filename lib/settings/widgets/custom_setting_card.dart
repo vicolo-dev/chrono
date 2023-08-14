@@ -1,6 +1,5 @@
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/setting_link.dart';
 import 'package:flutter/material.dart';
 
 class CustomSettingCard extends StatefulWidget {

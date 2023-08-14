@@ -194,8 +194,8 @@ class SlideActionState extends State<SlideAction>
     animation.addListener(() {
       if (mounted) {
         setState(() {
-          double _delta = _endXPosition - _initialPosition;
-          _position = (_endXPosition - (_delta * animation.value));
+          double delta = _endXPosition - _initialPosition;
+          _position = (_endXPosition - (delta * animation.value));
         });
       }
     });

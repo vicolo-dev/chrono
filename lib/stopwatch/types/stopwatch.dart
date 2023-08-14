@@ -1,7 +1,6 @@
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/timer_state.dart';
 import 'package:clock_app/common/utils/duration.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';

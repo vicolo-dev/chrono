@@ -1,6 +1,5 @@
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:flutter/material.dart';
