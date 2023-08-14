@@ -14,8 +14,6 @@ class SelectField extends StatefulWidget {
     this.description,
     required this.choices,
     required this.onChanged,
-    this.shouldCloseOnSelect = true,
-    this.onSelect,
   }) : super(key: key);
 
   final int selectedIndex;
@@ -23,22 +21,12 @@ class SelectField extends StatefulWidget {
   final String? description;
   final List<SelectChoice> choices;
   final void Function(int index) onChanged;
-  final Function(int index)? onSelect;
-  final bool shouldCloseOnSelect;
 
   @override
   State<SelectField> createState() => _SelectFieldState();
 }
 
 class _SelectFieldState<T> extends State<SelectField> {
-  // late int _currentSelectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    // _currentSelectedIndex = widget.selectedIndex;
-  }
-
   Widget _getFieldCard() {
     SelectChoice choice = widget.choices[widget.selectedIndex];
 
@@ -81,12 +69,8 @@ class _SelectFieldState<T> extends State<SelectField> {
               void handleSelect(int index) {
                 setState(() {
                   currentSelectedIndex = index;
-                  widget.onSelect?.call(index);
                 });
-                //close bottom sheet
-                // if (widget.shouldCloseOnSelect) {
                 Navigator.pop(context, currentSelectedIndex);
-                // }
               }
 
               return SelectBottomSheet(
@@ -104,8 +88,6 @@ class _SelectFieldState<T> extends State<SelectField> {
         widget.onChanged(currentSelectedIndex ?? widget.selectedIndex);
       });
     }
-
-    SelectChoice choice = widget.choices[widget.selectedIndex];
 
     return Material(
       color: Colors.transparent,

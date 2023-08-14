@@ -8,6 +8,7 @@ import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_storage/get_storage.dart';
 
 class AlarmCard extends StatefulWidget {
@@ -41,10 +42,6 @@ class _AlarmCardState extends State<AlarmCard> {
   @override
   void initState() {
     super.initState();
-    if (GetStorage().read('first_alarm_created') == false) {
-      GetStorage().write('first_alarm_created', true);
-      showEditTip(context);
-    }
     dateFormatSetting = appSettings
         .getGroup("General")
         .getGroup("Display")
@@ -66,6 +63,8 @@ class _AlarmCardState extends State<AlarmCard> {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
+
+    // return Container();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

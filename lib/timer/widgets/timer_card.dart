@@ -52,10 +52,10 @@ class _TimerCardState extends State<TimerCard> {
   @override
   void initState() {
     super.initState();
-    if (GetStorage().read('first_timer_created') == false) {
-      GetStorage().write('first_timer_created', true);
-      showEditTip(context);
-    }
+    // if (GetStorage().read('first_timer_created') == false) {
+    //   GetStorage().write('first_timer_created', true);
+    //   showEditTip(context, () => mounted);
+    // }
     valueNotifier = ValueNotifier(widget.timer.remainingSeconds.toDouble());
     remainingSeconds = widget.timer.remainingSeconds;
     valueNotifier.addListener(() {

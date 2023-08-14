@@ -387,8 +387,6 @@ class SliderSetting extends Setting<double> {
 
 class SelectSetting<T> extends Setting<int> {
   final List<SelectSettingOption<T>> _options;
-  void Function(BuildContext, int, T)? onSelect;
-  final bool shouldCloseOnSelect;
 
   List<SelectSettingOption<T>> get options => _options;
   int get selectedIndex => _value;
@@ -404,27 +402,20 @@ class SelectSetting<T> extends Setting<int> {
     return options[index].value;
   }
 
-  void onSelectOption(BuildContext context, int index) {
-    onSelect?.call(context, index, options[index].value);
-  }
-
   @override
   void restoreDefault(BuildContext context) {
     setValue(context, _defaultValue);
-    onSelectOption(context, _defaultValue);
   }
 
   SelectSetting(
     String name,
     this._options, {
     void Function(BuildContext, int)? onChange,
-    this.onSelect,
     int defaultValue = 0,
     String description = "",
     bool isVisual = true,
     List<SettingEnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-    this.shouldCloseOnSelect = true,
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual);
 
@@ -435,10 +426,8 @@ class SelectSetting<T> extends Setting<int> {
       _options,
       defaultValue: _value,
       onChange: onChange,
-      onSelect: onSelect,
       description: description,
       enableConditions: enableConditions,
-      shouldCloseOnSelect: shouldCloseOnSelect,
       isVisual: isVisual,
       searchTags: searchTags,
     );
@@ -467,10 +456,8 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
           [],
           defaultValue: defaultValue,
           onChange: onChange,
-          onSelect: onSelect,
           description: description,
           enableConditions: enableConditions,
-          shouldCloseOnSelect: shouldCloseOnSelect,
           isVisual: isVisual,
           searchTags: searchTags,
         );
@@ -479,11 +466,9 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
   DynamicSelectSetting<T> copy() {
     return DynamicSelectSetting(name, optionsGetter,
         onChange: onChange,
-        onSelect: onSelect,
         description: description,
         defaultValue: _value,
         enableConditions: enableConditions,
-        shouldCloseOnSelect: shouldCloseOnSelect,
         isVisual: isVisual,
         searchTags: searchTags);
   }

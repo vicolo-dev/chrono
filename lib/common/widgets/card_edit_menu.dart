@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 enum CardAction { duplicate, delete }
 
 class CardEditMenu extends StatelessWidget {
-  CardEditMenu({
+  const CardEditMenu({
     super.key,
     this.onPressDelete,
     this.onPressDuplicate,

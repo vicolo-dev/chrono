@@ -37,11 +37,11 @@ class SelectTextOptionCard extends StatelessWidget {
                 children: [
                   Text(choice.name,
                       style: Theme.of(context).textTheme.headlineMedium),
-                  if (choice.description.isNotEmpty)
+                  if (choice.description.isNotEmpty) ...[
                     const SizedBox(height: 4.0),
-                  if (choice.description.isNotEmpty)
                     Text(choice.description,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                        style: Theme.of(context).textTheme.bodyMedium)
+                  ],
                 ],
               ),
             ],

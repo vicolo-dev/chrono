@@ -23,21 +23,24 @@ void main() {
         testWidgets('before value changed', (tester) async {
           const selectedIndex = 0;
           await _renderWidget(tester, selectedIndex: selectedIndex);
-          final valueFinder = find.text(choices[selectedIndex].value);
+          final valueFinder = find.text(choices[selectedIndex].name);
           expect(valueFinder, findsOneWidget);
         });
         testWidgets('after value changed', (tester) async {
           int selectedIndex = 1;
-          await _renderWidget(tester, selectedIndex: selectedIndex);
+          await _renderWidget(tester,
+              selectedIndex: selectedIndex,
+              onChanged: (index) => selectedIndex = index);
           await tester.tap(find.byType(SelectField));
           await tester.pumpAndSettle();
-          final valueFinder = find.descendant(
-              of: find.byType(BottomSheet),
-              matching: find.byType(SelectTextOptionCard));
+          final valueFinder = find.byType(SelectTextOptionCard);
           expect(valueFinder, findsNWidgets(choices.length));
           await tester.tap(valueFinder.at(2));
           await tester.pumpAndSettle();
-          final newValueFinder = find.text(choices[2].value);
+          await _renderWidget(tester,
+              selectedIndex: selectedIndex,
+              onChanged: (index) => selectedIndex = index);
+          final newValueFinder = find.text(choices[2].name);
           expect(newValueFinder, findsOneWidget);
         });
       });
