@@ -15,8 +15,7 @@ jobs:
   build:
     # 6
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
+    permissions: write-all
 
     # 7
     steps:
