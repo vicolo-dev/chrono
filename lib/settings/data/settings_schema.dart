@@ -250,7 +250,7 @@ SettingGroup appSettings = SettingGroup(
         SettingGroup("Alarm", [
           SwitchSetting(
             "Show Instant Alarm Button",
-            true,
+            kDebugMode,
             description:
                 "Show a button on the alarm screen that creates an alarm that rings one second in the future",
           ),
