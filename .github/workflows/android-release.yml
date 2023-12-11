@@ -35,10 +35,38 @@ jobs:
           flutter-version: "3.16.3"
           channel: 'stable'
           cache: true
-      # 12
-      - name: Get dependencies
+
+      # - name: Decode android/neumodore_key.jks
+      #   run: echo "${{ secrets.KEYSTORE_JKS_PROD }}" | base64 --decode > android/keystore.jks
+
+      # - name: Decode android/key.properties
+      #   run: echo "${{ secrets.KEY_PROPERTIES_PROD }}" | base64 --decode > android/key.properties
+
+      - uses: olegtarasov/get-tag@v2 # that generate $GIT_TAG_NAME env
+        id: tagName
+        with:
+          tagRegex: 'internal-v([0-9]+.[0-9]+.[0-9]+\+[0-9]+)' # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+          tagRegexGroup: 1 # Optional. Default is 1.
+
+      - name: Replace YAML version with tag version
+        run: |
+          sed -i 's/99.99.99+99/'$GIT_TAG_NAME'/g' pubspec.yaml|
+          echo "Tag used version:"$GIT_TAG_NAME
+      - name: Pub Get Packages
         run: flutter pub get
 
-      # Runs a set of commands using the runners shell
-      - name: Start release build
-        run: flutter build appbundle
+      - name: Build APPBUNDLE
+        run: flutter build appbundle --release
+
+      - name: Create Github Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/bundle/release/*.aab"
+          token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
+
+      - name: Save APPBUNDLE to Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: APPBUNDLE
+          path: build/app/outputs/bundle/release/app-release.aab
+   

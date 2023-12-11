@@ -36,6 +36,7 @@ class ThemePreviewCard extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: CardContainer(
+                    color: colorScheme.surface,
                     key: const Key("Preview Card - Card"),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
