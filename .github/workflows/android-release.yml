@@ -56,12 +56,15 @@ jobs:
         run: flutter pub get
 
       - name: Build APPBUNDLE
-        run: flutter build appbundle --release
+        run: flutter build appbundle
+
+      - name: Build APK
+        run: flutter build apk --split-per-abi
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/bundle/release/*.aab"
+          artifacts: "build/app/outputs/bundle/release/*.aab,build/app/outputs/bundle/release/*.apk"
           # tag: $GIT_TAG_NAME
           # token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
 

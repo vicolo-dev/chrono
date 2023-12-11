@@ -17,6 +17,7 @@ jobs:
       with:
         flutter-version: '3.16.3' # or, you can use 1.22
         channel: 'stable'
+        cache: true
     - run: flutter test --coverage
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
