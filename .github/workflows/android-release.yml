@@ -17,6 +17,8 @@ jobs:
   build:
     # 6
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
 
     # 7
     steps:
@@ -62,7 +64,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/bundle/release/*.aab"
-          token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
+          # token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
 
       - name: Save APPBUNDLE to Artifacts
         uses: actions/upload-artifact@v2
