@@ -4,10 +4,8 @@ name: Android Release
 on:
   # 2
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
+    tags:
+    - '*'
   # 3
   workflow_dispatch:
 
@@ -54,6 +52,7 @@ jobs:
         run: |
           sed -i 's/99.99.99+99/'$GIT_TAG_NAME'/g' pubspec.yaml|
           echo "Tag used version:"$GIT_TAG_NAME
+
       - name: Pub Get Packages
         run: flutter pub get
 
@@ -64,6 +63,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/bundle/release/*.aab"
+          # tag: $GIT_TAG_NAME
           # token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
 
       - name: Save APPBUNDLE to Artifacts
