@@ -6,6 +6,7 @@ BottomSheetThemeData getBottomSheetTheme(
         ColorSchemeData colorScheme, StyleTheme styleTheme) =>
     BottomSheetThemeData(
       backgroundColor: colorScheme.background,
+      surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(styleTheme.borderRadius),
