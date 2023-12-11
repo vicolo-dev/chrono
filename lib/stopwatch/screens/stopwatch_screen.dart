@@ -272,7 +272,7 @@ class LapComparer extends StatelessWidget {
     return Stack(
       children: [
         LinearProgressBar(
-          minHeight: 14,
+          minHeight: 16,
           value: _stopwatch.currentLapTime.inMilliseconds /
               (comparisonLap?.lapTime.inMilliseconds ?? double.infinity),
           backgroundColor:
@@ -280,7 +280,7 @@ class LapComparer extends StatelessWidget {
           color: color,
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 1.0, left: 4.0, right: 4.0),
+          padding: const EdgeInsets.only(top: 0.0, left: 8.0, right: 8.0),
           child: Row(
             children: [
               Text(label,

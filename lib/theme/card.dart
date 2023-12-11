@@ -7,4 +7,5 @@ const cardTheme = CardTheme(
   shape: defaultShape,
   clipBehavior: Clip.hardEdge,
   elevation: defaultElevation,
+  surfaceTintColor: Colors.transparent,
 );

@@ -1,3 +1,4 @@
+import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:flutter/material.dart';
 
 class CustomTrackShape extends RoundedRectSliderTrackShape {
@@ -17,9 +18,12 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
   }
 }
 
-SliderThemeData sliderTheme = SliderThemeData(
-  // trackShape: CustomTrackShape(),
-  overlayShape: SliderComponentShape.noOverlay,
+SliderThemeData getSliderTheme(ColorSchemeData colorScheme) {
+  return SliderThemeData(
+      // trackShape: CustomTrackShape(),
+      overlayShape: SliderComponentShape.noOverlay,
+      inactiveTrackColor: colorScheme.onBackground.withOpacity(0.3)
 
-  // overlayShape: RoundSliderOverlayShape(overlayRadius: 16),
-);
+      // overlayShape: RoundSliderOverlayShape(overlayRadius: 16),
+      );
+}

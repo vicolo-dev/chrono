@@ -75,6 +75,7 @@ class _CustomizeScreenState<Item extends CustomizableListItem>
             context: context,
             builder: (buildContext) {
               return AlertDialog(
+                actionsPadding: const EdgeInsets.only(bottom: 2, right: 2),
                 content: const Text("Do you want to leave without saving?"),
                 actions: [
                   TextButton(

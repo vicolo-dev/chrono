@@ -1,11 +1,22 @@
+import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:flutter/material.dart';
 
-SwitchThemeData switchTheme = const SwitchThemeData(
-  // thumbColor: MaterialStateProperty.resolveWith((states) =>
-  //     states.contains(MaterialState.selected) ? colorScheme.primary : null),
-  // trackColor: MaterialStateProperty.resolveWith((states) =>
-  //     states.contains(MaterialState.selected)
-  //         ? colorScheme.primary.withOpacity(0.6)
-  //         : null),
-  splashRadius: 0,
-);
+SwitchThemeData getSwitchTheme(ColorSchemeData colorScheme) {
+  return SwitchThemeData(
+    thumbColor: MaterialStateProperty.resolveWith((states) =>
+        states.contains(MaterialState.selected) ? Colors.white : Colors.white),
+    trackColor: MaterialStateProperty.resolveWith((states) =>
+        states.contains(MaterialState.selected)
+            ? colorScheme.accent
+            : colorScheme.onBackground.withOpacity(0.4)),
+    overlayColor: MaterialStateProperty.resolveWith((states) =>
+        states.contains(MaterialState.selected)
+            ? colorScheme.accent
+            : colorScheme.onBackground.withOpacity(0.4)),
+    trackOutlineColor: MaterialStateProperty.resolveWith((states) =>
+        states.contains(MaterialState.selected)
+            ? colorScheme.accent
+            : Colors.transparent),
+    splashRadius: 0,
+  );
+}

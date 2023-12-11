@@ -2485,6 +2485,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
 
     final Size dialogSize = _dialogSize(context);
     return Dialog(
+      surfaceTintColor: null,
       shape: shape,
       backgroundColor: TimePickerTheme.of(context).backgroundColor ??
           theme.colorScheme.surface,

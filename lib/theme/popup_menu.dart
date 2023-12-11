@@ -14,5 +14,6 @@ PopupMenuThemeData getPopupMenuTheme(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(styleTheme.borderRadius),
     ),
+    surfaceTintColor: Colors.transparent,
   );
 }

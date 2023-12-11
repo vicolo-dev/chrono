@@ -3,4 +3,5 @@ import 'package:flutter/material.dart';
 
 const DialogTheme dialogTheme = DialogTheme(
   shape: defaultShape,
+  surfaceTintColor: Colors.transparent,
 );

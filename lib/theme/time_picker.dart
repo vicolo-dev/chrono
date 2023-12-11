@@ -16,5 +16,6 @@ TimePickerThemeData timePickerTheme = TimePickerThemeData(
   // dayPeriodTextColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
   shape: defaultShape,
   dayPeriodBorderSide: BorderSide.none,
+
   // entryModeIconColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
 );

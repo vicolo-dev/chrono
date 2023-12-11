@@ -63,17 +63,15 @@ class PickerSelector extends StatelessWidget {
       width: double.infinity,
       child: Padding(
         padding: EdgeInsets.only(bottom: columnSpacing),
-        child: CardContainer(
-          child: ToggleField(
-            selectedItems:
-                options.map((option) => option.value == picker).toList(),
-            onChange: (index) {
-              onPickerChanged(options[index].value);
-            },
-            options: options.where((option) => pickers[option.value]!).toList(),
-            square: false,
-            innerPadding: 16,
-          ),
+        child: ToggleField(
+          selectedItems:
+              options.map((option) => option.value == picker).toList(),
+          onChange: (index) {
+            onPickerChanged(options[index].value);
+          },
+          options: options.where((option) => pickers[option.value]!).toList(),
+          square: false,
+          innerPadding: 16,
         ),
       ),
     );

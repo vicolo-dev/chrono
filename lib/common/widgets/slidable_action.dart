@@ -144,7 +144,7 @@ class SlideActionState extends State<SlideAction>
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: CardContainer(
-                        color: Theme.of(context).primaryIconTheme.color,
+                        color: Theme.of(context).colorScheme.surface,
                         child: Container(
                           padding:
                               EdgeInsets.all(widget.sliderButtonIconPadding),
