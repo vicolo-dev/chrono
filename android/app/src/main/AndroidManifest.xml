@@ -1,79 +1,79 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.flux.clock"
-    android:installLocation="internalOnly"
-    >
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <!-- For apps with targetSDK=31 (Android 12) -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-   <application
-        android:label="Clock"
-        tools:replace="android:label"
-        android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-            android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize"
-            android:showWhenLocked="true"
-            android:showOnLockScreen="true"
-            android:turnScreenOn="true">
-            <!-- Specifies an Android theme to apply to this Activity as soon as
+  xmlns:tools="http://schemas.android.com/tools"
+  package="com.flux.clock"
+  android:installLocation="internalOnly"
+>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  <uses-permission android:name="android.permission.VIBRATE" />
+  <!-- For apps with targetSDK=31 (Android 12) -->
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+  <application
+    android:label="Flux Clock"
+    tools:replace="android:label"
+    android:name="${applicationName}"
+    android:icon="@mipmap/launcher_icon">
+    <activity
+      android:name=".MainActivity"
+      android:exported="true"
+      android:launchMode="singleTop"
+      android:theme="@style/LaunchTheme"
+      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+      android:hardwareAccelerated="true"
+      android:windowSoftInputMode="adjustResize"
+      android:showWhenLocked="true"
+      android:showOnLockScreen="true"
+      android:turnScreenOn="true">
+      <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
-            <meta-data
-              android:name="io.flutter.embedding.android.NormalTheme"
-              android:resource="@style/NormalTheme"
-              />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <!-- Don't delete the meta-data below.
+      <meta-data
+        android:name="io.flutter.embedding.android.NormalTheme"
+        android:resource="@style/NormalTheme"
+      />
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
-        <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
-        <service
-            android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"/>
-        <receiver
-            android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmBroadcastReceiver"
-            android:exported="false"/>
-        <receiver
-            android:name="dev.fluttercommunity.plus.androidalarmmanager.RebootBroadcastReceiver"
-            android:enabled="false"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <service
-            android:name="com.flux.flutter_boot_receiver.BootHandlerService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <receiver  
-            android:enabled="true"
-            android:exported="true"
-            android:name="com.flux.flutter_boot_receiver.BootBroadcastReceiver"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver> 
+    <meta-data
+      android:name="flutterEmbedding"
+      android:value="2" />
+    <service
+      android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmService"
+      android:permission="android.permission.BIND_JOB_SERVICE"
+      android:exported="false" />
+    <receiver
+      android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmBroadcastReceiver"
+      android:exported="false" />
+    <receiver
+      android:name="dev.fluttercommunity.plus.androidalarmmanager.RebootBroadcastReceiver"
+      android:enabled="false"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+      </intent-filter>
+    </receiver>
+    <service
+      android:name="com.flux.flutter_boot_receiver.BootHandlerService"
+      android:exported="false"
+      android:permission="android.permission.BIND_JOB_SERVICE" />
+    <receiver
+      android:enabled="true"
+      android:exported="true"
+      android:name="com.flux.flutter_boot_receiver.BootBroadcastReceiver"
+      android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </receiver>
 
-    </application>
-    
+  </application>
+
 </manifest>
