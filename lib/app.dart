@@ -82,7 +82,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       navigatorKey: App.navigatorKey,
       debugShowCheckedModeBanner: false,
-      title: 'Clock',
+      title: 'Flux Clock',
       theme: _theme,
       initialRoute: Routes.rootRoute,
       navigatorObservers: [routeObserver],
