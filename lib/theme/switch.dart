@@ -8,11 +8,11 @@ SwitchThemeData getSwitchTheme(ColorSchemeData colorScheme) {
     trackColor: MaterialStateProperty.resolveWith((states) =>
         states.contains(MaterialState.selected)
             ? colorScheme.accent
-            : colorScheme.onBackground.withOpacity(0.4)),
+            : colorScheme.onBackground.withOpacity(0.3)),
     overlayColor: MaterialStateProperty.resolveWith((states) =>
         states.contains(MaterialState.selected)
             ? colorScheme.accent
-            : colorScheme.onBackground.withOpacity(0.4)),
+            : colorScheme.onBackground.withOpacity(0.3)),
     trackOutlineColor: MaterialStateProperty.resolveWith((states) =>
         states.contains(MaterialState.selected)
             ? colorScheme.accent

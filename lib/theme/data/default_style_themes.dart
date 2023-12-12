@@ -2,7 +2,7 @@ import 'package:clock_app/theme/types/style_theme.dart';
 
 List<StyleTheme> defaultStyleThemes = [
   StyleTheme(
-    name: 'Default',
+    name: 'Paper',
     shadowElevation: 1,
     shadowOpacity: 0.2,
     shadowBlurRadius: 1,
@@ -29,6 +29,16 @@ List<StyleTheme> defaultStyleThemes = [
     shadowSpreadRadius: 0,
     borderRadius: 16,
     borderWidth: 0,
+    isDefault: true,
+  ),
+  StyleTheme(
+    name: 'Outline',
+    shadowElevation: 0,
+    shadowOpacity: 0,
+    shadowBlurRadius: 0,
+    shadowSpreadRadius: 0,
+    borderRadius: 16,
+    borderWidth: 1,
     isDefault: true,
   ),
 ];
