@@ -61,14 +61,20 @@ class _SettingGroupScreenState extends State<ReliabilityInstructionsScreen> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                child: Html(
-                  data: htmlData,
-                  onLinkTap: (url, _, __) async {
-                    if (url != null) {
-                      await launchUrl(Uri.parse(url),
-                          mode: LaunchMode.inAppBrowserView);
-                    }
-                  },
+                child: Column(
+                  children: [
+                    Html(
+                      data: htmlData,
+                      onLinkTap: (url, _, __) async {
+                        if (url != null) {
+                          await launchUrl(Uri.parse(url),
+                              mode: LaunchMode.inAppBrowserView);
+                        }
+                      },
+                    ),
+                    const Text(
+                        "Vendor instructions ar provided by dontkillmyapp.com")
+                  ],
                 ),
               ),
             );
