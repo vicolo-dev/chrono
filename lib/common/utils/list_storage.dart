@@ -28,13 +28,11 @@ Future<List<T>> loadList<T extends JsonSerializable>(String key) async {
   // return decodeList<T>(encodedList);
   final String encodedList = await queue.add(() async {
     String appDataDirectory = getAppDataDirectoryPathSync();
-    print("first timeeee");
     File file = File(path.join(appDataDirectory, '$key.txt'));
 
     if (file.existsSync()) {
       return file.readAsString();
     } else {
-      print("errordfjdksfgkdsgkdshgjkfdhjg");
       return '[]';
     }
   });

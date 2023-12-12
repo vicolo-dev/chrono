@@ -56,7 +56,6 @@ dependencies:
   flutter_windowmanager: ^0.2.0
   flutter_fgbg: ^0.2.2
   move_to_background: ^1.0.2
-  disable_battery_optimization: ^1.1.0+1
   vibration: ^1.7.6
   great_list_view:
     git:
@@ -68,9 +67,11 @@ dependencies:
   vector_math: ^2.1.4
   fuzzywuzzy: ^1.1.2
   flex_color_picker: ^3.2.2
-  auto_start_flutter: ^0.1.1
-  app_settings: ^5.0.0
   flutter_launcher_icons: ^0.13.1
+  url_launcher: ^6.2.2
+  flutter_html: ^3.0.0-beta.2
+  http: ^0.13.6
+  introduction_screen: ^3.1.12
 
 dev_dependencies:
   flutter_test:

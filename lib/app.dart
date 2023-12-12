@@ -4,6 +4,7 @@ import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/screens/vendor_list_screen.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/theme.dart';
@@ -12,6 +13,112 @@ import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:introduction_screen/introduction_screen.dart';
+
+class OnBoardingPage extends StatefulWidget {
+  const OnBoardingPage({Key? key}) : super(key: key);
+
+  @override
+  OnBoardingPageState createState() => OnBoardingPageState();
+}
+
+class OnBoardingPageState extends State<OnBoardingPage> {
+  final introKey = GlobalKey<IntroductionScreenState>();
+
+  void _onIntroEnd(context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const NavScaffold()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
+
+    const pageDecoration = PageDecoration(
+      bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      imagePadding: EdgeInsets.zero,
+    );
+
+    return IntroductionScreen(
+      key: introKey,
+      globalBackgroundColor: colorScheme.background,
+      allowImplicitScrolling: true,
+      autoScrollDuration: 3000,
+      infiniteAutoScroll: true,
+      pages: [
+        PageViewModel(
+          title: "",
+          bodyWidget: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text("Important",
+                  style: textTheme.titleMedium?.copyWith(
+                    color: colorScheme.onBackground,
+                  )),
+              const SizedBox(height: 16),
+              const Text(
+                "Some devices have battery optimizations that prevent background app from functioning properly. This might cause alarms and timers to not go off reliably. Please click the button below and follow the guide to disable these optimizations for your device. You can also do so later by going to Settings > General > Reliability",
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VendorListScreen()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: const Text(
+                  'View Settings',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          decoration: pageDecoration,
+        ),
+      ],
+      onDone: () => _onIntroEnd(context),
+      onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+      showSkipButton: true,
+      skipOrBackFlex: 0,
+      nextFlex: 0,
+      showBackButton: false,
+      //rtl: true, // Display as right-to-left
+      back: const Icon(Icons.arrow_back),
+      skip: const Text('Skip', style: TextStyle(fontWeight: FontWeight.w600)),
+      next: const Icon(Icons.arrow_forward),
+      done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+      curve: Curves.fastLinearToSlowEaseIn,
+      controlsMargin: const EdgeInsets.all(16),
+      controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+      dotsDecorator: const DotsDecorator(
+        size: Size(10.0, 10.0),
+        color: Color(0xFFBDBDBD),
+        activeSize: Size(22.0, 10.0),
+        activeShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+        ),
+      ),
+      dotsContainerDecorator: ShapeDecoration(
+        color: colorScheme.surface,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        ),
+      ),
+    );
+  }
+}
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -90,7 +197,15 @@ class _AppState extends State<App> {
         Routes.push(settings.name ?? Routes.rootRoute);
         switch (settings.name) {
           case Routes.rootRoute:
-            return MaterialPageRoute(builder: (context) => const NavScaffold());
+            final bool? onboarded = GetStorage().read('onboarded');
+            if (onboarded == null) {
+              GetStorage().write('first_launch', true);
+              return MaterialPageRoute(
+                  builder: (context) => const OnBoardingPage());
+            } else {
+              return MaterialPageRoute(
+                  builder: (context) => const NavScaffold());
+            }
 
           case Routes.alarmNotificationRoute:
             return MaterialPageRoute(
