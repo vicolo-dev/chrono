@@ -85,7 +85,7 @@ dev_dependencies:
   dart_code_metrics: ^5.5.1
 
 flutter_launcher_icons:
-  android: "launcher_icon"
+  android: "ic_launcher"
   image_path: "assets/icon/1024.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
 # For information on the generic Dart part of this file, see the
