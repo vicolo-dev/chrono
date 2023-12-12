@@ -37,7 +37,7 @@ Its usable, but still WIP, so you might encounter some bugs. Feel free to open a
 - Highly customizable style themes
 
 ## Installation
-- Download the relevant apk from the releases
+- Download the relevant apk from the [latest release](https://github.com/AhsanSarwar45/clock/releases/latest/downloads)
 - Install (make sure to allow install from unknown sources)
 
 ## Platforms
