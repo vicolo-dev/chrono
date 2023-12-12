@@ -26,6 +26,8 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
     BorderRadiusGeometry borderRadius = theme.cardTheme.shape != null
         ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
         : BorderRadius.circular(8.0);
@@ -35,7 +37,7 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         decoration: BoxDecoration(
-          color: theme.colorScheme.background,
+          color: theme.colorScheme.surface,
           borderRadius: borderRadius,
         ),
         child: Wrap(
@@ -49,7 +51,7 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(64),
-                        color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                        color: colorScheme.onSurface.withOpacity(0.6)),
                   ),
                 ),
                 const SizedBox(height: 12.0),
@@ -60,18 +62,16 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                     children: [
                       Text(
                         widget.title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.colorScheme.onBackground
-                                .withOpacity(0.6)),
+                        style: textTheme.titleMedium?.copyWith(
+                            color: colorScheme.onSurface.withOpacity(0.6)),
                       ),
                       if (widget.description != null)
                         const SizedBox(height: 8.0),
                       if (widget.description != null)
                         Text(
                           widget.description!,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onBackground
-                                  .withOpacity(0.6)),
+                          style: textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.onSurface.withOpacity(0.6)),
                         ),
                     ],
                   ),
@@ -84,11 +84,8 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                   }),
                   width: 44,
                   height: 44,
-                  borderRadius: Theme.of(context)
-                      .toggleButtonsTheme
-                      .borderRadius
-                      ?.bottomLeft
-                      .x,
+                  borderRadius:
+                      theme.toggleButtonsTheme.borderRadius?.bottomLeft.x,
                   pickersEnabled: const <ColorPickerType, bool>{
                     ColorPickerType.both: false,
                     ColorPickerType.primary: true,
@@ -115,13 +112,9 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                         },
                         child: Text(
                           'Cancel',
-                          style:
-                              Theme.of(context).textTheme.labelMedium?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground
-                                        .withOpacity(0.6),
-                                  ),
+                          style: textTheme.labelMedium?.copyWith(
+                            color: colorScheme.onSurface.withOpacity(0.6),
+                          ),
                         ),
                       ),
                       const Spacer(),
@@ -132,12 +125,9 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                         },
                         child: Text(
                           'Save',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                          style: textTheme.labelMedium?.copyWith(
+                            color: colorScheme.primary,
+                          ),
                         ),
                       ),
                     ],

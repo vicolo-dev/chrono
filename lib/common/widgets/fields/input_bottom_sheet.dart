@@ -37,6 +37,8 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
     BorderRadiusGeometry borderRadius = theme.cardTheme.shape != null
         ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
         : BorderRadius.circular(8.0);
@@ -45,7 +47,7 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: colorScheme.surface,
           borderRadius: borderRadius,
         ),
         child: Wrap(
@@ -59,10 +61,7 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(64),
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onBackground
-                            .withOpacity(0.6)),
+                        color: colorScheme.onSurface.withOpacity(0.6)),
                   ),
                 ),
                 const SizedBox(height: 12.0),
@@ -73,14 +72,8 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                     children: [
                       Text(
                         widget.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium
-                            ?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onBackground
-                                    .withOpacity(0.6)),
+                        style: textTheme.labelMedium?.copyWith(
+                            color: colorScheme.onSurface.withOpacity(0.6)),
                       ),
                       const SizedBox(height: 4.0),
                       TextField(
@@ -102,19 +95,11 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                             Navigator.pop(context);
                           },
                           child: Text('Save',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium
-                                  ?.copyWith(
-                                      color: widget.isInputRequired &&
-                                              _controller.text.isEmpty
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .onBackground
-                                              .withOpacity(0.6)
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .primary)),
+                              style: textTheme.labelMedium?.copyWith(
+                                  color: widget.isInputRequired &&
+                                          _controller.text.isEmpty
+                                      ? colorScheme.onSurface.withOpacity(0.6)
+                                      : colorScheme.primary)),
                         ),
                       ])
                     ],
