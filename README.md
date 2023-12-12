@@ -1,7 +1,7 @@
 # Flux Clock
 A modern and powerful clock, alarms, timer and stopwatch app for Android!
 
-Its usable, but still WIP, so you might encounter some bugs.
+Its usable, but still WIP, so you might encounter some bugs. Feel free to open an issue.
 
 ![tests](https://github.com/AhsanSarwar45/clock/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/AhsanSarwar45/clock/branch/master/graph/badge.svg?token=cKxMm8KVev)](https://codecov.io/gh/AhsanSarwar45/clock)
@@ -39,26 +39,6 @@ Its usable, but still WIP, so you might encounter some bugs.
 ## Installation
 - Download the relevant apk from the releases
 - Install (make sure to allow install from unknown sources)
-
-### Important
-After installation, it is important to test whether alarms are working properly and reliably on your device, 
-since some devices have optimizations and settings that prevent background apps from running properly.
-
-#### Disable Battery Optimization
-- Open the app and go to to Settings (gear icon in the top-right corner) > General > Reliability
-- Select `Disable Battery Optimization`
-- A settings page will open. Find your device, select it, and select allow. If the app is not visible, 
-make sure to select 'All apps' from the dropdown
-
-#### Enable Auto Start
-- Open the app and go to to Settings (gear icon in the top-right corner) > General > Reliability
-- Select `Auto Start`. If nothing happens, the setting might not be available on your device
-- In the settings page that opens, enable Auto Start for the app. 
-
-If alarms are still not working properly, visit [https://dontkillmyapp.com/](https://dontkillmyapp.com/), 
-and try following the guide for your device.
-
-If nothing works, feel free to open an issue.
 
 ## Platforms
 Currently, the app is only available for android. I don't have an apple device to develop for iOS, but feel free
