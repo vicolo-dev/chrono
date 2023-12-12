@@ -4,6 +4,7 @@ import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:clock_app/settings/screens/vendor_list_screen.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
@@ -27,6 +28,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) {
+    GetStorage().write('onboarded', true);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const NavScaffold()),
     );
@@ -70,7 +72,11 @@ class OnBoardingPageState extends State<OnBoardingPage> {
                   await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const VendorListScreen()));
+                          builder: (context) => SettingGroupScreen(
+                                settingGroup:
+                                    appSettings.getGroup("Reliability"),
+                                isAppSettings: false,
+                              )));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorScheme.primary,
@@ -199,7 +205,6 @@ class _AppState extends State<App> {
           case Routes.rootRoute:
             final bool? onboarded = GetStorage().read('onboarded');
             if (onboarded == null) {
-              GetStorage().write('first_launch', true);
               return MaterialPageRoute(
                   builder: (context) => const OnBoardingPage());
             } else {

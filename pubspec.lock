@@ -42,6 +42,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  app_settings:
+    dependency: "direct main"
+    description:
+      name: app_settings
+      sha256: "09bc7fe0313a507087bec1a3baf555f0576e816a760cbb31813a88890a09d9e5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.1"
   archive:
     dependency: transitive
     description:
@@ -74,6 +82,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.13"
+  auto_start_flutter:
+    dependency: "direct main"
+    description:
+      name: auto_start_flutter
+      sha256: "27b12be7dc2d37b1a535189f461a12dad15b54c12f0a36e6ea69e73e579d433b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   awesome_notifications:
     dependency: "direct main"
     description:

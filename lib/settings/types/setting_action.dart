@@ -2,7 +2,7 @@ import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:flutter/material.dart';
 
 class SettingAction extends SettingItem {
-  VoidCallback action;
+  void Function(BuildContext context) action;
 
   SettingAction(
     String name,
@@ -13,7 +13,8 @@ class SettingAction extends SettingItem {
 
   @override
   SettingAction copy() {
-    return SettingAction(name, action);
+    return SettingAction(name, action,
+        description: description, searchTags: searchTags);
   }
 
   @override

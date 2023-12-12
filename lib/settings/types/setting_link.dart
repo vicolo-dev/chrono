@@ -13,7 +13,8 @@ class SettingPageLink extends SettingItem {
 
   @override
   SettingPageLink copy() {
-    return SettingPageLink(name, screen);
+    return SettingPageLink(name, screen,
+        description: description, searchTags: searchTags);
   }
 
   @override

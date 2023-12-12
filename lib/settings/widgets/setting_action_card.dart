@@ -26,7 +26,7 @@ class _SettingActionCardState<T> extends State<SettingActionCard> {
     Widget inner = Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: widget.setting.action,
+        onTap: () => widget.setting.action(context),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
