@@ -73,7 +73,7 @@ class _SettingGroupScreenState extends State<ReliabilityInstructionsScreen> {
                       },
                     ),
                     const Text(
-                        "Vendor instructions ar provided by dontkillmyapp.com")
+                        "Vendor instructions are provided by dontkillmyapp.com")
                   ],
                 ),
               ),
