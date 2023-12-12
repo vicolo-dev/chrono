@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 BottomSheetThemeData getBottomSheetTheme(
         ColorSchemeData colorScheme, StyleTheme styleTheme) =>
     BottomSheetThemeData(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.card,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
