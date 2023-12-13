@@ -1,4 +1,4 @@
-# Flux Clock
+# Chrono
 A modern and powerful clock, alarms, timer and stopwatch app for Android!
 
 Its usable, but still WIP, so you might encounter some bugs. Feel free to open an issue.
