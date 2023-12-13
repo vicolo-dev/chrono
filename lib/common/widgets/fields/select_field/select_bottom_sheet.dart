@@ -70,6 +70,8 @@ class SelectBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
     BorderRadiusGeometry borderRadius = theme.cardTheme.shape != null
         ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
         : BorderRadius.circular(8.0);
@@ -78,7 +80,7 @@ class SelectBottomSheet extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.7,
       child: Container(
         decoration: BoxDecoration(
-          color: theme.colorScheme.background,
+          color: colorScheme.surface,
           borderRadius: borderRadius,
         ),
         child: Column(
@@ -90,7 +92,7 @@ class SelectBottomSheet extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(64),
-                    color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                    color: colorScheme.onSurface.withOpacity(0.6)),
               ),
             ),
             const SizedBox(height: 12.0),
@@ -101,16 +103,15 @@ class SelectBottomSheet extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                    style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onSurface.withOpacity(0.6)),
                   ),
                   if (description != null) const SizedBox(height: 8.0),
                   if (description != null)
                     Text(
                       description!,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                          color:
-                              theme.colorScheme.onBackground.withOpacity(0.6)),
+                      style: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurface.withOpacity(0.6)),
                     ),
                 ],
               ),
