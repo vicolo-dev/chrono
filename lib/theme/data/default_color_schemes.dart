@@ -4,6 +4,20 @@ import 'package:flutter/material.dart';
 
 List<ColorSchemeData> defaultColorSchemes = [
   ColorSchemeData(
+    name: 'Ocean',
+    background: const Color.fromARGB(255, 248, 249, 250),
+    onBackground: const Color.fromARGB(255, 48, 48, 49),
+    card: const Color.fromARGB(255, 255, 255, 255),
+    onCard: const Color.fromARGB(255, 48, 48, 49),
+    accent: const Color.fromARGB(255, 34, 102, 238),
+    onAccent: const Color.fromARGB(255, 216, 239, 255),
+    shadow: const Color.fromARGB(255, 0, 0, 0),
+    outline: const Color.fromARGB(255, 235, 235, 235),
+    error: const Color(0xFFFE4A49),
+    onError: Colors.white,
+    isDefault: true,
+  ),
+  ColorSchemeData(
     name: 'Light',
     background: const Color.fromARGB(255, 248, 250, 250),
     onBackground: const Color.fromARGB(255, 46, 53, 68),
@@ -45,18 +59,4 @@ List<ColorSchemeData> defaultColorSchemes = [
     onError: Colors.white,
     isDefault: true,
   ),
-  ColorSchemeData(
-    name: 'Ocean',
-    background: const Color.fromARGB(255, 248, 249, 250),
-    onBackground: const Color.fromARGB(255, 48, 48, 49),
-    card: const Color.fromARGB(255, 255, 255, 255),
-    onCard: const Color.fromARGB(255, 48, 48, 49),
-    accent: const Color.fromARGB(255, 34, 102, 238),
-    onAccent: const Color.fromARGB(255, 216, 239, 255),
-    shadow: const Color.fromARGB(255, 0, 0, 0),
-    outline: const Color.fromARGB(255, 235, 235, 235),
-    error: const Color(0xFFFE4A49),
-    onError: Colors.white,
-    isDefault: true,
-  )
 ];
