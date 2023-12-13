@@ -1,6 +1,5 @@
 <h1>Flux Clock</h1>
-A modern and powerful clock, alarms, timer and stopwatch app for Android!
-
+<p>A modern and powerful clock, alarms, timer and stopwatch app for Android!</span>
 <h2>Features</h2>
 <ul>
 <li>Modern and easy to use interface</li>
@@ -13,24 +12,24 @@ A modern and powerful clock, alarms, timer and stopwatch app for Android!
 <li>Alarm tasks (Math problems, Retype text, Sequence, more to come)</li>
 <li>Filter alarms (all, today, tomorrow, snoozed, disabled, completed)</li>
 </ul>
-### Clock
+<h3>Clock</h3>
 <ul>
 <li>Customizable clock display</li>
 <li>World clocks with relative time difference</li>
 <li>Search and add cities</li>
 </ul>
-### Timer
+<h3>Timer</h3>
 <ul>
 <li>Configure Melody, rising volume and vibrations</li>
 <li>Timer presets</li>
 <li>Filter timers (all, running, paused, stopped)</li>
 </ul>
-### Stopwatch
+<h3>Stopwatch</h3>
 <ul>
 <li>Lap history with lap times and elapsed times</li>
 <li>Lap comparisons</li>
 </ul
-### Appearance
+<h3>Appearance</h3>
 <ul>
 <li>Highly customizable color themes</li>
 <li>Highly customizable style themes</li>
