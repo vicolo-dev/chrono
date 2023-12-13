@@ -47,6 +47,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
         .getGroup("Developer Options")
         .getSetting("Show Instant Alarm Button");
     _showFilters = appSettings.getGroup("Alarm").getSetting("Show Filters");
+    appSettings.getGroup("Accessibility").getSetting("Left Handed Mode");
 
     _showInstantAlarmButton.addListener(update);
     _showFilters.addListener(update);

@@ -281,6 +281,12 @@ SettingGroup appSettings = SettingGroup(
       icon: FluxIcons.stopwatch,
     ),
     SettingGroup(
+      "Accessibility",
+      [SwitchSetting("Left Handed Mode", false)],
+      icon: Icons.accessibility,
+      showExpandedView: false,
+    ),
+    SettingGroup(
       "Developer Options",
       [
         SettingGroup("Alarm", [
