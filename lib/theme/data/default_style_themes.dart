@@ -41,4 +41,14 @@ List<StyleTheme> defaultStyleThemes = [
     borderWidth: 1,
     isDefault: true,
   ),
+  StyleTheme(
+    name: 'Retro',
+    shadowElevation: 1,
+    shadowOpacity: 0.1,
+    shadowBlurRadius: 2,
+    shadowSpreadRadius: 1,
+    borderRadius: 4,
+    borderWidth: 0,
+    isDefault: true,
+  ),
 ];

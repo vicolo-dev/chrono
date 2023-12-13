@@ -157,4 +157,18 @@ List<ColorSchemeData> defaultColorSchemes = [
     onError: Colors.white,
     isDefault: true,
   ),
+  ColorSchemeData(
+    name: 'One Dark Pro',
+    background: const Color.fromARGB(255, 40, 44, 52),
+    onBackground: const Color.fromARGB(255, 240, 240, 240),
+    card: const Color.fromARGB(255, 33, 37, 43),
+    onCard: const Color.fromARGB(255, 240, 240, 240),
+    accent: const Color.fromARGB(255, 198, 120, 221),
+    onAccent: const Color.fromARGB(255, 240, 240, 240),
+    shadow: const Color.fromARGB(255, 0, 0, 0),
+    outline: const Color.fromARGB(255, 38, 38, 38),
+    error: const Color.fromARGB(255, 224, 128, 117),
+    onError: Colors.white,
+    isDefault: false,
+  )
 ];

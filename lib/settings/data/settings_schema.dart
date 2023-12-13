@@ -135,6 +135,8 @@ SettingGroup appSettings = SettingGroup(
           [
             CustomSetting(
               "Color Scheme",
+              description:
+                  "Select from predefined color schemes or create your own",
               defaultColorScheme,
               (context, setting) => ThemesScreen(
                 saveTag: 'color_schemes',
@@ -152,23 +154,19 @@ SettingGroup appSettings = SettingGroup(
               },
               searchTags: ["theme", "style", "visual", "dark mode"],
             ),
-            SwitchSetting(
-              "Override Accent Color",
-              false,
-              onChange: (context, value) {
-                App.setColorScheme(context);
-              },
-            ),
-            ColorSetting(
-              "Accent Color",
-              Colors.cyan,
-              onChange: (context, color) {
-                App.setColorScheme(context);
-              },
-              enableConditions: [
-                SettingEnableConditionParameter("Override Accent Color", true)
-              ],
-            ),
+            SwitchSetting("Override Accent Color", false,
+                onChange: (context, value) {
+              App.setColorScheme(context);
+            }, searchTags: ["primary", "color"]),
+            ColorSetting("Accent Color", Colors.cyan,
+                onChange: (context, color) {
+              App.setColorScheme(context);
+            }, enableConditions: [
+              SettingEnableConditionParameter("Override Accent Color", true)
+            ], searchTags: [
+              "primary",
+              "color"
+            ]),
           ],
         ),
         SettingGroup(
@@ -176,6 +174,7 @@ SettingGroup appSettings = SettingGroup(
           [
             CustomSetting<StyleTheme>(
               "Style Theme",
+              description: "Change styles like shadows, outlines and opacities",
               defaultStyleTheme,
               (context, setting) => ThemesScreen(
                 saveTag: 'style_themes',
@@ -191,7 +190,17 @@ SettingGroup appSettings = SettingGroup(
               onChange: (context, styleTheme) {
                 App.setStyleTheme(context, styleTheme);
               },
-              searchTags: ["scheme", "visual"],
+              searchTags: [
+                "scheme",
+                "visual",
+                "shadow",
+                "outline",
+                "elevation",
+                "card",
+                "border",
+                "opacity",
+                "blur"
+              ],
             ),
           ],
         ),
@@ -208,7 +217,9 @@ SettingGroup appSettings = SettingGroup(
           description: "Set default settings for new alarms",
           icon: Icons.settings,
         ),
-        SelectSetting<NotificationAction>("Dismiss Action Type", [
+        SelectSetting<NotificationAction>("Dismiss Action Type", searchTags: [
+          "action"
+        ], [
           SelectSettingOption(
             "Slide",
             NotificationAction(
@@ -259,13 +270,13 @@ SettingGroup appSettings = SettingGroup(
       "Stopwatch",
       [
         SettingGroup(
-          "Time Format",
-          [
-            SwitchSetting("Show Milliseconds", true),
-          ],
-          description: "Show comparison laps bars in stopwatch",
-          icon: Icons.settings,
-        ),
+            "Time Format",
+            [
+              SwitchSetting("Show Milliseconds", true),
+            ],
+            description: "Show comparison laps bars in stopwatch",
+            icon: Icons.settings,
+            searchTags: ["milliseconds"]),
         SettingGroup(
           "Comparison Lap Bars",
           [
@@ -276,6 +287,7 @@ SettingGroup appSettings = SettingGroup(
           ],
           description: "Show comparison laps bars in stopwatch",
           icon: Icons.settings,
+          searchTags: ["fastest", "slowest", "average", "previous"],
         ),
       ],
       icon: FluxIcons.stopwatch,
