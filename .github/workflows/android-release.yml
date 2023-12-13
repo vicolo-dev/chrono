@@ -21,6 +21,8 @@ jobs:
     steps:
       # 8
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       # 9
       - uses: actions/setup-java@v3
         with:
@@ -46,18 +48,17 @@ jobs:
       #     sed -i 's/99.99.99+99/'$GIT_TAG_NAME'/g' pubspec.yaml|
       #     echo "Tag used version:"$GIT_TAG_NAME
       #
-      - id: get_version
-        name: Get Version
-        uses: jannemattila/get-version-from-tag@v1
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
 
       - name: Pub Get Packages
         run: "flutter pub get"
 
       - name: Build APPBUNDLE
-        run: "flutter build appbundle --build-name=${{ steps.get_version.outputs.version }}"
+        run: "flutter build appbundle --build-name=${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}"
 
       - name: Build APK
-        run: "flutter build apk --split-per-abi --build-name=${{ github.ref_name }}"
+        run: "flutter build apk --split-per-abi --build-name=${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}"
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1
