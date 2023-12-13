@@ -135,7 +135,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(getSnackbar("Cannot delete alarm while it is snoozed"));
     } else {
-      _listController.duplicateItem(alarm);
+      _listController.deleteItem(alarm);
     }
   }
 
