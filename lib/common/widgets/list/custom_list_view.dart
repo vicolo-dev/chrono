@@ -266,7 +266,7 @@ class _CustomListViewState<Item extends ListItem>
                     : null,
                 reorderDecorationBuilder:
                     widget.isReorderable ? reorderableListDecorator : null,
-                footer: const SizedBox(height: 64),
+                footer: const SizedBox(height: 64 + 80),
                 // cacheExtent: double.infinity,
               ),
             ),
