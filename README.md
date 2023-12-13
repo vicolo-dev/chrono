@@ -3,9 +3,9 @@ A modern and powerful clock, alarms, timer and stopwatch app for Android!
 
 Its usable, but still WIP, so you might encounter some bugs. Feel free to open an issue.
 
-![tests](https://github.com/AhsanSarwar45/clock/actions/workflows/tests.yml/badge.svg)
-[![codecov](https://codecov.io/gh/AhsanSarwar45/clock/branch/master/graph/badge.svg?token=cKxMm8KVev)](https://codecov.io/gh/AhsanSarwar45/clock)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/7dc1e51c1616482baa5392bc0826c50a)](https://app.codacy.com/gh/AhsanSarwar45/clock/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+![tests](https://github.com/vicolo-dev/chrono/actions/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/gh/vicolo-dev/chrono/branch/master/graph/badge.svg?token=cKxMm8KVev)](https://codecov.io/gh/vicolo-dev/chrono)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/7dc1e51c1616482baa5392bc0826c50a)](https://app.codacy.com/gh/vicolo-dev/chrono/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 # Table of Content
 - [Features](#features)
@@ -38,7 +38,7 @@ Its usable, but still WIP, so you might encounter some bugs. Feel free to open a
 - Highly customizable style themes
 
 ## Installation
-- Download the relevant apk from the [latest release](https://github.com/AhsanSarwar45/clock/releases/latest/downloads)
+- Download the relevant apk from the [latest release](https://github.com/vicolo-dev/chrono/releases/latest/downloads)
 - Install (make sure to allow install from unknown sources)
 
 ## Platforms
