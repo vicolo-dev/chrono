@@ -12,6 +12,7 @@ Its usable, but still WIP, so you might encounter some bugs. Feel free to open a
 - [Installation](#installation)
 - [Platforms](#platforms)
 - [Development](#development)
+- [Todo](#todo)
 
 ## Features
 - Modern and easy to use interface
@@ -49,3 +50,24 @@ use android-only code, so that will need to be ported. Everything else should mo
 
 This app is built using flutter. All you need is to follow [this](https://docs.flutter.dev/get-started/install) 
 guide to install it, and you should be able to start developing it.
+
+## Todo
+- Alarms
+  - Alarm reliability testing system
+  - Vibration patterns
+  - Alternative time picker interfaces
+  - Array alarms (alarm that will ring after set interval (10 minutes etc.)
+  - More tasks
+- Color schemes
+  - More prebuilt themes  
+  - Filter
+  - Tags
+  - Icon colors
+- Theme
+  - Icon themes
+  - Font themes
+- Timer
+  - Alternative duration picker interfaces
+- Online?
+  - Sync?
+  - Community themes?
