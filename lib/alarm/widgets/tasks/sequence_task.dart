@@ -151,7 +151,7 @@ class _SequenceTaskState extends State<SequenceTask>
                               _enteredSequence.length > i
                                   ? Icons.circle
                                   : Icons.circle_outlined,
-                              color: colorScheme.onSurface,
+                              color: colorScheme.primary,
                             ),
                           ),
                       ],
@@ -178,7 +178,11 @@ class _SequenceTaskState extends State<SequenceTask>
                                 child: Center(
                                   child: Text(
                                     (index + 1).toString(),
-                                    style: textTheme.headlineMedium,
+                                    style: textTheme.headlineMedium?.copyWith(
+                                        color: _colorTweenList[index].value ==
+                                                colorScheme.background
+                                            ? colorScheme.onBackground
+                                            : colorScheme.onPrimary),
                                   ),
                                 ),
                               ),
