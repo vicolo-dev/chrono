@@ -146,6 +146,7 @@ class DateChip extends StatelessWidget {
       backgroundColor: colorScheme.onBackground.withOpacity(0.1),
       // labelPadding: EdgeInsets.zero,
       padding: EdgeInsets.zero,
+
       // side: ,
       label: Text(
         DateFormat(dateFormat).format(date),

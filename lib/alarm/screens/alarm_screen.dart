@@ -32,6 +32,7 @@ class AlarmScreen extends StatefulWidget {
 class _AlarmScreenState extends State<AlarmScreen> {
   final _listController = PersistentListController<Alarm>();
   late Setting showInstantAlarmButton;
+  late Setting showFilters;
 
   void update(value) {
     setState(() {});
@@ -44,13 +45,16 @@ class _AlarmScreenState extends State<AlarmScreen> {
     showInstantAlarmButton = appSettings
         .getGroup("Developer Options")
         .getSetting("Show Instant Alarm Button");
+    showFilters = appSettings.getGroup("Alarm").getSetting("Show Filters");
 
     showInstantAlarmButton.addListener(update);
+    showFilters.addListener(update);
   }
 
   @override
   void dispose() {
     showInstantAlarmButton.removeListener(update);
+    showFilters.removeListener(update);
     super.dispose();
   }
 
@@ -159,7 +163,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
           }),
           placeholderText: "No alarms created",
           reloadOnPop: true,
-          listFilters: alarmListFilters,
+          listFilters: showFilters.value ? alarmListFilters : [],
         ),
         FAB(
           onPressed: () {

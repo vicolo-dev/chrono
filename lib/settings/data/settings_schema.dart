@@ -236,7 +236,8 @@ SettingGroup appSettings = SettingGroup(
               ),
             ),
           )
-        ])
+        ]),
+        SwitchSetting("Show Filters", true),
       ],
       icon: FluxIcons.alarm,
     ),
@@ -249,7 +250,8 @@ SettingGroup appSettings = SettingGroup(
           description: "Set default settings for new timers",
           icon: Icons.settings,
         ),
-        SettingPageLink("Presets", const PresetsScreen())
+        SettingPageLink("Presets", const PresetsScreen()),
+        SwitchSetting("Show Filters", true),
       ],
       icon: FluxIcons.timer,
     ),

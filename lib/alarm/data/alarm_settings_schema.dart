@@ -127,6 +127,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             snapLength: 1,
             description:
                 "The maximum number of times the alarm can be snoozed before it is dismissed"),
+        SwitchSetting("Prevent Disabling while Snoozed", false),
       ],
       icon: Icons.snooze_rounded,
       summarySettings: [
