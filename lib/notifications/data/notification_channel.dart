@@ -1,13 +1,13 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/theme/theme.dart';
 
-const String alarmNotificationChannelGroupKey = 'clock_group';
-const String alarmNotificationChannelKey = 'clock';
+const String alarmNotificationChannelGroupKey = 'alarms_and_timers';
+const String alarmNotificationChannelKey = 'chrono';
 
 final NotificationChannel alarmNotificationChannel = NotificationChannel(
   channelGroupKey: alarmNotificationChannelGroupKey,
   channelKey: alarmNotificationChannelKey,
-  channelName: 'Clock',
+  channelName: 'Chrono',
   channelDescription: 'Notification channel for clock alarms and timers',
   defaultColor: defaultColorScheme.accent,
   locked: true,
@@ -20,5 +20,5 @@ final NotificationChannel alarmNotificationChannel = NotificationChannel(
 final NotificationChannelGroup alarmNotificationChannelGroup =
     NotificationChannelGroup(
   channelGroupKey: alarmNotificationChannelGroupKey,
-  channelGroupName: 'Clock Group',
+  channelGroupName: 'Alarms and timers',
 );

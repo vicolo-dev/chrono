@@ -1,18 +1,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  package="com.flux.clock"
-  android:installLocation="internalOnly"
->
-  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-  <uses-permission android:name="android.permission.WAKE_LOCK" />
-  <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-  <uses-permission android:name="android.permission.VIBRATE" />
-  <uses-permission android:name="android.permission.INTERNET" />
+  package="com.vicolo.chrono"> android:installLocation="internalOnly" > <uses-permission
+    android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission
+    android:name="android.permission.WAKE_LOCK" />
+  <uses-permission
+    android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+  <uses-permission
+    android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  <uses-permission
+    android:name="android.permission.VIBRATE" />
+  <uses-permission
+    android:name="android.permission.INTERNET" />
   <!-- For apps with targetSDK=31 (Android 12) -->
-  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+  <uses-permission
+    android:name="android.permission.SCHEDULE_EXACT_ALARM" />
   <application
-    android:label="Flux Clock"
+    android:label="Chrono"
     tools:replace="android:label"
     android:name="${applicationName}"
     android:icon="@mipmap/ic_launcher">

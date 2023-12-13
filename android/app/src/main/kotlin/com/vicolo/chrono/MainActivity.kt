@@ -1,4 +1,4 @@
-package com.flux.clock
+package com.vicolo.chrono
 
 import android.content.Context
 import android.content.Intent
