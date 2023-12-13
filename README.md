@@ -42,8 +42,8 @@ Its usable, but still WIP, so you might encounter some bugs. Feel free to open a
 
 ## Platforms
 Currently, the app is only available for android. I don't have an apple device to develop for iOS, but feel free
-to contribute if you want iOS support. Most of the app should work fine on other platforms. The alarm and timer features
-use android-only code so that will need to be ported.
+to contribute if you want iOS support. The alarm and timer features
+use android-only code, so that will need to be ported. Everything else should mostly work fine.
 
 ## Development
 
