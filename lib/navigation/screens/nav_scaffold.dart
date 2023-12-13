@@ -50,6 +50,7 @@ class _NavScaffoldState extends State<NavScaffold> {
           ),
         ],
       ),
+      extendBody: true,
       body: Center(
         child: tabs[_selectedTabIndex].widget,
       ),

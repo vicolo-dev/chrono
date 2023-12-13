@@ -10,7 +10,7 @@ class FAB extends StatelessWidget {
     this.onPressed,
     this.icon = FluxIcons.add,
     this.index = 0,
-    this.bottomPadding = 0,
+    this.bottomPadding = 80,
     this.size = 1,
     this.position = FabPosition.bottomRight,
   }) : super(key: key);

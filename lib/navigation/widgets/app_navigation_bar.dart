@@ -21,9 +21,10 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0, top: 0),
+          const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 4.0, top: 0),
       child: CardContainer(
         elevationMultiplier: 2,
+        // color: Colors.red,
         child: BottomNavBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
