@@ -41,25 +41,19 @@ jobs:
       # - name: Decode android/key.properties
       #   run: echo "${{ secrets.KEY_PROPERTIES_PROD }}" | base64 --decode > android/key.properties
 
-      - uses: olegtarasov/get-tag@v2 # that generate $GIT_TAG_NAME env
-        id: tagName
-        with:
-          tagRegex: 'internal-v([0-9]+.[0-9]+.[0-9]+\+[0-9]+)' # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-          tagRegexGroup: 1 # Optional. Default is 1.
-
-      - name: Replace YAML version with tag version
-        run: |
-          sed -i 's/99.99.99+99/'$GIT_TAG_NAME'/g' pubspec.yaml|
-          echo "Tag used version:"$GIT_TAG_NAME
+      # - name: Replace YAML version with tag version
+      #   run: |
+      #     sed -i 's/99.99.99+99/'$GIT_TAG_NAME'/g' pubspec.yaml|
+      #     echo "Tag used version:"$GIT_TAG_NAME
 
       - name: Pub Get Packages
-        run: flutter pub get
+        run: "flutter pub get"
 
       - name: Build APPBUNDLE
-        run: flutter build appbundle --build-name=$GIT_TAG_NAME
+        run: "flutter build appbundle --build-name=${{ github.ref_name }}"
 
       - name: Build APK
-        run: flutter build apk --split-per-abi --build-name=$GIT_TAG_NAME
+        run: "flutter build apk --split-per-abi --build-name=${{ github.ref_name }}"
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1
