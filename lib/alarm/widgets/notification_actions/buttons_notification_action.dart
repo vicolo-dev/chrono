@@ -16,11 +16,17 @@ class ButtonsNotificationAction extends StatelessWidget {
       children: [
         CardContainer(
           onTap: onDismiss,
-          child: const Text("Dismiss"),
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("Dismiss"),
+          ),
         ),
         CardContainer(
           onTap: onDismiss,
-          child: const Text("Snooze"),
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("Snooze"),
+          ),
         )
       ],
     );
