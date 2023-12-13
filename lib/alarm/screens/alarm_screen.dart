@@ -59,9 +59,31 @@ class _AlarmScreenState extends State<AlarmScreen> {
     super.dispose();
   }
 
+  SnackBar getSnackbar(String text) {
+    return SnackBar(
+      content: Container(
+        alignment: Alignment.centerLeft,
+        height: 28,
+        child: Text(text),
+      ),
+      margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
+      elevation: 2,
+      dismissDirection: DismissDirection.none,
+    );
+  }
+
   _handleEnableChangeAlarm(Alarm alarm, bool value) {
-    int index = _listController.getItemIndex(alarm);
-    _listController.changeItems((alarms) => alarms[index].setIsEnabled(value));
+    if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+          getSnackbar("Cannot disable alarm while it is snoozed"));
+    } else {
+      int index = _listController.getItemIndex(alarm);
+      _listController.changeItems((alarms) {
+        alarms[index].setIsEnabled(value);
+        _showNextScheduleSnackBar(alarms[index]);
+      });
+    }
   }
 
   Future<Alarm?> _openCustomizeAlarmScreen(
@@ -102,20 +124,19 @@ class _AlarmScreenState extends State<AlarmScreen> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
       if (nextScheduleDateTime == null) return;
-
-      SnackBar snackBar = SnackBar(
-        content: Container(
-          alignment: Alignment.centerLeft,
-          height: 28,
-          child: Text(getNewAlarmSnackbarText(alarm)),
-        ),
-        margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
-        elevation: 2,
-        dismissDirection: DismissDirection.none,
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(getSnackbar(getNewAlarmSnackbarText(alarm)));
     });
+  }
+
+  _handleDeleteAlarm(Alarm alarm) {
+    if (!alarm.canBeDeletedWhenSnoozed && alarm.isSnoozed) {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(getSnackbar("Cannot delete alarm while it is snoozed"));
+    } else {
+      _listController.duplicateItem(alarm);
+    }
   }
 
   @override
@@ -149,11 +170,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
           saveTag: 'alarms',
           listController: _listController,
           itemBuilder: (alarm) => AlarmCard(
-            alarm: alarm,
-            onEnabledChange: (value) => _handleEnableChangeAlarm(alarm, value),
-            onPressDelete: () => _listController.deleteItem(alarm),
-            onPressDuplicate: () => _listController.duplicateItem(alarm),
-          ),
+              alarm: alarm,
+              onEnabledChange: (value) =>
+                  _handleEnableChangeAlarm(alarm, value),
+              onPressDelete: () => _handleDeleteAlarm(alarm),
+              onPressDuplicate: () => _listController.duplicateItem(alarm)),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
           onAddItem: (alarm) {
             alarm.update();

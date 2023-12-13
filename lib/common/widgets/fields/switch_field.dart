@@ -27,9 +27,12 @@ class _SwitchFieldState extends State<SwitchField> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             children: [
-              Text(
-                widget.name,
-                style: Theme.of(context).textTheme.headlineMedium,
+              Expanded(
+                flex: 100,
+                child: Text(
+                  widget.name,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
               ),
               const Spacer(),
               Switch(

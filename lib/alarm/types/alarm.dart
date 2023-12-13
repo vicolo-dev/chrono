@@ -73,6 +73,10 @@ class Alarm extends CustomizableListItem {
   double get snoozeLength => _settings.getSetting("Length").value;
   List<AlarmTask> get tasks => _settings.getSetting("Tasks").value;
   int get maxSnoozes => _settings.getSetting("Max Snoozes").value.toInt();
+  bool get canBeDisabledWhenSnoozed =>
+      !_settings.getSetting("Prevent Disabling while Snoozed").value;
+  bool get canBeDeletedWhenSnoozed =>
+      !_settings.getSetting("Prevent Deleting while Snoozed").value;
   TimeDuration get risingVolumeDuration =>
       _settings.getSetting("Rising Volume").value
           ? _settings.getSetting("Time To Full Volume").value
