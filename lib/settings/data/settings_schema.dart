@@ -151,6 +151,7 @@ SettingGroup appSettings = SettingGroup(
               ),
               onChange: (context, colorScheme) {
                 App.setColorScheme(context, colorScheme);
+                appSettings.save();
               },
               searchTags: ["theme", "style", "visual", "dark mode"],
             ),
@@ -189,6 +190,7 @@ SettingGroup appSettings = SettingGroup(
               ),
               onChange: (context, styleTheme) {
                 App.setStyleTheme(context, styleTheme);
+                appSettings.save();
               },
               searchTags: [
                 "scheme",
