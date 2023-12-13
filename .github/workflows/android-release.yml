@@ -45,12 +45,16 @@ jobs:
       #   run: |
       #     sed -i 's/99.99.99+99/'$GIT_TAG_NAME'/g' pubspec.yaml|
       #     echo "Tag used version:"$GIT_TAG_NAME
+      #
+      - id: get_version
+        name: Get Version
+        uses: jannemattila/get-version-from-tag@v1
 
       - name: Pub Get Packages
         run: "flutter pub get"
 
       - name: Build APPBUNDLE
-        run: "flutter build appbundle --build-name=${{ github.ref_name }}"
+        run: "flutter build appbundle --build-name=${{ steps.get_version.outputs.version }}"
 
       - name: Build APK
         run: "flutter build apk --split-per-abi --build-name=${{ github.ref_name }}"
