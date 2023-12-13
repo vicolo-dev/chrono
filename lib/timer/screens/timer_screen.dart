@@ -1,6 +1,8 @@
 import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/timer/data/timer_list_filters.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
 import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
@@ -27,6 +29,27 @@ class TimerScreen extends StatefulWidget {
 
 class _TimerScreenState extends State<TimerScreen> {
   final _listController = PersistentListController<ClockTimer>();
+  late Setting _showFilters;
+
+  void update(value) {
+    setState(() {});
+    _listController.changeItems((timers) => {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _showFilters = appSettings.getGroup("Timer").getSetting("Show Filters");
+
+    _showFilters.addListener(update);
+  }
+
+  @override
+  void dispose() {
+    _showFilters.removeListener(update);
+    super.dispose();
+  }
 
   void _handleDeleteTimer(ClockTimer deletedTimer) {
     int index = _listController.getItemIndex(deletedTimer);
@@ -114,7 +137,7 @@ class _TimerScreenState extends State<TimerScreen> {
               onDeleteItem: _handleDeleteTimer,
               placeholderText: "No timers created",
               reloadOnPop: true,
-              listFilters: timerListFilters,
+              listFilters: _showFilters.value ? timerListFilters : [],
             ),
           ),
         ],

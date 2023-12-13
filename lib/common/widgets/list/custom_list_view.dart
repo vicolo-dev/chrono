@@ -201,6 +201,7 @@ class _CustomListViewState<Item extends ListItem>
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: widget.listFilters
                       .map((filter) => ListFilterChip<Item>(
                             listFilter: filter,
@@ -246,7 +247,9 @@ class _CustomListViewState<Item extends ListItem>
                   sameItem: (a, b) => a.id == b.id,
                   sameContent: (a, b) => a.id == b.id,
                 ),
-                itemBuilder: _getItemBuilder(_selectedFilter),
+                itemBuilder: _getItemBuilder(widget.listFilters.isEmpty
+                    ? ListFilter("Default", (item) => true)
+                    : _selectedFilter),
                 // animator: DefaultAnimatedListAnimator,
                 listController: _controller,
                 scrollController: _scrollController,

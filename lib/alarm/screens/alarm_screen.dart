@@ -31,30 +31,31 @@ class AlarmScreen extends StatefulWidget {
 
 class _AlarmScreenState extends State<AlarmScreen> {
   final _listController = PersistentListController<Alarm>();
-  late Setting showInstantAlarmButton;
-  late Setting showFilters;
+  late Setting _showInstantAlarmButton;
+  late Setting _showFilters;
 
   void update(value) {
     setState(() {});
+    _listController.changeItems((alarms) => {});
   }
 
   @override
   void initState() {
     super.initState();
 
-    showInstantAlarmButton = appSettings
+    _showInstantAlarmButton = appSettings
         .getGroup("Developer Options")
         .getSetting("Show Instant Alarm Button");
-    showFilters = appSettings.getGroup("Alarm").getSetting("Show Filters");
+    _showFilters = appSettings.getGroup("Alarm").getSetting("Show Filters");
 
-    showInstantAlarmButton.addListener(update);
-    showFilters.addListener(update);
+    _showInstantAlarmButton.addListener(update);
+    _showFilters.addListener(update);
   }
 
   @override
   void dispose() {
-    showInstantAlarmButton.removeListener(update);
-    showFilters.removeListener(update);
+    _showInstantAlarmButton.removeListener(update);
+    _showFilters.removeListener(update);
     super.dispose();
   }
 
@@ -163,7 +164,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
           }),
           placeholderText: "No alarms created",
           reloadOnPop: true,
-          listFilters: showFilters.value ? alarmListFilters : [],
+          listFilters: _showFilters.value ? alarmListFilters : [],
         ),
         FAB(
           onPressed: () {
@@ -171,7 +172,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             selectTime();
           },
         ),
-        if (showInstantAlarmButton.value)
+        if (_showInstantAlarmButton.value)
           FAB(
             onPressed: () {
               Alarm alarm = Alarm(Time.fromNow(const Duration(seconds: 5)));
