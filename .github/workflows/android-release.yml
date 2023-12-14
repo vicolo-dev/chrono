@@ -39,9 +39,9 @@ jobs:
 
       - name: Create key.properties
         run: |
-          echo keyPassword=\${{ secrets.KEY_PASSWORD }} > android/key.properties
-          echo storePassword=\${{ secrets.KEY_STORE_PASSWORD }} >> android/key.propertieS
-          echo keyAlias=\${{ secrets.KEY_ALIAS }} >> android/key.properties
+          echo keyPassword=\${{ secrets.KEY_PASSWORD }} > ./android/key.properties
+          echo storePassword=\${{ secrets.KEY_STORE_PASSWORD }} >> ./android/key.properties
+          echo keyAlias=\${{ secrets.KEY_ALIAS }} >> ./android/key.properties
 
 
       - name: Load key
