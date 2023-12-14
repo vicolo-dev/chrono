@@ -38,7 +38,7 @@ Its usable, but still WIP, so you might encounter some bugs. Feel free to open a
 - Highly customizable style themes
 
 ## Installation
-- Download the relevant apk from the [latest release](https://github.com/vicolo-dev/chrono/releases/latest/downloads)
+- Download the relevant apk from the [latest release](https://github.com/vicolo-dev/chrono/releases/latest/)
 - Install (make sure to allow install from unknown sources)
 
 ## Platforms
