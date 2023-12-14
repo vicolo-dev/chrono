@@ -63,7 +63,7 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile storeFile = file('release-key.jks')
+            storeFile = file('release-key.jks')
             storePassword keystoreProperties['storePassword']        
         }
     }
