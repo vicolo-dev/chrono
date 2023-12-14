@@ -79,24 +79,24 @@ android {
         }
     }
 
-    flavorDimensions "app"
+    // flavorDimensions "app"
 
-    productFlavors {
-      dev {
-        dimension "app"
-        resValue "string", "app_name","Chrono Dev"
-        versionNameSuffix "-dev"
-      }
+    // productFlavors {
+    //   dev {
+    //     dimension "app"
+    //     resValue "string", "app_name","Chrono Dev"
+    //     versionNameSuffix "-dev"
+    //   }
 
-      fdroid {
-        dimension "app"
-        resValue "string", "app_name","Chrono"
-        versionName "0.2.5"
-        versionCode 1
+    //   fdroid {
+    //     dimension "app"
+    //     resValue "string", "app_name","Chrono"
+    //     versionName "0.2.5"
+    //     versionCode 1
 
-      }
+    //   }
 
-    }
+    // }
 }
 
 flutter {
