@@ -1,4 +1,4 @@
-<h1>Flux Clock</h1>
+<h1>Chrono</h1>
 <p>A modern and powerful clock, alarms, timer and stopwatch app for Android!</span>
 <h2>Features</h2>
 <ul>
