@@ -66,6 +66,7 @@ android {
             storeFile storeFile = file('release-key.jks')
             storePassword keystoreProperties['storePassword']        
         }
+    }
 
     buildTypes {
         release {
