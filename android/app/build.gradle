@@ -85,7 +85,7 @@ android {
       dev {
         dimension "app"
         resValue "string", "app_name","Chrono Dev"
-        applicationIdSuffix ".dev"
+        versionNameSuffix "-dev"
       }
 
       fdroid {
