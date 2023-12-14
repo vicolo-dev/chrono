@@ -78,6 +78,25 @@ android {
             shrinkResources true
         }
     }
+
+    flavorDimensions "app"
+
+    productFlavors {
+      dev {
+        dimension "app"
+        resValue "string", "app_name","Chrono Dev"
+        applicationIdSuffix ".dev"
+      }
+
+      fdroid {
+        dimension "app"
+        resValue "string", "app_name","Chrono"
+        versionName "0.2.5"
+        versionCode 1
+
+      }
+
+    }
 }
 
 flutter {
