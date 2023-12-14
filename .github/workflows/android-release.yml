@@ -37,17 +37,16 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # - name: Decode android/neumodore_key.jks
-      #   run: echo "${{ secrets.KEYSTORE_JKS_PROD }}" | base64 --decode > android/keystore.jks
+      - name: Create key.properties
+        run: |
+          echo keyPassword=\${{ secrets.KEY_PASSWORD }} > android/key.properties
+          echo storePassword=\${{ secrets.KEY_STORE_PASSWORD }} >> android/key.propertieS
+          echo keyAlias=\${{ secrets.KEY_ALIAS }} >> android/key.properties
 
-      # - name: Decode android/key.properties
-      #   run: echo "${{ secrets.KEY_PROPERTIES_PROD }}" | base64 --decode > android/key.properties
 
-      # - name: Replace YAML version with tag version
-      #   run: |
-      #     sed -i 's/99.99.99+99/'$GIT_TAG_NAME'/g' pubspec.yaml|
-      #     echo "Tag used version:"$GIT_TAG_NAME
-      #
+      - name: Load key
+        run: echo "${{ secrets.KEYSTORE_JKS_RELEASE }}" | base64 --decode > android/app/release-key.jks
+
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.1.0
 
