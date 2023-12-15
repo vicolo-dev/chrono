@@ -7,6 +7,7 @@ import 'package:clock_app/alarm/widgets/notification_actions/buttons_notificatio
 import 'package:clock_app/alarm/widgets/notification_actions/slide_notification_action.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
+import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/screens/vendor_list_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -43,13 +44,22 @@ SettingGroup appSettings = SettingGroup(
             "Date Format",
             () => [
               _getDateSettingOption("dd/MM/yyyy"),
-              _getDateSettingOption("dd/MM/yyyy"),
+              _getDateSettingOption("dd-MM-yyyy"),
               _getDateSettingOption("d/M/yyyy"),
+              _getDateSettingOption("d-M-yyyy"),
               _getDateSettingOption("MM/dd/yyyy"),
+              _getDateSettingOption("MM-dd-yyyy"),
               _getDateSettingOption("M/d/yy"),
+              _getDateSettingOption("M-d-yy"),
               _getDateSettingOption("M/d/yyyy"),
+              _getDateSettingOption("M-d-yyyy"),
+              _getDateSettingOption("yyyy/dd/MM"),
               _getDateSettingOption("yyyy-dd-MM"),
-              _getDateSettingOption("d-MMM-yyyy"),
+              _getDateSettingOption("yyyy/MM/dd"),
+              _getDateSettingOption("yyyy-MM-dd"),
+              // SelectSettingOption(DateTime.now().toIso8601Date(), "YYYY-MM-DD"),
+              _getDateSettingOption("d MMM yyyy"),
+              _getDateSettingOption("d MMMM yyyy"),
             ],
             description: "How to display the dates",
           ),
