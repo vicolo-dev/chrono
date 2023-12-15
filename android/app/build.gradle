@@ -50,7 +50,6 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-
     defaultConfig {
         // Map for the version code that gives each ABI a value.
 
