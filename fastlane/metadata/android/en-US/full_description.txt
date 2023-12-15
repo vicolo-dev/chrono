@@ -1,5 +1,3 @@
-<h1>Chrono</h1>
-<p>A modern and powerful clock, alarms, timer and stopwatch app for Android!</span>
 <h2>Features</h2>
 <ul>
 <li>Modern and easy to use interface</li>
