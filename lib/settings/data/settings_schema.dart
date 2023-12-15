@@ -223,7 +223,7 @@ SettingGroup appSettings = SettingGroup(
           ],
         ),
       ],
-      icon: FluxIcons.settings,
+      icon: Icons.palette_outlined,
       description: "Set themes, colors and change layout",
     ),
     SettingGroup(
@@ -313,11 +313,13 @@ SettingGroup appSettings = SettingGroup(
     SettingGroup(
       "Accessibility",
       [SwitchSetting("Left Handed Mode", false)],
-      icon: Icons.accessibility,
+      icon: Icons.accessibility_new_rounded,
       showExpandedView: false,
     ),
     SettingGroup(
       "Backup",
+      description: "Export or Import your settings locally",
+      icon: Icons.restore_rounded,
       [
         SettingGroup(
           "Settings",
@@ -325,44 +327,72 @@ SettingGroup appSettings = SettingGroup(
             SettingAction(
               "Export",
               (context) async {
-                final jsonFile = json.encode(appSettings.valueToJson());
-                // print(jsonFile);
-                await PickOrSave().fileSaver(
-                    params: FileSaverParams(
-                  saveFiles: [
-                    SaveFileInfo(
-                      fileData: Uint8List.fromList(utf8.encode(jsonFile)),
-                      fileName:
-                          "chrono_settings_backup_${DateTime.now().toIso8601String()}",
-                    )
-                  ],
-                ));
+                saveBackupFile(
+                    json.encode(appSettings.valueToJson()), "settings");
               },
+              searchTags: ["settings", "export", "backup", "save"],
+              description: "Export settings to a local file",
             ),
             SettingAction(
               "Import",
               (context) async {
-                List<String>? result = await PickOrSave().filePicker(
-                  params: FilePickerParams(
-                    getCachedFilePath: true,
-                  ),
+                loadBackupFile(
+                  (data) {
+                    appSettings.loadValueFromJson(json.decode(data));
+                    appSettings.callAllListeners();
+                    App.refreshTheme(context);
+                  },
                 );
-                if (result != null && result.isNotEmpty) {
-                  File file = File(result[0]);
-                  final jsonFile =
-                      json.decode(utf8.decode(file.readAsBytesSync()));
-                  // print(jsonFile);
-                  appSettings.loadValueFromJson(jsonFile);
-                  appSettings.callAllListeners();
-                  // ignore: use_build_context_synchronously
-                  App.refreshTheme(context);
-                } else {
-                  // User canceled the picker
-                }
               },
+              searchTags: ["settings", "import", "backup", "load"],
+              description: "Import settings from a local file",
             ),
           ],
         ),
+        // SettingGroup(
+        //   "Alarms",
+        //   [
+        //     SettingAction(
+        //       "Export",
+        //       (context) async {
+        //         saveBackupFile(
+        //             json.encode(appSettings.valueToJson()), "alarms");
+        //       },
+        //     ),
+        //     SettingAction(
+        //       "Import",
+        //       (context) async {
+        //         loadBackupFile((data) {
+        //           appSettings.loadValueFromJson(json.decode(data));
+        //           appSettings.callAllListeners();
+        //           App.refreshTheme(context);
+        //         });
+        //       },
+        //     ),
+        //   ],
+        // ),
+        //  SettingGroup(
+        //   "Timers",
+        //   [
+        //     SettingAction(
+        //       "Export",
+        //       (context) async {
+        //         saveBackupFile(
+        //             json.encode(appSettings.valueToJson()), "timers");
+        //       },
+        //     ),
+        //     SettingAction(
+        //       "Import",
+        //       (context) async {
+        //         loadBackupFile((data) {
+        //           appSettings.loadValueFromJson(json.decode(data));
+        //           appSettings.callAllListeners();
+        //           App.refreshTheme(context);
+        //         });
+        //       },
+        //     ),
+        //   ],
+        // ),
       ],
     ),
     SettingGroup(
@@ -377,11 +407,32 @@ SettingGroup appSettings = SettingGroup(
           ),
         ]),
       ],
-      icon: Icons.code,
+      icon: Icons.code_rounded,
     ),
   ],
 );
 
+saveBackupFile(String data, String label) async {
+  await PickOrSave().fileSaver(
+      params: FileSaverParams(
+    saveFiles: [
+      SaveFileInfo(
+        fileData: Uint8List.fromList(utf8.encode(data)),
+        fileName: "chrono_${label}_backup_${DateTime.now().toIso8601String()}",
+      )
+    ],
+  ));
+}
 
-
+loadBackupFile(Function(String) onSuccess) async {
+  List<String>? result = await PickOrSave().filePicker(
+    params: FilePickerParams(
+      getCachedFilePath: true,
+    ),
+  );
+  if (result != null && result.isNotEmpty) {
+    File file = File(result[0]);
+    onSuccess(utf8.decode(file.readAsBytesSync()));
+  }
+}
 // Settings appSettings = Settings(settingsItems);
