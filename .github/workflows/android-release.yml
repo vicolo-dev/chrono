@@ -59,10 +59,17 @@ jobs:
       - name: Build APK
         run: "flutter build apk --split-per-abi"
 
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Github Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/bundle/release/*.aab,build/app/outputs/flutter-apk/*.apk"
+          body: ${{steps.github_release.outputs.changelog}}
           # tag: $GIT_TAG_NAME
           # token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
           #
