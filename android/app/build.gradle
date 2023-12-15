@@ -1,3 +1,5 @@
+import com.android.build.OutputFile
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -8,7 +10,7 @@ if (localPropertiesFile.exists()) {
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    throw GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -49,13 +51,50 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        // Map for the version code that gives each ABI a value.
+
+        // // For per-density APKs, create a similar map:
+        // // ext.densityCodes = ['mdpi': 1, 'hdpi': 2, 'xhdpi': 3]
+
+
+        // // For each APK output variant, override versionCode with a combination of
+        // // ext.abiCodes * 1000 + variant.versionCode. In this example, variant.versionCode
+        // // is equal to defaultConfig.versionCode. If you configure product flavors that
+        // // define their own versionCode, variant.versionCode uses that value instead.
+        // project.android.applicationVariants.all { variant ->
+
+        //   // Assigns a different version code for each output APK
+        //   // other than the universal APK.
+        //   variant.outputs.each { output ->
+
+        //     // Stores the value of ext.abiCodes that is associated with the ABI for this variant.
+        //     def baseAbiVersionCode =
+        //             // Determines the ABI for this variant and returns the mapped value.
+        //             project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+
+        //     // Because abiCodes.get() returns null for ABIs that are not mapped by ext.abiCodes,
+        //     // the following code doesn't override the version code for universal APKs.
+        //     // However, because you want universal APKs to have the lowest version code,
+        //     // this outcome is desirable.
+        //     if (baseAbiVersionCode != null) {
+
+        //       // Assigns the new version code to versionCodeOverride, which changes the
+        //       // version code for only the output APK, not for the variant itself. Skipping
+        //       // this step causes Gradle to use the value of variant.versionCode for the APK.
+        //       output.versionCodeOverride =
+        //               variant.versionCode * 10 + baseAbiVersionCode
+        //     }
+        //   }
+        // }        
+
         applicationId "com.vicolo.chrono"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 21
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
+        // def abiCodes = ['armeabi-v7a':1, 'arm64-v8a':2, x86_64:3]
+        // def abi = project.hasProperty('flutterBuildAbi') ? project.flutterBuildAbi : 'armeabi-v7a'
+        versionCode flutterVersionCode.toInteger()  
         versionName flutterVersionName
         multiDexEnabled true
     }
@@ -70,13 +109,23 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
 
             minifyEnabled true
             shrinkResources true
         }
+    }
+
+    applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+        // For each separate APK per architecture, set a unique version code as described here:
+        // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
+        def versionCodes = ["armeabi-v7a":1, "arm64-v8a":2, x86_64:3]
+        def abi = output.getFilter(OutputFile.ABI)
+        if (abi != null) {  // null for the universal-debug, universal-release variants
+            output.versionCodeOverride =
+                    defaultConfig.versionCode * 10 + versionCodes.get(abi)}
+      }
     }
 
     // flavorDimensions "app"
