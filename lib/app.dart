@@ -1,4 +1,5 @@
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
+import 'package:clock_app/common/logic/card_decoration.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
@@ -116,12 +117,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
       ),
-      dotsContainerDecorator: ShapeDecoration(
-        color: colorScheme.surface,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        ),
-      ),
+      dotsContainerDecorator: getCardDecoration(context),
     );
   }
 }
@@ -145,6 +141,11 @@ class App extends StatefulWidget {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
     state.setStyleTheme(styleTheme);
   }
+
+  static void refreshTheme(BuildContext context) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.refreshTheme();
+  }
 }
 
 class _AppState extends State<App> {
@@ -164,6 +165,11 @@ class _AppState extends State<App> {
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
 
+    setColorScheme(_colorSettings.getSetting("Color Scheme").value);
+    setStyleTheme(_styleSettings.getSetting("Style Theme").value);
+  }
+
+  refreshTheme() {
     setColorScheme(_colorSettings.getSetting("Color Scheme").value);
     setStyleTheme(_styleSettings.getSetting("Style Theme").value);
   }
