@@ -23,4 +23,6 @@ extension DateTimeUtils on DateTime {
         month == tomorrow.month &&
         day == tomorrow.day;
   }
+
+  String toIso8601Date() => toIso8601String().substring(0, 10);
 }
