@@ -1,3 +1,4 @@
+import 'package:clock_app/common/logic/card_decoration.dart';
 import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -27,44 +28,17 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
-    ThemeStyleExtension? themeStyle = theme.extension<ThemeStyleExtension>();
-
     return Container(
       alignment: alignment,
       margin: margin ?? const EdgeInsets.all(4),
       clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        border: showLightBorder
-            ? Border.all(
-                color: colorScheme.outline.withOpacity(0.2),
-                width: 0.5,
-                strokeAlign: BorderSide.strokeAlignInside,
-              )
-            : (themeStyle?.borderWidth != 0)
-                ? Border.all(
-                    color: colorScheme.outline,
-                    width: themeStyle?.borderWidth ?? 0.5,
-                    strokeAlign: BorderSide.strokeAlignInside,
-                  )
-                : null,
-        color: color ?? Theme.of(context).colorScheme.surface,
-        borderRadius:
-            (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
-                .borderRadius,
-        boxShadow: [
-          if (showShadow && (themeStyle?.shadowOpacity ?? 0) > 0)
-            BoxShadow(
-              blurStyle: blurStyle,
-              color: colorScheme.shadow
-                  .withOpacity(themeStyle?.shadowOpacity ?? 1),
-              blurRadius: themeStyle?.shadowBlurRadius ?? 5,
-              spreadRadius: themeStyle?.shadowSpreadRadius ?? 0,
-              offset: Offset(
-                  0, (themeStyle?.shadowElevation ?? 1) * elevationMultiplier),
-            ),
-        ],
+      decoration: getCardDecoration(
+        context,
+        color: color,
+        showLightBorder: showLightBorder,
+        showShadow: showShadow,
+        elevationMultiplier: elevationMultiplier,
+        blurStyle: blurStyle,
       ),
       child: onTap == null
           ? child

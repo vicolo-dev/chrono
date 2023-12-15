@@ -73,6 +73,7 @@ dependencies:
   introduction_screen: ^3.1.12
   app_settings: ^5.1.1
   auto_start_flutter: ^0.1.1
+  pick_or_save: ^2.2.4
 
 dev_dependencies:
   flutter_test:

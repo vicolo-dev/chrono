@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:auto_start_flutter/auto_start_flutter.dart';
 import 'package:clock_app/alarm/data/alarm_settings_schema.dart';
@@ -7,7 +10,6 @@ import 'package:clock_app/alarm/widgets/notification_actions/buttons_notificatio
 import 'package:clock_app/alarm/widgets/notification_actions/slide_notification_action.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
-import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/screens/vendor_list_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -26,14 +28,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:pick_or_save/pick_or_save.dart';
 
 SelectSettingOption<String> _getDateSettingOption(String format) {
   return SelectSettingOption(
       "${DateFormat(format).format(DateTime.now())} ($format)", format);
 }
 
+const int settingsSchemaVersion = 1;
+
 SettingGroup appSettings = SettingGroup(
   "Settings",
+  version: settingsSchemaVersion,
   isSearchable: true,
   [
     SettingGroup(
@@ -311,6 +317,55 @@ SettingGroup appSettings = SettingGroup(
       showExpandedView: false,
     ),
     SettingGroup(
+      "Backup",
+      [
+        SettingGroup(
+          "Settings",
+          [
+            SettingAction(
+              "Export",
+              (context) async {
+                final jsonFile = json.encode(appSettings.valueToJson());
+                // print(jsonFile);
+                await PickOrSave().fileSaver(
+                    params: FileSaverParams(
+                  saveFiles: [
+                    SaveFileInfo(
+                      fileData: Uint8List.fromList(utf8.encode(jsonFile)),
+                      fileName:
+                          "chrono_settings_backup_${DateTime.now().toIso8601String()}",
+                    )
+                  ],
+                ));
+              },
+            ),
+            SettingAction(
+              "Import",
+              (context) async {
+                List<String>? result = await PickOrSave().filePicker(
+                  params: FilePickerParams(
+                    getCachedFilePath: true,
+                  ),
+                );
+                if (result != null && result.isNotEmpty) {
+                  File file = File(result[0]);
+                  final jsonFile =
+                      json.decode(utf8.decode(file.readAsBytesSync()));
+                  // print(jsonFile);
+                  appSettings.loadValueFromJson(jsonFile);
+                  appSettings.callAllListeners();
+                  // ignore: use_build_context_synchronously
+                  App.refreshTheme(context);
+                } else {
+                  // User canceled the picker
+                }
+              },
+            ),
+          ],
+        ),
+      ],
+    ),
+    SettingGroup(
       "Developer Options",
       [
         SettingGroup("Alarm", [
@@ -326,5 +381,7 @@ SettingGroup appSettings = SettingGroup(
     ),
   ],
 );
+
+
 
 // Settings appSettings = Settings(settingsItems);

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 class SettingGroup extends SettingItem {
+  final int? _version;
   final IconData? _icon;
   final List<String> _summarySettings;
   final bool? _showExpandedView;
@@ -33,6 +34,7 @@ class SettingGroup extends SettingItem {
   SettingGroup(
     String name,
     this._settingItems, {
+    int? version,
     IconData? icon,
     List<String> summarySettings = const [],
     String description = "",
@@ -47,6 +49,7 @@ class SettingGroup extends SettingItem {
         _settings = [],
         _settingPageLinks = [],
         _settingActions = [],
+        _version = version,
         super(name, description, searchTags) {
     for (SettingItem item in _settingItems) {
       item.parent = this;
@@ -127,14 +130,36 @@ class SettingGroup extends SettingItem {
   @override
   dynamic valueToJson() {
     Json json = {};
+    if (_version != null) json["version"] = _version;
     for (var setting in _settingItems) {
       json[setting.name] = setting.valueToJson();
     }
     return json;
   }
 
+  void callAllListeners() {
+    for (var setting in settings) {
+      setting.callListeners(setting);
+    }
+  }
+
   @override
   void loadValueFromJson(dynamic value) {
+    if (_version != null && value["version"] != _version) {
+      //TODO: Add migration code
+
+      //In case of name change:
+      //value["New Name"] = value["Old Name"];
+      //OR
+      //value["Group 1"]["New Name"] = value["Group 1"]["Old Name"];
+      //value.remove("Old Name");
+
+      //Incase of addition
+      //value["New Setting"] = defaultValue;
+
+      //Incase of removal
+      //value.remove("Old Setting");
+    }
     for (var setting in _settingItems) {
       setting.loadValueFromJson(value[setting.name]);
     }
