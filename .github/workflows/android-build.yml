@@ -65,10 +65,11 @@ jobs:
         run: flutter build apk --release --split-per-abi --target-platform="android-x64"
 
       - name: Save APKs to Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: APKs
           path: build/app/outputs/flutter-apk/*.apk
+          retention-days: 3
 
 
 
