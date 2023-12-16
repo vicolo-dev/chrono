@@ -144,6 +144,7 @@ class DateChip extends StatelessWidget {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return CardContainer(
+      key: const Key("DateChip"),
       color: colorScheme.primary,
       margin: const EdgeInsets.all(0),
       child: Padding(
