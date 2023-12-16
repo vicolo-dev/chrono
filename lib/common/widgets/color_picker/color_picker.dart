@@ -117,7 +117,7 @@ class ColorPicker extends StatefulWidget {
         'It was removed in v2.0.0. To modify the copy icon on the color code '
         'entry field, define the `ColorPickerCopyPasteBehavior(copyIcon: '
         'myIcon)` and provide it via the `copyPasteBehavior` property.')
-        this.colorCodeIcon,
+    this.colorCodeIcon,
     this.colorCodePrefixStyle,
     this.colorCodeReadOnly = false,
     this.showColorValue = false,
@@ -1588,6 +1588,65 @@ class _ColorPickerState extends State<ColorPicker> {
           // Add a tiny bit of extra hard coded space after the picker
           // type selector if there was one.
           if (_usePickerSelector) const SizedBox(height: 4),
+          if ((widget.showColorCode || widget.showColorValue) &&
+              _activePicker == ColorPickerType.wheel)
+            Padding(
+              padding: EdgeInsets.only(bottom: widget.columnSpacing),
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                runAlignment: WrapAlignment.center,
+                alignment: WrapAlignment.center,
+                children: <Widget>[
+                  // Show the color code view and edit field, if enabled.
+                  if (widget.showColorCode)
+                    ColorCodeField(
+                      color: _selectedColor,
+                      readOnly: _activePicker != ColorPickerType.wheel ||
+                          widget.colorCodeReadOnly,
+                      textStyle: widget.colorCodeTextStyle,
+                      prefixStyle: widget.colorCodePrefixStyle,
+                      colorCodeHasColor: widget.colorCodeHasColor,
+                      enableTooltips: widget.enableTooltips,
+                      shouldUpdate: _editShouldUpdate,
+                      onColorChanged: (Color color) {
+                        widget.onColorChangeStart?.call(_selectedColor);
+                        setState(() {
+                          _selectedColor = color.withOpacity(_opacity);
+                          // Color changed outside wheel picker, when the
+                          // code was edited, the wheel should update.
+                          _wheelShouldUpdate = true;
+                          _editShouldUpdate = false;
+                          _updateActiveSwatch();
+                        });
+                        widget.onColorChanged(_selectedColor);
+                        widget.onColorChangeEnd?.call(_selectedColor);
+                        _addToRecentColors(color);
+                      },
+                      onEditFocused: (bool editInFocus) {
+                        setState(() {
+                          _editCodeFocused = editInFocus;
+                          if (_editCodeFocused) {
+                            _selectedShouldFocus = false;
+                            _wheelShouldFocus = false;
+                          }
+                        });
+                      },
+                      toolIcons: widget.actionButtons,
+                      copyPasteBehavior: widget.copyPasteBehavior,
+                    ),
+                  // If we show both hex code and int value, add some
+                  // hardcoded horizontal space between them.
+                  if (widget.showColorCode && widget.showColorValue)
+                    const SizedBox(width: 8),
+                  if (widget.showColorValue)
+                    SelectableText(
+                      _selectedColor.value.toString(),
+                      style: effectiveCodeStyle,
+                    ),
+                ],
+              ),
+            ),
+
           // This is not the Wheel case, so we draw all the main colors
           // for the active swatch list.
           if (_activePicker != ColorPickerType.wheel)
@@ -1668,32 +1727,32 @@ class _ColorPickerState extends State<ColorPicker> {
               child: widget.wheelSubheading,
             ),
           // Draw the shade colors for the selected main color.
-          // if (widget.enableShadesSelection)
-          //   ShadeColors(
-          //     spacing: widget.spacing,
-          //     runSpacing: widget.runSpacing,
-          //     columnSpacing: widget.columnSpacing,
-          //     activeSwatch: _activeSwatch!,
-          //     selectedColor: _selectedColor.withAlpha(0xFF),
-          //     onSelectColor: (Color color) {
-          //       _onSelectColor(color);
-          //       if (_activePicker == ColorPickerType.wheel) {
-          //         setState(() {
-          //           _selectedShouldFocus = true;
-          //           _tonalShouldUpdate = true;
-          //         });
-          //       }
-          //     },
-          //     includeIndex850: widget.includeIndex850,
-          //     width: widget.width,
-          //     height: widget.height,
-          //     borderRadius: widget.borderRadius,
-          //     hasBorder: widget.hasBorder,
-          //     borderColor: widget.borderColor,
-          //     elevation: widget.elevation,
-          //     selectedColorIcon: widget.selectedColorIcon,
-          //     selectedRequestsFocus: _selectedShouldFocus,
-          //   ),
+          if (widget.enableShadesSelection)
+            ShadeColors(
+              spacing: widget.spacing,
+              runSpacing: widget.runSpacing,
+              columnSpacing: widget.columnSpacing,
+              activeSwatch: _activeSwatch!,
+              selectedColor: _selectedColor.withAlpha(0xFF),
+              onSelectColor: (Color color) {
+                _onSelectColor(color);
+                if (_activePicker == ColorPickerType.wheel) {
+                  setState(() {
+                    _selectedShouldFocus = true;
+                    _tonalShouldUpdate = true;
+                  });
+                }
+              },
+              includeIndex850: widget.includeIndex850,
+              width: widget.width,
+              height: widget.height,
+              borderRadius: widget.borderRadius,
+              hasBorder: widget.hasBorder,
+              borderColor: widget.borderColor,
+              elevation: widget.elevation,
+              selectedColorIcon: widget.selectedColorIcon,
+              selectedRequestsFocus: _selectedShouldFocus,
+            ),
           // Show the tonal sub-heading
           if (widget.tonalSubheading != null && widget.enableTonalPalette)
             Padding(
@@ -1800,63 +1859,6 @@ class _ColorPickerState extends State<ColorPicker> {
           // Wrap, they will be on same row nicely if there is room enough
           // but also wrap to two rows when so needed when both are
           // shown at the same and they don't fit on one row.
-          if (widget.showColorCode || widget.showColorValue)
-            Padding(
-              padding: EdgeInsets.only(bottom: widget.columnSpacing),
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                runAlignment: WrapAlignment.center,
-                alignment: WrapAlignment.center,
-                children: <Widget>[
-                  // Show the color code view and edit field, if enabled.
-                  if (widget.showColorCode)
-                    ColorCodeField(
-                      color: _selectedColor,
-                      readOnly: _activePicker != ColorPickerType.wheel ||
-                          widget.colorCodeReadOnly,
-                      textStyle: widget.colorCodeTextStyle,
-                      prefixStyle: widget.colorCodePrefixStyle,
-                      colorCodeHasColor: widget.colorCodeHasColor,
-                      enableTooltips: widget.enableTooltips,
-                      shouldUpdate: _editShouldUpdate,
-                      onColorChanged: (Color color) {
-                        widget.onColorChangeStart?.call(_selectedColor);
-                        setState(() {
-                          _selectedColor = color.withOpacity(_opacity);
-                          // Color changed outside wheel picker, when the
-                          // code was edited, the wheel should update.
-                          _wheelShouldUpdate = true;
-                          _editShouldUpdate = false;
-                          _updateActiveSwatch();
-                        });
-                        widget.onColorChanged(_selectedColor);
-                        widget.onColorChangeEnd?.call(_selectedColor);
-                        _addToRecentColors(color);
-                      },
-                      onEditFocused: (bool editInFocus) {
-                        setState(() {
-                          _editCodeFocused = editInFocus;
-                          if (_editCodeFocused) {
-                            _selectedShouldFocus = false;
-                            _wheelShouldFocus = false;
-                          }
-                        });
-                      },
-                      toolIcons: widget.actionButtons,
-                      copyPasteBehavior: widget.copyPasteBehavior,
-                    ),
-                  // If we show both hex code and int value, add some
-                  // hardcoded horizontal space between them.
-                  if (widget.showColorCode && widget.showColorValue)
-                    const SizedBox(width: 8),
-                  if (widget.showColorValue)
-                    SelectableText(
-                      _selectedColor.value.toString(),
-                      style: effectiveCodeStyle,
-                    ),
-                ],
-              ),
-            ),
           // Show the sub-heading for recent colors.
           if (widget.recentColorsSubheading != null && widget.showRecentColors)
             Padding(

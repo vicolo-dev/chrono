@@ -15,38 +15,18 @@ class PickerSelector extends StatelessWidget {
   const PickerSelector({
     Key? key,
     required this.pickers,
-    required this.pickerLabels,
     required this.picker,
     required this.onPickerChanged,
-    this.thumbColor,
-    this.textStyle,
-    this.columnSpacing = 8,
   }) : super(key: key);
 
   /// A map of used picker types to select which segments to show and use.
   final Map<ColorPickerType, bool> pickers;
-
-  /// THe labels for the picker segments.
-  final Map<ColorPickerType, String> pickerLabels;
 
   /// Current active picker.
   final ColorPickerType picker;
 
   /// Callback to change picker type.
   final ValueChanged<ColorPickerType> onPickerChanged;
-
-  /// The thumb color of the selected segment.
-  ///
-  /// Uses cupertino default light and dark style if not provided.
-  final Color? thumbColor;
-
-  /// Text style of the text items in the picker
-  ///
-  /// If not provided, default to `Theme.of(context).textTheme.bodySmall`.
-  final TextStyle? textStyle;
-
-  /// The spacing after the picker. Defaults to 8.
-  final double columnSpacing;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +42,7 @@ class PickerSelector extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Padding(
-        padding: EdgeInsets.only(bottom: columnSpacing),
+        padding: const EdgeInsets.only(bottom: 8),
         child: ToggleField(
           selectedItems:
               options.map((option) => option.value == picker).toList(),

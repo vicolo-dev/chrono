@@ -66,7 +66,12 @@ dependencies:
   table_calendar: ^3.0.8
   vector_math: ^2.1.4
   fuzzywuzzy: ^1.1.2
-  flex_color_picker: ^3.2.2
+  # flex_color_picker:
+  #   path: ../flex_color_picker
+  flex_color_picker:
+    git:
+      url: https://github.com/vicolo-dev/flex_color_picker
+      ref: master
   url_launcher: ^6.2.2
   flutter_html: ^3.0.0-beta.2
   http: ^0.13.6
