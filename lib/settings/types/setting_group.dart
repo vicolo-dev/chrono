@@ -145,6 +145,7 @@ class SettingGroup extends SettingItem {
 
   @override
   void loadValueFromJson(dynamic value) {
+    if (value == null) return;
     if (_version != null && value["version"] != _version) {
       //TODO: Add migration code
 
@@ -161,7 +162,7 @@ class SettingGroup extends SettingItem {
       //value.remove("Old Setting");
     }
     for (var setting in _settingItems) {
-      setting.loadValueFromJson(value[setting.name]);
+      if (value != null) setting.loadValueFromJson(value[setting.name]);
     }
   }
 
