@@ -253,11 +253,12 @@ packages:
   flex_color_picker:
     dependency: "direct main"
     description:
-      name: flex_color_picker
-      sha256: d8279250820ad279123fa8ee94151dd99400dd9ef4fb096589fcf956765d39a9
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.2"
+      path: "."
+      ref: master
+      resolved-ref: af031177e8cf6ff7cf077ca9cf2bc9fb0e4a76f4
+      url: "https://github.com/vicolo-dev/flex_color_picker"
+    source: git
+    version: "3.3.0"
   flex_seed_scheme:
     dependency: transitive
     description:
