@@ -194,11 +194,13 @@ class Alarm extends CustomizableListItem {
   }
 
   void enable() {
+    _unSnooze();
     schedule();
   }
 
   void disable() {
     _isEnabled = false;
+    _unSnooze();
     cancel();
   }
 
