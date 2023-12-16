@@ -1,4 +1,5 @@
 import 'package:clock_app/common/widgets/fields/date_picker_field.dart';
+import 'package:clock_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,19 +18,19 @@ void main() {
         testWidgets('with 1 date', (tester) async {
           final value = [DateTime(2021, 1, 1)];
           await _renderWidget(tester, value: value);
-          final valueFinder = find.byType(DateChip);
+          final valueFinder = find.byKey(const Key("DateChip"));
           expect(valueFinder, findsOneWidget);
         });
         testWidgets('with 2 dates', (tester) async {
           final value = [DateTime(2021, 1, 1), DateTime(2021, 1, 2)];
           await _renderWidget(tester, value: value);
-          final valueFinder = find.byType(DateChip);
+          final valueFinder = find.byKey(const Key("DateChip"));
           expect(valueFinder, findsNWidgets(2));
         });
         testWidgets('with 10 dates', (tester) async {
           final value = List.generate(10, (index) => DateTime(2021, 1, 1));
           await _renderWidget(tester, value: value);
-          final valueFinder = find.byType(DateChip);
+          final valueFinder = find.byKey(const Key("DateChip"));
           expect(valueFinder, findsNWidgets(10));
         });
       });
@@ -75,6 +76,7 @@ Future<void> _renderWidget(WidgetTester tester,
     void Function(List<DateTime>)? onChanged}) async {
   await tester.pumpWidget(
     MaterialApp(
+      theme: defaultTheme,
       home: Scaffold(
         body: DatePickerField(
           value: value,

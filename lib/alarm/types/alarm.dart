@@ -1,6 +1,7 @@
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/alarm_task.dart';
+import 'package:clock_app/alarm/types/range_interval.dart';
 import 'package:clock_app/alarm/types/schedules/alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
@@ -261,8 +262,8 @@ class Alarm extends CustomizableListItem {
     return (getSetting("Date Range") as DateTimeSetting).value[1];
   }
 
-  Duration get interval {
-    return (getSetting("Interval") as SelectSetting<Duration>).value;
+  RangeInterval get interval {
+    return (getSetting("Interval") as SelectSetting<RangeInterval>).value;
   }
 
   Alarm.fromJson(Json json)

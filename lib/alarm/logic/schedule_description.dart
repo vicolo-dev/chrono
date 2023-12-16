@@ -1,3 +1,4 @@
+import 'package:clock_app/alarm/types/range_interval.dart';
 import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
@@ -43,11 +44,11 @@ String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
       return 'Every ${weekdays.where((weekday) => alarmWeekdays.contains(weekday)).map((weekday) => weekday.displayName).join(', ')}';
     case DatesAlarmSchedule:
       List<DateTime> dates = alarm.dates;
-      return 'On ${DateFormat(dateFormat).format(dates[0])}${dates.length > 1 ? ' and ${dates.length - 1} other${dates.length > 2 ? 's' : ''}' : ''}';
+      return 'On ${DateFormat(dateFormat).format(dates[0])}${dates.length > 1 ? ' and ${dates.length - 1} other date${dates.length > 2 ? 's' : ''} ' : ''}';
     case RangeAlarmSchedule:
       DateTime rangeStart = alarm.startDate;
       DateTime rangeEnd = alarm.endDate;
-      Duration interval = alarm.interval;
+      RangeInterval interval = alarm.interval;
 
       String startString = DateFormat(dateFormat).format(rangeStart);
       String endString = DateFormat(dateFormat).format(rangeEnd);
@@ -65,7 +66,7 @@ String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
         }
       }
 
-      return '${interval.inDays == 1 ? "Daily" : "Weekly"} from $startString to $endString';
+      return '${interval == RangeInterval.daily ? "Daily" : "Weekly"} from $startString to $endString';
     default:
       return 'Not scheduled';
   }
