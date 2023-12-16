@@ -52,12 +52,14 @@ This app is built using flutter. All you need is to follow [this](https://docs.f
 guide to install it, and you should be able to start developing it.
 
 ## Todo
+Stuff I would like to do soon™. In no particular order:
 - Alarms
   - Alarm reliability testing system
   - Vibration patterns
   - Alternative time picker interfaces
   - Array alarms (alarm that will ring after set interval (10 minutes etc.)
   - More tasks
+  - Custom ringtones
 - Color schemes
   - More prebuilt themes  
   - Filter
@@ -66,8 +68,16 @@ guide to install it, and you should be able to start developing it.
 - Theme
   - Icon themes
   - Font themes
+  - System theme and fonts
 - Timer
   - Alternative duration picker interfaces
+- Widgets
+  - Clock
+  - Clock faces
+  - Alarms
+  - Timers
+  - Stopwatch
+  - Customization
 - Online?
   - Sync?
   - Community themes?
