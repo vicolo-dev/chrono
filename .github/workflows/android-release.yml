@@ -1,35 +1,28 @@
 name: Android Release
 
-# 1
 on:
-  # 2
   push:
     tags:
     - '*'
-  # 3
   workflow_dispatch:
 
 # 4
 jobs:
-  # 5
   build:
-    # 6
     runs-on: ubuntu-latest
     permissions: write-all
 
-    # 7
     steps:
-      # 8
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      # 9
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: "17"
           cache: 'gradle'
-      # 10   
+
       - uses: subosito/flutter-action@v2
         with:
           # 11
@@ -42,7 +35,6 @@ jobs:
           echo keyPassword=\${{ secrets.KEY_PASSWORD }} > ./android/key.properties
           echo storePassword=\${{ secrets.KEY_STORE_PASSWORD }} >> ./android/key.properties
           echo keyAlias=\${{ secrets.KEY_ALIAS }} >> ./android/key.properties
-
 
       - name: Load key
         run: echo "${{ secrets.KEYSTORE_JKS_RELEASE }}" | base64 --decode > android/app/release-key.jks
@@ -79,15 +71,3 @@ jobs:
         with:
           artifacts: "build/app/outputs/bundle/release/*.aab,build/app/outputs/flutter-apk/*.apk"
           body: ${{steps.github_release.outputs.changelog}}
-          # tag: $GIT_TAG_NAME
-          # token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
-          #
-      # - name: Save APPBUNDLE to Artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: APPBUNDLE
-      #     path: build/app/outputs/bundle/release/*.aab
-
-
-     
-   
