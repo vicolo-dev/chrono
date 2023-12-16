@@ -1,3 +1,4 @@
+import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/fields/date_picker_bottom_sheet.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -142,17 +143,17 @@ class DateChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return Chip(
-      backgroundColor: colorScheme.onBackground.withOpacity(0.1),
-      // labelPadding: EdgeInsets.zero,
-      padding: EdgeInsets.zero,
-
-      // side: ,
-      label: Text(
-        DateFormat(dateFormat).format(date),
-        style: const TextStyle(fontSize: 10),
+    return CardContainer(
+      color: colorScheme.primary,
+      margin: const EdgeInsets.all(0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          DateFormat(dateFormat).format(date),
+          style: const TextStyle(fontSize: 10)
+              .copyWith(color: colorScheme.onPrimary),
+        ),
       ),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }
