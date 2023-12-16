@@ -44,6 +44,10 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
 
   WeekdaySchedule get nextWeekdaySchedule {
     if (_weekdaySchedules.isEmpty) return WeekdaySchedule(0);
+    if (_weekdaySchedules.any((weeklySchedule) =>
+        weeklySchedule.alarmRunner.currentScheduleDateTime == null)) {
+      return _weekdaySchedules[0];
+    }
     return _weekdaySchedules.reduce((a, b) => a
             .alarmRunner.currentScheduleDateTime!
             .isBefore(b.alarmRunner.currentScheduleDateTime!)
