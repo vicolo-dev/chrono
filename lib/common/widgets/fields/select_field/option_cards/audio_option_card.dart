@@ -66,17 +66,26 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
                 groupValue: widget.selectedIndex,
                 onChanged: (dynamic value) => widget.onSelect(widget.index),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.choice.value.title,
-                      style: textTheme.headlineMedium),
-                  if (widget.choice.description.isNotEmpty)
-                    const SizedBox(height: 4.0),
-                  if (widget.choice.description.isNotEmpty)
-                    Text(widget.choice.description,
-                        style: textTheme.bodyMedium),
-                ],
+              Expanded(
+                flex: 100,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      // Flutter doesn't allow per character overflow, so this is a workaround
+                      widget.choice.value.title.replaceAll('', '\u{200B}'),
+                      style: textTheme.headlineMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                    ),
+                    if (widget.choice.description.isNotEmpty)
+                      const SizedBox(height: 4.0),
+                    if (widget.choice.description.isNotEmpty)
+                      Text(widget.choice.description,
+                          style: textTheme.bodyMedium),
+                  ],
+                ),
               ),
               const Spacer(),
               IconButton(

@@ -29,9 +29,13 @@ class _VendorListScreenState extends State<VendorListScreen> {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       final json = jsonDecode(response.body);
-      return (json["vendors"] as List<dynamic>)
+      final list = (json["vendors"] as List<dynamic>)
           .map((json) => Vendor.fromJson(json))
           .toList();
+      // Filter out duplicates
+      final names = <dynamic>{};
+      list.retainWhere((vendor) => names.add(vendor.name));
+      return list;
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
