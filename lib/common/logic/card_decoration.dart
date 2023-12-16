@@ -25,9 +25,9 @@ BoxDecoration getCardDecoration(BuildContext context,
                 strokeAlign: BorderSide.strokeAlignInside,
               )
             : null,
-    color: color ?? Theme.of(context).colorScheme.surface,
-    borderRadius: (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)
-        .borderRadius,
+    color: color ?? colorScheme.surface,
+    borderRadius:
+        (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius,
     boxShadow: [
       if (showShadow && (themeStyle?.shadowOpacity ?? 0) > 0)
         BoxShadow(
