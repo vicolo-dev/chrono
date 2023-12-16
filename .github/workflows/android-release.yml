@@ -25,7 +25,6 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          # 11
           flutter-version: "3.16.3"
           channel: 'stable'
           cache: true
@@ -65,6 +64,30 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "categories": [
+                {
+                  "title": "## 🚀 Features",
+                  "labels": ["feature"]
+                },
+                {
+                  "enhancements": "## ✨ Enhancements"
+                  "labels": ["enhancement"]
+                },
+                {
+                  "title": "## 🐛 Fixes",
+                  "labels": ["bug"]
+                },
+                {
+                  "key": "tests",
+                  "title": "## 🧪 Tests",
+                  "labels": ["test"]
+                },
+              ],
+            }
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1

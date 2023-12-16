@@ -108,7 +108,7 @@ SettingGroup appSettings = SettingGroup(
             (context) async {
               try {
                 //check auto-start availability.
-                var test = await isAutoStartAvailable ?? false;
+                var test = (await isAutoStartAvailable) ?? false;
                 //if available then navigate to auto-start setting page.
                 if (test) {
                   await getAutoStartPermission();
@@ -136,7 +136,7 @@ SettingGroup appSettings = SettingGroup(
               }
             },
             description:
-                "Enable auto start to allow alarms to go off when the app is closed",
+                "Some devices require Auto Start to be enabled for alarms to ring while app is closed.",
           )
         ]),
       ],
