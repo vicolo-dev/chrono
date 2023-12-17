@@ -9,6 +9,7 @@ import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
 import 'package:clock_app/alarm/widgets/try_alarm_task_button.dart';
+import 'package:clock_app/audio/audio_channels.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
@@ -17,13 +18,6 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
-
-List<SelectSettingOption<AndroidAudioUsage>> audioChannelOptions = [
-  SelectSettingOption("Alarm", AndroidAudioUsage.alarm),
-  SelectSettingOption("Media", AndroidAudioUsage.media),
-  SelectSettingOption("Notification", AndroidAudioUsage.notification),
-  SelectSettingOption("Ringtone", AndroidAudioUsage.notificationRingtone),
-];
 
 SettingGroup alarmSettingsSchema = SettingGroup(
   "AlarmSettings",
