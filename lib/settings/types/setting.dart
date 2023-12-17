@@ -83,6 +83,7 @@ abstract class Setting<T> extends SettingItem {
 
   @override
   void loadValueFromJson(dynamic value) {
+    if (value == null) return;
     _value = value;
   }
 }
@@ -161,6 +162,7 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
 
   @override
   void loadValueFromJson(dynamic value) {
+    if (value == null) return;
     _value = (value as List).map((e) => fromJsonFactories[T]!(e) as T).toList();
   }
 }
@@ -219,6 +221,7 @@ class CustomSetting<T extends JsonSerializable> extends Setting<T> {
 
   @override
   void loadValueFromJson(dynamic value) {
+    if (value == null) return;
     _value = fromJsonFactories[T]!(value);
   }
 }
@@ -294,6 +297,7 @@ class ColorSetting extends Setting<Color> {
 
   @override
   void loadValueFromJson(dynamic value) {
+    if (value == null) return;
     _value = Color(value);
   }
 
@@ -536,6 +540,7 @@ class ToggleSetting<T> extends Setting<List<bool>> {
 
   @override
   void loadValueFromJson(dynamic value) {
+    if (value == null) return;
     _value = (value as List).map((e) => e == "1").toList();
   }
 }
@@ -584,6 +589,7 @@ class DateTimeSetting extends Setting<List<DateTime>> {
 
   @override
   void loadValueFromJson(dynamic value) {
+    if (value == null) return;
     _value = (value as List)
         .map((e) => DateTime.fromMillisecondsSinceEpoch(e))
         .toList();
@@ -632,6 +638,7 @@ class DurationSetting extends Setting<TimeDuration> {
 
   @override
   void loadValueFromJson(dynamic value) {
+    if (value == null) return;
     _value = TimeDuration.fromMilliseconds(value);
   }
 }

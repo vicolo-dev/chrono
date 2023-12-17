@@ -1,10 +1,11 @@
 import 'package:audio_session/audio_session.dart';
 
-Future<void> initializeAudioSession() async {
+Future<void> initializeAudioSession(
+    [AndroidAudioUsage usage = AndroidAudioUsage.alarm]) async {
   final session = await AudioSession.instance;
-  await session.configure(const AudioSessionConfiguration(
+  await session.configure(AudioSessionConfiguration(
     androidAudioAttributes: AndroidAudioAttributes(
-      usage: AndroidAudioUsage.alarm,
+      usage: usage,
       contentType: AndroidAudioContentType.music,
     ),
   ));
