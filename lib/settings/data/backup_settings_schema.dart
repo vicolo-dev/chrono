@@ -33,6 +33,7 @@ SettingGroup backupSettingsSchema = SettingGroup(
                 appSettings.loadValueFromJson(json.decode(data));
                 appSettings.callAllListeners();
                 App.refreshTheme(context);
+                appSettings.save();
               },
             );
           },

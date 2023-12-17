@@ -48,20 +48,14 @@ jobs:
         run: flutter pub get
 
       - name: Build APPBUNDLE
-        run: flutter build appbundle
+        run: flutter build appbundle --flavor prod
 
-      - name: Build arm APK
-        run: flutter build apk --release --split-per-abi --target-platform="android-arm"
-
-      - name: Build arm64 APK
-        run: flutter build apk --release --split-per-abi --target-platform="android-arm64"
-
-      - name: Build x64 APK
-        run: flutter build apk --release --split-per-abi --target-platform="android-x64"
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi --flavor prod
 
       - name: Build Changelog
         id: github_release
-        uses: mikepenz/release-changelog-builder-action@v3
+        uses: mikepenz/release-changelog-builder-action@v4.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
