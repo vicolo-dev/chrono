@@ -165,7 +165,6 @@ class _CustomListViewState<Item extends ListItem>
     // if (_scrollController.offset == 0) {
     //   _scrollController.jumpTo(1);
     // }
-    print(_controller.computeItemBox(0));
     if (_itemCardHeight == 0 && index != 0) return;
     _scrollController.animateTo(index * _itemCardHeight,
         duration: const Duration(milliseconds: 250), curve: Curves.easeIn);

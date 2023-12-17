@@ -1,7 +1,10 @@
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 
+const styleThemeSettingsSchemaVersion = 1;
+
 SettingGroup styleThemeSettingsSchema = SettingGroup(
+  version: styleThemeSettingsSchemaVersion,
   "App Style",
   [
     StringSetting("Name", "Style Theme"),

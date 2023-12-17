@@ -53,7 +53,7 @@ class Alarm extends CustomizableListItem {
   @override
   int get id => currentScheduleId;
   @override
-  bool get isDeletable => true;
+  bool get isDeletable => !(isSnoozed && !canBeDeletedWhenSnoozed);
   Time get time => _time;
 
   /// If an alarm is enabled, it has an active schedule.
@@ -76,9 +76,9 @@ class Alarm extends CustomizableListItem {
   List<AlarmTask> get tasks => _settings.getSetting("Tasks").value;
   int get maxSnoozes => _settings.getSetting("Max Snoozes").value.toInt();
   bool get canBeDisabledWhenSnoozed =>
-      !_settings.getSetting("Prevent Disabling while Snoozed").value;
+      !_settings.getSetting("Prevent Disabling").value;
   bool get canBeDeletedWhenSnoozed =>
-      !_settings.getSetting("Prevent Deleting while Snoozed").value;
+      !_settings.getSetting("Prevent Deletion").value;
   TimeDuration get risingVolumeDuration =>
       _settings.getSetting("Rising Volume").value
           ? _settings.getSetting("Time To Full Volume").value
