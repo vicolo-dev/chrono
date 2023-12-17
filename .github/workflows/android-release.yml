@@ -50,14 +50,8 @@ jobs:
       - name: Build APPBUNDLE
         run: flutter build appbundle
 
-      - name: Build arm APK
-        run: flutter build apk --release --split-per-abi --target-platform="android-arm"
-
-      - name: Build arm64 APK
-        run: flutter build apk --release --split-per-abi --target-platform="android-arm64"
-
-      - name: Build x64 APK
-        run: flutter build apk --release --split-per-abi --target-platform="android-x64"
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi --flavor prod"
 
       - name: Build Changelog
         id: github_release
