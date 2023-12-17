@@ -41,7 +41,7 @@ class AboutScreen extends StatelessWidget {
                           Text(
                             packageInfo?.appName ?? 'Chrono',
                             style: textTheme.titleMedium?.copyWith(
-                              color: colorScheme.onBackground,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                         ],
@@ -49,10 +49,11 @@ class AboutScreen extends StatelessWidget {
                       const SizedBox(height: 8.0),
                       Row(
                         children: [
-                          const SizedBox(
+                          SizedBox(
                             width: 48,
                             child: Icon(
                               Icons.info_outline_rounded,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(width: 16.0),
@@ -62,7 +63,7 @@ class AboutScreen extends StatelessWidget {
                               Text(
                                 "Version",
                                 style: textTheme.bodyMedium?.copyWith(
-                                  color: colorScheme.onBackground,
+                                  color: colorScheme.onSurface,
                                 ),
                               ),
                               Text(
@@ -84,10 +85,11 @@ class AboutScreen extends StatelessWidget {
                         },
                         child: Row(
                           children: [
-                            const SizedBox(
+                            SizedBox(
                               width: 48,
                               child: Icon(
                                 Icons.code_rounded,
+                                color: colorScheme.onSurface,
                               ),
                             ),
                             const SizedBox(width: 16.0),
