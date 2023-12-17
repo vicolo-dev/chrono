@@ -145,7 +145,8 @@ class _AlarmCardState extends State<AlarmCard> {
                         onChanged: widget.onEnabledChange,
                       ),
                 CardEditMenu(
-                  onPressDelete: widget.onPressDelete,
+                  onPressDelete:
+                      widget.alarm.isDeletable ? widget.onPressDelete : null,
                   onPressDuplicate: widget.onPressDuplicate,
                 ),
               ],

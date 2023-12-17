@@ -19,7 +19,10 @@ import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
+const alarmSchemaVersion = 2;
+
 SettingGroup alarmSettingsSchema = SettingGroup(
+  version: alarmSchemaVersion,
   "AlarmSettings",
   [
     StringSetting("Label", ""),
@@ -135,8 +138,10 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             snapLength: 1,
             description:
                 "The maximum number of times the alarm can be snoozed before it is dismissed"),
-        SwitchSetting("Prevent Disabling while Snoozed", false),
-        SwitchSetting("Prevent Deleting while Snoozed", false),
+        SettingGroup("While Snoozed", [
+          SwitchSetting("Prevent Disabling", false),
+          SwitchSetting("Prevent Deletion", false),
+        ]),
       ],
       icon: Icons.snooze_rounded,
       summarySettings: [

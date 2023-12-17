@@ -2,7 +2,10 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
+const colorSchemeSettingsSchemaVersion = 1;
+
 SettingGroup colorSchemeSettingsSchema = SettingGroup(
+  version: colorSchemeSettingsSchemaVersion,
   "Color Scheme",
   [
     StringSetting("Name", "Color Scheme"),

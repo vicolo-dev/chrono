@@ -131,13 +131,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
   }
 
   _handleDeleteAlarm(Alarm alarm) {
-    if (!alarm.canBeDeletedWhenSnoozed && alarm.isSnoozed) {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(getSnackbar("Cannot delete alarm while it is snoozed"));
-    } else {
-      _listController.deleteItem(alarm);
-    }
+    _listController.deleteItem(alarm);
   }
 
   @override
