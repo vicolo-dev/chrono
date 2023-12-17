@@ -11,6 +11,7 @@ import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/clock/logic/timezone_database.dart';
+import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/common/utils/debug.dart';
@@ -26,6 +27,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   initializeTimeZones();
+  await initializePackageInfo();
   await initializeAppDataDirectory();
   await initializeSettings();
   await initializeDatabases();

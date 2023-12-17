@@ -79,6 +79,7 @@ dependencies:
   app_settings: ^5.1.1
   auto_start_flutter: ^0.1.1
   pick_or_save: ^2.2.4
+  package_info_plus: ^5.0.1
 
 dev_dependencies:
   flutter_test:
@@ -111,6 +112,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/timezones.db
+    - assets/images/
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
