@@ -15,7 +15,7 @@ class ButtonsNotificationAction extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CardContainer(
-          onTap: onDismiss,
+          onTap: onSnooze,
           child: Padding(
             padding: const EdgeInsets.all(32.0),
             child:

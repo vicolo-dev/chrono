@@ -1,3 +1,6 @@
+import 'package:audio_session/audio_session.dart';
+import 'package:clock_app/audio/audio_channels.dart';
+import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
@@ -29,6 +32,12 @@ SettingGroup timerSettingsSchema = SettingGroup(
               },
               shouldCloseOnSelect: false,
             ),
+            SelectSetting<AndroidAudioUsage>(
+                "Audio Channel", audioChannelOptions,
+                onChange: (context, index) {
+              RingtonePlayer.stop();
+              initializeAudioSession(audioChannelOptions[index].value);
+            }),
             SliderSetting("Volume", 0, 100, 100, unit: "%"),
             SwitchSetting("Rising Volume", false,
                 description: "Gradually increase volume over time"),

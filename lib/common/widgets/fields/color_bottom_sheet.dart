@@ -1,5 +1,6 @@
-import 'package:clock_app/common/widgets/color_picker/color_picker.dart';
-import 'package:flex_color_picker/flex_color_picker.dart' show ColorPickerType;
+// import 'package:clock_app/common/widgets/color_picker/color_picker.dart';
+import 'package:clock_app/common/widgets/color_picker/picker_selector.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 
 class ColorBottomSheet extends StatefulWidget {
@@ -78,29 +79,41 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                 ),
                 // const SizedBox(height: 16.0),
                 ColorPicker(
-                  color: _color,
-                  onColorChanged: (Color color) => setState(() {
-                    _color = color;
-                  }),
-                  width: 44,
-                  height: 44,
-                  borderRadius:
-                      theme.toggleButtonsTheme.borderRadius?.bottomLeft.x,
-                  pickersEnabled: const <ColorPickerType, bool>{
-                    ColorPickerType.both: false,
-                    ColorPickerType.primary: true,
-                    ColorPickerType.accent: false,
-                    ColorPickerType.bw: false,
-                    ColorPickerType.custom: false,
-                    ColorPickerType.wheel: true,
-                  },
-                  enableShadesSelection: false,
+                    color: _color,
+                    onColorChanged: (Color color) => setState(() {
+                          _color = color;
+                        }),
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                    width: 44,
+                    height: 44,
+                    borderRadius:
+                        theme.toggleButtonsTheme.borderRadius?.bottomLeft.x,
+                    pickersEnabled: const <ColorPickerType, bool>{
+                      ColorPickerType.both: false,
+                      ColorPickerType.primary: true,
+                      ColorPickerType.accent: false,
+                      ColorPickerType.bw: false,
+                      ColorPickerType.custom: false,
+                      ColorPickerType.wheel: true,
+                    },
+                    enableShadesSelection: true,
+                    showColorCode: true,
+                    copyPasteBehavior: const ColorPickerCopyPasteBehavior(
+                        copyFormat: ColorPickerCopyFormat.hexRRGGBB),
+                    customPickerSelectBuilder:
+                        (pickers, pickerLabels, activePicker, onPickerChanged) {
+                      return PickerSelector(
+                          pickers: pickers,
+                          picker: activePicker,
+                          onPickerChanged: onPickerChanged);
+                    }
 
-                  // subheading: Text(
-                  //   'Select color shade',
-                  //   style: Theme.of(context).textTheme.titleSmall,
-                  // ),
-                ),
+                    // subheading: Text(
+                    //   'Select color shade',
+                    //   style: Theme.of(context).textTheme.titleSmall,
+                    // ),
+                    ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(

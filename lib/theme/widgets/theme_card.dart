@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 
 class ThemeCard<Item extends ThemeItem> extends StatelessWidget {
   const ThemeCard({
-    Key? key,
+    super.key,
     required this.themeItem,
     required this.onPressEdit,
     required this.isSelected,
     required this.getThemeFromItem,
     required this.onPressDelete,
     required this.onPressDuplicate,
-  }) : super(key: key);
+  });
 
   final Item themeItem;
   final VoidCallback onPressEdit;

@@ -18,7 +18,7 @@ jobs:
 
       - uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'adopt'
           java-version: "17"
           cache: 'gradle'
 
@@ -43,14 +43,8 @@ jobs:
       - name: Pub Get Packages
         run: flutter pub get
 
-      - name: Build arm APK
-        run: flutter build apk --release --split-per-abi --target-platform="android-arm"
-
-      - name: Build arm64 APK
-        run: flutter build apk --release --split-per-abi --target-platform="android-arm64"
-
-      - name: Build x64 APK
-        run: flutter build apk --release --split-per-abi --target-platform="android-x64"
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi --flavor dev
 
       - name: Save APKs to Artifacts
         uses: actions/upload-artifact@v4

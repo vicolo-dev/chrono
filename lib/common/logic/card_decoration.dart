@@ -26,8 +26,9 @@ BoxDecoration getCardDecoration(BuildContext context,
               )
             : null,
     color: color ?? colorScheme.surface,
-    borderRadius:
-        (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius,
+    borderRadius: theme.cardTheme.shape != null
+        ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
+        : const BorderRadius.all(Radius.circular(8.0)),
     boxShadow: [
       if (showShadow && (themeStyle?.shadowOpacity ?? 0) > 0)
         BoxShadow(

@@ -21,7 +21,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: "17"
-          # cache: 'gradle'
+          cache: 'gradle'
 
       - uses: subosito/flutter-action@v2
         with:
@@ -61,7 +61,7 @@ jobs:
 
       - name: Build Changelog
         id: github_release
-        uses: mikepenz/release-changelog-builder-action@v3
+        uses: mikepenz/release-changelog-builder-action@v4.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

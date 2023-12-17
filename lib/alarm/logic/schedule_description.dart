@@ -7,9 +7,8 @@ import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/common/types/weekday.dart';
-import 'package:clock_app/common/utils/time_of_day.dart';
+import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/weekday_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
@@ -24,7 +23,7 @@ String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
   }
   switch (alarm.scheduleType) {
     case OnceAlarmSchedule:
-      return 'Just ${alarm.time.toHours() > TimeOfDay.now().toHours() ? 'today' : 'tomorrow'}';
+      return 'Just ${alarm.time.toHours() > DateTime.now().toHours() ? 'today' : 'tomorrow'}';
     case DailyAlarmSchedule:
       return 'Every day';
     case WeeklyAlarmSchedule:

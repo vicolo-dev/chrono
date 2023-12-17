@@ -128,24 +128,16 @@ android {
       }
     }
 
-    // flavorDimensions "app"
+    flavorDimensions "app"
 
-    // productFlavors {
-    //   dev {
-    //     dimension "app"
-    //     resValue "string", "app_name","Chrono Dev"
-    //     versionNameSuffix "-dev"
-    //   }
-
-    //   fdroid {
-    //     dimension "app"
-    //     resValue "string", "app_name","Chrono"
-    //     versionName "0.2.5"
-    //     versionCode 1
-
-    //   }
-
-    // }
+    productFlavors {
+      dev {
+        dimension "app"
+        resValue "string", "app_name","Chrono Dev"
+        // versionNameSuffix "-dev",
+        applicationIdSuffix ".free"
+      }
+    }
 }
 
 flutter {

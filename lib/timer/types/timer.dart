@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -38,6 +39,8 @@ class ClockTimer extends CustomizableListItem {
       ? _settings.getSetting("Label").value
       : '${_duration.toString()} timer';
   Audio get ringtone => _settings.getSetting("Melody").value;
+  AndroidAudioUsage get audioChannel =>
+      _settings.getSetting("Audio Channel").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
   TimeDuration get risingVolumeDuration =>
       _settings.getSetting("Rising Volume").value

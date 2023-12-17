@@ -1,3 +1,4 @@
+import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/alarm_task.dart';
@@ -82,6 +83,8 @@ class Alarm extends CustomizableListItem {
       _settings.getSetting("Rising Volume").value
           ? _settings.getSetting("Time To Full Volume").value
           : TimeDuration.zero;
+  AndroidAudioUsage get audioChannel =>
+      _settings.getSetting("Audio Channel").value;
   AlarmSchedule get activeSchedule =>
       _schedules.firstWhere((schedule) => schedule.runtimeType == scheduleType);
   List<AlarmRunner> get activeAlarmRunners => activeSchedule.alarmRunners;
@@ -194,11 +197,13 @@ class Alarm extends CustomizableListItem {
   }
 
   void enable() {
+    _unSnooze();
     schedule();
   }
 
   void disable() {
     _isEnabled = false;
+    _unSnooze();
     cancel();
   }
 
