@@ -48,10 +48,10 @@ jobs:
         run: flutter pub get
 
       - name: Build APPBUNDLE
-        run: flutter build appbundle
+        run: flutter build appbundle --flavor prod
 
       - name: Build APK
-        run: flutter build apk --release --split-per-abi --flavor prod"
+        run: flutter build apk --release --split-per-abi --flavor prod
 
       - name: Build Changelog
         id: github_release
