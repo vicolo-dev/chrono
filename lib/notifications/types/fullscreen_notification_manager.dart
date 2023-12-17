@@ -58,8 +58,9 @@ class AlarmNotificationManager {
         key: _dismissActionKey,
         label:
             "${tasksRequired ? "Solve tasks to " : ""}${data.dismissActionLabel}",
-        actionType: ActionType.SilentAction,
-        autoDismissible: true,
+        actionType:
+            tasksRequired ? ActionType.Default : ActionType.SilentAction,
+        autoDismissible: tasksRequired ? false : true,
       ));
     }
 
@@ -137,7 +138,6 @@ class AlarmNotificationManager {
   static Future<void> openNotificationScreen(
       FullScreenNotificationData data, List<int> scheduleIds) async {
     await LockScreenFlagManager.setLockScreenFlags();
-
     // If we're already on the same notification screen, pop it off the
     // stack so we don't have two of them on the stack.
     if (Routes.currentRoute == data.route) {
