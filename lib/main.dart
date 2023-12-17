@@ -34,7 +34,7 @@ void main() async {
   await AndroidAlarmManager.initialize();
   await RingtoneManager.initialize();
   await RingtonePlayer.initialize();
-  await initializeAudioSession();
+  await initializeAudioSession(); //Needs to be initialized after settings
   await BootReceiver.initialize(handleBoot);
   await initializeNotifications();
   AppVisibility.initialize();

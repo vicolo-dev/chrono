@@ -1,3 +1,4 @@
+import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/data/alarm_task_schemas.dart';
 import 'package:clock_app/alarm/types/alarm_task.dart';
 import 'package:clock_app/alarm/types/range_interval.dart';
@@ -8,13 +9,14 @@ import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
 import 'package:clock_app/alarm/widgets/try_alarm_task_button.dart';
+import 'package:clock_app/audio/audio_channels.dart';
+import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 SettingGroup alarmSettingsSchema = SettingGroup(
@@ -28,7 +30,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
           "Type",
           [
             SelectSettingOption("Once", OnceAlarmSchedule,
-                description: "Will ring at the next occurrence of the time."),
+                description: "Will ring at the next occurrence of the time"),
             SelectSettingOption("Daily", DailyAlarmSchedule,
                 description: "Will ring every day"),
             SelectSettingOption("On Specified Week Days", WeeklyAlarmSchedule,
@@ -100,6 +102,12 @@ SettingGroup alarmSettingsSchema = SettingGroup(
               },
               shouldCloseOnSelect: false,
             ),
+            SelectSetting<AndroidAudioUsage>(
+                "Audio Channel", audioChannelOptions,
+                onChange: (context, index) {
+              RingtonePlayer.stop();
+              initializeAudioSession(audioChannelOptions[index].value);
+            }),
             SliderSetting("Volume", 0, 100, 100, unit: "%"),
             SwitchSetting("Rising Volume", false,
                 description: "Gradually increase volume over time"),
@@ -137,9 +145,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
     ),
     ListSetting<AlarmTask>(
       "Tasks",
-      kDebugMode
-          ? alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList()
-          : [],
+      [],
       alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
       addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
       cardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: false),
