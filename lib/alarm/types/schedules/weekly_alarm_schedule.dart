@@ -31,6 +31,7 @@ class WeekdaySchedule extends JsonSerializable {
 }
 
 class WeeklyAlarmSchedule extends AlarmSchedule {
+  // This is just a dummy alarmRunner so we get a consistent currentAlarmRunnerId;
   late final AlarmRunner _alarmRunner;
 
   late List<WeekdaySchedule> _weekdaySchedules = [];
@@ -74,6 +75,8 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
 
   @override
   int get currentAlarmRunnerId => _alarmRunner.id;
+
+  int get currentWeekdayAlarmRunnerId => nextWeekdaySchedule.alarmRunner.id;
 
   WeeklyAlarmSchedule(Setting weekdaySetting)
       : _weekdaySetting = weekdaySetting as ToggleSetting<int>,

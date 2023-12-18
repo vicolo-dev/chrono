@@ -97,7 +97,7 @@ void main() {
       });
       test('returns true when id is in alarmRunners', () {
         schedule.schedule(const Time(hour: 10, minute: 30));
-        expect(schedule.hasId(schedule.currentAlarmRunnerId), true);
+        expect(schedule.hasId(schedule.currentWeekdayAlarmRunnerId), true);
       });
     });
 
@@ -134,12 +134,16 @@ void main() {
       final weekdayScheduleJson = {
         'weekday': 1,
         'alarmRunner': {
-          'id': schedule.currentAlarmRunnerId,
+          'id': schedule.currentWeekdayAlarmRunnerId,
           'currentScheduleDateTime':
               schedule.currentScheduleDateTime?.millisecondsSinceEpoch,
         },
       };
       final weeklyScheduleJson = {
+        'alarmRunner': {
+          'id': null,
+          'currentScheduleDateTime': null,
+        },
         'weekdaySchedules': [weekdayScheduleJson],
       };
 
@@ -157,6 +161,10 @@ void main() {
         },
       };
       final weeklyScheduleJson = {
+        'alarmRunner': {
+          'id': 50,
+          'currentScheduleDateTime': null,
+        },
         'weekdaySchedules': [weekdayScheduleJson],
       };
 
