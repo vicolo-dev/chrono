@@ -63,13 +63,26 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
             children: [
               Expanded(
                 flex: 2,
-                child: ListView(
+                child: Padding(
                   padding: const EdgeInsets.only(
-                      top: 32, bottom: 16, left: 32, right: 32),
-                  children: [
-                    for (int id in widget.scheduleIds)
-                      TimerNotificationCard(timer: getTimerById(id)),
-                  ],
+                      top: 32, bottom: 16, left: 20, right: 20),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: widget.scheduleIds.length == 1
+                        ? Text(
+                            getTimerById(widget.scheduleIds.first).label,
+                            style: Theme.of(context).textTheme.displayMedium,
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : ListView(
+                            children: [
+                              for (int id in widget.scheduleIds)
+                                TimerNotificationCard(timer: getTimerById(id)),
+                            ],
+                          ),
+                  ),
                 ),
               ),
               Expanded(
