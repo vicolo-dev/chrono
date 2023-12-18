@@ -14,12 +14,12 @@ import 'package:clock_app/common/utils/duration.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 
 class ClockTimer extends CustomizableListItem {
-  TimeDuration _duration;
-  TimeDuration _currentDuration;
-  int _secondsRemainingOnPause;
-  DateTime _startTime;
-  TimerState _state;
-  final int _id;
+  TimeDuration _duration = TimeDuration.fromSeconds(5);
+  TimeDuration _currentDuration = TimeDuration.fromSeconds(5);
+  int _secondsRemainingOnPause = 5;
+  DateTime _startTime = DateTime(0);
+  TimerState _state = TimerState.stopped;
+  late final int _id;
   SettingGroup _settings = SettingGroup(
     "Timer Settings",
     appSettings
@@ -164,22 +164,28 @@ class ClockTimer extends CustomizableListItem {
     };
   }
 
-  ClockTimer.fromJson(Json json)
-      : _duration = TimeDuration.fromSeconds(json['duration']),
-        _currentDuration = TimeDuration.fromSeconds(json['currentDuration']),
-        _secondsRemainingOnPause = json['durationRemainingOnPause'],
-        _startTime = DateTime.parse(json['startTime']),
-        _state =
-            TimerState.values.firstWhere((e) => e.toString() == json['state']),
-        _id = json['id'],
-        _settings = SettingGroup(
-          "Timer Settings",
-          appSettings
-              .getGroup("Timer")
-              .getGroup("Default Settings")
-              .copy()
-              .settingItems,
-        ) {
+  ClockTimer.fromJson(Json json) {
+    if (json == null) {
+      _id = UniqueKey().hashCode;
+      return;
+    }
+    _duration = TimeDuration.fromSeconds(json['duration'] ?? 0);
+    _currentDuration = TimeDuration.fromSeconds(json['currentDuration'] ?? 0);
+    _secondsRemainingOnPause = json['durationRemainingOnPause'] ?? 0;
+    _startTime = json['startTime'] != null
+        ? DateTime.parse(json['startTime'])
+        : DateTime.now();
+    _state = TimerState.values.firstWhere((e) => e.toString() == json['state'],
+        orElse: () => TimerState.stopped);
+    _id = json['id'] ?? UniqueKey().hashCode;
+    _settings = SettingGroup(
+      "Timer Settings",
+      appSettings
+          .getGroup("Timer")
+          .getGroup("Default Settings")
+          .copy()
+          .settingItems,
+    );
     _settings.loadValueFromJson(json['settings']);
   }
 

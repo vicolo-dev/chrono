@@ -73,6 +73,10 @@ class _TimerCardState extends State<TimerCard> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+
     if (!_previousTimer.equals(widget.timer)) {
       updateTimer();
       _previousTimer = ClockTimer.from(widget.timer);
@@ -100,42 +104,42 @@ class _TimerCardState extends State<TimerCard> {
                   child: widget.timer.isRunning
                       ? Icon(
                           Icons.pause_rounded,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: colorScheme.primary,
                           size: 32,
                         )
                       : Icon(
                           Icons.play_arrow_rounded,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.6),
+                          color: colorScheme.onSurface.withOpacity(0.6),
                           size: 32,
                         ),
                 );
               },
-              progressColors: [Theme.of(context).colorScheme.primary],
+              progressColors: [colorScheme.primary],
               backColor: Colors.black.withOpacity(0.15),
             ),
             const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.timer.label,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onBackground
-                            .withOpacity(0.6),
-                      ),
-                ),
-                Text(
-                  TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontSize: remainingSeconds > 3600 ? 40 : 48,
-                      ),
-                ),
-              ],
+            Expanded(
+              flex: 999,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.timer.label,
+                    style: textTheme.displaySmall?.copyWith(
+                      color: colorScheme.onBackground.withOpacity(0.6),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                  ),
+                  Text(
+                    TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
+                    style: textTheme.displayMedium?.copyWith(
+                      fontSize: remainingSeconds > 3600 ? 40 : 48,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const Spacer(),
             CardEditMenu(

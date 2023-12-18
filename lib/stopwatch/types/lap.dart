@@ -3,9 +3,9 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 
 class Lap extends ListItem {
-  final int number;
-  final TimeDuration lapTime;
-  final TimeDuration elapsedTime;
+  late final int number;
+  late final TimeDuration lapTime;
+  late final TimeDuration elapsedTime;
 
   @override
   int get id => number;
@@ -14,10 +14,17 @@ class Lap extends ListItem {
 
   Lap({required this.elapsedTime, required this.number, required this.lapTime});
 
-  Lap.fromJson(Json json)
-      : number = json['number'],
-        lapTime = TimeDuration.fromJson(json['lapTime']),
-        elapsedTime = TimeDuration.fromJson(json['elapsedTime']);
+  Lap.fromJson(Json? json) {
+    if (json == null) {
+      number = 0;
+      lapTime = TimeDuration.zero;
+      elapsedTime = TimeDuration.zero;
+      return;
+    }
+    number = json['number'] ?? 0;
+    lapTime = TimeDuration.fromJson(json['lapTime']);
+    elapsedTime = TimeDuration.fromJson(json['elapsedTime']);
+  }
 
   @override
   Json toJson() => {

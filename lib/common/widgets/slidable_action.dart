@@ -25,7 +25,9 @@ class SlideAction extends StatefulWidget {
   final double height;
 
   /// The text showed in the default Text widget
-  final String? text;
+  final String? rightText;
+
+  final String? leftText;
 
   /// Callback called on submit
   /// If this is null the component will not animate to complete
@@ -54,9 +56,10 @@ class SlideAction extends StatefulWidget {
     this.submittedIcon,
     this.onSubmitRight,
     this.child,
-    this.text,
     this.sliderButtonIcon,
     this.onSubmitLeft,
+    this.rightText,
+    this.leftText,
   }) : super(key: key);
   @override
   SlideActionState createState() => SlideActionState();
@@ -101,13 +104,13 @@ class SlideActionState extends State<SlideAction>
                 child: Row(
                   children: [
                     Text(
-                      widget.text ?? 'Snooze',
+                      widget.leftText ?? 'Left',
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSecondary),
                     ),
                     const Spacer(),
                     Text(
-                      widget.text ?? 'Dismiss',
+                      widget.rightText ?? 'Right',
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSecondary),
                     ),

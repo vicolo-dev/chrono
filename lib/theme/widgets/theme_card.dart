@@ -44,7 +44,14 @@ class ThemeCard<Item extends ThemeItem> extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(themeItem.name, style: textTheme.displaySmall),
+                      Text(
+                        themeItem.name,
+                        style: textTheme.displaySmall
+                            ?.copyWith(color: colorScheme.onSurface),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                      ),
                     ],
                   ),
                 ),

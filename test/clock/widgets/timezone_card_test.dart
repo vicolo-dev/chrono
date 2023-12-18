@@ -18,15 +18,10 @@ void main() {
     );
 
     testWidgets(
-      'shows city name',
+      'shows city name correctly',
       (tester) async {
         await _renderWidget(tester);
-
-        // The widget code uses `replaceAll` to work around flutter's
-        // limitation of cutting entire words on overflow instead of
-        // individual letters, so we do the same here
-        expect(find.text(sampleCity.name.replaceAll('', '\u{200B}')),
-            findsOneWidget);
+        expect(find.text(sampleCity.name), findsOneWidget);
       },
     );
   });

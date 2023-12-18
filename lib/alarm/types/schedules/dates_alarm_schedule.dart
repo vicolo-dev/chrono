@@ -5,14 +5,19 @@ import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/settings/types/setting.dart';
 
 class DateSchedule extends JsonSerializable {
-  DateTime date;
-  AlarmRunner alarmRunner;
+  late DateTime date;
+  late AlarmRunner alarmRunner;
 
   DateSchedule(this.date) : alarmRunner = AlarmRunner();
 
-  DateSchedule.fromJson(Json json)
-      : date = DateTime.parse(json['date']),
-        alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
+  DateSchedule.fromJson(Json json) {
+    if (json == null) {
+      date = DateTime.now();
+      return;
+    }
+    date = json['date'] != null ? DateTime.parse(json['date']) : DateTime.now();
+    alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
+  }
 
   @override
   Json toJson() => {
@@ -23,9 +28,9 @@ class DateSchedule extends JsonSerializable {
 
 class DatesAlarmSchedule extends AlarmSchedule {
   //  List<WeekdaySchedule> _weekdaySchedules = [];
-  final DateTimeSetting _datesSetting;
-  final AlarmRunner _alarmRunner;
-  bool _isFinished;
+  late final DateTimeSetting _datesSetting;
+  late final AlarmRunner _alarmRunner;
+  late bool _isFinished;
 
   @override
   bool get isDisabled => false;
@@ -86,11 +91,16 @@ class DatesAlarmSchedule extends AlarmSchedule {
         'isFinished': _isFinished,
       };
 
-  DatesAlarmSchedule.fromJson(Json json, Setting datesSetting)
-      : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
-        _datesSetting = datesSetting as DateTimeSetting,
-        _isFinished = json['isFinished'],
-        super();
+  DatesAlarmSchedule.fromJson(Json json, Setting datesSetting) : super() {
+    _datesSetting = datesSetting as DateTimeSetting;
+    if (json == null) {
+      _alarmRunner = AlarmRunner();
+      _isFinished = false;
+      return;
+    }
+    _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
+    _isFinished = json['isFinished'] ?? false;
+  }
 
   @override
   bool hasId(int id) {

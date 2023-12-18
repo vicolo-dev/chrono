@@ -34,7 +34,7 @@ List<AlarmSchedule> createSchedules(SettingGroup settings) {
 }
 
 class Alarm extends CustomizableListItem {
-  Time _time;
+  late Time _time;
   bool _isEnabled = true;
   bool _isFinished = false;
   DateTime? _snoozeTime;
@@ -271,22 +271,27 @@ class Alarm extends CustomizableListItem {
     return (getSetting("Interval") as SelectSetting<RangeInterval>).value;
   }
 
-  Alarm.fromJson(Json json)
-      : _time = Time.fromJson(json['timeOfDay']),
-        _isEnabled = json['enabled'],
-        _isFinished = json['finished'],
-        _snoozeTime = json['snoozeTime'] != 0
-            ? DateTime.fromMillisecondsSinceEpoch(json['snoozeTime'])
-            : null,
-        _snoozeCount = json['snoozeCount'],
-        _settings = SettingGroup(
-          "Alarm Settings",
-          appSettings
-              .getGroup("Alarm")
-              .getGroup("Default Settings")
-              .copy()
-              .settingItems,
-        ) {
+  Alarm.fromJson(Json json) {
+    if (json == null) {
+      _time = Time.now();
+      _schedules = createSchedules(_settings);
+      return;
+    }
+    _time = Time.fromJson(json['timeOfDay']);
+    _isEnabled = json['enabled'];
+    _isFinished = json['finished'];
+    _snoozeTime = json['snoozeTime'] != 0
+        ? DateTime.fromMillisecondsSinceEpoch(json['snoozeTime'])
+        : null;
+    _snoozeCount = json['snoozeCount'];
+    _settings = SettingGroup(
+      "Alarm Settings",
+      appSettings
+          .getGroup("Alarm")
+          .getGroup("Default Settings")
+          .copy()
+          .settingItems,
+    );
     _settings.loadValueFromJson(json['settings']);
     _schedules = [
       OnceAlarmSchedule.fromJson(json['schedules'][0]),

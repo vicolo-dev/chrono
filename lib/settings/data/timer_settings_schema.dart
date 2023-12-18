@@ -1,4 +1,8 @@
+import 'package:clock_app/alarm/types/notification_action.dart';
 import 'package:clock_app/icons/flux_icons.dart';
+import 'package:clock_app/notifications/widgets/notification_actions/area_notification_action.dart';
+import 'package:clock_app/notifications/widgets/notification_actions/buttons_notification_action.dart';
+import 'package:clock_app/notifications/widgets/notification_actions/slide_notification_action.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
@@ -16,6 +20,50 @@ SettingGroup timerAppSettingsSchema = SettingGroup(
       icon: Icons.settings,
     ),
     SettingPageLink("Presets", const PresetsScreen()),
+    SelectSetting<NotificationAction>("Dismiss Action Type", searchTags: [
+      "action",
+      "buttons",
+      "slider",
+      "slide",
+      "area"
+    ], [
+      SelectSettingOption(
+        "Area Buttons",
+        NotificationAction(
+          builder: (onDismiss, onSnooze, dismissLabel, snoozeLabel) =>
+              AreaNotificationAction(
+            onDismiss: onDismiss,
+            onSnooze: onSnooze,
+            dismissLabel: dismissLabel,
+            snoozeLabel: snoozeLabel,
+          ),
+        ),
+      ),
+      SelectSettingOption(
+        "Slide",
+        NotificationAction(
+          builder: (onDismiss, onSnooze, dismissLabel, snoozeLabel) =>
+              SlideNotificationAction(
+            onDismiss: onDismiss,
+            onSnooze: onSnooze,
+            dismissLabel: dismissLabel,
+            snoozeLabel: snoozeLabel,
+          ),
+        ),
+      ),
+      SelectSettingOption(
+        "Buttons",
+        NotificationAction(
+          builder: (onDismiss, onSnooze, dismissLabel, snoozeLabel) =>
+              ButtonsNotificationAction(
+            onDismiss: onDismiss,
+            onSnooze: onSnooze,
+            dismissLabel: dismissLabel,
+            snoozeLabel: snoozeLabel,
+          ),
+        ),
+      ),
+    ]),
     SwitchSetting("Show Filters", true),
   ],
   icon: FluxIcons.timer,

@@ -92,8 +92,8 @@ class TimeDuration extends JsonSerializable {
       };
 
   TimeDuration.fromJson(Json json)
-      : hours = json['hours'],
-        minutes = json['minutes'],
-        seconds = json['seconds'],
-        milliseconds = json['milliseconds'];
+      : hours = json != null ? json['hours'] ?? 0 : 0,
+        minutes = json != null ? json['minutes'] ?? 0 : 0,
+        seconds = json != null ? json['seconds'] ?? 0 : 0,
+        milliseconds = json != null ? json['milliseconds'] ?? 0 : 0;
 }

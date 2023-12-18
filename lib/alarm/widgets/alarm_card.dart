@@ -75,17 +75,16 @@ class _AlarmCardState extends State<AlarmCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (widget.alarm.label.isNotEmpty)
-                    Row(
-                      children: [
-                        Text(
-                          widget.alarm.label,
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: widget.alarm.isEnabled
-                                ? colorScheme.onBackground.withOpacity(0.8)
-                                : colorScheme.onBackground.withOpacity(0.6),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      widget.alarm.label,
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: widget.alarm.isEnabled
+                            ? colorScheme.onBackground.withOpacity(0.8)
+                            : colorScheme.onBackground.withOpacity(0.6),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
                     ),
                   Row(
                     children: [

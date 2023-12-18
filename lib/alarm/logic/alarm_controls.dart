@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
+import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -29,6 +30,19 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
     print("Alarm triggered: $scheduleId");
   }
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+  if (params == null) {
+    if (kDebugMode) {
+      print("Params was null when triggering alarm");
+    }
+    return;
+  }
+
+  if (params['type'] == null) {
+    if (kDebugMode) {
+      print("Params Type was null when triggering alarm");
+    }
+    return;
+  }
 
   ScheduledNotificationType notificationType =
       ScheduledNotificationType.values.byName(params['type']);
@@ -72,6 +86,13 @@ void stopScheduledNotification(List<dynamic> message) {
 }
 
 void triggerAlarm(int scheduleId, Json params) async {
+  if (params == null) {
+    if (kDebugMode) {
+      print("Params was null when triggering alarm");
+    }
+    return;
+  }
+
   await updateAlarms();
 
   GetStorage().write("fullScreenNotificationRecentlyShown", true);
@@ -100,6 +121,8 @@ void triggerAlarm(int scheduleId, Json params) async {
     body: TimeOfDayUtils.decode(params['timeOfDay']).formatToString('h:mm a'),
     showSnoozeButton: !alarm.maxSnoozeIsReached,
     tasksRequired: alarm.tasks.isNotEmpty,
+    snoozeActionLabel: "Snooze",
+    dismissActionLabel: "Dismiss",
   );
 }
 
@@ -133,12 +156,16 @@ void triggerTimer(int scheduleId, Json params) async {
         ScheduledNotificationType.timer);
   }
 
-  RingtonePlayer.playTimer(getTimerById(scheduleId));
+  ClockTimer timer = getTimerById(scheduleId);
+
+  RingtonePlayer.playTimer(timer);
   RingingManager.ringTimer(scheduleId);
 
   AlarmNotificationManager.showFullScreenNotification(
     type: ScheduledNotificationType.timer,
     scheduleIds: RingingManager.ringingTimerIds,
+    snoozeActionLabel: '+${timer.addLength.floor()}:00',
+    dismissActionLabel: 'Stop',
     title: "Time's Up!",
     body:
         "${RingingManager.ringingTimerIds.length} Timer${RingingManager.ringingTimerIds.length > 1 ? 's' : ''}",
@@ -146,10 +173,11 @@ void triggerTimer(int scheduleId, Json params) async {
 }
 
 void stopTimer(int scheduleId, AlarmStopAction action) async {
+  ClockTimer timer = getTimerById(scheduleId);
   if (action == AlarmStopAction.snooze) {
     scheduleSnoozeAlarm(
       scheduleId,
-      const Duration(minutes: 1),
+      Duration(minutes: timer.addLength.floor()),
       ScheduledNotificationType.timer,
     );
     updateTimerById(scheduleId, (timer) {

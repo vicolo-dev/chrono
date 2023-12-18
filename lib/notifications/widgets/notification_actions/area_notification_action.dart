@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 
 class AreaNotificationAction extends StatelessWidget {
   const AreaNotificationAction(
-      {Key? key, required this.onDismiss, required this.onSnooze})
+      {Key? key,
+      required this.dismissLabel,
+      required this.snoozeLabel,
+      required this.onDismiss,
+      required this.onSnooze})
       : super(key: key);
 
+  final String dismissLabel;
+  final String snoozeLabel;
   final VoidCallback onDismiss;
   final VoidCallback onSnooze;
 
@@ -32,7 +38,7 @@ class AreaNotificationAction extends StatelessWidget {
                     onTap: onDismiss,
                     child: Center(
                         child: Text(
-                      "Dismiss",
+                      dismissLabel,
                       style: textTheme.titleMedium?.copyWith(
                         color: colorScheme.onPrimary,
                       ),
@@ -50,7 +56,7 @@ class AreaNotificationAction extends StatelessWidget {
                     onTap: onSnooze,
                     child: Center(
                         child: Text(
-                      "Snooze",
+                      snoozeLabel,
                       style: textTheme.titleMedium?.copyWith(
                         color: colorScheme.onPrimary,
                       ),

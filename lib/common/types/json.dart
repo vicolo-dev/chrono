@@ -1,4 +1,4 @@
-typedef Json = Map<String, dynamic>;
+typedef Json = Map<String, dynamic>?;
 
 abstract class JsonSerializable {
   const JsonSerializable();

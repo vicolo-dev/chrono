@@ -4,9 +4,9 @@ import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/foundation.dart';
 
 class TimerPreset extends ListItem {
-  final int _id;
-  String name;
-  TimeDuration duration;
+  late final int _id;
+  String name = "Preset";
+  TimeDuration duration = const TimeDuration(minutes: 5);
   TimerPreset(this.name, this.duration) : _id = UniqueKey().hashCode;
 
   @override
@@ -26,10 +26,15 @@ class TimerPreset extends ListItem {
         'duration': duration.toJson(),
       };
 
-  TimerPreset.fromJson(Json json)
-      : _id = json['id'],
-        name = json['name'],
-        duration = TimeDuration.fromJson(json['duration']);
+  TimerPreset.fromJson(Json json) {
+    if (json == null) {
+      _id = UniqueKey().hashCode;
+      return;
+    }
+    _id = json['id'] ?? UniqueKey().hashCode;
+    name = json['name'] ?? "Preset";
+    duration = TimeDuration.fromJson(json['duration']);
+  }
 
   @override
   copy() {

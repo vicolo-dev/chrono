@@ -26,9 +26,10 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   late Widget _currentWidget;
   int _currentIndex = -1;
   late Widget actionWidget = appSettings
+      .getGroup("Alarm")
       .getSetting("Dismiss Action Type")
       .value
-      .builder(_setNextWidget, _snoozeAlarm);
+      .builder(_setNextWidget, _snoozeAlarm, "Dismiss", "Snooze");
 
   void _setNextWidget() {
     setState(() {

@@ -13,10 +13,10 @@ class Audio {
     required this.uri,
   });
 
-  factory Audio.fromJson(Json map) => Audio(
-        id: map['id'] as String,
-        title: map['title'] as String,
-        uri: map['uri'] as String,
+  factory Audio.fromJson(Json json) => Audio(
+        id: json != null ? json['id'] ?? '' : '',
+        title: json != null ? json['title'] ?? 'Unknown' : 'Unknown',
+        uri: json != null ? json['uri'] ?? '' : '',
       );
 
   Json toJson() => {
