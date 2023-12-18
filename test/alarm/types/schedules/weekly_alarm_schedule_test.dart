@@ -141,8 +141,8 @@ void main() {
       };
       final weeklyScheduleJson = {
         'alarmRunner': {
-          'id': null,
-          'currentScheduleDateTime': null,
+          'id': schedule.currentAlarmRunnerId,
+          'currentScheduleDateTime': 0,
         },
         'weekdaySchedules': [weekdayScheduleJson],
       };
@@ -162,8 +162,8 @@ void main() {
       };
       final weeklyScheduleJson = {
         'alarmRunner': {
-          'id': 50,
-          'currentScheduleDateTime': null,
+          'id': 60,
+          'currentScheduleDateTime': 0,
         },
         'weekdaySchedules': [weekdayScheduleJson],
       };
@@ -173,7 +173,8 @@ void main() {
 
       expect(weeklySchedule.scheduledWeekdays.length, 1);
       expect(weeklySchedule.scheduledWeekdays[0].id, 1);
-      expect(weeklySchedule.currentAlarmRunnerId, 50);
+      expect(weeklySchedule.currentAlarmRunnerId, 60);
+      expect(weeklySchedule.currentWeekdayAlarmRunnerId, 50);
       expect(weeklySchedule.currentScheduleDateTime?.millisecondsSinceEpoch,
           dateTime.millisecondsSinceEpoch);
     });
