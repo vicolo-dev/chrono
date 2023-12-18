@@ -7,7 +7,6 @@ import 'package:clock_app/alarm/widgets/alarm_time_picker.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/time.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
