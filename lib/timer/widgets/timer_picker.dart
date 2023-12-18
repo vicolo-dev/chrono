@@ -169,18 +169,24 @@ class PresetChip extends StatelessWidget {
               : colorScheme.onBackground.withOpacity(0.1),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(children: [
-              if (isSelected)
-                Icon(Icons.check_circle_outline_rounded,
-                    color: colorScheme.onPrimary, size: 20),
-              if (isSelected) const SizedBox(width: 8),
-              Text(preset.name,
+            child: Row(
+              children: [
+                if (isSelected)
+                  Icon(Icons.check_circle_outline_rounded,
+                      color: colorScheme.onPrimary, size: 20),
+                if (isSelected) const SizedBox(width: 8),
+                Text(
+                  preset.name.length > 20
+                      ? preset.name.replaceRange(20, preset.name.length, '...')
+                      : preset.name,
                   style: textTheme.labelSmall?.copyWith(
                     color: isSelected
                         ? colorScheme.onPrimary
                         : colorScheme.onBackground,
-                  ))
-            ]),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -59,6 +59,6 @@ SettingGroup timerSettingsSchema = SettingGroup(
         "Vibration",
       ],
     ),
-    SliderSetting("Add Length", 1, 30, 1, unit: "minutes"),
+    SliderSetting("Add Length", 1, 30, 1, unit: "minutes", snapLength: 1),
   ],
 );

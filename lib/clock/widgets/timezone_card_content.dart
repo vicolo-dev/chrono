@@ -29,7 +29,7 @@ class TimezoneCardContent extends StatelessWidget {
               children: [
                 Text(
                   // Flutter doesn't allow per character overflow, so this is a workaround
-                  title.replaceAll('', '\u{200B}'),
+                  title,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         color: textColor,
                       ),
@@ -46,6 +46,9 @@ class TimezoneCardContent extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: textColor,
                           ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
                     );
                   },
                 ),

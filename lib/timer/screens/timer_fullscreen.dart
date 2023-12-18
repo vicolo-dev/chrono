@@ -103,14 +103,20 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              timer.label,
-              style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.6),
-                  ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                timer.label,
+                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.6),
+                    ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+              ),
             ),
             const SizedBox(height: 32),
             CircularProgressBar(
