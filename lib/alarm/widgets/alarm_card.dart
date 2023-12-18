@@ -2,6 +2,7 @@ import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/logic/time_icon.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
+import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -28,12 +29,26 @@ class AlarmCard extends StatefulWidget {
 
 class _AlarmCardState extends State<AlarmCard> {
   late String dateFormat;
+  late TimeFormat timeFormat;
+
   late Setting dateFormatSetting;
+  late Setting timeFormatSetting;
 
   void setDateFormat(dynamic newDateFormat) {
     setState(() {
       dateFormat = newDateFormat;
     });
+  }
+
+  void setTimeFormat(dynamic newTimeFormat) {
+    setState(() {
+      print("bwer $newTimeFormat");
+      timeFormat = newTimeFormat;
+    });
+  }
+
+  void update(value) {
+    setState(() {});
   }
 
   @override
@@ -43,13 +58,22 @@ class _AlarmCardState extends State<AlarmCard> {
         .getGroup("General")
         .getGroup("Display")
         .getSetting("Date Format");
+
+    timeFormatSetting = appSettings
+        .getGroup("General")
+        .getGroup("Display")
+        .getSetting("Time Format");
+
     dateFormatSetting.addListener(setDateFormat);
-    setDateFormat(appSettings.getSetting("Date Format").value);
+    timeFormatSetting.addListener(setTimeFormat);
+    setDateFormat(dateFormatSetting.value);
+    setTimeFormat(timeFormatSetting.value);
   }
 
   @override
   void dispose() {
     dateFormatSetting.removeListener(setDateFormat);
+    timeFormatSetting.removeListener(setTimeFormat);
     super.dispose();
   }
 
@@ -108,7 +132,8 @@ class _AlarmCardState extends State<AlarmCard> {
                       const SizedBox(width: 8),
                       Flexible(
                         child: Text(
-                          getAlarmScheduleDescription(widget.alarm, dateFormat),
+                          getAlarmScheduleDescription(
+                              widget.alarm, dateFormat, timeFormat),
                           maxLines: 2,
                           style: textTheme.bodyMedium?.copyWith(
                             color: widget.alarm.isEnabled

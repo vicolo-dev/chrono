@@ -1,4 +1,5 @@
 import 'package:clock_app/alarm/types/range_interval.dart';
+import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/schedules/daily_alarm_schedule.dart';
@@ -11,9 +12,10 @@ import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/weekday_utils.dart';
 import 'package:intl/intl.dart';
 
-String getAlarmScheduleDescription(Alarm alarm, String dateFormat) {
+String getAlarmScheduleDescription(
+    Alarm alarm, String dateFormat, TimeFormat timeFormat) {
   if (alarm.isSnoozed) {
-    return 'Snoozed until ${DateFormat("hh:mm").format(alarm.snoozeTime!)}';
+    return 'Snoozed until ${DateFormat(timeFormat == TimeFormat.h12 ? 'h:mm a' : 'HH:mm').format(alarm.snoozeTime!)}';
   }
   if (alarm.isFinished) {
     return 'No future dates';

@@ -1,7 +1,9 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
@@ -114,11 +116,20 @@ void triggerAlarm(int scheduleId, Json params) async {
   RingtonePlayer.playAlarm(alarm);
   RingingManager.ringAlarm(scheduleId);
 
+  appSettings.load();
+
   AlarmNotificationManager.showFullScreenNotification(
     type: ScheduledNotificationType.alarm,
     scheduleIds: [scheduleId],
     title: "Alarm Ringing...",
-    body: TimeOfDayUtils.decode(params['timeOfDay']).formatToString('h:mm a'),
+    body: TimeOfDayUtils.decode(params['timeOfDay']).formatToString(appSettings
+                .getGroup('General')
+                .getGroup('Display')
+                .getSetting('Time Format')
+                .value ==
+            TimeFormat.h12
+        ? 'h:mm a'
+        : 'HH:mm'),
     showSnoozeButton: !alarm.maxSnoozeIsReached,
     tasksRequired: alarm.tasks.isNotEmpty,
     snoozeActionLabel: "Snooze",
