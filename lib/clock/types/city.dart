@@ -3,10 +3,10 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:flutter/material.dart';
 
 class City extends ListItem {
-  final String _name;
-  final String _country;
-  final String _timezone;
-  late final int _id;
+  late String _name = "Unknown";
+  late String _country = "Unknown";
+  late String _timezone = 'America/Detroit';
+  late int _id;
 
   String get name => _name;
   String get country => _country;
@@ -24,11 +24,16 @@ class City extends ListItem {
     return City(name, country, timezone);
   }
 
-  City.fromJson(Json jsonData)
-      : _name = jsonData['name'],
-        _country = jsonData['country'],
-        _timezone = jsonData['timezone'],
-        _id = jsonData['id'];
+  City.fromJson(Json json) {
+    if (json == null) {
+      _id = UniqueKey().hashCode;
+      return;
+    }
+    _name = json['name'] ?? 'Unknown';
+    _country = json['country'] ?? 'Unknown';
+    _timezone = json['timezone'] ?? 'America/Detroit';
+    _id = json['id'] ?? UniqueKey().hashCode;
+  }
 
   @override
   Json toJson() => {

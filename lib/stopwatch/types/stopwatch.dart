@@ -6,10 +6,10 @@ import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
 class ClockStopwatch extends JsonSerializable {
-  int _elapsedMillisecondsOnPause;
-  DateTime _startTime;
-  TimerState _state;
-  final int _id;
+  int _elapsedMillisecondsOnPause = 0;
+  DateTime _startTime = DateTime(0);
+  TimerState _state = TimerState.stopped;
+  late final int _id;
   List<Lap> _laps = [];
   Lap? _fastestLap;
   Lap? _slowestLap;
@@ -114,18 +114,26 @@ class ClockStopwatch extends JsonSerializable {
   Json toJson() {
     return {
       'id': _id,
-      '_elapsedMillisecondsOnPause': _elapsedMillisecondsOnPause,
+      'elapsedMillisecondsOnPause': _elapsedMillisecondsOnPause,
       'startTime': _startTime.toIso8601String(),
       'state': _state.toString(),
       'laps': _laps.map((e) => e.toJson()).toList(),
     };
   }
 
-  ClockStopwatch.fromJson(Json json)
-      : _elapsedMillisecondsOnPause = json['_elapsedMillisecondsOnPause'],
-        _startTime = DateTime.parse(json['startTime']),
-        _state =
-            TimerState.values.firstWhere((e) => e.toString() == json['state']),
-        _id = json['id'],
-        _laps = (json['laps'] as List).map((e) => Lap.fromJson(e)).toList();
+  ClockStopwatch.fromJson(Json json) {
+    if (json == null) {
+      _id = UniqueKey().hashCode;
+      return;
+    }
+    _elapsedMillisecondsOnPause = json['elapsedMillisecondsOnPause'] ?? 0;
+    _startTime = json['startTime'] != null
+        ? DateTime.parse(json['startTime'])
+        : DateTime.now();
+    _state = TimerState.values.firstWhere(
+        (e) => e.toString() == (json['state'] ?? ''),
+        orElse: () => TimerState.stopped);
+    _id = json['id'] ?? UniqueKey().hashCode;
+    _laps = ((json['laps'] ?? []) as List).map((e) => Lap.fromJson(e)).toList();
+  }
 }

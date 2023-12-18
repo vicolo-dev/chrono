@@ -32,9 +32,9 @@ class Time extends JsonSerializable {
   }
 
   Time.fromJson(Json json)
-      : hour = json['hours'],
-        minute = json['minutes'],
-        second = json['seconds'];
+      : hour = json != null ? json['hours'] ?? 0 : 0,
+        minute = json != null ? json['minutes'] ?? 0 : 0,
+        second = json != null ? json['seconds'] ?? 0 : 0;
 
   @override
   Json toJson() {

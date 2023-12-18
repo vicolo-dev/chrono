@@ -29,6 +29,19 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
     print("Alarm triggered: $scheduleId");
   }
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
+  if (params == null) {
+    if (kDebugMode) {
+      print("Params was null when triggering alarm");
+    }
+    return;
+  }
+
+  if (params['type'] == null) {
+    if (kDebugMode) {
+      print("Params Type was null when triggering alarm");
+    }
+    return;
+  }
 
   ScheduledNotificationType notificationType =
       ScheduledNotificationType.values.byName(params['type']);
@@ -72,6 +85,13 @@ void stopScheduledNotification(List<dynamic> message) {
 }
 
 void triggerAlarm(int scheduleId, Json params) async {
+  if (params == null) {
+    if (kDebugMode) {
+      print("Params was null when triggering alarm");
+    }
+    return;
+  }
+
   await updateAlarms();
 
   GetStorage().write("fullScreenNotificationRecentlyShown", true);

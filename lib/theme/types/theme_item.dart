@@ -4,9 +4,9 @@ import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
 abstract class ThemeItem extends CustomizableListItem {
-  final int _id;
+  late final int _id;
   final SettingGroup _settings;
-  final bool _isDefault;
+  bool _isDefault = false;
 
   ThemeItem(SettingGroup defaultSettings, bool isDefault, [int? id])
       : _id = id ?? UniqueKey().hashCode,
@@ -36,10 +36,13 @@ abstract class ThemeItem extends CustomizableListItem {
     };
   }
 
-  ThemeItem.fromJson(Json json, SettingGroup settings)
-      : _id = json['id'],
-        _isDefault = json['isDefault'],
-        _settings = settings {
+  ThemeItem.fromJson(Json json, SettingGroup settings) : _settings = settings {
+    if (json == null) {
+      _id = UniqueKey().hashCode;
+      return;
+    }
+    _id = json['id'] ?? UniqueKey().hashCode;
+    _isDefault = json['isDefault'] ?? false;
     settings.loadValueFromJson(json['settings']);
   }
 }

@@ -27,8 +27,8 @@ extension TimeOfDayUtils on TimeOfDay {
   }
 
   static TimeOfDay fromJson(Json json) => TimeOfDay(
-        hour: json['hour'],
-        minute: json['minute'],
+        hour: json != null ? json['hour'] ?? 0 : 0,
+        minute: json != null ? json['minute'] ?? 0 : 0,
       );
 
   DateTime toDateTime() {

@@ -46,10 +46,14 @@ class OnceAlarmSchedule extends AlarmSchedule {
         'isDisabled': _isDisabled,
       };
 
-  OnceAlarmSchedule.fromJson(Json json)
-      : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
-        _isDisabled = json['isDisabled'],
-        super();
+  OnceAlarmSchedule.fromJson(Json json) {
+    if (json == null) {
+      _alarmRunner = AlarmRunner();
+      return;
+    }
+    _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
+    _isDisabled = json['isDisabled'] ?? false;
+  }
 
   @override
   bool hasId(int id) {
