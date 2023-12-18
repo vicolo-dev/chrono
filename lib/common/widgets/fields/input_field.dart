@@ -53,22 +53,27 @@ class _InputFieldState<T> extends State<InputField> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.title,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 4.0),
-                  // const Spacer(),
-                  Text(
-                    widget.value.isNotEmpty ? widget.value : widget.hintText,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
+              Expanded(
+                flex: 999,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 4.0),
+                    // const Spacer(),
+                    Text(
+                      widget.value.isNotEmpty ? widget.value : widget.hintText,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                    ),
+                  ],
+                ),
               ),
-              const Spacer(),
               Icon(Icons.keyboard_arrow_down_rounded,
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.6))

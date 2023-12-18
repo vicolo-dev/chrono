@@ -22,7 +22,7 @@ class ListSettingAddBottomSheet<Item extends CustomizableListItem>
       height: MediaQuery.of(context).size.height * 0.7,
       child: Container(
         decoration: BoxDecoration(
-          color: theme.colorScheme.background,
+          color: theme.colorScheme.surface,
           borderRadius: borderRadius,
         ),
         child: Column(
@@ -34,7 +34,7 @@ class ListSettingAddBottomSheet<Item extends CustomizableListItem>
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(64),
-                    color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                    color: theme.colorScheme.onSurface.withOpacity(0.6)),
               ),
             ),
             const SizedBox(height: 12.0),
@@ -46,7 +46,7 @@ class ListSettingAddBottomSheet<Item extends CustomizableListItem>
                   Text(
                     "Choose Task to Add",
                     style: theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.onBackground.withOpacity(0.6)),
+                        color: theme.colorScheme.onSurface.withOpacity(0.6)),
                   ),
                 ],
               ),

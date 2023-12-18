@@ -10,7 +10,10 @@ import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
+const timerSettingSchemeVersion = 1;
+
 SettingGroup timerSettingsSchema = SettingGroup(
+  version: timerSettingSchemeVersion,
   "Timer Setting",
   [
     StringSetting("Label", ""),
@@ -56,6 +59,6 @@ SettingGroup timerSettingsSchema = SettingGroup(
         "Vibration",
       ],
     ),
-    SliderSetting("Add Length", 1, 30, 1, unit: "minutes"),
+    SliderSetting("Add Length", 1, 30, 1, unit: "minutes", snapLength: 1),
   ],
 );

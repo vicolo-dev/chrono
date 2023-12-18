@@ -34,7 +34,7 @@ List<AlarmSchedule> createSchedules(SettingGroup settings) {
 }
 
 class Alarm extends CustomizableListItem {
-  Time _time;
+  late Time _time;
   bool _isEnabled = true;
   bool _isFinished = false;
   DateTime? _snoozeTime;
@@ -53,7 +53,7 @@ class Alarm extends CustomizableListItem {
   @override
   int get id => currentScheduleId;
   @override
-  bool get isDeletable => true;
+  bool get isDeletable => !(isSnoozed && !canBeDeletedWhenSnoozed);
   Time get time => _time;
 
   /// If an alarm is enabled, it has an active schedule.
@@ -76,9 +76,9 @@ class Alarm extends CustomizableListItem {
   List<AlarmTask> get tasks => _settings.getSetting("Tasks").value;
   int get maxSnoozes => _settings.getSetting("Max Snoozes").value.toInt();
   bool get canBeDisabledWhenSnoozed =>
-      !_settings.getSetting("Prevent Disabling while Snoozed").value;
+      !_settings.getSetting("Prevent Disabling").value;
   bool get canBeDeletedWhenSnoozed =>
-      !_settings.getSetting("Prevent Deleting while Snoozed").value;
+      !_settings.getSetting("Prevent Deletion").value;
   TimeDuration get risingVolumeDuration =>
       _settings.getSetting("Rising Volume").value
           ? _settings.getSetting("Time To Full Volume").value
@@ -271,22 +271,27 @@ class Alarm extends CustomizableListItem {
     return (getSetting("Interval") as SelectSetting<RangeInterval>).value;
   }
 
-  Alarm.fromJson(Json json)
-      : _time = Time.fromJson(json['timeOfDay']),
-        _isEnabled = json['enabled'],
-        _isFinished = json['finished'],
-        _snoozeTime = json['snoozeTime'] != 0
-            ? DateTime.fromMillisecondsSinceEpoch(json['snoozeTime'])
-            : null,
-        _snoozeCount = json['snoozeCount'],
-        _settings = SettingGroup(
-          "Alarm Settings",
-          appSettings
-              .getGroup("Alarm")
-              .getGroup("Default Settings")
-              .copy()
-              .settingItems,
-        ) {
+  Alarm.fromJson(Json json) {
+    if (json == null) {
+      _time = Time.now();
+      _schedules = createSchedules(_settings);
+      return;
+    }
+    _time = Time.fromJson(json['timeOfDay']);
+    _isEnabled = json['enabled'];
+    _isFinished = json['finished'];
+    _snoozeTime = json['snoozeTime'] != 0
+        ? DateTime.fromMillisecondsSinceEpoch(json['snoozeTime'])
+        : null;
+    _snoozeCount = json['snoozeCount'];
+    _settings = SettingGroup(
+      "Alarm Settings",
+      appSettings
+          .getGroup("Alarm")
+          .getGroup("Default Settings")
+          .copy()
+          .settingItems,
+    );
     _settings.loadValueFromJson(json['settings']);
     _schedules = [
       OnceAlarmSchedule.fromJson(json['schedules'][0]),

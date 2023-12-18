@@ -5,7 +5,7 @@ import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/time.dart';
 
 class DailyAlarmSchedule extends AlarmSchedule {
-  final AlarmRunner _alarmRunner;
+  late final AlarmRunner _alarmRunner;
 
   @override
   DateTime? get currentScheduleDateTime => _alarmRunner.currentScheduleDateTime;
@@ -39,9 +39,13 @@ class DailyAlarmSchedule extends AlarmSchedule {
         'alarmRunner': _alarmRunner.toJson(),
       };
 
-  DailyAlarmSchedule.fromJson(Json json)
-      : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
-        super();
+  DailyAlarmSchedule.fromJson(Json json) {
+    if (json == null) {
+      _alarmRunner = AlarmRunner();
+      return;
+    }
+    _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
+  }
 
   @override
   bool hasId(int id) {

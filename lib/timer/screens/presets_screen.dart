@@ -36,6 +36,8 @@ class _PresetsScreenState extends State<PresetsScreen> {
                     key: ValueKey(preset),
                     preset: preset,
                     onPressDelete: () => _listController.deleteItem(preset),
+                    onPressDuplicate: () =>
+                        _listController.duplicateItem(preset),
                   ),
                   onTapItem: (preset, index) async {
                     TimerPreset? newPreset = await showTimerPresetPicker(

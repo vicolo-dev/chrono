@@ -29,6 +29,8 @@ class AlarmNotificationManager {
     bool tasksRequired = false,
     required String title,
     required String body,
+    required String dismissActionLabel,
+    required String snoozeActionLabel,
   }) {
     FullScreenNotificationData data = alarmNotificationData[type]!;
 
@@ -38,7 +40,7 @@ class AlarmNotificationManager {
       actionButtons.add(NotificationActionButton(
         showInCompactView: true,
         key: _dismissActionKey,
-        label: '${data.dismissActionLabel} All',
+        label: '$dismissActionLabel All',
         actionType: ActionType.SilentAction,
         autoDismissible: true,
       ));
@@ -47,7 +49,7 @@ class AlarmNotificationManager {
         actionButtons.add(NotificationActionButton(
           showInCompactView: true,
           key: _snoozeActionKey,
-          label: data.snoozeActionLabel,
+          label: snoozeActionLabel,
           actionType: ActionType.SilentAction,
           autoDismissible: true,
         ));
@@ -56,8 +58,7 @@ class AlarmNotificationManager {
       actionButtons.add(NotificationActionButton(
         showInCompactView: true,
         key: _dismissActionKey,
-        label:
-            "${tasksRequired ? "Solve tasks to " : ""}${data.dismissActionLabel}",
+        label: "${tasksRequired ? "Solve tasks to " : ""}$dismissActionLabel",
         actionType:
             tasksRequired ? ActionType.Default : ActionType.SilentAction,
         autoDismissible: tasksRequired ? false : true,

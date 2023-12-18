@@ -10,6 +10,6 @@ class Vendor {
   });
 
   Vendor.fromJson(Json json)
-      : name = json['name'],
-        url = json['url'] {}
+      : name = json != null ? json['name'] ?? 'Unknown' : 'Unknown',
+        url = json != null ? json['url'] ?? '' : '';
 }
