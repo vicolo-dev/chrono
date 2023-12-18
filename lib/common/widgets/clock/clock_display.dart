@@ -74,7 +74,7 @@ class _ClockDisplayState extends State<ClockDisplay> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               TimeDisplay(
-                format: '${timeFormat == TimeFormat.h12 ? 'h' : 'kk'}:mm',
+                format: '${timeFormat == TimeFormat.h12 ? 'h' : 'HH'}:mm',
                 fontSize: 72 * widget.scale,
                 height: widget.shouldShowDate ? 0.75 : null,
                 color: widget.color,
