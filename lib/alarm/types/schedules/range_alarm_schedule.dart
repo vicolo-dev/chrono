@@ -8,8 +8,8 @@ import 'package:clock_app/settings/types/setting.dart';
 
 class RangeAlarmSchedule extends AlarmSchedule {
   late final AlarmRunner _alarmRunner;
-  final DateTimeSetting _datesRangeSetting;
-  final SelectSetting<RangeInterval> _intervalSetting;
+  late final DateTimeSetting _datesRangeSetting;
+  late final SelectSetting<RangeInterval> _intervalSetting;
   bool _isFinished = false;
 
   RangeInterval get interval => _intervalSetting.value;
@@ -66,11 +66,15 @@ class RangeAlarmSchedule extends AlarmSchedule {
       };
 
   RangeAlarmSchedule.fromJson(
-      Json json, Setting datesRangeSetting, Setting intervalSetting)
-      : _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']),
-        _datesRangeSetting = datesRangeSetting as DateTimeSetting,
-        _intervalSetting = intervalSetting as SelectSetting<RangeInterval>,
-        super();
+      Json json, Setting datesRangeSetting, Setting intervalSetting) {
+    _datesRangeSetting = datesRangeSetting as DateTimeSetting;
+    _intervalSetting = intervalSetting as SelectSetting<RangeInterval>;
+    if (json == null) {
+      _alarmRunner = AlarmRunner();
+      return;
+    }
+    _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
+  }
 
   @override
   bool hasId(int id) {

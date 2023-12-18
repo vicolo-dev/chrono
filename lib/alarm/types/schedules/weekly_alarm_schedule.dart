@@ -9,14 +9,19 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/foundation.dart';
 
 class WeekdaySchedule extends JsonSerializable {
-  int weekday;
-  AlarmRunner alarmRunner;
+  int weekday = 0;
+  late AlarmRunner alarmRunner;
 
   WeekdaySchedule(this.weekday) : alarmRunner = AlarmRunner();
 
-  WeekdaySchedule.fromJson(Json json)
-      : weekday = json['weekday'],
-        alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
+  WeekdaySchedule.fromJson(Json json) {
+    if (json == null) {
+      alarmRunner = AlarmRunner();
+      return;
+    }
+    weekday = json['weekday'];
+    alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
+  }
 
   @override
   Json toJson() => {
@@ -26,8 +31,11 @@ class WeekdaySchedule extends JsonSerializable {
 }
 
 class WeeklyAlarmSchedule extends AlarmSchedule {
-  List<WeekdaySchedule> _weekdaySchedules = [];
-  final ToggleSetting<int> _weekdaySetting;
+  // This is just a dummy alarmRunner so we get a consistent currentAlarmRunnerId;
+  late final AlarmRunner _alarmRunner;
+
+  late List<WeekdaySchedule> _weekdaySchedules = [];
+  late final ToggleSetting<int> _weekdaySetting;
 
   @override
   bool get isDisabled => false;
@@ -44,15 +52,21 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
 
   WeekdaySchedule get nextWeekdaySchedule {
     if (_weekdaySchedules.isEmpty) return WeekdaySchedule(0);
-    if (_weekdaySchedules.any((weeklySchedule) =>
-        weeklySchedule.alarmRunner.currentScheduleDateTime == null)) {
-      return _weekdaySchedules[0];
+    if (_weekdaySchedules.every(
+        (element) => element.alarmRunner.currentScheduleDateTime == null)) {
+      return WeekdaySchedule(0);
     }
-    return _weekdaySchedules.reduce((a, b) => a
-            .alarmRunner.currentScheduleDateTime!
-            .isBefore(b.alarmRunner.currentScheduleDateTime!)
-        ? a
-        : b);
+    return _weekdaySchedules.reduce((a, b) {
+      if (a.alarmRunner.currentScheduleDateTime == null) return b;
+      if (b.alarmRunner.currentScheduleDateTime == null) return a;
+
+      if (a.alarmRunner.currentScheduleDateTime!
+          .isBefore(b.alarmRunner.currentScheduleDateTime!)) {
+        return a;
+      } else {
+        return b;
+      }
+    });
   }
 
   @override
@@ -60,10 +74,13 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
       nextWeekdaySchedule.alarmRunner.currentScheduleDateTime;
 
   @override
-  int get currentAlarmRunnerId => nextWeekdaySchedule.alarmRunner.id;
+  int get currentAlarmRunnerId => _alarmRunner.id;
+
+  int get currentWeekdayAlarmRunnerId => nextWeekdaySchedule.alarmRunner.id;
 
   WeeklyAlarmSchedule(Setting weekdaySetting)
       : _weekdaySetting = weekdaySetting as ToggleSetting<int>,
+        _alarmRunner = AlarmRunner(),
         super();
 
   @override
@@ -99,16 +116,22 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
   @override
   toJson() {
     return {
+      'alarmRunner': _alarmRunner.toJson(),
       'weekdaySchedules': _weekdaySchedules.map((e) => e.toJson()).toList(),
     };
   }
 
-  WeeklyAlarmSchedule.fromJson(Json json, Setting weekdaySetting)
-      : _weekdaySchedules = (json['weekdaySchedules'] as List)
-            .map((e) => WeekdaySchedule.fromJson(e))
-            .toList(),
-        _weekdaySetting = weekdaySetting as ToggleSetting<int>,
-        super();
+  WeeklyAlarmSchedule.fromJson(Json json, Setting weekdaySetting) {
+    _weekdaySetting = weekdaySetting as ToggleSetting<int>;
+    if (json == null) {
+      _alarmRunner = AlarmRunner();
+      return;
+    }
+    _weekdaySchedules = ((json['weekdaySchedules'] ?? []) as List)
+        .map((e) => WeekdaySchedule.fromJson(e))
+        .toList();
+    _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
+  }
 
   @override
   bool hasId(int id) {

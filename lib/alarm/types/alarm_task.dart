@@ -31,7 +31,8 @@ class AlarmTaskSchema extends JsonSerializable {
     return _builder(onSolve, settings);
   }
 
-  void loadFromJson(Json json) {
+  void loadFromJson(Json? json) {
+    if (json == null) return;
     settings.loadValueFromJson(json['settings']);
   }
 
@@ -48,7 +49,7 @@ class AlarmTaskSchema extends JsonSerializable {
 }
 
 class AlarmTask extends CustomizableListItem {
-  final AlarmTaskType type;
+  late final AlarmTaskType type;
   late final AlarmTaskSchema _schema;
 
   AlarmTask(this.type) : _schema = alarmTaskSchemasMap[type]!.copy();
@@ -57,8 +58,13 @@ class AlarmTask extends CustomizableListItem {
       : type = task.type,
         _schema = task._schema.copy();
 
-  AlarmTask.fromJson(Json json)
-      : type = AlarmTaskType.values.byName(json['type']) {
+  AlarmTask.fromJson(Json json) {
+    if (json == null) {
+      type = AlarmTaskType.math;
+      _schema = alarmTaskSchemasMap[type]!.copy();
+      return;
+    }
+    type = AlarmTaskType.values.byName(json['type']);
     _schema = alarmTaskSchemasMap[type]!.copy();
     _schema.loadFromJson(json['schema']);
   }

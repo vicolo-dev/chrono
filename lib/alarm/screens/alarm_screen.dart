@@ -7,6 +7,7 @@ import 'package:clock_app/alarm/widgets/alarm_time_picker.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/time.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
@@ -113,9 +114,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   _handleCustomizeAlarm(Alarm alarm) async {
     int index = _listController.getItemIndex(alarm);
+    // if (index < 0) return;
     await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) {
       newAlarm.update();
-      _listController.changeItems((alarms) => alarms[index] = newAlarm);
+      _listController.changeItems((alarms) {
+        print(
+            "alasasasrm ${alarms.map((alarms) => alarm.id).toList()}, ${alarm.id}");
+        alarms[index] = newAlarm;
+      });
       _showNextScheduleSnackBar(newAlarm);
     });
   }

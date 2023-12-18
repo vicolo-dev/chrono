@@ -23,12 +23,17 @@ class AlarmRunner extends JsonSerializable {
     cancelAlarm(_id);
   }
 
-  AlarmRunner.fromJson(Json json) : _id = json['id'] {
-    int millisecondsSinceEpoch = json['currentScheduleDateTime'];
-
+  AlarmRunner.fromJson(Json? json) {
+    if (json == null) {
+      _id = UniqueKey().hashCode;
+      return;
+    }
+    _id = json['id'] ?? UniqueKey().hashCode;
+    int millisecondsSinceEpoch = json['currentScheduleDateTime'] ?? 0;
     _currentScheduleDateTime = millisecondsSinceEpoch == 0
         ? null
-        : DateTime.fromMillisecondsSinceEpoch(json['currentScheduleDateTime']);
+        : DateTime.fromMillisecondsSinceEpoch(
+            json['currentScheduleDateTime'] ?? 0);
   }
 
   @override
