@@ -39,7 +39,7 @@ class AboutScreen extends StatelessWidget {
                           ),
                           const SizedBox(width: 16.0),
                           Text(
-                            packageInfo?.appName ?? 'Chrono',
+                            getAppName(),
                             style: textTheme.titleMedium?.copyWith(
                               color: colorScheme.onSurface,
                             ),
@@ -68,6 +68,37 @@ class AboutScreen extends StatelessWidget {
                               ),
                               Text(
                                 packageInfo?.version ?? '1.0.0',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color:
+                                      colorScheme.onBackground.withOpacity(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8.0),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 48,
+                            child: Icon(
+                              Icons.center_focus_weak_rounded,
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Package name",
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                              Text(
+                                packageInfo?.packageName ?? 'com.vicolo.chrono',
                                 style: textTheme.bodyMedium?.copyWith(
                                   color:
                                       colorScheme.onBackground.withOpacity(0.6),

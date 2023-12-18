@@ -1,5 +1,6 @@
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
+import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
@@ -45,6 +46,7 @@ Future<void> initializeSettings() async {
     initializeDefaultTimerPresets();
     initializeDefaultAlarms();
     saveList<ClockTimer>('timers', []);
+    saveList<FileItem>('melodies', []);
     saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
     saveList<ColorSchemeData>('color_schemes', defaultColorSchemes);
     saveList<StyleTheme>('style_themes', defaultStyleThemes);
