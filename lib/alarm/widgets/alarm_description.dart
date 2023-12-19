@@ -87,7 +87,8 @@ class _AlarmDescriptionState extends State<AlarmDescription> {
         const SizedBox(width: 8),
         Flexible(
           child: Text(
-            getAlarmScheduleDescription(widget.alarm, dateFormat, timeFormat),
+            getAlarmScheduleDescription(
+                context, widget.alarm, dateFormat, timeFormat),
             maxLines: 2,
             style: textTheme.displaySmall?.copyWith(
               color: colorScheme.onBackground.withOpacity(0.6),

@@ -1,5 +1,4 @@
 import 'package:clock_app/common/logic/card_decoration.dart';
-import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {

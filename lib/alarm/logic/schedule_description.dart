@@ -9,13 +9,15 @@ import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/common/types/weekday.dart';
 import 'package:clock_app/common/utils/date_time.dart';
+import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/common/utils/weekday_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-String getAlarmScheduleDescription(
-    Alarm alarm, String dateFormat, TimeFormat timeFormat) {
+String getAlarmScheduleDescription(BuildContext context, Alarm alarm,
+    String dateFormat, TimeFormat timeFormat) {
   if (alarm.isSnoozed) {
-    return 'Snoozed until ${DateFormat(timeFormat == TimeFormat.h12 ? 'h:mm a' : 'HH:mm').format(alarm.snoozeTime!)}';
+    return 'Snoozed until ${DateFormat(getTimeFormatString(context, timeFormat)).format(alarm.snoozeTime!)}';
   }
   if (alarm.isFinished) {
     return 'No future dates';

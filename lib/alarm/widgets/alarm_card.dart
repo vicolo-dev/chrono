@@ -42,7 +42,6 @@ class _AlarmCardState extends State<AlarmCard> {
 
   void setTimeFormat(dynamic newTimeFormat) {
     setState(() {
-      print("bwer $newTimeFormat");
       timeFormat = newTimeFormat;
     });
   }
@@ -133,7 +132,7 @@ class _AlarmCardState extends State<AlarmCard> {
                       Flexible(
                         child: Text(
                           getAlarmScheduleDescription(
-                              widget.alarm, dateFormat, timeFormat),
+                              context, widget.alarm, dateFormat, timeFormat),
                           maxLines: 2,
                           style: textTheme.bodyMedium?.copyWith(
                             color: widget.alarm.isEnabled

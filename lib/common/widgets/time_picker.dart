@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:clock_app/common/types/picker_result.dart';
+import 'package:clock_app/common/utils/time_picker_builder.dart';
 import 'package:clock_app/theme/border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -2596,7 +2597,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
 Future<PickerResult<TimeOfDay>?> showTimePickerDialog({
   required BuildContext context,
   required TimeOfDay initialTime,
-  TransitionBuilder? builder,
+  // TransitionBuilder? builder,
   bool useRootNavigator = true,
   TimePickerEntryMode initialEntryMode = TimePickerEntryMode.dial,
   String? cancelText,
@@ -2632,7 +2633,7 @@ Future<PickerResult<TimeOfDay>?> showTimePickerDialog({
     context: context,
     useRootNavigator: useRootNavigator,
     builder: (BuildContext context) {
-      return builder == null ? dialog : builder(context, dialog);
+      return getTimePickerBuilder(context, dialog);
     },
     routeSettings: routeSettings,
     anchorPoint: anchorPoint,
