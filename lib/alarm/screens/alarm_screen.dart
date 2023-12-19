@@ -117,8 +117,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
     await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) {
       newAlarm.update();
       _listController.changeItems((alarms) {
-        print(
-            "alasasasrm ${alarms.map((alarms) => alarm.id).toList()}, ${alarm.id}");
         alarms[index] = newAlarm;
       });
       _showNextScheduleSnackBar(newAlarm);

@@ -1,6 +1,8 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:auto_start_flutter/auto_start_flutter.dart';
 import 'package:clock_app/clock/types/time.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/screens/custom_melodies_screen.dart';
 import 'package:clock_app/settings/screens/vendor_list_screen.dart';
@@ -17,6 +19,12 @@ SelectSettingOption<String> _getDateSettingOption(String format) {
   return SelectSettingOption(
       "${DateFormat(format).format(DateTime.now())} ($format)", format);
 }
+
+final timeFormatOptions = [
+  SelectSettingOption("12 Hours", TimeFormat.h12),
+  SelectSettingOption("24 Hours", TimeFormat.h24),
+  SelectSettingOption("Device Settings", TimeFormat.device),
+];
 
 SettingGroup generalSettingsSchema = SettingGroup(
   "General",
@@ -45,15 +53,11 @@ SettingGroup generalSettingsSchema = SettingGroup(
         ],
         description: "How to display the dates",
       ),
-      SelectSetting<TimeFormat>(
-        "Time Format",
-        [
-          SelectSettingOption("12 Hours", TimeFormat.h12),
-          SelectSettingOption("24 Hours", TimeFormat.h24),
-          SelectSettingOption("Device Settings", TimeFormat.device),
-        ],
-        description: "12 or 24 hour time",
-      ),
+      SelectSetting<TimeFormat>("Time Format", timeFormatOptions,
+          description: "12 or 24 hour time", onChange: (context, index) {
+        saveTextFile("time_format_string",
+            getTimeFormatString(context, timeFormatOptions[index].value));
+      }),
       SwitchSetting("Show Seconds", true),
     ]),
     SettingPageLink("Custom Melodies", const CustomMelodiesScreen()),
