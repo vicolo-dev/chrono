@@ -1,4 +1,5 @@
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
+import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
@@ -99,7 +100,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       navigatorKey: App.navigatorKey,
       debugShowCheckedModeBanner: false,
-      title: 'Chrono',
+      title: getAppName(),
       theme: _theme,
       initialRoute: Routes.rootRoute,
       navigatorObservers: [routeObserver],
