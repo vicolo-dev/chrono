@@ -1,52 +1,67 @@
 import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/types/time.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
+void testDescription(String name, Function(BuildContext) callback) {
+  testWidgets('when alarm is snoozed', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      Builder(
+        builder: (BuildContext context) {
+          callback(context);
+          return const Placeholder();
+        },
+      ),
+    );
+  });
+}
+
 void main() {
   group('getAlarmScheduleDescription', () {
-    test('when alarm is snoozed', () {
+    testDescription('when alarm is snoozed', (context) {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
       alarm.snooze();
 
-      final result =
-          getAlarmScheduleDescription(alarm, 'yyyy-MM-dd HH:mm:ss.SSS');
+      final result = getAlarmScheduleDescription(
+          context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
 
       expect(
         result,
-        'Snoozed until ${DateFormat("hh:mm").format(alarm.snoozeTime!)}',
+        'Snoozed until ${DateFormat("h:mm").format(alarm.snoozeTime!)}',
       );
     });
 
-    test('when alarm is finished', () {
+    testDescription('when alarm is finished', (context) {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
 
       alarm.finish();
 
-      final result =
-          getAlarmScheduleDescription(alarm, 'yyyy-MM-dd HH:mm:ss.SSS');
+      final result = getAlarmScheduleDescription(
+          context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
 
       expect(result, 'No future dates');
     });
 
-    test('when alarm is not enabled', () {
+    testDescription('when alarm is not enabled', (context) {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
 
       alarm.disable();
 
-      final result =
-          getAlarmScheduleDescription(alarm, 'yyyy-MM-dd HH:mm:ss.SSS');
+      final result = getAlarmScheduleDescription(
+          context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
 
       expect(result, 'Not scheduled');
     });
 
-    test('when alarm has once schedule', () {
+    testDescription('when alarm has once schedule', (context) {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
       alarm.setSettingWithoutNotify("Type", 0);
 
-      final result =
-          getAlarmScheduleDescription(alarm, 'yyyy-MM-dd HH:mm:ss.SSS');
+      final result = getAlarmScheduleDescription(
+          context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
 
       expect(
         result,
@@ -54,12 +69,12 @@ void main() {
       );
     });
 
-    test('when alarm has daily schedule', () {
+    testDescription('when alarm has daily schedule', (context) {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
       alarm.setSettingWithoutNotify("Type", 1);
 
-      final result =
-          getAlarmScheduleDescription(alarm, 'yyyy-MM-dd HH:mm:ss.SSS');
+      final result = getAlarmScheduleDescription(
+          context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
 
       expect(result, 'Every day');
     });
@@ -67,40 +82,40 @@ void main() {
     group('when alarm has weekly schedule', () {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
       alarm.setSettingWithoutNotify("Type", 2);
-      test("with all week days", () {
+      testDescription("with all week days", (context) {
         alarm.setSettingWithoutNotify(
             "Week Days", [true, true, true, true, true, true, true]);
 
-        final result =
-            getAlarmScheduleDescription(alarm, 'yyyy-MM-dd HH:mm:ss.SSS');
+        final result = getAlarmScheduleDescription(
+            context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
 
         expect(result, 'Every day');
       });
 
-      test("with only weekends", () {
+      testDescription("with only weekends", (context) {
         alarm.setSettingWithoutNotify(
             "Week Days", [false, false, false, false, false, true, true]);
 
-        final result =
-            getAlarmScheduleDescription(alarm, 'yyyy-MM-dd HH:mm:ss.SSS');
+        final result = getAlarmScheduleDescription(
+            context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
 
         expect(result, 'Every weekend');
       });
-      test("with only weekdays", () {
+      testDescription("with only weekdays", (context) {
         alarm.setSettingWithoutNotify(
             "Week Days", [true, true, true, true, true, false, false]);
 
-        final result =
-            getAlarmScheduleDescription(alarm, 'yyyy-MM-dd HH:mm:ss.SSS');
+        final result = getAlarmScheduleDescription(
+            context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
 
         expect(result, 'Every weekday');
       });
-      test("with other week days", () {
+      testDescription("with other week days", (context) {
         alarm.setSettingWithoutNotify(
             "Week Days", [true, false, false, false, false, false, true]);
 
-        final result =
-            getAlarmScheduleDescription(alarm, 'yyyy-MM-dd HH:mm:ss.SSS');
+        final result = getAlarmScheduleDescription(
+            context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
 
         expect(result, 'Every Mon, Sun');
       });
