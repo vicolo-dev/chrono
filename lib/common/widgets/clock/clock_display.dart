@@ -1,4 +1,5 @@
 import 'package:clock_app/clock/types/time.dart';
+import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/common/widgets/clock/time_display.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -74,7 +75,8 @@ class _ClockDisplayState extends State<ClockDisplay> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               TimeDisplay(
-                format: '${timeFormat == TimeFormat.h12 ? 'h' : 'HH'}:mm',
+                format: getTimeFormatString(context, timeFormat,
+                    showMeridian: false),
                 fontSize: 72 * widget.scale,
                 height: widget.shouldShowDate ? 0.75 : null,
                 color: widget.color,

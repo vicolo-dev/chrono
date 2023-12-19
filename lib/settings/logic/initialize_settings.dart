@@ -48,6 +48,7 @@ Future<void> initializeSettings() async {
     saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
     saveList<ColorSchemeData>('color_schemes', defaultColorSchemes);
     saveList<StyleTheme>('style_themes', defaultStyleThemes);
+    saveTextFile("time_format_string", "h:mm a");
 
     // Save the schema to disk on first launch
     appSettings.save();
