@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
 void testDescription(String name, Function(BuildContext) callback) {
-  testWidgets('when alarm is snoozed', (WidgetTester tester) async {
+  testWidgets(name, (WidgetTester tester) async {
     await tester.pumpWidget(
       Builder(
         builder: (BuildContext context) {
@@ -30,7 +30,7 @@ void main() {
 
       expect(
         result,
-        'Snoozed until ${DateFormat("h:mm").format(alarm.snoozeTime!)}',
+        'Snoozed until ${DateFormat("h:mm a").format(alarm.snoozeTime!)}',
       );
     });
 
