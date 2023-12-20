@@ -221,7 +221,7 @@ class CustomSetting<T extends JsonSerializable> extends Setting<T> {
 
   @override
   void loadValueFromJson(dynamic value) {
-    if (value == null) return;
+    if (value == null || value is! Json) return;
     _value = fromJsonFactories[T]!(value);
   }
 }
@@ -297,7 +297,7 @@ class ColorSetting extends Setting<Color> {
 
   @override
   void loadValueFromJson(dynamic value) {
-    if (value == null) return;
+    if (value == null || value is! int) return;
     _value = Color(value);
   }
 
@@ -415,7 +415,7 @@ class SelectSetting<T> extends Setting<int> {
     String name,
     this._options, {
     void Function(BuildContext, int)? onChange,
-    int defaultValue = -1,
+    int defaultValue = 0,
     String description = "",
     bool isVisual = true,
     List<SettingEnableConditionParameter> enableConditions = const [],
@@ -452,17 +452,19 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
     this.optionsGetter, {
     void Function(BuildContext, int)? onChange,
     String description = "",
+    int defaultValue = 0,
     bool isVisual = true,
     bool shouldCloseOnSelect = true,
     List<SettingEnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, optionsGetter()[0].value.id, onChange,
-            enableConditions, searchTags, isVisual);
+  }) : super(name, description, optionsGetter()[defaultValue].value.id,
+            onChange, enableConditions, searchTags, isVisual);
 
   @override
   DynamicSelectSetting<T> copy() {
     return DynamicSelectSetting(name, optionsGetter,
         onChange: onChange,
+        defaultValue: selectedIndex,
         description: description,
         enableConditions: enableConditions,
         isVisual: isVisual,
@@ -501,7 +503,7 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
 
   @override
   void loadValueFromJson(dynamic value) {
-    if (value == null) return;
+    if (value == null || value is! int) return;
     // If the value is no longer in the options, return the first option
     // If options is empty, set id to -1
     if (getIndexOfId(value) == -1) value = getIdAtIndex(0);
@@ -671,7 +673,7 @@ class DurationSetting extends Setting<TimeDuration> {
 
   @override
   void loadValueFromJson(dynamic value) {
-    if (value == null) return;
+    if (value == null || value is! int) return;
     _value = TimeDuration.fromMilliseconds(value);
   }
 }

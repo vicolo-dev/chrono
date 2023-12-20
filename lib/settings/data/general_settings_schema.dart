@@ -60,7 +60,11 @@ SettingGroup generalSettingsSchema = SettingGroup(
       }),
       SwitchSetting("Show Seconds", true),
     ]),
-    SettingPageLink("Melodies", const RingtonesScreen()),
+    SettingPageLink(
+      "Melodies",
+      const RingtonesScreen(),
+      searchTags: ["ringtones", "music", "audio", "tones", "custom"],
+    ),
     SettingGroup("Reliability", [
       SettingPageLink(
         "Vendor Specific",
