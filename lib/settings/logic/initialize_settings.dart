@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/audio/logic/system_ringtones.dart';
 import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
+import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -25,9 +29,13 @@ Future<void> _clearSettings() async {
     timer.reset();
   }
   await GetStorage().erase();
+  // Delete all files in custom melodies directory
+  final dir = Directory(await getRingtonesDirectoryPath());
+  dir.deleteSync(recursive: true);
+  dir.createSync(recursive: true);
 }
 
-Future<void> initializeSettings() async {
+Future<void> initializeStorage() async {
   await GetStorage.init();
 
   // Used to clear the preferences in case of a change in format of the data
@@ -36,8 +44,6 @@ Future<void> initializeSettings() async {
 
   bool? firstLaunch = GetStorage().read('first_launch');
   if (firstLaunch == null) {
-    GetStorage().write('first_launch', true);
-
     // This is used to show alarm and timer edit animations
     GetStorage().write('first_alarm_created', false);
     GetStorage().write('first_timer_created', false);
@@ -45,15 +51,21 @@ Future<void> initializeSettings() async {
     initializeDefaultFavoriteCities();
     initializeDefaultTimerPresets();
     initializeDefaultAlarms();
-    saveList<ClockTimer>('timers', []);
-    saveList<FileItem>('melodies', []);
-    saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
-    saveList<ColorSchemeData>('color_schemes', defaultColorSchemes);
-    saveList<StyleTheme>('style_themes', defaultStyleThemes);
-    saveTextFile("time_format_string", "h:mm a");
+    await saveList<ClockTimer>('timers', []);
+    await saveList<FileItem>('ringtones', await getSystemRingtones());
+    await saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
+    await saveList<ColorSchemeData>('color_schemes', defaultColorSchemes);
+    await saveList<StyleTheme>('style_themes', defaultStyleThemes);
+    await saveTextFile("time_format_string", "h:mm a");
+  }
+}
 
+Future<void> initializeSettings() async {
+  bool? firstLaunch = GetStorage().read('first_launch');
+  if (firstLaunch == null) {
+    GetStorage().write('first_launch', true);
     // Save the schema to disk on first launch
-    appSettings.save();
+    await appSettings.save();
   }
 
   appSettings.load();

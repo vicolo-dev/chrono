@@ -1,6 +1,9 @@
+import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/timer/types/timer.dart';
+import 'package:clock_app/timer/utils/timer_id.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
 
@@ -17,13 +20,17 @@ class RingtonePlayer {
   }
 
   static Future<void> playUri(String ringtoneUri,
-      {bool vibrate = false, LoopMode loopMode = LoopMode.one}) async {
+      {bool vibrate = false,
+      LoopMode loopMode = LoopMode.one,
+      AndroidAudioUsage channel = AndroidAudioUsage.media}) async {
+    await initializeAudioSession(channel);
     activePlayer = _alarmPlayer;
     await _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
   }
 
   static Future<void> playAlarm(Alarm alarm,
       {LoopMode loopMode = LoopMode.one}) async {
+    await initializeAudioSession(alarm.audioChannel);
     activePlayer = _alarmPlayer;
     await _play(
       alarm.ringtone.uri,
@@ -35,6 +42,7 @@ class RingtonePlayer {
 
   static Future<void> playTimer(ClockTimer timer,
       {LoopMode loopMode = LoopMode.one}) async {
+    await initializeAudioSession(timer.audioChannel);
     activePlayer = _timerPlayer;
     await _play(
       timer.ringtone.uri,

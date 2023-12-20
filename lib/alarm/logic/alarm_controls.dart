@@ -61,14 +61,12 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
 
   await initializeAppDataDirectory();
   await GetStorage.init();
-  await RingtoneManager.initialize();
+  // await RingtoneManager.initialize();
   await RingtonePlayer.initialize();
 
   if (notificationType == ScheduledNotificationType.alarm) {
-    await initializeAudioSession(getAlarmByScheduleId(scheduleId).audioChannel);
     triggerAlarm(scheduleId, params);
   } else if (notificationType == ScheduledNotificationType.timer) {
-    await initializeAudioSession(getTimerById(scheduleId).audioChannel);
     triggerTimer(scheduleId, params);
   }
 }

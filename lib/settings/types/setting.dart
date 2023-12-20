@@ -83,7 +83,7 @@ abstract class Setting<T> extends SettingItem {
 
   @override
   void loadValueFromJson(dynamic value) {
-    if (value == null) return;
+    if (value == null || value is! T) return;
     _value = value;
   }
 }
@@ -397,10 +397,12 @@ class SelectSetting<T> extends Setting<int> {
   // bool get isColor => T == Color;
 
   int getIndexOfValue(T value) {
-    return options.indexWhere((element) => element.value == value);
+    int index = options.indexWhere((element) => element.value == value);
+    return index == -1 ? 0 : index;
   }
 
   T getValueOfIndex(int index) {
+    if (index < 0 || index >= options.length) index = 0;
     return options[index].value;
   }
 
@@ -436,7 +438,7 @@ class SelectSetting<T> extends Setting<int> {
   }
 }
 
-class DynamicSelectSetting<T> extends SelectSetting<T> {
+class DynamicSelectSetting<T extends ListItem> extends SelectSetting<T> {
   List<SelectSettingOption<T>> Function() optionsGetter;
 
   @override
@@ -473,6 +475,29 @@ class DynamicSelectSetting<T> extends SelectSetting<T> {
         enableConditions: enableConditions,
         isVisual: isVisual,
         searchTags: searchTags);
+  }
+
+  @override
+  int getIndexOfValue(T value) {
+    int index = options.indexWhere((element) => element.value.id == value.id);
+    return index == -1 ? 0 : index;
+  }
+
+  @override
+  dynamic valueToJson() {
+    final settingsOptions = optionsGetter();
+    if (settingsOptions.isEmpty) return "-1";
+    print(options[_value].value.toJson());
+    return options[_value].value.toJson();
+  }
+
+  @override
+  void loadValueFromJson(dynamic value) {
+    print(value);
+    print(listToString(options.map((option) => option.value).toList()));
+    if (value == null || value is! Json) return;
+    print("yess");
+    _value = getIndexOfValue(fromJsonFactories[T]!(value) as T);
   }
 }
 

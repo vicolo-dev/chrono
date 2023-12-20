@@ -4,7 +4,7 @@ import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
-import 'package:clock_app/settings/screens/custom_melodies_screen.dart';
+import 'package:clock_app/settings/screens/ringtones_screen.dart';
 import 'package:clock_app/settings/screens/vendor_list_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
@@ -30,9 +30,9 @@ SettingGroup generalSettingsSchema = SettingGroup(
   "General",
   [
     SettingGroup("Display", [
-      DynamicSelectSetting<String>(
+      SelectSetting<String>(
         "Date Format",
-        () => [
+        [
           _getDateSettingOption("dd/MM/yyyy"),
           _getDateSettingOption("dd-MM-yyyy"),
           _getDateSettingOption("d/M/yyyy"),
@@ -60,7 +60,7 @@ SettingGroup generalSettingsSchema = SettingGroup(
       }),
       SwitchSetting("Show Seconds", true),
     ]),
-    SettingPageLink("Custom Melodies", const CustomMelodiesScreen()),
+    SettingPageLink("Melodies", const RingtonesScreen()),
     SettingGroup("Reliability", [
       SettingPageLink(
         "Vendor Specific",

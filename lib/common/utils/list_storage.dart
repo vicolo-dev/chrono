@@ -4,6 +4,7 @@ import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:path/path.dart' as path;
+import 'package:path/path.dart';
 import 'package:queue/queue.dart';
 
 final queue = Queue();
@@ -30,6 +31,16 @@ Future<void> saveTextFile(String key, String content) async {
     }
     await file.writeAsString(content, mode: FileMode.writeOnly);
   });
+}
+
+Future<String> saveRingtone(String id, String sourceUri) async {
+  String ringtonesDirectory = getRingtonesDirectoryPathSync();
+  File source = File(sourceUri);
+  String newPath = path.join(ringtonesDirectory, '$id.mp3');
+  await queue.add(() async {
+    await source.copy(newPath);
+  });
+  return newPath;
 }
 
 String loadTextFileSync<T extends JsonSerializable>(String key) {

@@ -4,6 +4,8 @@ import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
+import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/utils/ringtones.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 
@@ -23,12 +25,9 @@ SettingGroup timerSettingsSchema = SettingGroup(
         SettingGroup(
           "Sound",
           [
-            DynamicSelectSetting<Audio>(
+            DynamicSelectSetting<FileItem>(
               "Melody",
-              () => RingtoneManager.ringtones
-                  .map((ringtone) =>
-                      SelectSettingOption<Audio>(ringtone.title, ringtone))
-                  .toList(),
+              getRingtoneOptions,
               onSelect: (context, index, uri) {},
               onChange: (context, index) {
                 RingtonePlayer.stop();
@@ -39,7 +38,6 @@ SettingGroup timerSettingsSchema = SettingGroup(
                 "Audio Channel", audioChannelOptions,
                 onChange: (context, index) {
               RingtonePlayer.stop();
-              initializeAudioSession(audioChannelOptions[index].value);
             }),
             SliderSetting("Volume", 0, 100, 100, unit: "%"),
             SwitchSetting("Rising Volume", false,

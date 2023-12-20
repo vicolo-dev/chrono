@@ -73,7 +73,7 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
                   children: [
                     Text(
                       // Flutter doesn't allow per character overflow, so this is a workaround
-                      widget.choice.value.title,
+                      widget.choice.value.name,
                       style: textTheme.headlineMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

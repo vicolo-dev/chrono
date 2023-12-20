@@ -1,4 +1,5 @@
 import 'package:clock_app/audio/types/audio.dart';
+import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/fields/select_field/option_cards/audio_option_card.dart';
 import 'package:clock_app/common/widgets/fields/select_field/option_cards/color_option_card.dart';
@@ -42,7 +43,7 @@ class SelectBottomSheet extends StatelessWidget {
       );
     }
 
-    if (choices[0].value is Audio) {
+    if (choices[0].value is FileItem) {
       return ListView.builder(
           itemCount: choices.length,
           itemBuilder: (context, index) {
