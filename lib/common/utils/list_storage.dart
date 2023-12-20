@@ -44,8 +44,7 @@ Future<String> saveRingtone(String id, String sourceUri) async {
 }
 
 String loadTextFileSync<T extends JsonSerializable>(String key) {
-  String appDataDirectory = getAppDataDirectoryPathSync();
-  File file = File(path.join(appDataDirectory, '$key.txt'));
+  File file = File(path.join(getAppDataDirectoryPathSync(), '$key.txt'));
   try {
     return file.readAsStringSync();
   } catch (error) {
