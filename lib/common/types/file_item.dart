@@ -14,55 +14,48 @@ enum FileItemType {
 
 class FileItem extends ListItem {
   final int _id;
-  final String title;
-  final String uri;
+  final String name;
+  String _uri;
+  final bool _isDeletable;
 
+  set uri(String value) {
+    _uri = value;
+  }
+
+  String get uri => _uri;
   @override
   int get id => _id;
-
   @override
-  bool get isDeletable => true;
+  bool get isDeletable => _isDeletable;
 
-  FileItem(
-    this.title,
-    this.uri,
-  ) : _id = UniqueKey().hashCode;
+  FileItem(this.name, this._uri, {isDeletable = true})
+      : _id = UniqueKey().hashCode,
+        _isDeletable = isDeletable;
 
   @override
   FileItem.fromJson(Json json)
       : _id = json != null
-            ? json['_id'] ?? UniqueKey().hashCode
+            ? json['id'] ?? UniqueKey().hashCode
             : UniqueKey().hashCode,
-        title = json != null ? json['title'] ?? 'Unknown' : 'Unknown',
-        uri = json != null ? json['uri'] ?? '' : '';
+        name = json != null ? json['title'] ?? 'Unknown' : 'Unknown',
+        _uri = json != null ? json['uri'] ?? '' : '',
+        _isDeletable = json != null ? json['isDeletable'] ?? true : true;
 
   @override
   Json toJson() => {
-        'id': id,
-        'title': title,
-        'uri': uri,
+        'id': _id,
+        'title': name,
+        'uri': _uri,
+        'isDeletable': _isDeletable,
       };
 
-  // factory Audio.fromEncodedJson(String encodedJson) =>
-  //     Audio.fromJson(json.decode(encodedJson));
-  // String toEncodedJson() => json.encode(toJson());
   @override
   String toString() {
     return json.encode(toJson());
   }
 
-  FileItem copyWith({
-    String? title,
-    String? uri,
-  }) {
-    return FileItem(
-      title ?? this.title,
-      uri ?? this.uri,
-    );
-  }
-
   @override
   copy() {
-    return FileItem(title, uri);
+    return FileItem(name, _uri, isDeletable: _isDeletable);
   }
 }

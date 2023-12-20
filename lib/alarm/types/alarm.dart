@@ -9,6 +9,7 @@ import 'package:clock_app/alarm/types/schedules/dates_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
+import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/common/types/json.dart';
@@ -70,7 +71,7 @@ class Alarm extends CustomizableListItem {
   SettingGroup get settings => _settings;
   String get label => _settings.getSetting("Label").value;
   Type get scheduleType => _settings.getSetting("Type").value;
-  Audio get ringtone => _settings.getSetting("Melody").value;
+  FileItem get ringtone => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
   double get snoozeLength => _settings.getSetting("Length").value;
   List<AlarmTask> get tasks => _settings.getSetting("Tasks").value;
