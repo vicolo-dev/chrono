@@ -95,7 +95,7 @@ void triggerAlarm(int scheduleId, Json params) async {
   await updateAlarms();
 
   if (alarm.shouldSkipNextAlarm) {
-    alarm.unSkip();
+    alarm.cancelSkip();
     return;
   }
 

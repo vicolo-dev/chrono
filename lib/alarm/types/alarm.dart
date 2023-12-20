@@ -96,7 +96,9 @@ class Alarm extends CustomizableListItem {
   int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
   int get snoozeCount => _snoozeCount;
   bool get maxSnoozeIsReached => _snoozeCount >= maxSnoozes;
-  bool get shouldSkipNextAlarm => _skippedTime == currentScheduleDateTime;
+  bool get shouldSkipNextAlarm =>
+      _skippedTime == currentScheduleDateTime &&
+      currentScheduleDateTime != null;
 
   Alarm(this._time) {
     _schedules = createSchedules(_settings);
@@ -144,7 +146,7 @@ class Alarm extends CustomizableListItem {
     _skippedTime = currentScheduleDateTime;
   }
 
-  void unSkip() {
+  void cancelSkip() {
     _skippedTime = null;
   }
 
@@ -153,6 +155,14 @@ class Alarm extends CustomizableListItem {
       disable();
     } else {
       enable();
+    }
+  }
+
+  void setShouldSkip(bool shouldSkip) {
+    if (shouldSkip) {
+      skip();
+    } else {
+      cancelSkip();
     }
   }
 
@@ -202,7 +212,7 @@ class Alarm extends CustomizableListItem {
   }
 
   void cancel() {
-    unSkip();
+    cancelSkip();
     for (var schedule in _schedules) {
       schedule.cancel();
     }

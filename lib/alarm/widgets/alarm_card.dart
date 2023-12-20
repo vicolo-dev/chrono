@@ -18,10 +18,14 @@ class AlarmCard extends StatefulWidget {
     required this.alarm,
     required this.onPressDelete,
     required this.onPressDuplicate,
+    required this.onDismiss,
+    required this.onSkipChange,
   });
 
   final Alarm alarm;
   final void Function(bool) onEnabledChange;
+  final void Function() onDismiss;
+  final void Function(bool) onSkipChange;
   final VoidCallback onPressDelete;
   final VoidCallback onPressDuplicate;
 
@@ -179,9 +183,9 @@ class _AlarmCardState extends State<AlarmCard> {
                         : "Skip Next Alarm",
                     () {
                       if (widget.alarm.shouldSkipNextAlarm) {
-                        widget.alarm.skip();
+                        widget.onSkipChange(false);
                       } else {
-                        widget.alarm.unSkip();
+                        widget.onSkipChange(true);
                       }
                     },
                     Icons.skip_next,
