@@ -452,13 +452,17 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
     this.optionsGetter, {
     void Function(BuildContext, int)? onChange,
     String description = "",
-    int defaultValue = 0,
+    int defaultValue = -1,
     bool isVisual = true,
     bool shouldCloseOnSelect = true,
     List<SettingEnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, optionsGetter()[defaultValue].value.id,
-            onChange, enableConditions, searchTags, isVisual);
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            searchTags, isVisual) {
+    if (defaultValue != -1) {
+      _value = getIdAtIndex(defaultValue);
+    }
+  }
 
   @override
   DynamicSelectSetting<T> copy() {
