@@ -1,6 +1,7 @@
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -62,7 +63,7 @@ class _FileItemCardState extends State<FileItemCard> {
             children: [
               Icon(isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
                   color: colorScheme.primary),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Expanded(
                 flex: 999,
                 child: Padding(
@@ -78,7 +79,9 @@ class _FileItemCardState extends State<FileItemCard> {
               ),
               if (widget.fileItem.isDeletable)
                 CardEditMenu(
-                  onPressDelete: widget.onPressDelete,
+                  actions: [
+                    getDeletePopupAction(context, widget.onPressDelete)
+                  ],
                 ),
             ],
           )),

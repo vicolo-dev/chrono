@@ -1,53 +1,50 @@
+import 'package:clock_app/common/types/popup_action.dart';
 import 'package:flutter/material.dart';
 
-enum CardAction { duplicate, delete }
+// enum CardAction { duplicate, delete }
 
 class CardEditMenu extends StatelessWidget {
   const CardEditMenu({
     super.key,
-    this.onPressDelete,
-    this.onPressDuplicate,
+    required this.actions,
   });
 
-  final VoidCallback? onPressDelete;
-  final VoidCallback? onPressDuplicate;
+  final List<PopupAction> actions;
   // final GlobalKey _buttonKey = GlobalKey();
+
+  List<PopupMenuEntry<String>> getItems() {
+    List<PopupMenuEntry<String>> items = [];
+    for (var action in actions) {
+      items.add(PopupMenuItem(
+        value: action.name,
+        child: CardEditMenuItem(
+            icon: action.icon, text: action.name, color: action.color),
+      ));
+    }
+    return items;
+  }
+
+  void onSelected(String action) {
+    for (var item in actions) {
+      if (item.name == action) {
+        item.action();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
 
-    return PopupMenuButton<CardAction>(
+    return PopupMenuButton<String>(
       icon: Icon(
         Icons.keyboard_arrow_down_rounded,
         color: colorScheme.onSurface,
       ),
       padding: EdgeInsets.zero,
-      onSelected: (CardAction action) {
-        switch (action) {
-          case CardAction.duplicate:
-            onPressDuplicate?.call();
-            break;
-          case CardAction.delete:
-            onPressDelete?.call();
-            break;
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<CardAction>>[
-        if (onPressDuplicate != null)
-          const PopupMenuItem<CardAction>(
-            value: CardAction.duplicate,
-            child:
-                CardEditMenuItem(icon: Icons.copy_rounded, text: 'Duplicate'),
-          ),
-        if (onPressDelete != null)
-          PopupMenuItem<CardAction>(
-            value: CardAction.delete,
-            child: CardEditMenuItem(
-                icon: Icons.delete, text: 'Delete', color: colorScheme.error),
-          ),
-      ],
+      onSelected: onSelected,
+      itemBuilder: (BuildContext context) => getItems(),
     );
   }
 }

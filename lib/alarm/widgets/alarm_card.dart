@@ -3,6 +3,8 @@ import 'package:clock_app/alarm/logic/time_icon.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
 import 'package:clock_app/clock/types/time.dart';
+import 'package:clock_app/common/types/popup_action.dart';
+import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -167,11 +169,24 @@ class _AlarmCardState extends State<AlarmCard> {
                         value: widget.alarm.isEnabled,
                         onChanged: widget.onEnabledChange,
                       ),
-                CardEditMenu(
-                  onPressDelete:
-                      widget.alarm.isDeletable ? widget.onPressDelete : null,
-                  onPressDuplicate: widget.onPressDuplicate,
-                ),
+                CardEditMenu(actions: [
+                  if (widget.alarm.isDeletable)
+                    getDeletePopupAction(context, widget.onPressDelete),
+                  getDuplicatePopupAction(widget.onPressDuplicate),
+                  PopupAction(
+                    widget.alarm.shouldSkipNextAlarm
+                        ? "Cancel Skip"
+                        : "Skip Next Alarm",
+                    () {
+                      if (widget.alarm.shouldSkipNextAlarm) {
+                        widget.alarm.skip();
+                      } else {
+                        widget.alarm.unSkip();
+                      }
+                    },
+                    Icons.skip_next,
+                  )
+                ]),
               ],
             ),
           )
