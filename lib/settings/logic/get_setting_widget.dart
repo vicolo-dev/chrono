@@ -8,6 +8,7 @@ import 'package:clock_app/settings/widgets/custom_setting_card.dart';
 
 import 'package:clock_app/settings/widgets/date_setting_card.dart';
 import 'package:clock_app/settings/widgets/duration_setting_card.dart';
+import 'package:clock_app/settings/widgets/dynamic_select_setting_card.dart';
 import 'package:clock_app/settings/widgets/list_setting_card.dart';
 import 'package:clock_app/settings/widgets/select_setting_card.dart';
 import 'package:clock_app/settings/widgets/setting_action_card.dart';
@@ -78,6 +79,13 @@ Widget? getSettingItemWidget(
 
     if (item is SelectSetting) {
       return SelectSettingCard(
+        setting: item,
+        showAsCard: showAsCard,
+        onChanged: onChanged,
+      );
+    }
+    if (item is DynamicSelectSetting) {
+      return DynamicSelectSettingCard(
         setting: item,
         showAsCard: showAsCard,
         onChanged: onChanged,

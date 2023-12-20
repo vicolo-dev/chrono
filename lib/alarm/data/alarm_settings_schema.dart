@@ -10,10 +10,7 @@ import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
 import 'package:clock_app/alarm/widgets/try_alarm_task_button.dart';
 import 'package:clock_app/audio/audio_channels.dart';
-import 'package:clock_app/audio/logic/audio_session.dart';
-import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
-import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -98,7 +95,6 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             DynamicSelectSetting<FileItem>(
               "Melody",
               getRingtoneOptions,
-              onSelect: (context, index, uri) {},
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },

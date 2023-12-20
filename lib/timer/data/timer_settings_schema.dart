@@ -28,7 +28,6 @@ SettingGroup timerSettingsSchema = SettingGroup(
             DynamicSelectSetting<FileItem>(
               "Melody",
               getRingtoneOptions,
-              onSelect: (context, index, uri) {},
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },

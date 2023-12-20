@@ -415,7 +415,7 @@ class SelectSetting<T> extends Setting<int> {
     String name,
     this._options, {
     void Function(BuildContext, int)? onChange,
-    int defaultValue = 0,
+    int defaultValue = -1,
     String description = "",
     bool isVisual = true,
     List<SettingEnableConditionParameter> enableConditions = const [],
@@ -438,66 +438,74 @@ class SelectSetting<T> extends Setting<int> {
   }
 }
 
-class DynamicSelectSetting<T extends ListItem> extends SelectSetting<T> {
+// DynamicSelectSetting uses item id as its _value, instead of the index.
+// This is so that if the options changes, the value remains the same;
+class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
   List<SelectSettingOption<T>> Function() optionsGetter;
-
-  @override
   List<SelectSettingOption<T>> get options => optionsGetter();
+  @override
+  dynamic get value => options[selectedIndex].value;
+  int get selectedIndex => getIndexOfId(_value);
 
   DynamicSelectSetting(
     String name,
     this.optionsGetter, {
-    void Function(BuildContext, int index)? onChange,
-    void Function(BuildContext, int index, T value)? onSelect,
-    int defaultValue = 0,
+    void Function(BuildContext, int)? onChange,
     String description = "",
     bool isVisual = true,
     bool shouldCloseOnSelect = true,
     List<SettingEnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(
-          name,
-          [],
-          defaultValue: defaultValue,
-          onChange: onChange,
-          description: description,
-          enableConditions: enableConditions,
-          isVisual: isVisual,
-          searchTags: searchTags,
-        );
+  }) : super(name, description, optionsGetter()[0].value.id, onChange,
+            enableConditions, searchTags, isVisual);
 
   @override
   DynamicSelectSetting<T> copy() {
     return DynamicSelectSetting(name, optionsGetter,
         onChange: onChange,
         description: description,
-        defaultValue: _value,
         enableConditions: enableConditions,
         isVisual: isVisual,
         searchTags: searchTags);
   }
 
+  void setIndex(BuildContext context, int index) {
+    setValue(context, getIdAtIndex(index));
+  }
+
   @override
+  void restoreDefault(BuildContext context) {
+    setIndex(context, 0);
+  }
+
   int getIndexOfValue(T value) {
-    int index = options.indexWhere((element) => element.value.id == value.id);
+    return getIndexOfId(value.id);
+  }
+
+  int getIndexOfId(int id) {
+    int index = options.indexWhere((element) => element.value.id == id);
     return index == -1 ? 0 : index;
+  }
+
+  int getIdAtIndex(int index) {
+    final settingsOptions = optionsGetter();
+    if (settingsOptions.isEmpty) return -1;
+    if (index < 0 || index >= settingsOptions.length) index = 0;
+    return settingsOptions[index].value.id;
   }
 
   @override
   dynamic valueToJson() {
-    final settingsOptions = optionsGetter();
-    if (settingsOptions.isEmpty) return "-1";
-    print(options[_value].value.toJson());
-    return options[_value].value.toJson();
+    return _value;
   }
 
   @override
   void loadValueFromJson(dynamic value) {
-    print(value);
-    print(listToString(options.map((option) => option.value).toList()));
-    if (value == null || value is! Json) return;
-    print("yess");
-    _value = getIndexOfValue(fromJsonFactories[T]!(value) as T);
+    if (value == null) return;
+    // If the value is no longer in the options, return the first option
+    // If options is empty, set id to -1
+    if (getIndexOfId(value) == -1) value = getIdAtIndex(0);
+    _value = value;
   }
 }
 
