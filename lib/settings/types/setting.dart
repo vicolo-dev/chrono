@@ -460,7 +460,7 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual) {
     if (defaultValue != -1) {
-      _value = getIdAtIndex(defaultValue);
+      _value = defaultValue;
     }
   }
 
@@ -468,7 +468,7 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
   DynamicSelectSetting<T> copy() {
     return DynamicSelectSetting(name, optionsGetter,
         onChange: onChange,
-        defaultValue: selectedIndex,
+        defaultValue: _value,
         description: description,
         enableConditions: enableConditions,
         isVisual: isVisual,
