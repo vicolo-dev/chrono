@@ -83,6 +83,7 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
             // icon: Icons.music_note_rounded,
             bottomPadding: 8,
             onPressed: () async {
+              RingtonePlayer.stop();
               List<String>? result = await PickOrSave().filePicker(
                 params: FilePickerParams(
                   mimeTypesFilter: ['audio/*'],
