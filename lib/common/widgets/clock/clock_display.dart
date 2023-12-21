@@ -29,20 +29,23 @@ class ClockDisplay extends StatefulWidget {
 }
 
 class _ClockDisplayState extends State<ClockDisplay> {
-  late TimeFormat timeFormat;
+  // late TimeFormat timeFormat;
   late Setting timeFormatSetting;
 
-  void setTimeFormat(dynamic newTimeFormat) {
-    setState(() {
-      timeFormat = newTimeFormat;
-      if (timeFormat == TimeFormat.device) {
-        if (MediaQuery.of(context).alwaysUse24HourFormat) {
-          timeFormat = TimeFormat.h24;
-        } else {
-          timeFormat = TimeFormat.h12;
-        }
+  TimeFormat getTimeFormat() {
+    TimeFormat timeFormat = timeFormatSetting.value;
+    if (timeFormat == TimeFormat.device) {
+      if (MediaQuery.of(context).alwaysUse24HourFormat) {
+        timeFormat = TimeFormat.h24;
+      } else {
+        timeFormat = TimeFormat.h12;
       }
-    });
+    }
+    return timeFormat;
+  }
+
+  void update(dynamic value) {
+    setState(() {});
   }
 
   @override
@@ -52,18 +55,19 @@ class _ClockDisplayState extends State<ClockDisplay> {
         .getGroup("General")
         .getGroup("Display")
         .getSetting("Time Format");
-    setTimeFormat(timeFormatSetting.value);
-    timeFormatSetting.addListener(setTimeFormat);
+    timeFormatSetting.addListener(update);
   }
 
   @override
   void dispose() {
-    timeFormatSetting.removeListener(setTimeFormat);
+    timeFormatSetting.removeListener(update);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    TimeFormat timeFormat = getTimeFormat();
+
     return Column(
       crossAxisAlignment:
           CrossAxisAlignment.values[widget.horizontalAlignment.index],
@@ -117,6 +121,7 @@ class _ClockDisplayState extends State<ClockDisplay> {
                 ],
               ),
             ]),
+        if (widget.shouldShowDate) SizedBox(height: 4 * widget.scale),
         if (widget.shouldShowDate)
           TimeDisplay(
             format: 'EEE, MMM d',

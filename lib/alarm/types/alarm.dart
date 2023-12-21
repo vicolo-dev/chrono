@@ -103,7 +103,8 @@ class Alarm extends CustomizableListItem {
       _skippedTime == currentScheduleDateTime &&
       currentScheduleDateTime != null;
   bool get canBeSkipped => !isSnoozed && !isFinished && isEnabled;
-  bool get showDimissButton => isSnoozed && !canBeDisabledWhenSnoozed;
+  bool get canBeDisabled =>
+      !(isSnoozed && !canBeDisabledWhenSnoozed) && !isFinished;
 
   Alarm(this._time) {
     _schedules = createSchedules(_settings);
@@ -200,7 +201,12 @@ class Alarm extends CustomizableListItem {
     );
   }
 
-  void _cancelSnooze() {
+  void cancelSnooze() {
+    cancelAlarm(id);
+    _unSnooze();
+  }
+
+  void _unSnooze() {
     _snoozeTime = null;
   }
 
@@ -226,13 +232,13 @@ class Alarm extends CustomizableListItem {
   }
 
   void enable() {
-    _cancelSnooze();
+    _unSnooze();
     schedule();
   }
 
   void disable() {
     _isEnabled = false;
-    _cancelSnooze();
+    _unSnooze();
     cancel();
   }
 
@@ -247,7 +253,7 @@ class Alarm extends CustomizableListItem {
 
       if (isSnoozed) {
         if (DateTime.now().isAfter(_snoozeTime!)) {
-          _cancelSnooze();
+          _unSnooze();
         } else {
           _scheduleSnooze();
         }
