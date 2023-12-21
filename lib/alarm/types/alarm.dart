@@ -96,7 +96,9 @@ class Alarm extends CustomizableListItem {
   int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
   int get snoozeCount => _snoozeCount;
   bool get maxSnoozeIsReached => _snoozeCount >= maxSnoozes;
-  bool get canBeSnoozed => maxSnoozeIsReached;
+  bool get canBeSnoozed =>
+      !maxSnoozeIsReached &&
+      _settings.getGroup("Snooze").getSetting("Enabled").value;
   bool get shouldSkipNextAlarm =>
       _skippedTime == currentScheduleDateTime &&
       currentScheduleDateTime != null;

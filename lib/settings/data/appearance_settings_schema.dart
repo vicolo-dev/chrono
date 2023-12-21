@@ -1,6 +1,7 @@
 import 'package:clock_app/app.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/theme/screens/themes_screen.dart';
 import 'package:clock_app/theme/theme.dart';
@@ -45,7 +46,7 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
         ColorSetting("Accent Color", Colors.cyan, onChange: (context, color) {
           App.setColorScheme(context);
         }, enableConditions: [
-          SettingEnableConditionParameter("Override Accent Color", true)
+          SettingEnableConditionParameter(["Override Accent Color"], true)
         ], searchTags: [
           "primary",
           "color"

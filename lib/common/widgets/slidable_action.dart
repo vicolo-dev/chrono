@@ -104,13 +104,13 @@ class SlideActionState extends State<SlideAction>
                 child: Row(
                   children: [
                     Text(
-                      widget.leftText ?? 'Left',
+                      widget.leftText ?? widget.rightText ?? 'Left',
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSecondary),
                     ),
                     const Spacer(),
                     Text(
-                      widget.rightText ?? 'Right',
+                      widget.rightText ?? widget.leftText ?? 'Right',
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSecondary),
                     ),
@@ -131,12 +131,16 @@ class SlideActionState extends State<SlideAction>
                       if (_progress < 0.1) {
                         if (widget.onSubmitLeft != null) {
                           widget.onSubmitLeft!();
+                        } else if (widget.onSubmitRight != null) {
+                          widget.onSubmitRight!();
                         } else {
                           _cancelAnimation();
                         }
                       } else if (_progress > 0.9) {
                         if (widget.onSubmitRight != null) {
                           widget.onSubmitRight!();
+                        } else if (widget.onSubmitLeft != null) {
+                          widget.onSubmitLeft!();
                         } else {
                           _cancelAnimation();
                         }

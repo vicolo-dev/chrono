@@ -7,18 +7,18 @@ class SlideNotificationAction extends StatelessWidget {
       required this.dismissLabel,
       required this.snoozeLabel,
       required this.onDismiss,
-      required this.onSnooze})
+      this.onSnooze})
       : super(key: key);
 
   final String dismissLabel;
   final String snoozeLabel;
   final VoidCallback onDismiss;
-  final VoidCallback onSnooze;
+  final VoidCallback? onSnooze;
 
   @override
   Widget build(BuildContext context) {
     return SlideAction(
-      leftText: snoozeLabel,
+      leftText: onSnooze != null ? snoozeLabel : null,
       rightText: dismissLabel,
       onSubmitRight: onDismiss,
       onSubmitLeft: onSnooze,
