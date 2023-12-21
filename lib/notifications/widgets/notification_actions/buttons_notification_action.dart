@@ -17,24 +17,31 @@ class ButtonsNotificationAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         if (onSnooze != null)
           CardContainer(
+            color: colorScheme.primary,
             onTap: onSnooze,
             child: Padding(
               padding: const EdgeInsets.all(32.0),
               child: Text(snoozeLabel,
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: textTheme.titleMedium
+                      ?.copyWith(color: colorScheme.onPrimary)),
             ),
           ),
         CardContainer(
+          color: colorScheme.primary,
           onTap: onDismiss,
           child: Padding(
             padding: const EdgeInsets.all(32.0),
             child: Text(dismissLabel,
-                style: Theme.of(context).textTheme.titleMedium),
+                style: textTheme.titleMedium
+                    ?.copyWith(color: colorScheme.onPrimary)),
           ),
         ),
       ],
