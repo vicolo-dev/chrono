@@ -125,7 +125,7 @@ void triggerAlarm(int scheduleId, Json params) async {
     title: title,
     body: TimeOfDayUtils.decode(params['timeOfDay'])
         .formatToString(timeFormatString),
-    showSnoozeButton: !alarm.canBeSnoozed,
+    showSnoozeButton: alarm.canBeSnoozed,
     tasksRequired: alarm.tasks.isNotEmpty,
     snoozeActionLabel: "Snooze",
     dismissActionLabel: "Dismiss",

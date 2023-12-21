@@ -30,6 +30,7 @@ class SettingGroup extends SettingItem {
   List<SettingGroup> get settingGroups => _settingGroups;
   List<SettingItem> get settingItems => _settingItems;
   bool get isSearchable => _isSearchable;
+  bool get isEmpty => !_settings.any((setting) => setting.isEnabled);
 
   SettingGroup(
     String name,
@@ -55,6 +56,13 @@ class SettingGroup extends SettingItem {
       item.parent = this;
       if (item is Setting) {
         _settings.add(item);
+
+        for (var enableCondition in item.enableConditions) {
+          Setting setting = getSettingFromPath(enableCondition.settingPath);
+          item.enableSettings
+              .add(SettingEnableCondition(setting, enableCondition.value));
+          setting.changesEnableCondition = true;
+        }
       } else if (item is SettingPageLink) {
         _settingPageLinks.add(item);
       } else if (item is SettingAction) {
@@ -66,17 +74,6 @@ class SettingGroup extends SettingItem {
         _settingPageLinks.addAll(item.settingPageLinks);
         _settingActions.addAll(item.settingActions);
       }
-    }
-
-    for (Setting setting in _settings) {
-      setting.changesEnableCondition = _settings.any((otherSetting) =>
-          otherSetting.enableConditions
-              .any((condition) => condition.settingName == setting.name));
-
-      setting.enableSettings = setting.enableConditions.map((enableCondition) {
-        return SettingEnableCondition(
-            getSetting(enableCondition.settingName), enableCondition.value);
-      }).toList();
     }
   }
 
@@ -93,6 +90,37 @@ class SettingGroup extends SettingItem {
 
   SettingGroup getGroup(String name) {
     return _settingGroups.firstWhere((item) => item.name == name);
+  }
+
+  Setting getSettingFromPath(List<String> path) {
+    SettingItem currentItem = this;
+    for (var pathItem in path) {
+      if (pathItem == "..") {
+        if (currentItem.parent == null) {
+          throw Exception("Could not find setting with path $path");
+        } else {
+          currentItem = currentItem.parent!;
+          continue;
+        }
+      }
+      if (currentItem is SettingGroup) {
+        currentItem = currentItem.getSettingItem(pathItem);
+      } else if (currentItem is Setting) {
+        return currentItem;
+      }
+    }
+    throw Exception("Could not find setting with path $path");
+  }
+
+  SettingItem getSettingItem(String name) {
+    try {
+      return _settingItems.firstWhere((item) => item.name == name);
+    } catch (e) {
+      if (kDebugMode) {
+        print("Could not find setting item $name: $e");
+      }
+      rethrow;
+    }
   }
 
   Setting getSetting(String name) {

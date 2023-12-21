@@ -7,10 +7,10 @@ import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
 class SettingEnableConditionParameter {
-  String settingName;
+  List<String> settingPath;
   dynamic value;
 
-  SettingEnableConditionParameter(this.settingName, this.value);
+  SettingEnableConditionParameter(this.settingPath, this.value);
 }
 
 class SettingEnableCondition {

@@ -98,6 +98,9 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                       ColorPickerType.wheel: true,
                     },
                     enableShadesSelection: true,
+                    subheading: Text('Select color shade',
+                        style: textTheme.titleSmall
+                            ?.copyWith(color: colorScheme.onSurface)),
                     showColorCode: true,
                     copyPasteBehavior: const ColorPickerCopyPasteBehavior(
                         copyFormat: ColorPickerCopyFormat.hexRRGGBB),

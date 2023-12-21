@@ -45,7 +45,7 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
         ColorSetting("Accent Color", Colors.cyan, onChange: (context, color) {
           App.setColorScheme(context);
         }, enableConditions: [
-          SettingEnableConditionParameter("Override Accent Color", true)
+          SettingEnableConditionParameter(["Override Accent Color"], true)
         ], searchTags: [
           "primary",
           "color"
