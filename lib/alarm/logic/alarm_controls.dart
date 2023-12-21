@@ -117,14 +117,15 @@ void triggerAlarm(int scheduleId, Json params) async {
   RingingManager.ringAlarm(scheduleId);
 
   String timeFormatString = await loadTextFile("time_format_string");
+  String title = alarm.label.isEmpty ? "Alarm Ringing..." : alarm.label;
 
   AlarmNotificationManager.showFullScreenNotification(
     type: ScheduledNotificationType.alarm,
     scheduleIds: [scheduleId],
-    title: "Alarm Ringing...",
+    title: title,
     body: TimeOfDayUtils.decode(params['timeOfDay'])
         .formatToString(timeFormatString),
-    showSnoozeButton: !alarm.maxSnoozeIsReached,
+    showSnoozeButton: !alarm.canBeSnoozed,
     tasksRequired: alarm.tasks.isNotEmpty,
     snoozeActionLabel: "Snooze",
     dismissActionLabel: "Dismiss",

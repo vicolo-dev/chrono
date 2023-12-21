@@ -96,9 +96,12 @@ class Alarm extends CustomizableListItem {
   int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
   int get snoozeCount => _snoozeCount;
   bool get maxSnoozeIsReached => _snoozeCount >= maxSnoozes;
+  bool get canBeSnoozed => maxSnoozeIsReached;
   bool get shouldSkipNextAlarm =>
       _skippedTime == currentScheduleDateTime &&
       currentScheduleDateTime != null;
+  bool get canBeSkipped => !isSnoozed && !isFinished && isEnabled;
+  bool get showDimissButton => isSnoozed && !canBeDisabledWhenSnoozed;
 
   Alarm(this._time) {
     _schedules = createSchedules(_settings);
@@ -179,6 +182,8 @@ class Alarm extends CustomizableListItem {
     _snoozeCount++;
     // When the alarm rang, it was disabled, so we need to enable it again if the user presses snooze
     _isEnabled = true;
+    // Snoozing should cancel any skip
+    _skippedTime = null;
     _snoozeTime = DateTime.now().add(
       Duration(minutes: snoozeLength.toInt()),
     );
@@ -193,7 +198,7 @@ class Alarm extends CustomizableListItem {
     );
   }
 
-  void _unSnooze() {
+  void _cancelSnooze() {
     _snoozeTime = null;
   }
 
@@ -219,13 +224,13 @@ class Alarm extends CustomizableListItem {
   }
 
   void enable() {
-    _unSnooze();
+    _cancelSnooze();
     schedule();
   }
 
   void disable() {
     _isEnabled = false;
-    _unSnooze();
+    _cancelSnooze();
     cancel();
   }
 
@@ -240,7 +245,7 @@ class Alarm extends CustomizableListItem {
 
       if (isSnoozed) {
         if (DateTime.now().isAfter(_snoozeTime!)) {
-          _unSnooze();
+          _cancelSnooze();
         } else {
           _scheduleSnooze();
         }

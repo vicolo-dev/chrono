@@ -31,7 +31,7 @@ String getAlarmScheduleDescription(BuildContext context, Alarm alarm,
   }
   switch (alarm.scheduleType) {
     case OnceAlarmSchedule:
-      return 'Just ${alarm.time.toHours() > DateTime.now().toHours() ? 'today' : 'tomorrow'}';
+      return 'Just ${alarm.time.toHours() > DateTime.now().toHours() ? 'today' : 'tomorrow'} $suffix';
     case DailyAlarmSchedule:
       return 'Every day $suffix';
     case WeeklyAlarmSchedule:
