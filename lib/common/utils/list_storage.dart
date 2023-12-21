@@ -36,7 +36,7 @@ Future<void> saveTextFile(String key, String content) async {
 Future<String> saveRingtone(String id, String sourceUri) async {
   String ringtonesDirectory = getRingtonesDirectoryPathSync();
   File source = File(sourceUri);
-  String newPath = path.join(ringtonesDirectory, '$id.mp3');
+  String newPath = path.join(ringtonesDirectory, id);
   await queue.add(() async {
     await source.copy(newPath);
   });
