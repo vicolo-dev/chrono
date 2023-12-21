@@ -79,6 +79,7 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                 ),
                 // const SizedBox(height: 16.0),
                 ColorPicker(
+                    wheelDiameter: MediaQuery.of(context).size.width - 8,
                     color: _color,
                     onColorChanged: (Color color) => setState(() {
                           _color = color;
@@ -98,7 +99,7 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                       ColorPickerType.wheel: true,
                     },
                     enableShadesSelection: true,
-                    subheading: Text('Select color shade',
+                    subheading: Text('Shade',
                         style: textTheme.titleSmall
                             ?.copyWith(color: colorScheme.onSurface)),
                     showColorCode: true,
