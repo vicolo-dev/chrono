@@ -26,7 +26,7 @@ SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false}) {
   }
 
   if (navBar) {
-    bottom = 16;
+    bottom = 4;
   }
 
   return SnackBar(

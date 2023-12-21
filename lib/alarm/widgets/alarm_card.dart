@@ -188,7 +188,7 @@ class _AlarmCardState extends State<AlarmCard> {
                         widget.onSkipChange(true);
                       }
                     },
-                    Icons.skip_next,
+                    Icons.skip_next_rounded,
                   )
                 ]),
               ],
