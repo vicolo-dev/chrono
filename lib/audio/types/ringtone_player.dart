@@ -3,19 +3,20 @@ import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/timer/types/timer.dart';
-import 'package:clock_app/timer/utils/timer_id.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
 
 class RingtonePlayer {
   static AudioPlayer? _alarmPlayer;
   static AudioPlayer? _timerPlayer;
+  static AudioPlayer? _mediaPlayer;
   static AudioPlayer? activePlayer;
   static bool _vibratorIsAvailable = false;
 
   static Future<void> initialize() async {
     _alarmPlayer ??= AudioPlayer(handleInterruptions: false);
     _timerPlayer ??= AudioPlayer(handleInterruptions: false);
+    _mediaPlayer ??= AudioPlayer(handleInterruptions: false);
     _vibratorIsAvailable = (await Vibration.hasVibrator()) ?? false;
   }
 
@@ -24,7 +25,7 @@ class RingtonePlayer {
       LoopMode loopMode = LoopMode.one,
       AndroidAudioUsage channel = AndroidAudioUsage.media}) async {
     await initializeAudioSession(channel);
-    activePlayer = _alarmPlayer;
+    activePlayer = _mediaPlayer;
     await _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
   }
 
