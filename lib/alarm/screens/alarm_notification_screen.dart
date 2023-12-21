@@ -12,9 +12,13 @@ class AlarmNotificationScreen extends StatefulWidget {
   const AlarmNotificationScreen({
     Key? key,
     required this.scheduleId,
+    this.onDismiss,
+    this.initialIndex = -1,
   }) : super(key: key);
 
   final int scheduleId;
+  final int initialIndex;
+  final Function? onDismiss;
 
   @override
   State<AlarmNotificationScreen> createState() =>
@@ -24,7 +28,7 @@ class AlarmNotificationScreen extends StatefulWidget {
 class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   late Alarm alarm;
   late Widget _currentWidget;
-  int _currentIndex = -1;
+  late int _currentIndex = widget.initialIndex;
   late Widget actionWidget = appSettings
       .getGroup("Alarm")
       .getSetting("Dismiss Action Type")
@@ -37,8 +41,13 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
       if (_currentIndex == -1) {
         _currentWidget = actionWidget;
       } else if (_currentIndex >= alarm.tasks.length) {
-        AlarmNotificationManager.dismissAlarm(
-            widget.scheduleId, ScheduledNotificationType.alarm);
+        if (widget.onDismiss != null) {
+          widget.onDismiss!();
+          Navigator.of(context).pop(true);
+        } else {
+          AlarmNotificationManager.dismissAlarm(
+              widget.scheduleId, ScheduledNotificationType.alarm);
+        }
       } else {
         _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
       }

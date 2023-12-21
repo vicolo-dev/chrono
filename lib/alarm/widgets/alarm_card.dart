@@ -1,12 +1,15 @@
 import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/logic/time_icon.dart';
+import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
+import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
+import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
@@ -90,14 +93,56 @@ class _AlarmCardState extends State<AlarmCard> {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    // return Container();
+    Widget getActionButton() {
+      if (widget.alarm.isFinished) {
+        return IconButton(
+          onPressed: widget.onPressDelete,
+          icon: Icon(
+            Icons.delete_rounded,
+            color: colorScheme.error,
+            size: 32,
+          ),
+        );
+      }
+      if (widget.alarm.canBeDisabled) {
+        return Switch(
+          value: widget.alarm.isEnabled,
+          onChanged: widget.onEnabledChange,
+        );
+      }
+      return TextButton(
+        child: Text("Dismiss",
+            maxLines: 1,
+            style: textTheme.labelLarge?.copyWith(color: colorScheme.primary)),
+        onPressed: () async {
+          if (widget.alarm.tasks.isEmpty) {
+            widget.onDismiss();
+            return;
+          }
+
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AlarmNotificationScreen(
+                scheduleId: widget.alarm.id,
+                initialIndex: 0,
+                onDismiss: widget.onDismiss,
+              ),
+            ),
+          );
+          if (result != null && result == true) {
+            widget.onDismiss();
+          }
+        },
+      );
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Row(
         children: [
           Expanded(
-            flex: 8,
+            flex: 999,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Column(
@@ -153,47 +198,31 @@ class _AlarmCardState extends State<AlarmCard> {
               ),
             ),
           ),
-          const Spacer(),
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // const SizedBox(width: 8),
-                widget.alarm.isFinished
-                    ? IconButton(
-                        onPressed: widget.onPressDelete,
-                        icon: Icon(
-                          Icons.delete_rounded,
-                          color: colorScheme.error,
-                          size: 32,
-                        ),
-                      )
-                    : Switch(
-                        value: widget.alarm.isEnabled,
-                        onChanged: widget.onEnabledChange,
-                      ),
-                CardEditMenu(actions: [
-                  if (widget.alarm.isDeletable)
-                    getDeletePopupAction(context, widget.onPressDelete),
-                  getDuplicatePopupAction(widget.onPressDuplicate),
-                  PopupAction(
-                    widget.alarm.shouldSkipNextAlarm
-                        ? "Cancel Skip"
-                        : "Skip Next Alarm",
-                    () {
-                      if (widget.alarm.shouldSkipNextAlarm) {
-                        widget.onSkipChange(false);
-                      } else {
-                        widget.onSkipChange(true);
-                      }
-                    },
-                    Icons.skip_next_rounded,
-                  )
-                ]),
-              ],
-            ),
-          )
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              // const SizedBox(width: 8),
+              getActionButton(),
+              CardEditMenu(actions: [
+                if (widget.alarm.isDeletable)
+                  getDeletePopupAction(context, widget.onPressDelete),
+                getDuplicatePopupAction(widget.onPressDuplicate),
+                PopupAction(
+                  widget.alarm.shouldSkipNextAlarm
+                      ? "Cancel Skip"
+                      : "Skip Next Alarm",
+                  () {
+                    if (widget.alarm.shouldSkipNextAlarm) {
+                      widget.onSkipChange(false);
+                    } else {
+                      widget.onSkipChange(true);
+                    }
+                  },
+                  Icons.skip_next_rounded,
+                )
+              ]),
+            ],
+          ),
         ],
       ),
     );
