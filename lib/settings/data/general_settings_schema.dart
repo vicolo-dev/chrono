@@ -2,6 +2,7 @@ import 'package:app_settings/app_settings.dart';
 import 'package:auto_start_flutter/auto_start_flutter.dart';
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/screens/ringtones_screen.dart';
@@ -98,21 +99,8 @@ SettingGroup generalSettingsSchema = SettingGroup(
               await getAutoStartPermission();
             } else {
               // ignore: use_build_context_synchronously
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-              SnackBar snackBar = SnackBar(
-                content: Container(
-                    alignment: Alignment.centerLeft,
-                    height: 28,
-                    child: const Text(
-                        "Auto Start is not available for your device")),
-                margin: const EdgeInsets.only(left: 20, right: 20, bottom: 4),
-                elevation: 2,
-                dismissDirection: DismissDirection.none,
-              );
-
-              // ignore: use_build_context_synchronously
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              showSnackBar(
+                  context, "Auto Start is not available for your device");
             }
           } on PlatformException catch (e) {
             if (kDebugMode) print(e.message);

@@ -1,5 +1,6 @@
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/clock/widgets/timezone_card_content.dart';
+import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart' as timezone;
@@ -29,11 +30,7 @@ class TimeZoneSearchCard extends StatelessWidget {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
           if (disabled) {
-            const snackBar = SnackBar(
-              content: Text('This city is already in your favorites.'),
-            );
-
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            showSnackBar(context, 'This city is already in your favorites.');
           } else {
             onTap();
           }
