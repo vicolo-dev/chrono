@@ -14,6 +14,7 @@ import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
@@ -55,8 +56,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             ToggleSettingOption("S", 7),
           ],
           enableConditions: [
-            SettingEnableConditionParameter(
-                ["Schedule", "Type"], WeeklyAlarmSchedule)
+            SettingEnableConditionParameter(["Type"], WeeklyAlarmSchedule)
           ],
         ),
         DateTimeSetting(
@@ -140,16 +140,15 @@ SettingGroup alarmSettingsSchema = SettingGroup(
               SettingEnableConditionParameter(["Enabled"], true)
             ]),
         SettingGroup("While Snoozed", [
-          SwitchSetting("Prevent Disabling", false, enableConditions: [
-            SettingEnableConditionParameter(["..", "Enabled"], true)
-          ]),
-          SwitchSetting("Prevent Deletion", false, enableConditions: [
-            SettingEnableConditionParameter(["..", "Enabled"], true)
-          ]),
+          SwitchSetting("Prevent Disabling", false),
+          SwitchSetting("Prevent Deletion", false),
+        ], enableConditions: [
+          SettingEnableConditionParameter(["Enabled"], true)
         ]),
       ],
       icon: Icons.snooze_rounded,
       summarySettings: [
+        "Enabled",
         "Length",
       ],
     ),

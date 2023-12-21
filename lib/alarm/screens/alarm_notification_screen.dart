@@ -29,7 +29,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
       .getGroup("Alarm")
       .getSetting("Dismiss Action Type")
       .value
-      .builder(_setNextWidget, _snoozeAlarm, "Dismiss", "Snooze");
+      .builder(_setNextWidget, alarm.canBeSnoozed ? _snoozeAlarm() : null,
+          "Dismiss", "Snooze");
 
   void _setNextWidget() {
     setState(() {

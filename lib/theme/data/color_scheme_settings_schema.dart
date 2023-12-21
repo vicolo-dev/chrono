@@ -1,4 +1,5 @@
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 

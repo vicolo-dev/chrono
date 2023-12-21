@@ -2,30 +2,15 @@ import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_item.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
-class SettingEnableConditionParameter {
-  List<String> settingPath;
-  dynamic value;
-
-  SettingEnableConditionParameter(this.settingPath, this.value);
-}
-
-class SettingEnableCondition {
-  Setting setting;
-  dynamic value;
-
-  SettingEnableCondition(this.setting, this.value);
-}
-
 abstract class Setting<T> extends SettingItem {
   T _value;
   final T _defaultValue;
-  List<SettingEnableConditionParameter> enableConditions;
-  // Settings which influence whether this setting is enabled
-  List<SettingEnableCondition> enableSettings;
+
   // Whether another setting depends on the value of this setting
   bool changesEnableCondition;
   void Function(BuildContext context, T)? onChange;
@@ -34,30 +19,20 @@ abstract class Setting<T> extends SettingItem {
 
   final T Function(T)? _valueCopyGetter;
 
-  bool get isEnabled {
-    for (var enableSetting in enableSettings) {
-      if (enableSetting.setting.value != enableSetting.value) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   Setting(
     String name,
     String description,
     T defaultValue,
     this.onChange,
-    this.enableConditions,
+    List<SettingEnableConditionParameter> enableConditions,
     List<String> searchTags,
     this.isVisual, {
     T Function(T)? valueCopyGetter,
   })  : _value = valueCopyGetter?.call(defaultValue) ?? defaultValue,
         _defaultValue = valueCopyGetter?.call(defaultValue) ?? defaultValue,
-        enableSettings = [],
         changesEnableCondition = false,
         _valueCopyGetter = valueCopyGetter,
-        super(name, description, searchTags);
+        super(name, description, searchTags, enableConditions);
 
   void setValue(BuildContext context, T value) {
     _value = _valueCopyGetter?.call(value) ?? value;

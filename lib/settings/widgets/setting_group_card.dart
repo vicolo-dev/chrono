@@ -32,8 +32,6 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    if (widget.settingGroup.isEmpty) return const SizedBox();
-
     bool showSummaryView = widget.settingGroup.summarySettings.isNotEmpty;
     bool showExpandedView = (widget.settingGroup.showExpandedView ??
             widget.settingGroup.settingGroups.isEmpty) ||

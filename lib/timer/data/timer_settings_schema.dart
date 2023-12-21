@@ -1,12 +1,10 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/audio/audio_channels.dart';
-import 'package:clock_app/audio/logic/audio_session.dart';
-import 'package:clock_app/audio/types/audio.dart';
-import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 
 import 'package:clock_app/timer/types/time_duration.dart';
@@ -44,7 +42,7 @@ SettingGroup timerSettingsSchema = SettingGroup(
             DurationSetting(
                 "Time To Full Volume", const TimeDuration(minutes: 1),
                 enableConditions: [
-                  SettingEnableConditionParameter("Rising Volume", true)
+                  SettingEnableConditionParameter(["Rising Volume"], true)
                 ]),
           ],
         ),

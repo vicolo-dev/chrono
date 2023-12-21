@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
 import 'package:flutter/foundation.dart';
@@ -37,6 +38,7 @@ class SettingGroup extends SettingItem {
     this._settingItems, {
     int? version,
     IconData? icon,
+    List<SettingEnableConditionParameter> enableConditions = const [],
     List<String> summarySettings = const [],
     String description = "",
     bool? showExpandedView,
@@ -51,18 +53,11 @@ class SettingGroup extends SettingItem {
         _settingPageLinks = [],
         _settingActions = [],
         _version = version,
-        super(name, description, searchTags) {
+        super(name, description, searchTags, enableConditions) {
     for (SettingItem item in _settingItems) {
       item.parent = this;
       if (item is Setting) {
         _settings.add(item);
-
-        for (var enableCondition in item.enableConditions) {
-          Setting setting = getSettingFromPath(enableCondition.settingPath);
-          item.enableSettings
-              .add(SettingEnableCondition(setting, enableCondition.value));
-          setting.changesEnableCondition = true;
-        }
       } else if (item is SettingPageLink) {
         _settingPageLinks.add(item);
       } else if (item is SettingAction) {
@@ -74,6 +69,15 @@ class SettingGroup extends SettingItem {
         _settingPageLinks.addAll(item.settingPageLinks);
         _settingActions.addAll(item.settingActions);
       }
+
+      for (var enableCondition in item.enableConditions) {
+        Setting setting = getSettingFromPath(enableCondition.settingPath);
+        item.enableSettings
+            .add(SettingEnableCondition(setting, enableCondition.value));
+        // print(
+        //     "${item.name} is enabled by ${setting.name} = ${enableCondition.value}");
+        setting.changesEnableCondition = true;
+      }
     }
   }
 
@@ -83,6 +87,11 @@ class SettingGroup extends SettingItem {
       name,
       _settingItems.map((setting) => setting.copy()).toList(),
       icon: icon,
+      searchTags: searchTags,
+      enableConditions: enableConditions,
+      version: _version,
+      isSearchable: isSearchable,
+      showExpandedView: showExpandedView,
       summarySettings: _summarySettings,
       description: description,
     );
@@ -95,21 +104,24 @@ class SettingGroup extends SettingItem {
   Setting getSettingFromPath(List<String> path) {
     SettingItem currentItem = this;
     for (var pathItem in path) {
-      if (pathItem == "..") {
-        if (currentItem.parent == null) {
-          throw Exception("Could not find setting with path $path");
-        } else {
-          currentItem = currentItem.parent!;
-          continue;
-        }
-      }
+      // print("current item: ${currentItem.name}");
+      // if (pathItem == "..") {
+      //   if (currentItem.parent == null) {
+      //     throw Exception("Could not find setting with path $path");
+      //   } else {
+      //     currentItem = currentItem.parent!;
+      //     continue;
+      //   }
+      // }
       if (currentItem is SettingGroup) {
         currentItem = currentItem.getSettingItem(pathItem);
-      } else if (currentItem is Setting) {
-        return currentItem;
       }
     }
-    throw Exception("Could not find setting with path $path");
+    if (currentItem is Setting) {
+      return currentItem;
+    } else {
+      throw Exception("Could not find setting with path $path");
+    }
   }
 
   SettingItem getSettingItem(String name) {

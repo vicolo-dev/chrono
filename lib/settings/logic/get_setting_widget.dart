@@ -50,7 +50,10 @@ Widget? getSettingItemWidget(
   VoidCallback? onSettingChanged,
   bool isAppSettings = true,
 }) {
+  if (!item.isEnabled) return null;
   if (item is SettingGroup) {
+    // print(
+    //     "setting group ${item.name} ${item.isEnabled} ${item.enableSettings.map((e) => e.setting.name)}");
     return SettingGroupCard(
       settingGroup: item,
       checkDependentEnableConditions: checkDependentEnableConditions,
@@ -68,7 +71,7 @@ Widget? getSettingItemWidget(
       showAsCard: showAsCard,
     );
   } else if (item is Setting) {
-    if (!item.isEnabled || !item.isVisual) return null;
+    if (!item.isVisual) return null;
 
     onChanged(dynamic value) {
       if (item.changesEnableCondition) {

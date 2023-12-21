@@ -7,27 +7,28 @@ class ButtonsNotificationAction extends StatelessWidget {
       required this.dismissLabel,
       required this.snoozeLabel,
       required this.onDismiss,
-      required this.onSnooze})
+      this.onSnooze})
       : super(key: key);
 
   final String dismissLabel;
   final String snoozeLabel;
   final VoidCallback onDismiss;
-  final VoidCallback onSnooze;
+  final VoidCallback? onSnooze;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CardContainer(
-          onTap: onSnooze,
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Text(snoozeLabel,
-                style: Theme.of(context).textTheme.titleMedium),
+        if (onSnooze != null)
+          CardContainer(
+            onTap: onSnooze,
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Text(snoozeLabel,
+                  style: Theme.of(context).textTheme.titleMedium),
+            ),
           ),
-        ),
         CardContainer(
           onTap: onDismiss,
           child: Padding(
