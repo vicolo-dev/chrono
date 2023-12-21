@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/circular_progress_bar.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
@@ -142,10 +143,10 @@ class _TimerCardState extends State<TimerCard> {
               ),
             ),
             const Spacer(),
-            CardEditMenu(
-              onPressDelete: widget.onPressDelete,
-              onPressDuplicate: widget.onPressDuplicate,
-            ),
+            CardEditMenu(actions: [
+              getDeletePopupAction(context, widget.onPressDelete),
+              getDuplicatePopupAction(widget.onPressDuplicate),
+            ]),
           ],
         ));
   }

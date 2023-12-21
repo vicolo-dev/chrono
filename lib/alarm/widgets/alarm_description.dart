@@ -93,6 +93,7 @@ class _AlarmDescriptionState extends State<AlarmDescription> {
             style: textTheme.displaySmall?.copyWith(
               color: colorScheme.onBackground.withOpacity(0.6),
             ),
+            textAlign: TextAlign.center,
           ),
         ),
       ],

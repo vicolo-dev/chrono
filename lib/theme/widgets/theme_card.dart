@@ -1,3 +1,4 @@
+import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/theme/types/theme_item.dart';
 import 'package:clock_app/theme/widgets/theme_preview_card.dart';
@@ -81,10 +82,11 @@ class ThemeCard<Item extends ThemeItem> extends StatelessWidget {
                         ? colorScheme.primary
                         : colorScheme.onSurface.withOpacity(0.5)),
               ),
-              CardEditMenu(
-                onPressDelete: themeItem.isDeletable ? onPressDelete : null,
-                onPressDuplicate: onPressDuplicate,
-              ),
+              CardEditMenu(actions: [
+                if (themeItem.isDeletable)
+                  getDeletePopupAction(context, onPressDelete),
+                getDuplicatePopupAction(onPressDuplicate),
+              ]),
             ],
           ),
         ),

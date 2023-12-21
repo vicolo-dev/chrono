@@ -11,7 +11,6 @@ import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/time.dart';
-import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/weekday.dart';
 import 'package:clock_app/common/types/list_item.dart';
@@ -40,6 +39,7 @@ class Alarm extends CustomizableListItem {
   bool _isFinished = false;
   DateTime? _snoozeTime;
   int _snoozeCount = 0;
+  DateTime? _skippedTime = null;
   SettingGroup _settings = SettingGroup(
     "Alarm Settings",
     appSettings
@@ -96,6 +96,12 @@ class Alarm extends CustomizableListItem {
   int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
   int get snoozeCount => _snoozeCount;
   bool get maxSnoozeIsReached => _snoozeCount >= maxSnoozes;
+  bool get canBeSnoozed => maxSnoozeIsReached;
+  bool get shouldSkipNextAlarm =>
+      _skippedTime == currentScheduleDateTime &&
+      currentScheduleDateTime != null;
+  bool get canBeSkipped => !isSnoozed && !isFinished && isEnabled;
+  bool get showDimissButton => isSnoozed && !canBeDisabledWhenSnoozed;
 
   Alarm(this._time) {
     _schedules = createSchedules(_settings);
@@ -117,6 +123,7 @@ class Alarm extends CustomizableListItem {
         _time = alarm._time,
         _snoozeCount = alarm._snoozeCount,
         _snoozeTime = alarm._snoozeTime,
+        _skippedTime = alarm._skippedTime,
         _settings = alarm._settings.copy() {
     _schedules = createSchedules(_settings);
   }
@@ -138,11 +145,27 @@ class Alarm extends CustomizableListItem {
     _settings.getSetting(name).setValueWithoutNotify(value);
   }
 
+  void skip() {
+    _skippedTime = currentScheduleDateTime;
+  }
+
+  void cancelSkip() {
+    _skippedTime = null;
+  }
+
   void toggle() {
     if (_isEnabled) {
       disable();
     } else {
       enable();
+    }
+  }
+
+  void setShouldSkip(bool shouldSkip) {
+    if (shouldSkip) {
+      skip();
+    } else {
+      cancelSkip();
     }
   }
 
@@ -159,6 +182,8 @@ class Alarm extends CustomizableListItem {
     _snoozeCount++;
     // When the alarm rang, it was disabled, so we need to enable it again if the user presses snooze
     _isEnabled = true;
+    // Snoozing should cancel any skip
+    _skippedTime = null;
     _snoozeTime = DateTime.now().add(
       Duration(minutes: snoozeLength.toInt()),
     );
@@ -173,7 +198,7 @@ class Alarm extends CustomizableListItem {
     );
   }
 
-  void _unSnooze() {
+  void _cancelSnooze() {
     _snoozeTime = null;
   }
 
@@ -192,19 +217,20 @@ class Alarm extends CustomizableListItem {
   }
 
   void cancel() {
-    for (var alarm in _schedules) {
-      alarm.cancel();
+    cancelSkip();
+    for (var schedule in _schedules) {
+      schedule.cancel();
     }
   }
 
   void enable() {
-    _unSnooze();
+    _cancelSnooze();
     schedule();
   }
 
   void disable() {
     _isEnabled = false;
-    _unSnooze();
+    _cancelSnooze();
     cancel();
   }
 
@@ -219,7 +245,7 @@ class Alarm extends CustomizableListItem {
 
       if (isSnoozed) {
         if (DateTime.now().isAfter(_snoozeTime!)) {
-          _unSnooze();
+          _cancelSnooze();
         } else {
           _scheduleSnooze();
         }
@@ -278,13 +304,18 @@ class Alarm extends CustomizableListItem {
       _schedules = createSchedules(_settings);
       return;
     }
-    _time = Time.fromJson(json['timeOfDay']);
-    _isEnabled = json['enabled'];
-    _isFinished = json['finished'];
-    _snoozeTime = json['snoozeTime'] != 0
+    _time = json['timeOfDay'] != null
+        ? Time.fromJson(json['timeOfDay'])
+        : Time.now();
+    _isEnabled = json['enabled'] ?? false;
+    _isFinished = json['finished'] ?? false;
+    _skippedTime = json['skippedTime'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(json['skippedTime'])
+        : null;
+    _snoozeTime = json['snoozeTime'] != null
         ? DateTime.fromMillisecondsSinceEpoch(json['snoozeTime'])
         : null;
-    _snoozeCount = json['snoozeCount'];
+    _snoozeCount = json['snoozeCount'] ?? 0;
     _settings = SettingGroup(
       "Alarm Settings",
       appSettings
@@ -318,11 +349,11 @@ class Alarm extends CustomizableListItem {
         'timeOfDay': _time.toJson(),
         'enabled': _isEnabled,
         'finished': _isFinished,
-        'snoozeTime':
-            snoozeTime != null ? snoozeTime!.millisecondsSinceEpoch : 0,
+        'snoozeTime': snoozeTime?.millisecondsSinceEpoch,
         'snoozeCount': _snoozeCount,
         'schedules':
             _schedules.map<Json>((schedule) => schedule.toJson()).toList(),
         'settings': _settings.valueToJson(),
+        'skippedTime': _skippedTime?.millisecondsSinceEpoch,
       };
 }

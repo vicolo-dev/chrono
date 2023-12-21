@@ -1,10 +1,8 @@
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
@@ -17,8 +15,6 @@ import 'package:clock_app/alarm/types/ringing_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
-import 'package:clock_app/audio/logic/audio_session.dart';
-import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
@@ -94,7 +90,14 @@ void triggerAlarm(int scheduleId, Json params) async {
     return;
   }
 
+  Alarm alarm = getAlarmByScheduleId(scheduleId);
+
   await updateAlarms();
+
+  if (alarm.shouldSkipNextAlarm) {
+    alarm.cancelSkip();
+    return;
+  }
 
   GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
@@ -110,20 +113,19 @@ void triggerAlarm(int scheduleId, Json params) async {
         ScheduledNotificationType.alarm);
   }
 
-  Alarm alarm = getAlarmByScheduleId(scheduleId);
-
   RingtonePlayer.playAlarm(alarm);
   RingingManager.ringAlarm(scheduleId);
 
   String timeFormatString = await loadTextFile("time_format_string");
+  String title = alarm.label.isEmpty ? "Alarm Ringing..." : alarm.label;
 
   AlarmNotificationManager.showFullScreenNotification(
     type: ScheduledNotificationType.alarm,
     scheduleIds: [scheduleId],
-    title: "Alarm Ringing...",
+    title: title,
     body: TimeOfDayUtils.decode(params['timeOfDay'])
         .formatToString(timeFormatString),
-    showSnoozeButton: !alarm.maxSnoozeIsReached,
+    showSnoozeButton: !alarm.canBeSnoozed,
     tasksRequired: alarm.tasks.isNotEmpty,
     snoozeActionLabel: "Snooze",
     dismissActionLabel: "Dismiss",

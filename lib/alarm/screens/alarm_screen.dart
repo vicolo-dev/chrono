@@ -137,6 +137,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _listController.deleteItem(alarm);
   }
 
+  _handleSkipChange(Alarm alarm, bool value) {
+    int index = _listController.getItemIndex(alarm);
+    _listController.changeItems((alarms) {
+      alarms[index].setShouldSkip(value);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<void> selectTime() async {
@@ -168,11 +175,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
           saveTag: 'alarms',
           listController: _listController,
           itemBuilder: (alarm) => AlarmCard(
-              alarm: alarm,
-              onEnabledChange: (value) =>
-                  _handleEnableChangeAlarm(alarm, value),
-              onPressDelete: () => _handleDeleteAlarm(alarm),
-              onPressDuplicate: () => _listController.duplicateItem(alarm)),
+            alarm: alarm,
+            onEnabledChange: (value) => _handleEnableChangeAlarm(alarm, value),
+            onPressDelete: () => _handleDeleteAlarm(alarm),
+            onPressDuplicate: () => _listController.duplicateItem(alarm),
+            onDismiss: () => {},
+            onSkipChange: (value) => _handleSkipChange(alarm, value),
+          ),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
           onAddItem: (alarm) {
             alarm.update();
