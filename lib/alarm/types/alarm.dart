@@ -39,7 +39,7 @@ class Alarm extends CustomizableListItem {
   bool _isFinished = false;
   DateTime? _snoozeTime;
   int _snoozeCount = 0;
-  DateTime? _skippedTime = null;
+  DateTime? _skippedTime;
   SettingGroup _settings = SettingGroup(
     "Alarm Settings",
     appSettings

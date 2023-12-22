@@ -114,6 +114,7 @@ flutter:
   assets:
     - assets/timezones.db
     - assets/images/
+    - assets/ringtones/
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
