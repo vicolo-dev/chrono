@@ -1,5 +1,7 @@
 <div align="center">
 
+<image src="fastlane/metadata/android/en-US/images/icon.png" height="100">
+
 # Chrono
 
 ### A modern and powerful clock, alarms, timer and stopwatch app for Android!
