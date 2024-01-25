@@ -19,7 +19,6 @@ Its usable, but still WIP, so you might encounter some bugs. Feel free to open a
 
 # Table of Content
 - [Features](#features)
-- [Installation](#installation)
 - [Platforms](#platforms)
 - [Development](#development)
 - [Todo](#todo)
@@ -46,10 +45,6 @@ Its usable, but still WIP, so you might encounter some bugs. Feel free to open a
 ### Appearance
 - Highly customizable color themes
 - Highly customizable style themes
-
-## Installation
-- Download the relevant apk from the [latest release](https://github.com/vicolo-dev/chrono/releases/latest/)
-- Install (make sure to allow install from unknown sources)
 
 ## Platforms
 Currently, the app is only available for android. I don't have an apple device to develop for iOS, but feel free
