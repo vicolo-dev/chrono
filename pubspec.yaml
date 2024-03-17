@@ -38,23 +38,24 @@ dependencies:
       ref: master
   # flutter_boot_receiver:
   #   path: "../flutter_boot_receiver"
-  intl: ^0.17.0
+  intl: ^0.19.0
   timezone: ^0.9.1
   timer_builder: ^2.0.0
   path_provider: ^2.0.11
   path: ^1.8.2
   sqflite: ^2.2.2
-  flutter_slidable: ^2.0.0
+  flutter_slidable: ^3.1.0
   flutter_system_ringtones: ^0.0.6
-  android_alarm_manager_plus:
-    git:
-      url: https://github.com/AhsanSarwar45/android_alarm_manager_plus
-      ref: main
+  android_alarm_manager_plus: ^3.0.4
+  # android_alarm_manager_plus:
+  #   git:
+  #     url: https://github.com/AhsanSarwar45/android_alarm_manager_plus
+  #     ref: main
   just_audio: ^0.9.31
-  awesome_notifications: ^0.7.4+1
+  awesome_notifications: ^0.9.3
   audio_session: ^0.1.13
   flutter_windowmanager: ^0.2.0
-  flutter_fgbg: ^0.2.2
+  flutter_fgbg: ^0.3.0
   move_to_background: ^1.0.2
   vibration: ^1.7.6
   great_list_view:
@@ -90,7 +91,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
   dart_code_metrics: ^5.5.1
   change_app_package_name: ^1.1.0
   flutter_launcher_icons: ^0.13.1
