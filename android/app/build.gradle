@@ -34,9 +34,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
-    minSdkVersion 21
-    targetSdkVersion flutter.targetSdkVersion
-
+    
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -89,11 +87,8 @@ android {
         // }        
 
         applicationId "com.vicolo.chrono"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        
-               // def abiCodes = ['armeabi-v7a':1, 'arm64-v8a':2, x86_64:3]
-        // def abi = project.hasProperty('flutterBuildAbi') ? project.flutterBuildAbi : 'armeabi-v7a'
+        minSdkVersion 21
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()  
         versionName flutterVersionName
         multiDexEnabled true
