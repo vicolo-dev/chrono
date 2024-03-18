@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 
 class SlideNotificationAction extends StatelessWidget {
   const SlideNotificationAction(
-      {Key? key,
+      {super.key,
       required this.dismissLabel,
       required this.snoozeLabel,
       required this.onDismiss,
-      this.onSnooze})
-      : super(key: key);
+      this.onSnooze});
 
   final String dismissLabel;
   final String snoozeLabel;

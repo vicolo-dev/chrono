@@ -26,7 +26,7 @@ class ButtonsNotificationAction extends StatelessWidget {
         if (onSnooze != null)
           CardContainer(
             color: colorScheme.primary,
-            onTap: onSnooze,
+            onTap: ()=>print("oooooooooooooooooooaoooooooooooooooooo"),
             child: Padding(
               padding: const EdgeInsets.all(32.0),
               child: Text(snoozeLabel,

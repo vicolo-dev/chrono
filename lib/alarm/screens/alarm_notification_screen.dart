@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 
 class AlarmNotificationScreen extends StatefulWidget {
   const AlarmNotificationScreen({
-    Key? key,
+    super.key,
     required this.scheduleId,
     this.onDismiss,
     this.initialIndex = -1,
-  }) : super(key: key);
+  });
 
   final int scheduleId;
   final int initialIndex;
@@ -33,7 +33,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
       .getGroup("Alarm")
       .getSetting("Dismiss Action Type")
       .value
-      .builder(_setNextWidget, alarm.canBeSnoozed ? _snoozeAlarm() : null,
+      .builder(_setNextWidget, alarm.canBeSnoozed ? _snoozeAlarm : null,
           "Dismiss", "Snooze");
 
   void _setNextWidget() {
@@ -63,6 +63,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   }
 
   void _snoozeAlarm() {
+    print("Alarm ssssssssssssssssssssss");
     AlarmNotificationManager.snoozeAlarm(
         widget.scheduleId, ScheduledNotificationType.alarm);
   }
