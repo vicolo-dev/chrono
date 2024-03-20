@@ -142,6 +142,3 @@ flutter:
     - family: FluxIcons
       fonts:
         - asset: fonts/FluxIcons.ttf
-
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
