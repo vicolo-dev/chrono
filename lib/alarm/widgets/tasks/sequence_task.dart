@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
@@ -93,19 +94,7 @@ class _SequenceTaskState extends State<SequenceTask>
         // Wrong box tapped
         _enteredSequence.clear();
 
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        SnackBar snackBar = SnackBar(
-          content: Container(
-            alignment: Alignment.centerLeft,
-            height: 28,
-            child: const Text('Oops, wrong sequence! Please try again.'),
-          ),
-          margin: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
-          elevation: 2,
-          dismissDirection: DismissDirection.none,
-        );
-
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        showSnackBar(context, 'Oops, wrong sequence! Please try again.');
       } else {
         // Correct box tapped
         _enteredSequence.add(index);

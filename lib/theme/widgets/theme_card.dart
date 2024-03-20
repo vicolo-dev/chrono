@@ -1,3 +1,5 @@
+import 'package:clock_app/common/utils/popup_action.dart';
+import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/theme/types/theme_item.dart';
 import 'package:clock_app/theme/widgets/theme_preview_card.dart';
@@ -60,31 +62,20 @@ class ThemeCard<Item extends ThemeItem> extends StatelessWidget {
                 onPressed: !themeItem.isDefault
                     ? onPressEdit
                     : () {
-                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Container(
-                              alignment: Alignment.centerLeft,
-                              height: 28,
-                              child: const Text(
-                                  "Default themes cannot be edited. You can duplicate it to edit."),
-                            ),
-                            margin: const EdgeInsets.only(
-                                left: 20, right: 64 + 16, bottom: 12),
-                            elevation: 2,
-                            dismissDirection: DismissDirection.none,
-                          ),
-                        );
+                        showSnackBar(context,
+                            "Default themes cannot be edited. You can duplicate it to edit.",
+                            fab: true);
                       },
                 icon: Icon(Icons.edit,
                     color: !themeItem.isDefault
                         ? colorScheme.primary
                         : colorScheme.onSurface.withOpacity(0.5)),
               ),
-              CardEditMenu(
-                onPressDelete: themeItem.isDeletable ? onPressDelete : null,
-                onPressDuplicate: onPressDuplicate,
-              ),
+              CardEditMenu(actions: [
+                if (themeItem.isDeletable)
+                  getDeletePopupAction(context, onPressDelete),
+                getDuplicatePopupAction(onPressDuplicate),
+              ]),
             ],
           ),
         ),

@@ -2,6 +2,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
@@ -14,8 +15,6 @@ import 'package:clock_app/alarm/types/ringing_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
-import 'package:clock_app/audio/logic/audio_session.dart';
-import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
@@ -58,14 +57,12 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
 
   await initializeAppDataDirectory();
   await GetStorage.init();
-  await RingtoneManager.initialize();
+  // await RingtoneManager.initialize();
   await RingtonePlayer.initialize();
 
   if (notificationType == ScheduledNotificationType.alarm) {
-    await initializeAudioSession(getAlarmByScheduleId(scheduleId).audioChannel);
     triggerAlarm(scheduleId, params);
   } else if (notificationType == ScheduledNotificationType.timer) {
-    await initializeAudioSession(getTimerById(scheduleId).audioChannel);
     triggerTimer(scheduleId, params);
   }
 }
@@ -93,7 +90,14 @@ void triggerAlarm(int scheduleId, Json params) async {
     return;
   }
 
+  Alarm alarm = getAlarmByScheduleId(scheduleId);
+
   await updateAlarms();
+
+  if (alarm.shouldSkipNextAlarm) {
+    alarm.cancelSkip();
+    return;
+  }
 
   GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
@@ -109,17 +113,19 @@ void triggerAlarm(int scheduleId, Json params) async {
         ScheduledNotificationType.alarm);
   }
 
-  Alarm alarm = getAlarmByScheduleId(scheduleId);
-
   RingtonePlayer.playAlarm(alarm);
   RingingManager.ringAlarm(scheduleId);
+
+  String timeFormatString = await loadTextFile("time_format_string");
+  String title = alarm.label.isEmpty ? "Alarm Ringing..." : alarm.label;
 
   AlarmNotificationManager.showFullScreenNotification(
     type: ScheduledNotificationType.alarm,
     scheduleIds: [scheduleId],
-    title: "Alarm Ringing...",
-    body: TimeOfDayUtils.decode(params['timeOfDay']).formatToString('h:mm a'),
-    showSnoozeButton: !alarm.maxSnoozeIsReached,
+    title: title,
+    body: TimeOfDayUtils.decode(params['timeOfDay'])
+        .formatToString(timeFormatString),
+    showSnoozeButton: alarm.canBeSnoozed,
     tasksRequired: alarm.tasks.isNotEmpty,
     snoozeActionLabel: "Snooze",
     dismissActionLabel: "Dismiss",

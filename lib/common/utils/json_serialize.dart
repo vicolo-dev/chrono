@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_task.dart';
+import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/common/types/json.dart';
@@ -24,6 +25,7 @@ final fromJsonFactories = <Type, Function>{
   AlarmTask: (Json json) => AlarmTask.fromJson(json),
   Time: (Json json) => Time.fromJson(json),
   TimeOfDay: (Json json) => TimeOfDayUtils.fromJson(json),
+  FileItem: (Json json) => FileItem.fromJson(json),
   // AlarmTaskList: (Json json) => AlarmTaskList.fromJson(json),
 };
 

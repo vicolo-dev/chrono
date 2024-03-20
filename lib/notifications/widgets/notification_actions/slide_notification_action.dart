@@ -3,22 +3,21 @@ import 'package:flutter/material.dart';
 
 class SlideNotificationAction extends StatelessWidget {
   const SlideNotificationAction(
-      {Key? key,
+      {super.key,
       required this.dismissLabel,
       required this.snoozeLabel,
       required this.onDismiss,
-      required this.onSnooze})
-      : super(key: key);
+      this.onSnooze});
 
   final String dismissLabel;
   final String snoozeLabel;
   final VoidCallback onDismiss;
-  final VoidCallback onSnooze;
+  final VoidCallback? onSnooze;
 
   @override
   Widget build(BuildContext context) {
     return SlideAction(
-      leftText: snoozeLabel,
+      leftText: onSnooze != null ? snoozeLabel : null,
       rightText: dismissLabel,
       onSubmitRight: onDismiss,
       onSubmitLeft: onSnooze,

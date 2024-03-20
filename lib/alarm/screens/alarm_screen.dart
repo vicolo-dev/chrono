@@ -7,6 +7,7 @@ import 'package:clock_app/alarm/widgets/alarm_time_picker.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/time.dart';
+import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
@@ -60,24 +61,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
     super.dispose();
   }
 
-  SnackBar getSnackbar(String text) {
-    return SnackBar(
-      content: Container(
-        alignment: Alignment.centerLeft,
-        height: 28,
-        child: Text(text),
-      ),
-      margin: const EdgeInsets.only(left: 20, right: 64 + 16, bottom: 4),
-      elevation: 2,
-      dismissDirection: DismissDirection.none,
-    );
-  }
-
   _handleEnableChangeAlarm(Alarm alarm, bool value) {
     if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-          getSnackbar("Cannot disable alarm while it is snoozed"));
+      showSnackBar(context, "Cannot disable alarm while it is snoozed",
+          fab: true, navBar: true);
     } else {
       int index = _listController.getItemIndex(alarm);
       _listController.changeItems((alarms) {
@@ -117,8 +104,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
     await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) {
       newAlarm.update();
       _listController.changeItems((alarms) {
-        print(
-            "alasasasrm ${alarms.map((alarms) => alarm.id).toList()}, ${alarm.id}");
         alarms[index] = newAlarm;
       });
       _showNextScheduleSnackBar(newAlarm);
@@ -130,13 +115,28 @@ class _AlarmScreenState extends State<AlarmScreen> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
       if (nextScheduleDateTime == null) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(getSnackbar(getNewAlarmSnackbarText(alarm)));
+      ScaffoldMessenger.of(context).showSnackBar(
+          getSnackbar(getNewAlarmSnackbarText(alarm), fab: true, navBar: true));
     });
   }
 
   _handleDeleteAlarm(Alarm alarm) {
     _listController.deleteItem(alarm);
+  }
+
+  _handleSkipChange(Alarm alarm, bool value) {
+    int index = _listController.getItemIndex(alarm);
+    _listController.changeItems((alarms) {
+      alarms[index].setShouldSkip(value);
+    });
+  }
+
+  _handleDismissAlarm(Alarm alarm) {
+    int index = _listController.getItemIndex(alarm);
+    _listController.changeItems((alarms) {
+      alarms[index].cancelSnooze();
+      alarms[index].update();
+    });
   }
 
   @override
@@ -170,11 +170,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
           saveTag: 'alarms',
           listController: _listController,
           itemBuilder: (alarm) => AlarmCard(
-              alarm: alarm,
-              onEnabledChange: (value) =>
-                  _handleEnableChangeAlarm(alarm, value),
-              onPressDelete: () => _handleDeleteAlarm(alarm),
-              onPressDuplicate: () => _listController.duplicateItem(alarm)),
+            alarm: alarm,
+            onEnabledChange: (value) => _handleEnableChangeAlarm(alarm, value),
+            onPressDelete: () => _handleDeleteAlarm(alarm),
+            onPressDuplicate: () => _listController.duplicateItem(alarm),
+            onDismiss: () => _handleDismissAlarm(alarm),
+            onSkipChange: (value) => _handleSkipChange(alarm, value),
+          ),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
           onAddItem: (alarm) {
             alarm.update();

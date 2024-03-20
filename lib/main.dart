@@ -29,10 +29,11 @@ void main() async {
   initializeTimeZones();
   await initializePackageInfo();
   await initializeAppDataDirectory();
+  await initializeStorage();
   await initializeSettings();
   await initializeDatabases();
   await AndroidAlarmManager.initialize();
-  await RingtoneManager.initialize();
+  // await RingtoneManager.initialize();
   await RingtonePlayer.initialize();
   await initializeAudioSession(); //Needs to be initialized after settings
   await BootReceiver.initialize(handleBoot);

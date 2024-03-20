@@ -7,13 +7,13 @@ class AreaNotificationAction extends StatelessWidget {
       required this.dismissLabel,
       required this.snoozeLabel,
       required this.onDismiss,
-      required this.onSnooze})
+      this.onSnooze})
       : super(key: key);
 
   final String dismissLabel;
   final String snoozeLabel;
   final VoidCallback onDismiss;
-  final VoidCallback onSnooze;
+  final VoidCallback? onSnooze;
 
   @override
   Widget build(BuildContext context) {
@@ -47,23 +47,24 @@ class AreaNotificationAction extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Expanded(
-                flex: 1,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: CardContainer(
-                    color: colorScheme.primary,
-                    onTap: onSnooze,
-                    child: Center(
-                        child: Text(
-                      snoozeLabel,
-                      style: textTheme.titleMedium?.copyWith(
-                        color: colorScheme.onPrimary,
-                      ),
-                    )),
+              if (onSnooze != null)
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: CardContainer(
+                      color: colorScheme.primary,
+                      onTap: onSnooze,
+                      child: Center(
+                          child: Text(
+                        snoozeLabel,
+                        style: textTheme.titleMedium?.copyWith(
+                          color: colorScheme.onPrimary,
+                        ),
+                      )),
+                    ),
                   ),
-                ),
-              )
+                )
             ],
           ),
         ),

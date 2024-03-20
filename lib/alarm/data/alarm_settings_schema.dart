@@ -10,16 +10,16 @@ import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
 import 'package:clock_app/alarm/widgets/try_alarm_task_button.dart';
 import 'package:clock_app/audio/audio_channels.dart';
-import 'package:clock_app/audio/logic/audio_session.dart';
-import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
-import 'package:clock_app/audio/types/ringtone_manager.dart';
+import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/utils/ringtones.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
-const alarmSchemaVersion = 2;
+const alarmSchemaVersion = 3;
 
 SettingGroup alarmSettingsSchema = SettingGroup(
   version: alarmSchemaVersion,
@@ -56,14 +56,14 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             ToggleSettingOption("S", 7),
           ],
           enableConditions: [
-            SettingEnableConditionParameter("Type", WeeklyAlarmSchedule)
+            SettingEnableConditionParameter(["Type"], WeeklyAlarmSchedule)
           ],
         ),
         DateTimeSetting(
           "Dates",
           [],
           enableConditions: [
-            SettingEnableConditionParameter("Type", DatesAlarmSchedule)
+            SettingEnableConditionParameter(["Type"], DatesAlarmSchedule)
           ],
         ),
         DateTimeSetting(
@@ -71,7 +71,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
           [],
           rangeOnly: true,
           enableConditions: [
-            SettingEnableConditionParameter("Type", RangeAlarmSchedule)
+            SettingEnableConditionParameter(["Type"], RangeAlarmSchedule)
           ],
         ),
         SelectSetting<RangeInterval>(
@@ -81,7 +81,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             SelectSettingOption("Weekly", RangeInterval.weekly),
           ],
           enableConditions: [
-            SettingEnableConditionParameter("Type", RangeAlarmSchedule)
+            SettingEnableConditionParameter(["Type"], RangeAlarmSchedule)
           ],
         ),
       ],
@@ -93,13 +93,9 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         SettingGroup(
           "Sound",
           [
-            DynamicSelectSetting<Audio>(
+            DynamicSelectSetting<FileItem>(
               "Melody",
-              () => RingtoneManager.ringtones
-                  .map((ringtone) =>
-                      SelectSettingOption<Audio>(ringtone.title, ringtone))
-                  .toList(),
-              onSelect: (context, index, uri) {},
+              getRingtoneOptions,
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },
@@ -109,7 +105,6 @@ SettingGroup alarmSettingsSchema = SettingGroup(
                 "Audio Channel", audioChannelOptions,
                 onChange: (context, index) {
               RingtonePlayer.stop();
-              initializeAudioSession(audioChannelOptions[index].value);
             }),
             SliderSetting("Volume", 0, 100, 100, unit: "%"),
             SwitchSetting("Rising Volume", false,
@@ -117,7 +112,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             DurationSetting(
                 "Time To Full Volume", const TimeDuration(minutes: 1),
                 enableConditions: [
-                  SettingEnableConditionParameter("Rising Volume", true)
+                  SettingEnableConditionParameter(["Rising Volume"], true)
                 ]),
           ],
         ),
@@ -132,19 +127,28 @@ SettingGroup alarmSettingsSchema = SettingGroup(
     SettingGroup(
       "Snooze",
       [
-        SliderSetting("Length", 1, 30, 5, unit: "minutes"),
+        SwitchSetting("Enabled", true),
+        SliderSetting("Length", 1, 30, 5, unit: "minutes", enableConditions: [
+          SettingEnableConditionParameter(["Enabled"], true)
+        ]),
         SliderSetting("Max Snoozes", 1, 10, 3,
             unit: "times",
             snapLength: 1,
             description:
-                "The maximum number of times the alarm can be snoozed before it is dismissed"),
+                "The maximum number of times the alarm can be snoozed before it is dismissed",
+            enableConditions: [
+              SettingEnableConditionParameter(["Enabled"], true)
+            ]),
         SettingGroup("While Snoozed", [
           SwitchSetting("Prevent Disabling", false),
           SwitchSetting("Prevent Deletion", false),
+        ], enableConditions: [
+          SettingEnableConditionParameter(["Enabled"], true)
         ]),
       ],
       icon: Icons.snooze_rounded,
       summarySettings: [
+        "Enabled",
         "Length",
       ],
     ),

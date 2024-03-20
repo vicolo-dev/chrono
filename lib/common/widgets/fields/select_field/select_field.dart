@@ -1,4 +1,5 @@
 import 'package:clock_app/audio/types/audio.dart';
+import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/fields/select_field/field_cards/audio_field_card.dart';
 import 'package:clock_app/common/widgets/fields/select_field/field_cards/color_field_card.dart';
@@ -39,9 +40,9 @@ class _SelectFieldState<T> extends State<SelectField> {
         title: widget.title,
       );
     }
-    if (choice.value is Audio) {
+    if (choice.value is FileItem) {
       return AudioFieldCard(
-        choice: SelectChoice<Audio>(
+        choice: SelectChoice<FileItem>(
             name: choice.name,
             value: choice.value,
             description: choice.description),
