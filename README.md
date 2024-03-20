@@ -1,17 +1,24 @@
+<div align="center">
+
+<image src="fastlane/metadata/android/en-US/images/icon.png" height="100">
+
 # Chrono
 
-#### 🚧 Development temporarily paused. Stay tuned for updates! 🚧
-A modern and powerful clock, alarms, timer and stopwatch app for Android!
-
-Its usable, but still WIP, so you might encounter some bugs. Feel free to open an issue.
+### A modern and powerful clock, alarms, timer and stopwatch app for Android!
 
 ![tests](https://github.com/vicolo-dev/chrono/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/vicolo-dev/chrono/branch/master/graph/badge.svg?token=cKxMm8KVev)](https://codecov.io/gh/vicolo-dev/chrono)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7dc1e51c1616482baa5392bc0826c50a)](https://app.codacy.com/gh/vicolo-dev/chrono/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
+[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height=80/>](https://apt.izzysoft.de/fdroid/index/apk/com.vicolo.chrono)
+[<img src="https://i.ibb.co/q0mdc4Z/get-it-on-github.png" alt="Get it on Github" height=80/>](https://github.com/vicolo-dev/chrono/releases/latest)
+
+</div>
+
+Its usable, but still WIP, so you might encounter some bugs. Feel free to open an issue.
+
 # Table of Content
 - [Features](#features)
-- [Installation](#installation)
 - [Platforms](#platforms)
 - [Development](#development)
 - [Todo](#todo)
@@ -38,10 +45,6 @@ Its usable, but still WIP, so you might encounter some bugs. Feel free to open a
 ### Appearance
 - Highly customizable color themes
 - Highly customizable style themes
-
-## Installation
-- Download the relevant apk from the [latest release](https://github.com/vicolo-dev/chrono/releases/latest/)
-- Install (make sure to allow install from unknown sources)
 
 ## Platforms
 Currently, the app is only available for android. I don't have an apple device to develop for iOS, but feel free
