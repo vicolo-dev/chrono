@@ -8,6 +8,7 @@ import 'package:clock_app/settings/widgets/custom_setting_card.dart';
 
 import 'package:clock_app/settings/widgets/date_setting_card.dart';
 import 'package:clock_app/settings/widgets/duration_setting_card.dart';
+import 'package:clock_app/settings/widgets/dynamic_select_setting_card.dart';
 import 'package:clock_app/settings/widgets/list_setting_card.dart';
 import 'package:clock_app/settings/widgets/select_setting_card.dart';
 import 'package:clock_app/settings/widgets/setting_action_card.dart';
@@ -49,7 +50,10 @@ Widget? getSettingItemWidget(
   VoidCallback? onSettingChanged,
   bool isAppSettings = true,
 }) {
+  if (!item.isEnabled) return null;
   if (item is SettingGroup) {
+    // print(
+    //     "setting group ${item.name} ${item.isEnabled} ${item.enableSettings.map((e) => e.setting.name)}");
     return SettingGroupCard(
       settingGroup: item,
       checkDependentEnableConditions: checkDependentEnableConditions,
@@ -67,7 +71,7 @@ Widget? getSettingItemWidget(
       showAsCard: showAsCard,
     );
   } else if (item is Setting) {
-    if (!item.isEnabled || !item.isVisual) return null;
+    if (!item.isVisual) return null;
 
     onChanged(dynamic value) {
       if (item.changesEnableCondition) {
@@ -78,6 +82,13 @@ Widget? getSettingItemWidget(
 
     if (item is SelectSetting) {
       return SelectSettingCard(
+        setting: item,
+        showAsCard: showAsCard,
+        onChanged: onChanged,
+      );
+    }
+    if (item is DynamicSelectSetting) {
+      return DynamicSelectSettingCard(
         setting: item,
         showAsCard: showAsCard,
         onChanged: onChanged,

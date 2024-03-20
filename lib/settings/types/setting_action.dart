@@ -1,3 +1,4 @@
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:flutter/material.dart';
 
@@ -9,12 +10,15 @@ class SettingAction extends SettingItem {
     this.action, {
     String description = "",
     List<String> searchTags = const [],
-  }) : super(name, description, searchTags);
+    List<SettingEnableConditionParameter> enableConditions = const [],
+  }) : super(name, description, searchTags, enableConditions);
 
   @override
   SettingAction copy() {
     return SettingAction(name, action,
-        description: description, searchTags: searchTags);
+        description: description,
+        searchTags: searchTags,
+        enableConditions: enableConditions);
   }
 
   @override

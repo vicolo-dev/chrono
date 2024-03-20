@@ -15,7 +15,7 @@ void handleBoot() async {
       .writeAsStringSync(message, mode: FileMode.append);
 
   await initializeAppDataDirectory();
-  await RingtoneManager.initialize();
+  // await RingtoneManager.initialize();
 
   updateAlarms();
 }

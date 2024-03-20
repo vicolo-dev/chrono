@@ -88,3 +88,5 @@ jobs:
         with:
           artifacts: "build/app/outputs/bundle/release/*.aab,build/app/outputs/flutter-apk/*.apk"
           body: ${{steps.github_release.outputs.changelog}}
+          draft: true
+

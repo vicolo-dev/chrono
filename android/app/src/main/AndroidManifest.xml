@@ -16,8 +16,8 @@
   <uses-permission
     android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
   <!-- For apps with targetSDK=31 (Android 12) -->
-  <uses-permission
-    android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
+    android:maxSdkVersion="32" />
   <uses-permission
     android:name="android.permission.USE_EXACT_ALARM" />
 

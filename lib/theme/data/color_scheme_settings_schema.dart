@@ -1,4 +1,5 @@
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
@@ -24,13 +25,13 @@ SettingGroup colorSchemeSettingsSchema = SettingGroup(
     SettingGroup("Shadow", [
       SwitchSetting("Use Accent as Shadow", false),
       ColorSetting("Color", Colors.black, enableConditions: [
-        SettingEnableConditionParameter("Use Accent as Shadow", false),
+        SettingEnableConditionParameter(["Use Accent as Shadow"], false),
       ]),
     ]),
     SettingGroup("Outline", [
       SwitchSetting("Use Accent as Outline", false),
       ColorSetting("Color", Colors.black, enableConditions: [
-        SettingEnableConditionParameter("Use Accent as Outline", false),
+        SettingEnableConditionParameter(["Use Accent as Outline"], false),
       ]),
     ]),
     SettingGroup("Error", [

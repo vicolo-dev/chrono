@@ -1,3 +1,4 @@
+import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:flutter/material.dart';
@@ -47,10 +48,10 @@ class _TimerPresetCardState extends State<TimerPresetCard> {
                 ],
               ),
             ),
-            CardEditMenu(
-              onPressDelete: widget.onPressDelete,
-              onPressDuplicate: widget.onPressDuplicate,
-            ),
+            CardEditMenu(actions: [
+              getDeletePopupAction(context, widget.onPressDelete),
+              getDuplicatePopupAction(widget.onPressDuplicate),
+            ]),
           ],
         ));
   }
