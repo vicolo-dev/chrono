@@ -81,6 +81,8 @@ dependencies:
   auto_start_flutter: ^0.1.1
   pick_or_save: ^2.2.4
   package_info_plus: ^5.0.1
+  receive_intent: ^0.2.5
+  watcher: ^1.1.0
 
 dev_dependencies:
   flutter_test:

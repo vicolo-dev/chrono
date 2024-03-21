@@ -763,6 +763,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0+2"
+  receive_intent:
+    dependency: "direct main"
+    description:
+      name: receive_intent
+      sha256: "59afac5bcac8a0c6fc5067d03b4daeb260399cc8485256d6fe40a26640512cda"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.5"
   rxdart:
     dependency: transitive
     description:
@@ -985,7 +993,7 @@ packages:
     source: hosted
     version: "13.0.0"
   watcher:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: watcher
       sha256: "3d2ad6751b3c16cf07c7fca317a1413b3f26530319181b37e3b9039b84fc01d8"
