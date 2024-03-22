@@ -5,7 +5,7 @@
     android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission
     android:name="android.permission.WAKE_LOCK" />
-     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+  <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
   <uses-permission
     android:name="android.permission.USE_FULL_SCREEN_INTENT" />
   <uses-permission
@@ -37,7 +37,9 @@
       android:windowSoftInputMode="adjustResize"
       android:showWhenLocked="true"
       android:showOnLockScreen="true"
-      android:turnScreenOn="true">
+      android:turnScreenOn="true"
+      android:directBootAware="true"
+      >
       <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
@@ -51,14 +53,14 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
 
-    <intent-filter>
-      <action android:name="android.intent.action.QUICK_CLOCK"/>
-                <action android:name="android.intent.action.SHOW_ALARMS" />
-                <action android:name="android.intent.action.SHOW_TIMERS" />
-                <action android:name="android.intent.action.SET_ALARM" />
-                <action android:name="android.intent.action.SET_TIMER" />
-      <category android:name="android.intent.category.DEFAULT"/>
-    </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.QUICK_CLOCK"/>
+        <action android:name="android.intent.action.SHOW_ALARMS" />
+        <action android:name="android.intent.action.SHOW_TIMERS" />
+        <action android:name="android.intent.action.SET_ALARM" />
+        <action android:name="android.intent.action.SET_TIMER" />
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
     </activity>
     <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
@@ -68,37 +70,48 @@
     <service
       android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmService"
       android:permission="android.permission.BIND_JOB_SERVICE"
-      android:exported="false" />
+      android:exported="false" 
+      android:directBootAware="true"
+    />
     <receiver
       android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmBroadcastReceiver"
-      android:exported="false" />
+      android:exported="false" 
+      android:directBootAware="true"
+    />
     <receiver
       android:name="dev.fluttercommunity.plus.androidalarmmanager.RebootBroadcastReceiver"
       android:enabled="false"
-      android:exported="true">
+      android:exported="true"
+      android:directBootAware="true"
+      >
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
-                        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+        <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+        <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+        <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </receiver>
     <service
       android:name="com.flux.flutter_boot_receiver.BootHandlerService"
       android:exported="false"
-      android:permission="android.permission.BIND_JOB_SERVICE" />
+      android:permission="android.permission.BIND_JOB_SERVICE" 
+      android:directBootAware="true"
+      />
     <receiver
       android:enabled="true"
       android:exported="true"
       android:name="com.flux.flutter_boot_receiver.BootBroadcastReceiver"
-      android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+      android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
+      android:directBootAware="true"
+      >
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
-                        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+        <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+        <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
         <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </receiver>
-
   </application>
-
 </manifest>
