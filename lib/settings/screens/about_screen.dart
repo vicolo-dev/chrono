@@ -108,6 +108,44 @@ class AboutScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+ const SizedBox(height: 8.0),
+                      InkWell(
+                        onTap: () async {
+                          await launchUrl(Uri.parse(
+                              "https://github.com/vicolo-dev/chrono/blob/master/LICENSE"));
+                        },
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 48,
+                              child: Icon(
+                                Icons.balance_rounded,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(width: 16.0),
+ Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "License",
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                              Text(
+                                packageInfo?.packageName ?? 'GNU GPL v3.0',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color:
+                                      colorScheme.onBackground.withOpacity(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                          ],
+                        ),
+                      ),
+
                       const SizedBox(height: 8.0),
                       InkWell(
                         onTap: () async {
@@ -133,6 +171,8 @@ class AboutScreen extends StatelessWidget {
                           ],
                         ),
                       ),
+                      
+
                     ],
                   ),
                 ),
