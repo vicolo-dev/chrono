@@ -134,7 +134,7 @@ class AboutScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                packageInfo?.packageName ?? 'GNU GPL v3.0',
+                                'GNU GPL v3.0',
                                 style: textTheme.bodyMedium?.copyWith(
                                   color:
                                       colorScheme.onBackground.withOpacity(0.6),
