@@ -15,7 +15,7 @@
 
 </div>
 
-Its usable, but still WIP, so you might encounter some bugs. Feel free to open an issue.
+Its usable, but still WIP, so you might encounter some bugs. So its not recommended to use to for critical alarms at the moment. Feel free to open an issue.
 
 # Table of Content
 - [Features](#features)
