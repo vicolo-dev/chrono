@@ -73,6 +73,17 @@ class _CustomListViewState<Item extends ListItem>
     widget.listController.setDeleteItem(_handleDeleteItem);
     widget.listController.setGetItemIndex(_getItemIndex);
     widget.listController.setDuplicateItem(_handleDuplicateItem);
+    widget.listController.setReloadItems(_reloadItems);
+  }
+
+  void _reloadItems(List<Item> items) {
+setState(() {
+  widget.items.clear();
+  widget.items.addAll(items);
+});
+// TODO: MAN THIS SUCKS, WHY YOU GOTTA DO THIS
+    _controller.notifyRemovedRange(0, widget.items.length - 1,  _getChangeListBuilder());
+    _controller.notifyInsertedRange(0, widget.items.length);
   }
 
   int _getItemIndex(Item item) =>
@@ -94,6 +105,7 @@ class _CustomListViewState<Item extends ListItem>
   }
 
   void _notifyChangeList() {
+    print("============================= ${widget.items.length}");
     _controller.notifyChangedRange(
       0,
       widget.items.length,

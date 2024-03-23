@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:clock_app/common/data/paths.dart';
@@ -6,8 +7,42 @@ import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:path/path.dart' as path;
 import 'package:path/path.dart';
 import 'package:queue/queue.dart';
+import 'package:watcher/watcher.dart';
 
 final queue = Queue();
+final watcherSubscriptions = <String, StreamSubscription>{};
+
+void watchTextFile(String key, void Function(WatchEvent) callback) {
+  String appDataDirectory = getAppDataDirectoryPathSync();
+  // File file = File(path.join(appDataDirectory, '$key.txt'));
+  // file.watch().listen((event) {
+  //   if (event == FileSystemEvent.MODIFY) {
+  //     callback(file.readAsStringSync());
+  //   }
+  // });
+  var watcher = FileWatcher(path.join(appDataDirectory, '$key.txt'));
+  StreamSubscription subscription = watcher.events.listen(callback);
+  watcher.events.listen(callback);
+  if (watcherSubscriptions[key] != null) {
+    watcherSubscriptions[key]?.cancel();
+  }
+  watcherSubscriptions[key] = subscription;
+}
+
+void unwatchTextFile(String key) {
+  watcherSubscriptions[key]?.cancel();
+}
+
+void watchList<T extends JsonSerializable>(
+    String key, void Function(WatchEvent) callback) {
+  watchTextFile(key, (event) async {
+    callback(event);
+  });
+}
+
+void unwatchList(String key) {
+  unwatchTextFile(key);
+}
 
 List<T> loadListSync<T extends JsonSerializable>(String key) {
   return listFromString<T>(loadTextFileSync(key));

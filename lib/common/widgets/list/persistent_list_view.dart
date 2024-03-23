@@ -39,6 +39,10 @@ class PersistentListController<T> {
     return _listController.getItemIndex(item);
   }
 
+  void reloadItems(List<T> items) {
+    _listController.reload(items);
+  }
+
   void reload() {
     _onReload?.call();
   }
@@ -93,13 +97,24 @@ class _PersistentListViewState<Item extends ListItem>
     if (widget.saveTag.isNotEmpty) {
       _items = loadListSync<Item>(widget.saveTag);
     }
+    // watchList(widget.saveTag, (event) => reloadItems());
     ListenerManager.addOnChangeListener(widget.saveTag, loadItems);
+    ListenerManager.addOnChangeListener(
+        "${widget.saveTag}-reload", reloadItems);
   }
 
   @override
   void dispose() {
     ListenerManager.removeOnChangeListener(widget.saveTag, loadItems);
+    ListenerManager.removeOnChangeListener(
+        "${widget.saveTag}-reload", reloadItems);
+    // unwatchList(widget.saveTag);
     super.dispose();
+  }
+
+  void reloadItems() {
+    List<Item> newList = loadListSync<Item>(widget.saveTag);
+    widget.listController.reloadItems(newList);
   }
 
   void loadItems() {
@@ -109,6 +124,7 @@ class _PersistentListViewState<Item extends ListItem>
           List<Item> newList = loadListSync<Item>(widget.saveTag);
           items.clear();
           items.addAll(newList);
+          print("--------------------------------------------- $items");
         },
         callOnModifyList: false,
       );
