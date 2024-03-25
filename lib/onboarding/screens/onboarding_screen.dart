@@ -73,9 +73,9 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                child: const Text(
+                child:  Text(
                   'View Settings',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: colorScheme.onPrimary),
                 ),
               ),
             ],

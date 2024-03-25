@@ -10,7 +10,7 @@ class SettingAction extends SettingItem {
     this.action, {
     String description = "",
     List<String> searchTags = const [],
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
   }) : super(name, description, searchTags, enableConditions);
 
   @override

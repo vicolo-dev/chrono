@@ -56,14 +56,14 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             ToggleSettingOption("S", 7),
           ],
           enableConditions: [
-            SettingEnableConditionParameter(["Type"], WeeklyAlarmSchedule)
+            ValueCondition(["Type"], (value)=>value==WeeklyAlarmSchedule)
           ],
         ),
         DateTimeSetting(
           "Dates",
           [],
           enableConditions: [
-            SettingEnableConditionParameter(["Type"], DatesAlarmSchedule)
+            ValueCondition(["Type"], (value)=>value==DatesAlarmSchedule)
           ],
         ),
         DateTimeSetting(
@@ -71,7 +71,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
           [],
           rangeOnly: true,
           enableConditions: [
-            SettingEnableConditionParameter(["Type"], RangeAlarmSchedule)
+            ValueCondition(["Type"], (value)=>value==RangeAlarmSchedule)
           ],
         ),
         SelectSetting<RangeInterval>(
@@ -81,7 +81,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             SelectSettingOption("Weekly", RangeInterval.weekly),
           ],
           enableConditions: [
-            SettingEnableConditionParameter(["Type"], RangeAlarmSchedule)
+            ValueCondition(["Type"], (value)=>value==RangeAlarmSchedule)
           ],
         ),
       ],
@@ -112,7 +112,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             DurationSetting(
                 "Time To Full Volume", const TimeDuration(minutes: 1),
                 enableConditions: [
-                  SettingEnableConditionParameter(["Rising Volume"], true)
+                  ValueCondition(["Rising Volume"], (value)=>value==true)
                 ]),
           ],
         ),
@@ -129,7 +129,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
       [
         SwitchSetting("Enabled", true),
         SliderSetting("Length", 1, 30, 5, unit: "minutes", enableConditions: [
-          SettingEnableConditionParameter(["Enabled"], true)
+          ValueCondition(["Enabled"], (value)=>value==true)
         ]),
         SliderSetting("Max Snoozes", 1, 10, 3,
             unit: "times",
@@ -137,13 +137,13 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             description:
                 "The maximum number of times the alarm can be snoozed before it is dismissed",
             enableConditions: [
-              SettingEnableConditionParameter(["Enabled"], true)
+              ValueCondition(["Enabled"], (value)=>value==true)
             ]),
         SettingGroup("While Snoozed", [
           SwitchSetting("Prevent Disabling", false),
           SwitchSetting("Prevent Deletion", false),
         ], enableConditions: [
-          SettingEnableConditionParameter(["Enabled"], true)
+          ValueCondition(["Enabled"], (value)=>value==true)
         ]),
       ],
       icon: Icons.snooze_rounded,

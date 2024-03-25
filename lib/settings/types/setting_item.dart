@@ -10,16 +10,19 @@ abstract class SettingItem {
   final List<void Function(dynamic)> _settingListeners;
   List<void Function(dynamic)> get settingListeners => _settingListeners;
   List<String> searchTags = [];
-  List<SettingEnableConditionParameter> enableConditions;
+  List<EnableConditionParameter> enableConditions;
+  // List<SettingCompoundEnableConditionParameter> compoundEnableConditions;
   // Settings which influence whether this setting is enabled
-  List<SettingEnableCondition> enableSettings;
+  List<EnableConditionEvaluator> enableSettings;
+  // List<SettingCompoundEnableCondition> compoundEnableSettings;
 
   bool get isEnabled {
     for (var enableSetting in enableSettings) {
-      if (enableSetting.setting.value != enableSetting.value) {
-        return false;
-      }
+            if(!enableSetting.evaluate()){
+              return false;
+            }
     }
+
     return true;
   }
 
@@ -39,8 +42,8 @@ abstract class SettingItem {
     return path.reversed.toList();
   }
 
-  SettingItem(
-      this.name, this.description, this.searchTags, this.enableConditions)
+  SettingItem(this.name, this.description, this.searchTags,
+      this.enableConditions)
       : id = name,
         _settingListeners = [],
         enableSettings = [];

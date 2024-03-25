@@ -38,7 +38,7 @@ class SettingGroup extends SettingItem {
     this._settingItems, {
     int? version,
     IconData? icon,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> summarySettings = const [],
     String description = "",
     bool? showExpandedView,
@@ -71,12 +71,8 @@ class SettingGroup extends SettingItem {
       }
 
       for (var enableCondition in item.enableConditions) {
-        Setting setting = getSettingFromPath(enableCondition.settingPath);
-        item.enableSettings
-            .add(SettingEnableCondition(setting, enableCondition.value));
-        // print(
-        //     "${item.name} is enabled by ${setting.name} = ${enableCondition.value}");
-        setting.changesEnableCondition = true;
+        enableCondition.setupEnableSettings(this, item);
+        enableCondition.setupChangesEnableCondition(this, item);
       }
     }
   }

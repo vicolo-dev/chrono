@@ -32,17 +32,24 @@ class SelectTextOptionCard extends StatelessWidget {
                 groupValue: selectedIndex,
                 onChanged: (dynamic value) => onSelect(index),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(choice.name,
-                      style: Theme.of(context).textTheme.headlineMedium),
-                  if (choice.description.isNotEmpty) ...[
-                    const SizedBox(height: 4.0),
-                    Text(choice.description,
-                        style: Theme.of(context).textTheme.bodyMedium)
+              Expanded(
+              flex:999,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(choice.name,
+                        style: Theme.of(context).textTheme.headlineMedium),
+                    if (choice.description.isNotEmpty) ...[
+                      const SizedBox(height: 4.0),
+                      Text(choice.description,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                maxLines: 5,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                          )
+                    ],
                   ],
-                ],
+                ),
               ),
             ],
           ),

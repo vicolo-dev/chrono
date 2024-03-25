@@ -62,8 +62,7 @@ class ColorSchemeData extends ThemeItem {
         .setValueWithoutNotify(onError);
   }
 
-  ColorSchemeData.from(ColorSchemeData colorSchemeData)
-      : super.from(colorSchemeData);
+  ColorSchemeData.from(ColorSchemeData super.colorSchemeData) : super.from();
 
   @override
   String get name => settings.getSetting("Name").value;

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 SwitchThemeData getSwitchTheme(ColorSchemeData colorScheme) {
   return SwitchThemeData(
     thumbColor: MaterialStateProperty.resolveWith((states) =>
-        states.contains(MaterialState.selected) ? Colors.white : Colors.white),
+        states.contains(MaterialState.selected) ? colorScheme.card : Colors.white),
     trackColor: MaterialStateProperty.resolveWith((states) =>
         states.contains(MaterialState.selected)
             ? colorScheme.accent

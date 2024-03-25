@@ -74,6 +74,8 @@ Widget? getSettingItemWidget(
     if (!item.isVisual) return null;
 
     onChanged(dynamic value) {
+      // If any other item depend on this one, we should update
+      // state when this one changes
       if (item.changesEnableCondition) {
         checkDependentEnableConditions?.call();
       }
