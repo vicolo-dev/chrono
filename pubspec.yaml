@@ -63,6 +63,7 @@ dependencies:
   receive_intent: ^0.2.5
   watcher: ^1.1.0
   dynamic_color: ^1.7.0
+  material_color_utilities: ^0.8.0
 
 dev_dependencies:
   flutter_test:
