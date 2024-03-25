@@ -28,8 +28,6 @@ BoxDecoration getCardDecoration(BuildContext context,
       TonalPalette tonalPalette = toTonalPalette(colorScheme.surface.value);
 
 
-
-
   return BoxDecoration(
     border: showLightBorder
         ? Border.all(
