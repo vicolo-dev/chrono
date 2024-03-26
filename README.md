@@ -43,6 +43,7 @@ Its usable, but still WIP, so you might encounter some bugs. So its not recommen
 - Lap history with lap times and elapsed times
 - Lap comparisons
 ### Appearance
+- Material You icons and themes
 - Highly customizable color themes
 - Highly customizable style themes
 
@@ -74,7 +75,7 @@ Stuff I would like to do soon™. In no particular order:
 - Theme
   - Icon themes
   - Font themes
-  - System theme and fonts
+  - System fonts
 - Timer
   - Alternative duration picker interfaces
 - Widgets
