@@ -18,6 +18,7 @@ import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 ColorSchemeData defaultColorScheme = defaultColorSchemes[0];
+ColorSchemeData defaultDarkColorScheme = defaultColorSchemes[2];
 StyleTheme defaultStyleTheme = defaultStyleThemes[0];
 
 ThemeData defaultTheme = ThemeData(

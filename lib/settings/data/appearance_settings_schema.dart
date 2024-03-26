@@ -8,7 +8,6 @@ import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
-import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:flutter/material.dart';
 
 enum ThemeBrightness { light, dark, system }
@@ -38,17 +37,13 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
               ValueCondition(["Use Material You"], (value) => value == true)
             ],
             onChange: (context, index) => {App.refreshTheme(context)}),
-        SelectSetting(
-            "Dark Mode",
-            [
-              SelectSettingOption("User Defined", DarkMode.user),
-              SelectSettingOption("System", DarkMode.system),
-              SelectSettingOption("Night/Day", DarkMode.nightDay),
-            ],
+        SwitchSetting(
+            "System Dark Mode",
+            false,
             enableConditions: [
               ValueCondition(["Use Material You"], (value) => value == false)
             ],
-            onChange: (context, index) => {App.refreshTheme(context)}),
+            onChange: (context, value) => {App.refreshTheme(context)}),
         CustomSetting(
           "Color Scheme",
           description:
@@ -78,7 +73,7 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
           "Dark Color Scheme",
           description:
               "Select from predefined color schemes or create your own",
-          defaultColorScheme,
+          defaultDarkColorScheme,
           (context, setting) => ThemesScreen(
             saveTag: 'color_schemes',
             setting: setting,
@@ -97,8 +92,7 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
           searchTags: ["theme", "style", "visual", "dark mode", "night mode"],
           enableConditions: [
             ValueCondition(["Use Material You"], (value) => value == false),
-            ValueCondition(["Dark Mode"],
-                (value) => [DarkMode.system, DarkMode.nightDay].contains(value))
+            ValueCondition(["System Dark Mode"],(value) => value==true)
           ],
         ),
         SwitchSetting(
