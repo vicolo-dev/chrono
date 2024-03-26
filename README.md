@@ -15,7 +15,7 @@
 
 </div>
 
-Its usable, but still WIP, so you might encounter some bugs. Feel free to open an issue.
+Its usable, but still WIP, so you might encounter some bugs. So its not recommended to use to for critical alarms at the moment. Feel free to open an issue.
 
 # Table of Content
 - [Features](#features)
@@ -53,8 +53,9 @@ use android-only code, so that will need to be ported. Everything else should mo
 
 ## Development
 
-This app is built using flutter. All you need is to follow [this](https://docs.flutter.dev/get-started/install) 
-guide to install it, and you should be able to start developing it.
+This app is built using flutter. To start developing:
+1. Follow [this](https://docs.flutter.dev/get-started/install) guide to install flutter and all required tools.
+2. Run the app by `flutter run --flavor dev`. For production builds, use `flutter build apk --release --split-per-abi --flavor prod`.
 
 ## Todo
 Stuff I would like to do soon™. In no particular order:
