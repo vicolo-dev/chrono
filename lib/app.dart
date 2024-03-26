@@ -1,13 +1,9 @@
 import 'dart:async';
-import 'dart:isolate';
-import 'dart:ui';
 
 import 'package:clock_app/alarm/logic/new_alarm_snackbar.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/common/data/app_info.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
@@ -16,15 +12,12 @@ import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/onboarding/screens/onboarding_screen.dart';
 import 'package:clock_app/settings/data/appearance_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/system/logic/handle_intents.dart';
-import 'package:clock_app/theme/text.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
-import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +98,7 @@ class _AppState extends State<App> {
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
+
   }
 
   refreshTheme() {
@@ -162,8 +156,8 @@ class _AppState extends State<App> {
         colorSchemeData.accent = overrideColor;
         darkColorSchemeData.accent = overrideColor;
       }
-      DarkMode darkMode = _colorSettings.getSetting("Dark Mode").value;
-      if (darkMode == DarkMode.user) {
+      bool systemDarkMode = _colorSettings.getSetting("System Dark Mode").value;
+      if (!systemDarkMode) {
         darkColorSchemeData = colorSchemeData;
       }
       lightTheme =
