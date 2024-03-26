@@ -29,6 +29,16 @@ SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false}) {
     bottom = 4;
   }
 
+  final useMaterialStyle = appSettings
+      .getGroup("Appearance")
+      .getGroup("Style")
+      .getSetting("Use Material Style")
+      .value;
+
+  if(useMaterialStyle){
+    bottom += 20;
+  }
+
   return SnackBar(
     content: Container(
       alignment: Alignment.centerLeft,

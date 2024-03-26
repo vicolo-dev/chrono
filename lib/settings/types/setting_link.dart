@@ -10,7 +10,7 @@ class SettingPageLink extends SettingItem {
     this.screen, {
     String description = "",
     List<String> searchTags = const [],
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
   }) : super(name, description, searchTags, enableConditions);
 
   @override

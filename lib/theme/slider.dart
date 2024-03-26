@@ -23,7 +23,6 @@ SliderThemeData getSliderTheme(ColorSchemeData colorScheme) {
       // trackShape: CustomTrackShape(),
       overlayShape: SliderComponentShape.noOverlay,
       inactiveTrackColor: colorScheme.onBackground.withOpacity(0.2)
-
       // overlayShape: RoundSliderOverlayShape(overlayRadius: 16),
       );
 }

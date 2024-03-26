@@ -25,9 +25,41 @@ class CardContainer extends StatelessWidget {
   final BlurStyle blurStyle;
   final bool showLightBorder;
 
+   // TonalPalette primaryTonalP = toTonalPalette(_primaryColor); 
+   //  primaryTonalP.get(50); // Getting the specific color
+   //
+   //
+   //  TonalPalette toTonalPalette(int value) {
+   //    final color = Hct.fromInt(value);
+   //    return TonalPalette.of(color.hue, color.chroma);
+   //  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme =  theme.colorScheme;
+    return  
+    // Card.filled(
+    //   elevation: 1,
+    //   // margin: margin ?? const EdgeInsets.all(4),
+    //   // clipBehavior: Clip.hardEdge,
+    //   // shape: RoundedRectangleBorder(
+    //   // borderRadius: BorderRadius.circular(16),
+    //   // side: showLightBorder
+    //   //     ? BorderSide(
+    //   //         color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+    //   //         width: 1,
+    //   //       )
+    //   //     : BorderSide.none,
+    //   // ),
+    //   color: color,
+    //   child: InkWell(
+    //     onTap: onTap,
+    //     child: child,
+    //   ),
+    //       
+    // );
+    Container(
       alignment: alignment,
       margin: margin ?? const EdgeInsets.all(4),
       clipBehavior: Clip.hardEdge,
