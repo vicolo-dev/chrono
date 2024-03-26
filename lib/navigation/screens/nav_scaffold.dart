@@ -4,6 +4,7 @@ import 'package:clock_app/navigation/widgets/app_navigation_bar.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/screens/settings_group_screen.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
 class NavScaffold extends StatefulWidget {
@@ -15,6 +16,8 @@ class NavScaffold extends StatefulWidget {
 
 class _NavScaffoldState extends State<NavScaffold> {
   int _selectedTabIndex = 0;
+  bool useMaterialNavBar  = false;
+  late Setting useMaterialNavBarSetting;
 
   void _onTabSelected(int index) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -22,6 +25,28 @@ class _NavScaffoldState extends State<NavScaffold> {
     setState(() {
       _selectedTabIndex = index;
     });
+  }
+void setUseMaterialnavBar(dynamic value) {
+    setState(() {
+      useMaterialNavBar = value;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    useMaterialNavBarSetting = appSettings
+        .getGroup("Appearance")
+        .getGroup("Style")
+        .getSetting("Use Material Style");
+    setUseMaterialnavBar(useMaterialNavBarSetting.value);
+    useMaterialNavBarSetting.addListener(setUseMaterialnavBar);
+  }
+
+  @override
+  void dispose() {
+    useMaterialNavBarSetting.removeListener(setUseMaterialnavBar);
+    super.dispose();
   }
 
   @override
@@ -50,11 +75,24 @@ class _NavScaffoldState extends State<NavScaffold> {
           ),
         ],
       ),
-      extendBody: true,
+      extendBody: false,
       body: Center(
         child: tabs[_selectedTabIndex].widget,
       ),
-      bottomNavigationBar: AppNavigationBar(
+      bottomNavigationBar: useMaterialNavBar ?  
+NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        selectedIndex: _selectedTabIndex,
+        onDestinationSelected:_onTabSelected ,
+        destinations: <Widget>[
+          for (final tab in tabs)
+              NavigationDestination(
+                icon: Icon(tab.icon),
+                label: tab.title,
+              )
+        ],
+      ) :     
+      AppNavigationBar(
         selectedTabIndex: _selectedTabIndex,
         onTabSelected: _onTabSelected,
       ),

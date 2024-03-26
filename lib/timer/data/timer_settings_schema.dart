@@ -42,7 +42,7 @@ SettingGroup timerSettingsSchema = SettingGroup(
             DurationSetting(
                 "Time To Full Volume", const TimeDuration(minutes: 1),
                 enableConditions: [
-                  SettingEnableConditionParameter(["Rising Volume"], true)
+                  ValueCondition(["Rising Volume"], (value)=>value==true)
                 ]),
           ],
         ),

@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 
 class ListFilterChip<Item extends ListItem> extends StatelessWidget {
   const ListFilterChip(
-      {Key? key,
+      {super.key,
       required this.listFilter,
       required this.onTap,
-      required this.isSelected})
-      : super(key: key);
+      required this.isSelected});
 
   final ListFilter<Item> listFilter;
   final VoidCallback onTap;
@@ -22,7 +21,7 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
     TextTheme textTheme = theme.textTheme;
 
     return CardContainer(
-      color: isSelected ? colorScheme.primary : colorScheme.surface,
+      color: isSelected ? colorScheme.primary : null,
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

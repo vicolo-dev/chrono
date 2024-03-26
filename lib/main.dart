@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 import 'dart:isolate';
@@ -9,7 +8,6 @@ import 'package:clock_app/alarm/logic/alarm_controls.dart';
 import 'package:clock_app/alarm/logic/handle_boot.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
-import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/common/data/app_info.dart';
@@ -21,7 +19,6 @@ import 'package:clock_app/notifications/logic/notifications.dart';
 import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_boot_receiver/flutter_boot_receiver.dart';
 import 'package:timezone/data/latest_all.dart';
 

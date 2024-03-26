@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 
 class ColorField extends StatefulWidget {
   const ColorField(
-      {Key? key,
+      {super.key,
       required this.value,
       required this.onChange,
-      required this.name})
-      : super(key: key);
+      required this.name});
 
   final String name;
   final Color value;

@@ -24,7 +24,7 @@ abstract class Setting<T> extends SettingItem {
     String description,
     T defaultValue,
     this.onChange,
-    List<SettingEnableConditionParameter> enableConditions,
+    List<EnableConditionParameter> enableConditions,
     List<String> searchTags,
     this.isVisual, {
     T Function(T)? valueCopyGetter,
@@ -83,7 +83,7 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
     String description = "",
     void Function(BuildContext, List<T>)? onChange,
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(
           name,
@@ -158,7 +158,7 @@ class CustomSetting<T extends JsonSerializable> extends Setting<T> {
     void Function(BuildContext, T)? onChange,
     this.copyValue,
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual) {
@@ -208,7 +208,7 @@ class SwitchSetting extends Setting<bool> {
     void Function(BuildContext, bool)? onChange,
     String description = "",
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual);
@@ -234,7 +234,7 @@ class NumberSetting extends Setting<double> {
     void Function(BuildContext, double)? onChange,
     String description = "",
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual);
@@ -260,7 +260,7 @@ class ColorSetting extends Setting<Color> {
     void Function(BuildContext, Color)? onChange,
     String description = "",
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual);
@@ -297,7 +297,7 @@ class StringSetting extends Setting<String> {
     void Function(BuildContext, String)? onChange,
     String description = "",
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual);
@@ -334,7 +334,7 @@ class SliderSetting extends Setting<double> {
     this.maxIsInfinity = false,
     this.snapLength,
     this.unit = "",
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual);
@@ -393,7 +393,7 @@ class SelectSetting<T> extends Setting<int> {
     int defaultValue = 0,
     String description = "",
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual);
@@ -430,7 +430,7 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
     int defaultValue = -1,
     bool isVisual = true,
     bool shouldCloseOnSelect = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual) {
@@ -510,7 +510,7 @@ class ToggleSetting<T> extends Setting<List<bool>> {
     List<bool> defaultValue = const [],
     String description = "",
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(
           name,
@@ -569,7 +569,7 @@ class DateTimeSetting extends Setting<List<DateTime>> {
     void Function(BuildContext, List<DateTime>)? onChange,
     String description = "",
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(
           name,
@@ -627,7 +627,7 @@ class DurationSetting extends Setting<TimeDuration> {
     void Function(BuildContext, TimeDuration)? onChange,
     String description = "",
     bool isVisual = true,
-    List<SettingEnableConditionParameter> enableConditions = const [],
+    List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
             searchTags, isVisual);

@@ -25,13 +25,13 @@ SettingGroup colorSchemeSettingsSchema = SettingGroup(
     SettingGroup("Shadow", [
       SwitchSetting("Use Accent as Shadow", false),
       ColorSetting("Color", Colors.black, enableConditions: [
-        SettingEnableConditionParameter(["Use Accent as Shadow"], false),
+        ValueCondition(["Use Accent as Shadow"], (value)=>value==false),
       ]),
     ]),
     SettingGroup("Outline", [
       SwitchSetting("Use Accent as Outline", false),
       ColorSetting("Color", Colors.black, enableConditions: [
-        SettingEnableConditionParameter(["Use Accent as Outline"], false),
+        ValueCondition(["Use Accent as Outline"], (value)=>value==false),
       ]),
     ]),
     SettingGroup("Error", [

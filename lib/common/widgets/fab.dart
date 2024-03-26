@@ -8,14 +8,14 @@ enum FabPosition { bottomLeft, bottomRight }
 
 class FAB extends StatefulWidget {
   const FAB({
-    Key? key,
+    super.key,
     this.onPressed,
     this.icon = FluxIcons.add,
     this.index = 0,
-    this.bottomPadding = 80,
+    this.bottomPadding = 0,
     this.size = 1,
     this.position = FabPosition.bottomRight,
-  }) : super(key: key);
+  });
 
   final VoidCallback? onPressed;
   final IconData icon;
@@ -30,6 +30,7 @@ class FAB extends StatefulWidget {
 
 class _FABState extends State<FAB> {
   late Setting _leftHandedMode;
+  late Setting _useMaterialStyle;
 
   void update(value) {
     setState(() {});
@@ -41,12 +42,15 @@ class _FABState extends State<FAB> {
 
     _leftHandedMode =
         appSettings.getGroup("Accessibility").getSetting("Left Handed Mode");
+        _useMaterialStyle = appSettings.getGroup("Appearance").getGroup("Style").getSetting("Use Material Style");
     _leftHandedMode.addListener(update);
+    _useMaterialStyle.addListener(update);
   }
 
   @override
   void dispose() {
     _leftHandedMode.removeListener(update);
+    _useMaterialStyle.removeListener(update);
     super.dispose();
   }
 
@@ -58,8 +62,10 @@ class _FABState extends State<FAB> {
             : FabPosition.bottomRight
         : widget.position;
 
+double bottomPadding = _useMaterialStyle.value ? widget.bottomPadding + 20 : widget.bottomPadding;
+
     return Positioned(
-      bottom: widget.bottomPadding,
+      bottom: bottomPadding,
       right: position == FabPosition.bottomRight
           ? 16 + (widget.index * 24 * widget.size) + widget.index * 36
           : null,

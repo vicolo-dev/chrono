@@ -8,8 +8,11 @@ import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
-import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:flutter/material.dart';
+
+enum ThemeBrightness { light, dark, system }
+
+enum DarkMode { user, system, nightDay }
 
 SettingGroup appearanceSettingsSchema = SettingGroup(
   "Appearance",
@@ -17,6 +20,30 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
     SettingGroup(
       "Colors",
       [
+        SwitchSetting(
+          "Use Material You",
+          false,
+          onChange: (context, value) => App.refreshTheme(context),
+          searchTags: ["primary", "color", "material"],
+        ),
+        SelectSetting(
+            "Brightness",
+            [
+              SelectSettingOption("System", ThemeBrightness.system),
+              SelectSettingOption("Light", ThemeBrightness.light),
+              SelectSettingOption("Dark", ThemeBrightness.dark),
+            ],
+            enableConditions: [
+              ValueCondition(["Use Material You"], (value) => value == true)
+            ],
+            onChange: (context, index) => {App.refreshTheme(context)}),
+        SwitchSetting(
+            "System Dark Mode",
+            false,
+            enableConditions: [
+              ValueCondition(["Use Material You"], (value) => value == false)
+            ],
+            onChange: (context, value) => {App.refreshTheme(context)}),
         CustomSetting(
           "Color Scheme",
           description:
@@ -26,36 +53,92 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
             saveTag: 'color_schemes',
             setting: setting,
             getThemeFromItem: (theme, themeItem) =>
-                getThemeFromColorScheme(theme, themeItem),
+                getTheme(colorSchemeData: themeItem),
             createThemeItem: () => ColorSchemeData(),
           ),
           (context, setting) => Text(
             setting.value.name,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
-          onChange: (context, colorScheme) {
-            App.setColorScheme(context, colorScheme);
-            appSettings.save();
+          onChange: (context, colorScheme) async {
+            await appSettings.save();
+            if (context.mounted) App.refreshTheme(context);
           },
           searchTags: ["theme", "style", "visual", "dark mode"],
+          enableConditions: [
+            ValueCondition(["Use Material You"], (value) => value == false)
+          ],
         ),
-        SwitchSetting("Override Accent Color", false,
-            onChange: (context, value) {
-          App.setColorScheme(context);
-        }, searchTags: ["primary", "color"]),
+        CustomSetting(
+          "Dark Color Scheme",
+          description:
+              "Select from predefined color schemes or create your own",
+          defaultDarkColorScheme,
+          (context, setting) => ThemesScreen(
+            saveTag: 'color_schemes',
+            setting: setting,
+            getThemeFromItem: (theme, themeItem) =>
+                getTheme(colorSchemeData: themeItem),
+            createThemeItem: () => ColorSchemeData(),
+          ),
+          (context, setting) => Text(
+            setting.value.name,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          onChange: (context, colorScheme) async {
+            await appSettings.save();
+            if (context.mounted) App.refreshTheme(context);
+          },
+          searchTags: ["theme", "style", "visual", "dark mode", "night mode"],
+          enableConditions: [
+            ValueCondition(["Use Material You"], (value) => value == false),
+            ValueCondition(["System Dark Mode"],(value) => value==true)
+          ],
+        ),
+        SwitchSetting(
+          "Override Accent Color",
+          false,
+          onChange: (context, value) {
+            App.refreshTheme(context);
+          },
+          searchTags: ["primary", "color", "material you"],
+          enableConditions: [
+            // ValueCondition(["Use Material You"], (value) => value == false)
+          ],
+        ),
         ColorSetting("Accent Color", Colors.cyan, onChange: (context, color) {
-          App.setColorScheme(context);
+          App.refreshTheme(context);
         }, enableConditions: [
-          SettingEnableConditionParameter(["Override Accent Color"], true)
+          ValueCondition(["Override Accent Color"], (value) => value == true),
+          // ValueCondition(["Use Material You"], (value) => value == false)
         ], searchTags: [
           "primary",
-          "color"
+          "color",
+          "material you"
         ]),
       ],
     ),
     SettingGroup(
       "Style",
       [
+        SwitchSetting(
+          "Use Material Style",
+          false,
+          onChange: (context, value) => App.refreshTheme(context),
+          searchTags: [
+            "navigation",
+            "nav bar",
+            "scheme",
+            "visual",
+            "shadow",
+            "outline",
+            "elevation",
+            "card",
+            "border",
+            "opacity",
+            "blur",
+          ],
+        ),
         CustomSetting<StyleTheme>(
           "Style Theme",
           description: "Change styles like shadows, outlines and opacities",
@@ -64,16 +147,16 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
             saveTag: 'style_themes',
             setting: setting,
             getThemeFromItem: (theme, themeItem) =>
-                getThemeFromStyleTheme(theme, themeItem),
+                getTheme(colorScheme: theme.colorScheme, styleTheme: themeItem),
             createThemeItem: () => StyleTheme(),
           ),
           (context, setting) => Text(
             setting.value.name,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
-          onChange: (context, styleTheme) {
-            App.setStyleTheme(context, styleTheme);
-            appSettings.save();
+          onChange: (context, styleTheme) async {
+            await appSettings.save();
+            if (context.mounted) App.refreshTheme(context);
           },
           searchTags: [
             "scheme",

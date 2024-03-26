@@ -28,7 +28,6 @@ class TimezoneCardContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  // Flutter doesn't allow per character overflow, so this is a workaround
                   title,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         color: textColor,

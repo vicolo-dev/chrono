@@ -12,12 +12,12 @@ class SettingGroupCard extends StatefulWidget {
   final bool isAppSettings;
 
   const SettingGroupCard({
-    Key? key,
+    super.key,
     required this.settingGroup,
     this.checkDependentEnableConditions,
     this.onSettingChanged,
     this.isAppSettings = true,
-  }) : super(key: key);
+  });
 
   @override
   State<SettingGroupCard> createState() => _SettingGroupCardState();
