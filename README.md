@@ -18,24 +18,11 @@
 Its usable, but still WIP, so you might encounter some bugs. So its not recommended to use to for critical alarms at the moment. Feel free to open an issue.
 
 # Table of Content
-- [Screenshots](#screenshots)
 - [Features](#features)
 - [Platforms](#platforms)
 - [Development](#development)
 - [Todo](#todo)
-
-## Screenshots
-<p float="left">
-<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="400"/>
-<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="400"/>
-<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="400"/>
-<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="400"/>
-<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="400"/>
-<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="400"/>
-<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="400"/>
-<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="400"/>
-
-</p>
+- [Screenshots](#screenshots)
 
 ## Features
 - Modern and easy to use interface
@@ -103,6 +90,16 @@ Stuff I would like to do soon™. In no particular order:
   - Sync?
   - Community themes?
  
-
+## Screenshots
+<p float="left">
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="400"/>
+</p>
 
 
