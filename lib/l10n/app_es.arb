@@ -67,7 +67,7 @@
   "@saveButton": {},
   "labelField": "Etiqueta",
   "@labelField": {},
-  "labelFieldPlaceholder": "Etiqueta",
+  "labelFieldPlaceholder": "Añadir una etiqueta",
   "@labelFieldPlaceholder": {},
   "alarmScheduleSettingGroup": "Programar",
   "@alarmScheduleSettingGroup": {},
@@ -78,5 +78,15 @@
   "scheduleTypeDaily": "Diariamente",
   "@scheduleTypeDaily": {},
   "scheduleTypeOnceDescription": "Sonará a la siguiente hora fijada",
-  "@scheduleTypeOnceDescription": {}
+  "@scheduleTypeOnceDescription": {},
+  "scheduleTypeDailyDescription": "Sonará todos los días",
+  "@scheduleTypeDailyDescription": {},
+  "scheduleTypeWeek": "En días de la semana especificados",
+  "@scheduleTypeWeek": {},
+  "scheduleTypeWeekDescription": "Se repetirá los días de la semana especificados",
+  "@scheduleTypeWeekDescription": {},
+  "scheduleTypeData": "Se repetirá en las fechas especificadas",
+  "@scheduleTypeData": {},
+  "scheduleTypeRange": "Intervalo de fechas",
+  "@scheduleTypeRange": {}
 }
