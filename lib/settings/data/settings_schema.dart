@@ -10,7 +10,7 @@ import 'package:clock_app/settings/screens/about_screen.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
 
-const int settingsSchemaVersion = 1;
+const int settingsSchemaVersion = 3;
 
 SettingGroup appSettings = SettingGroup(
   "Settings",
