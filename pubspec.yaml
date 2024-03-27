@@ -64,6 +64,7 @@ dependencies:
   watcher: ^1.1.0
   dynamic_color: ^1.7.0
   material_color_utilities: ^0.8.0
+  
 
 dev_dependencies:
   flutter_test:
@@ -71,14 +72,8 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   dart_code_metrics: ^5.5.1
   change_app_package_name: ^1.1.0
-  flutter_launcher_icons: ^0.13.1
+  dependency_validator: ^3.2.3
 
-#
-# flutter_launcher_icons:
-#   android: "ic_launcher"
-#   image_path: "assets/icon/1024.png"
-#   min_sdk_android: 21 # android min sdk min:16, default 21
-#
 flutter:
   uses-material-design: true
   assets:

@@ -49,14 +49,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
-  archive:
-    dependency: transitive
-    description:
-      name: archive
-      sha256: "22600aa1e926be775fa5fe7e6894e7fb3df9efda8891c73f70fb3262399a432d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.4.10"
   args:
     dependency: transitive
     description:
@@ -105,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  build_config:
+    dependency: transitive
+    description:
+      name: build_config
+      sha256: bf80fcfb46a29945b423bd9aad884590fb1dc69b330a4d4700cac476af1708d1
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   change_app_package_name:
     dependency: "direct dev"
     description:
@@ -129,14 +129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  cli_util:
-    dependency: transitive
-    description:
-      name: cli_util
-      sha256: c05b7406fdabc7a49a3929d4af76bcaccbbffcbcdcf185b082e1ae07da323d19
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.1"
   clock:
     dependency: transitive
     description:
@@ -201,6 +193,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  dependency_validator:
+    dependency: "direct dev"
+    description:
+      name: dependency_validator
+      sha256: f727a5627aa405965fab4aef4f468e50a9b632ba0737fd2f98c932fec6d712b9
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.3"
   device_info_plus:
     dependency: transitive
     description:
@@ -368,14 +368,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  flutter_launcher_icons:
-    dependency: "direct dev"
-    description:
-      name: flutter_launcher_icons
-      sha256: "526faf84284b86a4cb36d20a5e45147747b7563d921373d4ee0559c54fcdbcea"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.13.1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -483,14 +475,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  image:
-    dependency: transitive
-    description:
-      name: image
-      sha256: "4c68bfd5ae83e700b5204c1e74451e7bf3cf750e6843c6e158289cf56bda018e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.1.7"
   intl:
     dependency: "direct main"
     description:
@@ -507,14 +491,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.12"
-  js:
+  io:
     dependency: transitive
     description:
-      name: js
-      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
+      name: io
+      sha256: "2ec25704aba361659e10e3e5f5d672068d332fc8ac516421d483a11e5cbd061e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.1"
+    version: "1.0.4"
   json_annotation:
     dependency: transitive
     description:
@@ -587,6 +571,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  logging:
+    dependency: transitive
+    description:
+      name: logging
+      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   matcher:
     dependency: transitive
     description:
@@ -731,14 +723,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  pointycastle:
-    dependency: transitive
-    description:
-      name: pointycastle
-      sha256: "43ac87de6e10afabc85c445745a7b799e04de84cebaa4fd7bf55a5e1e9604d29"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.7.4"
   process:
     dependency: transitive
     description:
@@ -763,6 +747,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0"
+  pubspec_parse:
+    dependency: transitive
+    description:
+      name: pubspec_parse
+      sha256: c63b2876e58e194e4b0828fcb080ad0e06d051cb607a6be51a9e084f47cb9367
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.3"
   queue:
     dependency: "direct main"
     description:

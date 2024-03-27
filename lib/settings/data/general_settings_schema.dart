@@ -6,15 +6,14 @@ import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/screens/ringtones_screen.dart';
-import 'package:clock_app/settings/screens/vendor_list_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 SelectSettingOption<String> _getDateSettingOption(String format) {
   return SelectSettingOption(
@@ -67,9 +66,9 @@ SettingGroup generalSettingsSchema = SettingGroup(
       searchTags: ["ringtones", "music", "audio", "tones", "custom"],
     ),
     SettingGroup("Reliability", [
-      SettingPageLink(
+      SettingAction(
         "Vendor Specific",
-        const VendorListScreen(),
+        (context) => launchUrl(Uri.parse("https://dontkillmyapp.com")),
         description: "Manually disable vendor-specific optimizations",
       ),
       SettingAction(
