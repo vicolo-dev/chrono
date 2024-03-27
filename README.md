@@ -1,6 +1,6 @@
 <div align="center">
 
-<image src="fastlane/metadata/android/en-US/images/icon.png" height="100">
+<image src="fastlane/metadata/android/en-US/images/icon.png" height="100"/>
 
 # Chrono
 
@@ -22,6 +22,7 @@ Its usable, but still WIP, so you might encounter some bugs. So its not recommen
 - [Platforms](#platforms)
 - [Development](#development)
 - [Todo](#todo)
+- [Screenshots](#screenshots)
 
 ## Features
 - Modern and easy to use interface
@@ -43,6 +44,7 @@ Its usable, but still WIP, so you might encounter some bugs. So its not recommen
 - Lap history with lap times and elapsed times
 - Lap comparisons
 ### Appearance
+- Material You icons and themes
 - Highly customizable color themes
 - Highly customizable style themes
 
@@ -74,7 +76,7 @@ Stuff I would like to do soon™. In no particular order:
 - Theme
   - Icon themes
   - Font themes
-  - System theme and fonts
+  - System fonts
 - Timer
   - Alternative duration picker interfaces
 - Widgets
@@ -87,3 +89,17 @@ Stuff I would like to do soon™. In no particular order:
 - Online?
   - Sync?
   - Community themes?
+ 
+## Screenshots
+<p float="left">
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="400"/>
+<image src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="400"/>
+</p>
+
+
