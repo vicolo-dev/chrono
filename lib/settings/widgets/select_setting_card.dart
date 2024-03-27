@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 
 class SelectSettingCard<T> extends StatefulWidget {
   const SelectSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = false,
     this.onChanged,
-  }) : super(key: key);
+  });
   final SelectSetting<T> setting;
   final void Function(T)? onChanged;
   final bool showAsCard;
@@ -24,7 +24,7 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
   Widget build(BuildContext context) {
     SelectField selectWidget = SelectField(
       selectedIndex: widget.setting.selectedIndex,
-      title: widget.setting.name,
+      title: widget.setting.displayName(context),
       choices: widget.setting.options
           .map((option) => SelectChoice(
               name: option.name,

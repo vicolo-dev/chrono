@@ -9,11 +9,11 @@ class DateSettingCard extends StatefulWidget {
   final void Function(List<DateTime>)? onChanged;
 
   const DateSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = false,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<DateSettingCard> createState() => _DateSettingCardState();
@@ -23,8 +23,8 @@ class _DateSettingCardState extends State<DateSettingCard> {
   @override
   Widget build(BuildContext context) {
     Widget input = DatePickerField(
-      title: widget.setting.name,
-      description: widget.setting.description,
+      title: widget.setting.displayName(context),
+      description: widget.setting.displayDescription(context),
       value: widget.setting.value,
       rangeOnly: widget.setting.rangeOnly,
       onChanged: (value) {

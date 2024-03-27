@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class SettingPageLinkCard extends StatefulWidget {
   const SettingPageLinkCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = true,
-  }) : super(key: key);
+  });
 
   final SettingPageLink setting;
   final bool showAsCard;
@@ -41,13 +41,13 @@ class _SettingPageLinkCardState<T> extends State<SettingPageLinkCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.setting.name,
+                      widget.setting.displayName(context),
                       style: textTheme.displaySmall,
                     ),
                     if (widget.setting.description.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        widget.setting.description,
+                        widget.setting.displayDescription(context),
                         style: textTheme.bodyMedium,
                       )
                     ]

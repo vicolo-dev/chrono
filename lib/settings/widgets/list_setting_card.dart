@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 class ListSettingCard extends StatefulWidget {
   const ListSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = true,
-  }) : super(key: key);
+  });
 
   final ListSetting setting;
   final bool showAsCard;
@@ -39,7 +39,7 @@ class _ListSettingCardState extends State<ListSettingCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.setting.name,
+                    widget.setting.displayName(context),
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 4.0),

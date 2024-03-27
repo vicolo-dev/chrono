@@ -9,8 +9,7 @@ class SettingsTopBar extends StatefulWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size(0, 56);
 
   const SettingsTopBar(
-      {Key? key, required this.onSearch, this.showSearch = false})
-      : super(key: key);
+      {super.key, required this.onSearch, this.showSearch = false});
 
   final void Function(List<SettingItem> settings) onSearch;
   final bool showSearch;

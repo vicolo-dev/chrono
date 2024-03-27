@@ -9,13 +9,13 @@ import 'package:flutter/material.dart';
 
 class SelectField extends StatefulWidget {
   const SelectField({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.title,
     this.description,
     required this.choices,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final int selectedIndex;
   final String title;

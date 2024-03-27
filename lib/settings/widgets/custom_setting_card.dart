@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class CustomSettingCard extends StatefulWidget {
   const CustomSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = true,
-  }) : super(key: key);
+  });
 
   final CustomSetting setting;
   final bool showAsCard;
@@ -38,7 +38,7 @@ class _CustomSettingCardState<T> extends State<CustomSettingCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.setting.name,
+                    widget.setting.displayName(context),
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 4.0),

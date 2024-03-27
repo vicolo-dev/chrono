@@ -1,6 +1,10 @@
+import 'package:clock_app/settings/data/localized_names.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:flutter/material.dart';
+
+
 
 abstract class SettingItem {
   String name;
@@ -15,6 +19,9 @@ abstract class SettingItem {
   // Settings which influence whether this setting is enabled
   List<EnableConditionEvaluator> enableSettings;
   // List<SettingCompoundEnableCondition> compoundEnableSettings;
+
+  String displayName(BuildContext context) => getLocalizedSettingName(name, context);
+  String displayDescription(BuildContext context) => getLocalizedSettingDescription(description, context);
 
   bool get isEnabled {
     for (var enableSetting in enableSettings) {

@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 
 class DynamicSelectSettingCard<T extends ListItem> extends StatefulWidget {
   const DynamicSelectSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = false,
     this.onChanged,
-  }) : super(key: key);
+  });
   final DynamicSelectSetting<T> setting;
   final void Function(T)? onChanged;
   final bool showAsCard;
@@ -28,7 +28,7 @@ class _DynamicSelectSettingCardState<T extends ListItem>
     print("init ${widget.setting.selectedIndex}");
     SelectField selectWidget = SelectField(
       selectedIndex: widget.setting.selectedIndex,
-      title: widget.setting.name,
+      title: widget.setting.displayName(context),
       choices: widget.setting.options
           .map((option) => SelectChoice(
               name: option.name,

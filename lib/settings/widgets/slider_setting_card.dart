@@ -9,11 +9,11 @@ class SliderSettingCard extends StatefulWidget {
   final void Function(double)? onChanged;
 
   const SliderSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = false,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<SliderSettingCard> createState() => _SliderSettingCardState();
@@ -23,7 +23,7 @@ class _SliderSettingCardState extends State<SliderSettingCard> {
   @override
   Widget build(BuildContext context) {
     SliderField sliderCard = SliderField(
-      title: widget.setting.name,
+      title: widget.setting.displayName(context),
       value: widget.setting.value,
       min: widget.setting.min,
       max: widget.setting.max,

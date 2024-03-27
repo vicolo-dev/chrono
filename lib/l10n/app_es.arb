@@ -2,5 +2,7 @@
     "clockTitle": "Reloj",
     "alarmTitle": "Alarma",
     "timerTitle": "Temporizador",
-    "stopwatchTitle": "Cronómetro"
+    "stopwatchTitle": "Cronómetro",
+    "generalSettingGroup": "General",
+    "appearanceSettingGroup": "Apariencia"
 }

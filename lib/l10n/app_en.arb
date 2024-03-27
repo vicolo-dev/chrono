@@ -14,5 +14,7 @@
   "stopwatchTitle": "Stopwatch",
   "@stopwatchTitle": {
     "description": "Title of the stopwatch screen"
-  }
+  },
+  "generalSettingGroup": "General",
+  "appearanceSettingGroup": "Appearance"
 }
