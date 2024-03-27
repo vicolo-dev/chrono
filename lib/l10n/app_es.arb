@@ -1,3 +1,6 @@
 {
-    "clock": "Reloj"
+    "clockTitle": "Reloj",
+    "alarmTitle": "Alarma",
+    "timerTitle": "Temporizador",
+    "stopwatchTitle": "Cronómetro"
 }

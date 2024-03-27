@@ -11,11 +11,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 List<Tab> getTabs(BuildContext context) {
   return [
-  Tab(title: 'Alarm', icon: FluxIcons.alarm, widget: const AlarmScreen()),
-  Tab(title: AppLocalizations.of(context)!.clock, icon: FluxIcons.clock, widget: const ClockScreen()),
-  Tab(title: 'Timer', icon: FluxIcons.timer, widget: const TimerScreen()),
+  Tab(title: AppLocalizations.of(context)!.alarmTitle, icon: FluxIcons.alarm, widget: const AlarmScreen()),
+  Tab(title: AppLocalizations.of(context)!.clockTitle, icon: FluxIcons.clock, widget: const ClockScreen()),
+  Tab(title: AppLocalizations.of(context)!.timerTitle, icon: FluxIcons.timer, widget: const TimerScreen()),
   Tab(
-      title: 'Stopwatch',
+      title: AppLocalizations.of(context)!.stopwatchTitle,
       icon: FluxIcons.stopwatch,
       widget: const StopwatchScreen()),
 ];
