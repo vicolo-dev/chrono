@@ -29,6 +29,7 @@
 </ul
 <h3>Appearance</h3>
 <ul>
+<li>Material You themes</li>
 <li>Highly customizable color themes</li>
 <li>Highly customizable style themes</li>
 </ul>
