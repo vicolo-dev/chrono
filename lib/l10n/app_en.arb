@@ -88,5 +88,15 @@
   "scheduleTypeOnceDescription": "Will ring at the next occurrence of the time",
   "@scheduleTypeOnceDescription": {},
   "scheduleTypeDailyDescription": "Will ring every day",
-  "@scheduleTypeDailyDescription": {}
+  "@scheduleTypeDailyDescription": {},
+  "scheduleTypeWeek": "On Specified Week Days",
+  "@scheduleTypeWeek": {},
+  "scheduleTypeWeekDescription": "Will repeat on the specified week days",
+  "@scheduleTypeWeekDescription": {},
+  "scheduleTypeData": "On Specific Dates",
+  "@scheduleTypeData": {},
+  "scheduleTypeRange": "Date Range",
+  "@scheduleTypeRange": {},
+  "scheduleTypeDateDescription": "Will repeat on the specified dates",
+  "@scheduleTypeDateDescription": {}
 }
