@@ -197,7 +197,7 @@ class SettingGroup extends SettingItem {
       //Incase of removal
       //value.remove("Old Setting");
 
-      if (name == "AlarmSettings") {
+      // if (name == "AlarmSettings") {
         if (value["version"] == 1) {
           final old1 = value["Snooze"]["Prevent Disabling while Snoozed"];
           final old2 = value["Snooze"]["Prevent Deleting while Snoozed"];
@@ -206,7 +206,7 @@ class SettingGroup extends SettingItem {
           }
           if (old2) value["Snooze"]["While Snoozed"]["Prevent Deletion"] = old2;
         }
-      }
+      // }
     }
     for (var setting in _settingItems) {
       if (value != null) setting.loadValueFromJson(value[setting.name]);
