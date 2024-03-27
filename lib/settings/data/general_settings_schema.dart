@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:auto_start_flutter/auto_start_flutter.dart';
+import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
+import 'package:clock_app/l10n/language_local.dart';
 import 'package:clock_app/settings/screens/ringtones_screen.dart';
 import 'package:clock_app/settings/screens/vendor_list_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -15,6 +19,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:locale_names/locale_names.dart';
 
 SelectSettingOption<String> _getDateSettingOption(String format) {
   return SelectSettingOption(
@@ -30,6 +36,12 @@ final timeFormatOptions = [
 SettingGroup generalSettingsSchema = SettingGroup(
   "General",
   [
+    SelectSetting("Language",[SelectSettingOption("System", Locale(Platform.localeName)), ...AppLocalizations.supportedLocales.map((locale) {
+      return SelectSettingOption(Locale.fromSubtags(
+        languageCode: locale.languageCode, scriptCode: locale.scriptCode, countryCode: locale.countryCode).nativeDisplayLanguage, locale);
+    })], onChange: (context, index) {
+      App.refreshTheme(context);
+    }),
     SettingGroup("Display", [
       SelectSetting<String>(
         "Date Format",

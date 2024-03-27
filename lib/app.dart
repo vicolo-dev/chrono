@@ -54,6 +54,7 @@ class _AppState extends State<App> {
   late SettingGroup _appearanceSettings;
   late SettingGroup _colorSettings;
   late SettingGroup _styleSettings;
+  late SettingGroup _generalSettings;
 
   late StreamSubscription _sub;
 
@@ -100,6 +101,7 @@ class _AppState extends State<App> {
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
+    _generalSettings = appSettings.getGroup("General");
   }
 
   refreshTheme() {
@@ -176,6 +178,7 @@ class _AppState extends State<App> {
       final AppTheme appTheme = getAppTheme(lightDynamic, darkDynamic);
       ThemeBrightness themeBrightness =
           _colorSettings.getSetting("Brightness").value;
+      Locale locale = _generalSettings.getSetting("Language").value;
 
       return MaterialApp(
         scaffoldMessengerKey: _messangerKey,
@@ -191,7 +194,7 @@ class _AppState extends State<App> {
                 : ThemeMode.dark,
         initialRoute: Routes.rootRoute,
         navigatorObservers: [routeObserver],
-        locale: const Locale('es'),
+        locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         onGenerateRoute: (settings) {

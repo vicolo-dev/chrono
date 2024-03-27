@@ -592,6 +592,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  locale_names:
+    dependency: "direct main"
+    description:
+      name: locale_names
+      sha256: "7a89ca54072f4f13d0f5df5a9ba69337554bf2fd057d1dd2a238898f3f159374"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   matcher:
     dependency: transitive
     description:
