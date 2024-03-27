@@ -76,5 +76,7 @@
   "scheduleTypeOnce": "Una vez",
   "@scheduleTypeOnce": {},
   "scheduleTypeDaily": "Diariamente",
-  "@scheduleTypeDaily": {}
+  "@scheduleTypeDaily": {},
+  "scheduleTypeOnceDescription": "Sonará a la siguiente hora fijada",
+  "@scheduleTypeOnceDescription": {}
 }
