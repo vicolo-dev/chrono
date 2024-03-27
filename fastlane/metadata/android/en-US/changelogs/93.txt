@@ -1,0 +1,6 @@
+✨ Enhancements
+* Add Material You colors and styles
+* Add system dark mode
+* Add Material 3 compliant navigation bar and style
+* Add adaptive launcher icon with Material You support
+* Change app icon
