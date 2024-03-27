@@ -16,5 +16,19 @@
     "description": "Title of the stopwatch screen"
   },
   "generalSettingGroup": "General",
-  "appearanceSettingGroup": "Appearance"
+  "@generalSettingGroup": {},
+  "appearanceSettingGroup": "Appearance",
+  "@appearanceSettingGroup": {},
+  "accessibilitySettingGroup": "Accessibility",
+  "@accessibilitySettingGroup": {},
+  "backupSettingGroup": "Backup",
+  "@backupSettingGroup": {},
+  "developerOptionsSettingGroup": "Developer Options",
+  "@developerOptionsSettingGroup": {},
+  "aboutSettingGroup": "About",
+  "@aboutSettingGroup": {},
+  "restoreSettingGroup": "Restore default values",
+  "@restoreSettingGroup": {},
+  "displaySettingGroup": "Display",
+  "@displaySettingGroup": {}
 }
