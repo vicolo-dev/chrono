@@ -2,5 +2,7 @@
   "clock": "Clock",
   "@clock": {
     "description": "Title of the clock screen"
-  }
+  },
+  "alarm": "Alarm",
+  "@alarm": {}
 }
