@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/audio/logic/system_ringtones.dart';
+import 'package:clock_app/clock/data/default_favorite_cities.dart';
 import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
+import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
@@ -12,8 +14,10 @@ import 'package:clock_app/theme/data/default_color_schemes.dart';
 import 'package:clock_app/theme/data/default_style_themes.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
+import 'package:clock_app/timer/data/default_timer_presets.dart';
 import 'package:clock_app/timer/logic/initialize_default_timer_presets.dart';
 import 'package:clock_app/timer/types/timer.dart';
+import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -48,16 +52,25 @@ Future<void> initializeStorage() async {
     GetStorage().write('first_alarm_created', false);
     GetStorage().write('first_timer_created', false);
 
-    initializeDefaultFavoriteCities();
-    initializeDefaultTimerPresets();
-    initializeDefaultAlarms();
-    await saveList<ClockTimer>('timers', []);
-    await saveList<FileItem>('ringtones', await getSystemRingtones());
-    await saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
-    await saveList<ColorSchemeData>('color_schemes', defaultColorSchemes);
-    await saveList<StyleTheme>('style_themes', defaultStyleThemes);
-    await saveTextFile("time_format_string", "h:mm a");
+    // initializeDefaultFavoriteCities();
+    // initializeDefaultTimerPresets();
+    // await saveList<ClockTimer>('timers', []);
+    // await saveList<FileItem>('ringtones', await getSystemRingtones());
+    //   await saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
+    //   await saveList<ColorSchemeData>('color_schemes', defaultColorSchemes);
+    //   await saveList<StyleTheme>('style_themes', defaultStyleThemes);
+    //   await saveTextFile("time_format_string", "h:mm a");
   }
+
+  await initList<Alarm>("alarms", []);
+  await initList<ClockTimer>('timers', []);
+  await initList<City>('favorite_cities', initialFavoriteCities);
+  await initList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
+  await initList<ColorSchemeData>('color_schemes', defaultColorSchemes);
+  await initList<StyleTheme>('style_themes', defaultStyleThemes);
+  await initList<TimerPreset>("timer_presets", defaultTimerPresets);
+  await initList<FileItem>("ringtones", await getSystemRingtones());
+  await initTextFile("time_format_string", "h:mm a");
 }
 
 Future<void> initializeSettings() async {
@@ -69,8 +82,4 @@ Future<void> initializeSettings() async {
   }
 
   appSettings.load();
-}
-
-void initializeDefaultAlarms() {
-  saveList<Alarm>('alarms', []);
 }
