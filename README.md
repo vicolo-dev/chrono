@@ -55,8 +55,15 @@ to contribute if you want iOS support. The alarm and timer features
 use android-only code, so that will need to be ported. Everything else should mostly work fine.
 
 ## Contribute
-
-All contributions are welcome, whether creating issues, pull requests or translations. When contributing to this repository, please first discuss the change you wish to make via an issue. Also, please refer to [Effective Dart](https://dart.dev/effective-dart) as a guideline for the coding standards expected from pull requests.
+All contributions are welcome, whether creating issues, pull requests or translations. 
+### Issues
+Feel free to create issues regarding any issues you might be facing, any improvements or enhancements, or any feature-requests. Try to follow the templates and include as much information as possible in your issues.
+### Pull Requests
+Pull Requests are highly welcome. When contributing to this repository, please first discuss the change you wish to make via an issue. Also, please refer to [Effective Dart](https://dart.dev/effective-dart) as a guideline for the coding standards expected from pull requests.
+### Translations
+You can help translate the app into your preferred language using weblate at https://hosted.weblate.org/projects/chrono/.
+### Spread the word!
+If you found the app useful, you can help the project by sharing it with friends and family.
 
 ## Development
 
