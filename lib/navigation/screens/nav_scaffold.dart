@@ -1,11 +1,12 @@
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
+import 'package:clock_app/navigation/types/tab.dart';
 import 'package:clock_app/navigation/widgets/app_navigation_bar.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Tab;
 
 class NavScaffold extends StatefulWidget {
   const NavScaffold({super.key});
@@ -51,6 +52,8 @@ void setUseMaterialnavBar(dynamic value) {
 
   @override
   Widget build(BuildContext context) {
+    List<Tab> tabs = getTabs(context);
+
     return Scaffold(
       appBar: AppTopBar(
         title: Text(tabs[_selectedTabIndex].title,

@@ -1,0 +1,6 @@
+{
+  "clock": "Clock",
+  "@clock": {
+    "description": "Title of the clock screen"
+  }
+}

@@ -45,7 +45,7 @@ BoxDecoration getCardDecoration(BuildContext context,
     color: color ??
         (useMaterialYou
             ? Color(tonalPalette.get(
-                Theme.of(context).brightness == Brightness.light ? 96 : 15))
+                Theme.of(context).brightness == Brightness.light ? 98 : 15))
             : colorScheme.surface),
     borderRadius: theme.cardTheme.shape != null
         ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
