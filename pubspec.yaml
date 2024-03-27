@@ -10,14 +10,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   flutter_boot_receiver:
     git:
       url: https://github.com/AhsanSarwar45/flutter_boot_receiver.git
       ref: master
   # flutter_boot_receiver:
   #   path: "../flutter_boot_receiver"
-  intl: ^0.19.0
   timezone: ^0.9.1
   timer_builder: ^2.0.0
   path_provider: ^2.0.11
@@ -73,6 +74,8 @@ dev_dependencies:
   change_app_package_name: ^1.1.0
   flutter_launcher_icons: ^0.13.1
 
+dependency_overrides:
+  intl: any
 #
 # flutter_launcher_icons:
 #   android: "ic_launcher"

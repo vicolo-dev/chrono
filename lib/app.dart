@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:receive_intent/receive_intent.dart' as intent_handler;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -98,7 +99,6 @@ class _AppState extends State<App> {
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
-
   }
 
   refreshTheme() {
@@ -190,6 +190,16 @@ class _AppState extends State<App> {
                 : ThemeMode.dark,
         initialRoute: Routes.rootRoute,
         navigatorObservers: [routeObserver],
+        locale: const Locale('es'),
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'), // English
+          Locale('es'), // Spanish
+        ],
         onGenerateRoute: (settings) {
           Routes.push(settings.name ?? Routes.rootRoute);
           switch (settings.name) {
