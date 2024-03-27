@@ -20,6 +20,7 @@ Its usable, but still WIP, so you might encounter some bugs. So its not recommen
 # Table of Content
 - [Features](#features)
 - [Platforms](#platforms)
+- [Contribute](#contribute)
 - [Development](#development)
 - [Todo](#todo)
 - [Screenshots](#screenshots)
@@ -52,6 +53,10 @@ Its usable, but still WIP, so you might encounter some bugs. So its not recommen
 Currently, the app is only available for android. I don't have an apple device to develop for iOS, but feel free
 to contribute if you want iOS support. The alarm and timer features
 use android-only code, so that will need to be ported. Everything else should mostly work fine.
+
+## Contribute
+
+All contributions are welcome, whether creating issues, pull requests or translations. When contributing to this repository, please first discuss the change you wish to make via an issue. Also, please refer to [Effective Dart](https://dart.dev/effective-dart) as a guideline for the coding standards expected from pull requests.
 
 ## Development
 
