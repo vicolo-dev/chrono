@@ -19,7 +19,7 @@ import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
-const alarmSchemaVersion = 3;
+const alarmSchemaVersion = 4;
 
 SettingGroup alarmSettingsSchema = SettingGroup(
   version: alarmSchemaVersion,
