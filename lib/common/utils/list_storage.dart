@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:path/path.dart';
 import 'package:queue/queue.dart';
@@ -55,6 +56,23 @@ Future<List<T>> loadList<T extends JsonSerializable>(String key) async {
 Future<void> saveList<T extends JsonSerializable>(
     String key, List<T> list) async {
   await saveTextFile(key, listToString(list));
+}
+
+Future<void> initList<T extends JsonSerializable>(
+    String key, List<T> value) async {
+  await initTextFile(key, listToString(value));
+}
+
+Future<void> initTextFile(String key, String value) async {
+  if (GetStorage().read('init_$key') == null) {
+    GetStorage().write('init_$key', true);
+    try {
+      loadTextFileSync(key);
+    } catch (e) {
+      print("Initializing $key");
+      await saveTextFile(key, value);
+    }
+  }
 }
 
 Future<void> saveTextFile(String key, String content) async {
