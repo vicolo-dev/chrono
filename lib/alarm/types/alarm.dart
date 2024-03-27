@@ -320,7 +320,7 @@ class Alarm extends CustomizableListItem {
     _skippedTime = json['skippedTime'] != null
         ? DateTime.fromMillisecondsSinceEpoch(json['skippedTime'])
         : null;
-    _snoozeTime = json['snoozeTime'] != null
+    _snoozeTime = (json['snoozeTime'] != null && json['snoozeTime'] != 0)
         ? DateTime.fromMillisecondsSinceEpoch(json['snoozeTime'])
         : null;
     _snoozeCount = json['snoozeCount'] ?? 0;
