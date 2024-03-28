@@ -91,7 +91,7 @@ class Alarm extends CustomizableListItem {
   List<AlarmRunner> get activeAlarmRunners => activeSchedule.alarmRunners;
   bool get isRepeating =>
       [DailyAlarmSchedule, WeeklyAlarmSchedule].contains(scheduleType);
-  DateTime? get currentScheduleDateTime =>
+  DateTime? get currentScheduleDateTime => _snoozeTime ??
       activeSchedule.currentScheduleDateTime;
   int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
   int get snoozeCount => _snoozeCount;
@@ -188,7 +188,7 @@ class Alarm extends CustomizableListItem {
     // Snoozing should cancel any skip
     _skippedTime = null;
     _snoozeTime = DateTime.now().add(
-      Duration(minutes: snoozeLength.toInt()),
+      Duration(minutes: snoozeLength.floor()),
     );
     _scheduleSnooze();
   }

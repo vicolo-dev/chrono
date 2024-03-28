@@ -21,6 +21,7 @@ import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
+
 Future<void> _clearSettings() async {
   List<ClockTimer> timers = await loadList<ClockTimer>('timers');
   List<Alarm> alarms = await loadList<Alarm>('alarms');
@@ -33,10 +34,15 @@ Future<void> _clearSettings() async {
     timer.reset();
   }
   await GetStorage().erase();
+
   // Delete all files in custom melodies directory
-  final dir = Directory(await getRingtonesDirectoryPath());
-  dir.deleteSync(recursive: true);
-  dir.createSync(recursive: true);
+  final ringtonesDir = Directory(await getRingtonesDirectoryPath());
+  ringtonesDir.deleteSync(recursive: true);
+  ringtonesDir.createSync(recursive: true);
+
+  final dataDir = Directory(await getAppDataDirectoryPath());
+  dataDir.deleteSync(recursive: true);
+  dataDir.createSync(recursive: true);
 }
 
 Future<void> initializeStorage() async {

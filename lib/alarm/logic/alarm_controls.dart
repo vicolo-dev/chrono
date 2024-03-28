@@ -6,6 +6,7 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -91,6 +92,13 @@ void triggerAlarm(int scheduleId, Json params) async {
   }
 
   Alarm alarm = getAlarmByScheduleId(scheduleId);
+  DateTime now = DateTime.now();
+  TimeOfDay timeOfDay = TimeOfDay.fromDateTime(now);
+
+  if(alarm.currentScheduleDateTime == null) return;
+  if(timeOfDay != TimeOfDay.fromDateTime(alarm.currentScheduleDateTime!)) {
+    return;
+  }
 
   await updateAlarms();
 
