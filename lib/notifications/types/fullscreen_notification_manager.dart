@@ -13,6 +13,7 @@ import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
+import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:move_to_background/move_to_background.dart';
 
@@ -96,7 +97,8 @@ class AlarmNotificationManager {
     await removeNotification(type);
 
     await GetStorage.init();
-    await LockScreenFlagManager.clearLockScreenFlags();
+    // await LockScreenFlagManager.clearLockScreenFlags();
+    await FlutterShowWhenLocked().hide();
 
     // If we were on the alarm screen, pop it off the stack. Sometimes the system
     // decides to show a heads up notification instead of a full screen one, so
@@ -138,7 +140,8 @@ class AlarmNotificationManager {
 
   static Future<void> openNotificationScreen(
       FullScreenNotificationData data, List<int> scheduleIds) async {
-    await LockScreenFlagManager.setLockScreenFlags();
+    // await LockScreenFlagManager.setLockScreenFlags();
+    await FlutterShowWhenLocked().show();
     // If we're already on the same notification screen, pop it off the
     // stack so we don't have two of them on the stack.
     if (Routes.currentRoute == data.route) {

@@ -20,6 +20,7 @@ import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boot_receiver/flutter_boot_receiver.dart';
+import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
 import 'package:timezone/data/latest_all.dart';
 
 void main() async {
@@ -39,7 +40,10 @@ void main() async {
   await BootReceiver.initialize(handleBoot);
   await initializeNotifications();
   AppVisibility.initialize();
-  await LockScreenFlagManager.initialize();
+  // print("++++++++++++++++++++++++++");
+  await FlutterShowWhenLocked().hide();
+  // print("gsddddddddddddddddddddddsaaaaaaaaaaaaaa----------------------");
+  // await LockScreenFlagManager.initialize();
 
   ReceivePort receivePort = ReceivePort();
   IsolateNameServer.removePortNameMapping(updatePortName);
