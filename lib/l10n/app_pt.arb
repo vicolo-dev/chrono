@@ -176,5 +176,9 @@
   "scheduleTypeDateDescription": "Será ativado nas datas especificadas",
   "@scheduleTypeDateDescription": {},
   "scheduleTypeRangeDescription": "Será ativado durante o intervalo especificado",
-  "@scheduleTypeRangeDescription": {}
+  "@scheduleTypeRangeDescription": {},
+  "noItemMessage": "Nenhum {item} adicionado ainda",
+  "@noItemMessage": {},
+  "noItemCreatedMessage": "Sem {itens} criados",
+  "@noItemCreatedMessage": {}
 }
