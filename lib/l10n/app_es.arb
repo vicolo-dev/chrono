@@ -166,5 +166,11 @@
   "completedFilter": "Terminada",
   "@completedFilter": {},
   "allFilter": "Todas",
-  "@allFilter": {}
+  "@allFilter": {},
+  "whileSnoozedSettingGroup": "Mientras estás dormido",
+  "@whileSnoozedSettingGroup": {},
+  "mathTask": "Problemas matemáticos",
+  "@mathTask": {},
+  "snoozedFilter": "Pospuesto",
+  "@snoozedFilter": {}
 }
