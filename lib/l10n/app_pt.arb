@@ -1,1 +1,18 @@
-{}
+{
+  "alarmTitle": "Alarme",
+  "@alarmTitle": {
+    "description": "Title of the alarm screen"
+  },
+  "stopwatchTitle": "Cronómetro",
+  "@stopwatchTitle": {
+    "description": "Title of the stopwatch screen"
+  },
+  "clockTitle": "Relógio",
+  "@clockTitle": {
+    "description": "Title of the clock screen"
+  },
+  "timerTitle": "Temporizador",
+  "@timerTitle": {
+    "description": "Title of the timer screen"
+  }
+}
