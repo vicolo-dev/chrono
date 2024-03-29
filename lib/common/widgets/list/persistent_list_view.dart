@@ -35,6 +35,10 @@ class PersistentListController<T> {
     _listController.deleteItem(item);
   }
 
+  void clearItems() {
+    _listController.clearItems();
+  }
+
   int getItemIndex(T item) {
     return _listController.getItemIndex(item);
   }

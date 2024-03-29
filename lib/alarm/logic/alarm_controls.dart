@@ -1,7 +1,10 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -26,6 +29,7 @@ const String updatePortName = "updatePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
+  // print("++++++++++++++++++++++++ $params");
   if (kDebugMode) {
     print("Alarm triggered: $scheduleId");
   }
@@ -58,6 +62,7 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
 
   await initializeAppDataDirectory();
   await GetStorage.init();
+  await AndroidAlarmManager.initialize();
   // await RingtoneManager.initialize();
   await RingtonePlayer.initialize();
 
@@ -84,6 +89,14 @@ void stopScheduledNotification(List<dynamic> message) {
 }
 
 void triggerAlarm(int scheduleId, Json params) async {
+  // List<AlarmEvent> events = await loadList<AlarmEvent>('alarm_events');
+  // for (var event in events) {
+  //   if (event.scheduleId == scheduleId) {
+  //     event.isActive = false;
+  //   }
+  // }
+  // await saveList<AlarmEvent>('alarm_events', events);
+
   if (params == null) {
     if (kDebugMode) {
       print("Params was null when triggering alarm");
@@ -93,14 +106,21 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   Alarm alarm = getAlarmByScheduleId(scheduleId);
   DateTime now = DateTime.now();
-  TimeOfDay timeOfDay = TimeOfDay.fromDateTime(now);
 
-  if(alarm.currentScheduleDateTime == null) return;
-  if(timeOfDay != TimeOfDay.fromDateTime(alarm.currentScheduleDateTime!)) {
+  if (alarm.currentScheduleDateTime == null) {
+    await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
+  }
+  // if alarm is triggered more than 10 minutes after the scheduled time, ignore
+  if (now.millisecondsSinceEpoch <
+          alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
+      now.millisecondsSinceEpoch >
+          alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
+              1000 * 60 * 10) {
+    await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
     return;
   }
 
-  await updateAlarms();
+  await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
 
   if (alarm.shouldSkipNextAlarm) {
     alarm.cancelSkip();
@@ -142,7 +162,7 @@ void triggerAlarm(int scheduleId, Json params) async {
 
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
   if (action == AlarmStopAction.snooze) {
-    await updateAlarmById(scheduleId, (alarm) => alarm.snooze());
+    await updateAlarmById(scheduleId, (alarm) async => await alarm.snooze());
   } else if (action == AlarmStopAction.dismiss) {
     // If there was a timer ringing when the alarm was triggered, resume it now
     if (RingingManager.isTimerRinging) {
@@ -189,10 +209,11 @@ void triggerTimer(int scheduleId, Json params) async {
 void stopTimer(int scheduleId, AlarmStopAction action) async {
   ClockTimer timer = getTimerById(scheduleId);
   if (action == AlarmStopAction.snooze) {
-    scheduleSnoozeAlarm(
+    await scheduleSnoozeAlarm(
       scheduleId,
       Duration(minutes: timer.addLength.floor()),
       ScheduledNotificationType.timer,
+      "stopTimer(): ${timer.addLength.floor()} added to timer",
     );
     updateTimerById(scheduleId, (timer) {
       timer.setTime(const TimeDuration(minutes: 1));

@@ -3,8 +3,7 @@ import 'package:clock_app/icons/flux_icons.dart';
 import 'package:flutter/material.dart';
 
 class AlarmTaskCard extends StatelessWidget {
-  const AlarmTaskCard({Key? key, required this.task, required this.isAddCard})
-      : super(key: key);
+  const AlarmTaskCard({super.key, required this.task, required this.isAddCard});
 
   final AlarmTask task;
   final bool isAddCard;

@@ -54,7 +54,7 @@ void handleIntent(Intent? receivedIntent, BuildContext context, Function(Alarm) 
               alarm.setSetting(context, "Label", message);
             }
 
-            alarm.update();
+            alarm.update("handleIntent(): Alarm set by external app");
             List<Alarm> alarms = await loadList<Alarm>("alarms");
             alarms.add(alarm);
             await saveList("alarms", alarms);

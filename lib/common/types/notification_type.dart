@@ -1,0 +1,8 @@
+
+enum ScheduledNotificationType {
+  alarm,
+  timer,
+}
+
+
+
