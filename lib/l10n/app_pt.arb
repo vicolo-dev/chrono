@@ -177,8 +177,8 @@
   "@scheduleTypeDateDescription": {},
   "scheduleTypeRangeDescription": "Será ativado durante o intervalo especificado",
   "@scheduleTypeRangeDescription": {},
-  "noItemMessage": "Nenhum {item} adicionado ainda",
+  "noItemMessage": "Ainda não adicionou {items}",
   "@noItemMessage": {},
-  "noItemCreatedMessage": "Sem {itens} criados",
+  "noItemCreatedMessage": "{items} não criadas",
   "@noItemCreatedMessage": {}
 }
