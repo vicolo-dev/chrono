@@ -70,6 +70,7 @@ class _AppState extends State<App> {
     try {
       final receivedIntent =
           await intent_handler.ReceiveIntent.getInitialIntent();
+      print("------------------ $receivedIntent");
       if (mounted) {
         handleIntent(receivedIntent, context, _showNextScheduleSnackBar);
       }
@@ -98,7 +99,6 @@ class _AppState extends State<App> {
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
-
   }
 
   refreshTheme() {

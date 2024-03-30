@@ -10,6 +10,7 @@ import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -23,12 +24,22 @@ import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
+import 'package:receive_intent/receive_intent.dart';
 
 const String stopAlarmPortName = "stopAlarmPort";
 const String updatePortName = "updatePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
+  // try {
+  //   final receivedIntent = await ReceiveIntent.getInitialIntent();
+  //   print("==================== ${receivedIntent?.action}");
+  //   // handleIntent(receivedIntent, context, _showNextScheduleSnackBar);
+  // } on PlatformException {
+  //   print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  //   // Handle exception
+  // }
+
   // print("++++++++++++++++++++++++ $params");
   if (kDebugMode) {
     print("Alarm triggered: $scheduleId");
@@ -215,9 +226,9 @@ void stopTimer(int scheduleId, AlarmStopAction action) async {
       ScheduledNotificationType.timer,
       "stopTimer(): ${timer.addLength.floor()} added to timer",
     );
-    updateTimerById(scheduleId, (timer) {
+    updateTimerById(scheduleId, (timer) async {
       timer.setTime(const TimeDuration(minutes: 1));
-      timer.start();
+      await timer.start();
     });
   } else if (action == AlarmStopAction.dismiss) {
     // If there was an alarm already ringing when the timer was triggered, we

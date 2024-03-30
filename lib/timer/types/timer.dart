@@ -80,7 +80,7 @@ class ClockTimer extends CustomizableListItem {
         _startTime = DateTime(0),
         _state = TimerState.stopped,
         _settings = timer._settings.copy(),
-        _id = timer.id;
+        _id = UniqueKey().hashCode;
 
   void setSetting(BuildContext context, String name, dynamic value) {
     _settings.getSetting(name).setValue(context, value);
@@ -90,10 +90,12 @@ class ClockTimer extends CustomizableListItem {
     _settings.getSetting(name).setValueWithoutNotify(value);
   }
 
-  Future<void> start()async {
+  Future<void> start() async {
     _startTime = DateTime.now();
     await scheduleAlarm(
-        _id, DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),'Timer.start()',
+        _id,
+        DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),
+        'Timer.start()',
         type: ScheduledNotificationType.timer);
     _state = TimerState.running;
   }
@@ -104,10 +106,13 @@ class ClockTimer extends CustomizableListItem {
     _secondsRemainingOnPause = newDuration.inSeconds;
   }
 
-  Future<void>  setTime(TimeDuration newDuration) async {
+  Future<void> setTime(TimeDuration newDuration) async {
     _currentDuration = TimeDuration.from(newDuration);
     _secondsRemainingOnPause = newDuration.inSeconds;
-    await scheduleAlarm(_id, DateTime.now().add(Duration(seconds: remainingSeconds)),'Timer.setTime',
+    await scheduleAlarm(
+        _id,
+        DateTime.now().add(Duration(seconds: remainingSeconds)),
+        'Timer.setTime',
         type: ScheduledNotificationType.timer);
   }
 
@@ -117,7 +122,10 @@ class ClockTimer extends CustomizableListItem {
     // _startTime = _startTime.subtract(addedDuration.toDuration);
     _secondsRemainingOnPause =
         _secondsRemainingOnPause + addedDuration.inSeconds;
-    await scheduleAlarm(_id, DateTime.now().add(Duration(seconds: remainingSeconds)),'Timer.addTime',
+    await scheduleAlarm(
+        _id,
+        DateTime.now().add(Duration(seconds: remainingSeconds)),
+        'Timer.addTime',
         type: ScheduledNotificationType.timer);
   }
 
@@ -135,7 +143,7 @@ class ClockTimer extends CustomizableListItem {
     _secondsRemainingOnPause = _duration.inSeconds;
   }
 
-  Future<void> toggleState()async  {
+  Future<void> toggleState() async {
     if (state == TimerState.running) {
       await pause();
     } else {

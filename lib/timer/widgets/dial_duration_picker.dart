@@ -166,6 +166,7 @@ class _TimerKnobState extends State<TimerKnob> {
           fillColor: widget.fillColor,
           maxValue: widget.maxValue,
           knobColor: Theme.of(context).colorScheme.primary,
+          knobTextColor: Theme.of(context).colorScheme.onPrimary,
           textColor: Theme.of(context).colorScheme.onBackground,
         ),
       ),
@@ -191,6 +192,7 @@ class _TimerKnobState extends State<TimerKnob> {
   }
 
   void _updateAngle(Offset position, {bool snapToMajor = false}) {
+    print("============ ${position.dx} ${position.dy}");
     final center = Offset(
       (context.size?.width)! / 2,
       (context.size?.height)! / 2,
@@ -234,6 +236,7 @@ class _TimerKnobPainter extends CustomPainter {
   final double divisions;
   final Color fillColor;
   final Color knobColor;
+  final Color knobTextColor;
   final Color textColor;
   final double maxValue;
 
@@ -246,6 +249,7 @@ class _TimerKnobPainter extends CustomPainter {
     required this.fillColor,
     required this.maxValue,
     required this.knobColor,
+    required this.knobTextColor,
     required this.textColor,
   });
 
@@ -314,7 +318,7 @@ class _TimerKnobPainter extends CustomPainter {
       text: handleLabel,
       style: textTheme.displaySmall?.copyWith(
         fontFamily: 'Rubik',
-        color: Colors.white,
+        color: knobTextColor,
       ),
     );
 

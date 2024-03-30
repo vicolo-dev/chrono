@@ -79,7 +79,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   Future<Alarm?> _openCustomizeAlarmScreen(
     Alarm alarm, {
-    void Function(Alarm)? onSave,
+    Future<void> Function(Alarm)? onSave,
     bool isNewAlarm = false,
   }) async {
     return openCustomizeScreen(
@@ -158,7 +158,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
       if (timePickerResult != null) {
         Alarm alarm = Alarm.fromTimeOfDay(timePickerResult.value);
         if (timePickerResult.isCustomize) {
-          await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) {
+          await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
             _listController.addItem(newAlarm);
           }, isNewAlarm: true);
         } else {

@@ -21,7 +21,7 @@ typedef TimerCardBuilder = Widget Function(
 );
 
 class TimerScreen extends StatefulWidget {
-  const TimerScreen({Key? key}) : super(key: key);
+  const TimerScreen({super.key});
 
   @override
   State<TimerScreen> createState() => _TimerScreenState();
@@ -51,34 +51,34 @@ class _TimerScreenState extends State<TimerScreen> {
     super.dispose();
   }
 
-  void _handleDeleteTimer(ClockTimer deletedTimer) {
+  void _handleDeleteTimer(ClockTimer deletedTimer) async{
     int index = _listController.getItemIndex(deletedTimer);
-    deletedTimer.reset();
+    await deletedTimer.reset();
     _listController.changeItems((timers) => timers[index] = deletedTimer);
   }
 
-  void _handleToggleState(ClockTimer timer) {
+  void _handleToggleState(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    timer.toggleState();
+    await timer.toggleState();
     _listController.changeItems((timers) => timers[index] = timer);
   }
 
-  void _handleResetTimer(ClockTimer timer) {
+  void _handleResetTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    timer.reset();
+    await timer.reset();
     _listController.changeItems((timers) => timers[index] = timer);
   }
 
-  void _handleAddTimeToTimer(ClockTimer timer) {
+  void _handleAddTimeToTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    timer.addTime();
+    await timer.addTime();
     _listController.changeItems((timers) => timers[index] = timer);
   }
 
   Future<ClockTimer?> _openCustomizeTimerScreen(
     ClockTimer timer, {
-    void Function(ClockTimer)? onSave,
-    void Function()? onCancel,
+    Future<void> Function(ClockTimer)? onSave,
+    Future<void>  Function()? onCancel,
     bool isNewTimer = false,
   }) async {
     return openCustomizeScreen(
@@ -95,9 +95,9 @@ class _TimerScreenState extends State<TimerScreen> {
 
   Future<ClockTimer?> _handleCustomizeTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    return await _openCustomizeTimerScreen(timer, onSave: (newTimer) {
-      newTimer.reset();
-      newTimer.start();
+    return await _openCustomizeTimerScreen(timer, onSave: (newTimer) async {
+      await newTimer.reset();
+      await newTimer.start();
       _listController.changeItems((timers) => timers[index] = newTimer);
     });
   }
@@ -151,14 +151,15 @@ class _TimerScreenState extends State<TimerScreen> {
             if (pickerResult.isCustomize) {
               await _openCustomizeTimerScreen(
                 timer,
-                onSave: (timer) {
-                  timer.start();
+                onSave: (timer) async {
+                  await timer.start();
                   _listController.addItem(timer);
                 },
                 isNewTimer: true,
               );
             } else {
-              timer.start();
+              print("*********************");
+              await timer.start();
               _listController.addItem(timer);
             }
           }

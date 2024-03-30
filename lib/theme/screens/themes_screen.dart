@@ -33,7 +33,7 @@ class _ThemesScreenState<Item extends ThemeItem>
 
   Future<Item?> _openCustomizeItemScreen(
     Item themeItem, {
-    void Function(Item)? onSave,
+    Future<void> Function(Item)? onSave,
     bool isNewItem = false,
   }) async {
     return openCustomizeScreen(
@@ -58,7 +58,7 @@ class _ThemesScreenState<Item extends ThemeItem>
     int index = _listController.getItemIndex(themeItem);
     await _openCustomizeItemScreen(
       themeItem,
-      onSave: (newThemItem) {
+      onSave: (newThemItem) async {
         if (widget.setting.value.id == themeItem.id) {
           widget.setting.setValue(context, newThemItem);
         }
@@ -116,7 +116,7 @@ class _ThemesScreenState<Item extends ThemeItem>
               Item? themeItem = widget.createThemeItem();
               await _openCustomizeItemScreen(
                 themeItem,
-                onSave: (newThemeItem) {
+                onSave: (newThemeItem) async {
                   _listController.addItem(newThemeItem);
                 },
                 isNewItem: true,

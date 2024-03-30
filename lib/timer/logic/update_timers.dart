@@ -33,10 +33,12 @@ Future<void> updateTimer(int scheduleId) async {
 Future<void> updateTimers() async {
   List<ClockTimer> timers = await loadList("timers");
 
-  timers.where((timer) => timer.remainingSeconds <= 0).forEach((timer)async {
-    await timer.reset();
-  });
+  final endedTimers = timers.where((timer) => timer.remainingSeconds <= 0);
 
+for (var timer in endedTimers) {
+    await timer.reset();
+  }
+    
   await saveList("timers", timers);
 
   SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
@@ -44,11 +46,11 @@ Future<void> updateTimers() async {
 }
 
 Future<void> updateTimerById(
-    int scheduleId, void Function(ClockTimer) callback) async {
+    int scheduleId, Future<void> Function(ClockTimer) callback) async {
   List<ClockTimer> timers = await loadList("timers");
   int timerIndex = timers.indexWhere((timer) => timer.id == scheduleId);
   ClockTimer timer = timers[timerIndex];
-  callback(timer);
+  await callback(timer);
   timers[timerIndex] = timer;
   await saveList("timers", timers);
 

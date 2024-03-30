@@ -44,7 +44,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
         isNewItem: false,
         itemPreviewBuilder: (item) => widget.setting.getPreviewCard(item),
       ),
-      onSave: (newItem) {
+      onSave: (newItem) async {
         _listController.changeItems((items) => items[index] = newItem);
       },
     );
