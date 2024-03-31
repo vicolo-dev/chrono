@@ -28,7 +28,6 @@ class OnceAlarmSchedule extends AlarmSchedule {
   Future<bool> schedule(Time time, String description) async {
     // If the alarm has already been scheduled in the past, disable it.
     if (currentScheduleDateTime?.isBefore(DateTime.now()) ?? false) {
-      print("##########################################");
       _isDisabled = true;
       return false;
     }

@@ -23,7 +23,6 @@ void handleIntent(Intent? receivedIntent, BuildContext context, Function(Alarm) 
           if(params != null){
               ScheduledNotificationType notificationType =
       ScheduledNotificationType.values.byName(jsonDecode(params)['type']);
-      print("-------------- $notificationType");
             if(notificationType == ScheduledNotificationType.alarm){
                setTab(0);
               }

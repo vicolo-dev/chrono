@@ -158,7 +158,6 @@ class _TimerScreenState extends State<TimerScreen> {
                 isNewTimer: true,
               );
             } else {
-              print("*********************");
               await timer.start();
               _listController.addItem(timer);
             }

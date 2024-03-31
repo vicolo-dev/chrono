@@ -36,7 +36,6 @@ class _TimerCardState extends State<TimerCard> {
   void updateTimer() {
     setState(() {
       periodicTimer?.cancel();
-      // print("+++++++++++++++ ${widget.timer.toJson()}");
       if (widget.timer.isRunning) {
         periodicTimer =
             Timer.periodic(const Duration(seconds: 1), (Timer timer) {

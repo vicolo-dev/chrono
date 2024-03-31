@@ -192,7 +192,6 @@ class _TimerKnobState extends State<TimerKnob> {
   }
 
   void _updateAngle(Offset position, {bool snapToMajor = false}) {
-    print("============ ${position.dx} ${position.dy}");
     final center = Offset(
       (context.size?.width)! / 2,
       (context.size?.height)! / 2,

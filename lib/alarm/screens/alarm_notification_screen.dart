@@ -64,7 +64,6 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   }
 
   void _snoozeAlarm() {
-    print("Alarm ssssssssssssssssssssss");
     AlarmNotificationManager.snoozeAlarm(
         widget.scheduleId, ScheduledNotificationType.alarm);
   }

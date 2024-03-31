@@ -25,7 +25,6 @@ class _DynamicSelectSettingCardState<T extends ListItem>
     extends State<DynamicSelectSettingCard<T>> {
   @override
   Widget build(BuildContext context) {
-    print("init ${widget.setting.selectedIndex}");
     SelectField selectWidget = SelectField(
       selectedIndex: widget.setting.selectedIndex,
       title: widget.setting.name,

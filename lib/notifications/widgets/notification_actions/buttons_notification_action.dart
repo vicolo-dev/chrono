@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 
 class ButtonsNotificationAction extends StatelessWidget {
   const ButtonsNotificationAction(
-      {Key? key,
+      {super.key,
       required this.dismissLabel,
       required this.snoozeLabel,
       required this.onDismiss,
-      this.onSnooze})
-      : super(key: key);
+      this.onSnooze});
 
   final String dismissLabel;
   final String snoozeLabel;
@@ -26,7 +25,7 @@ class ButtonsNotificationAction extends StatelessWidget {
         if (onSnooze != null)
           CardContainer(
             color: colorScheme.primary,
-            onTap: ()=>print("oooooooooooooooooooaoooooooooooooooooo"),
+            onTap: onSnooze,
             child: Padding(
               padding: const EdgeInsets.all(32.0),
               child: Text(snoozeLabel,
