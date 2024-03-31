@@ -21,9 +21,9 @@ void testDescription(String name, Function(BuildContext) callback) {
 
 void main() {
   group('getAlarmScheduleDescription', () {
-    testDescription('when alarm is snoozed', (context) {
+    testDescription('when alarm is snoozed', (context)async {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
-      alarm.snooze();
+      await alarm.snooze();
 
       final result = getAlarmScheduleDescription(
           context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
@@ -34,10 +34,10 @@ void main() {
       );
     });
 
-    testDescription('when alarm is finished', (context) {
+    testDescription('when alarm is finished', (context)async {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
 
-      alarm.finish();
+      await alarm.finish();
 
       final result = getAlarmScheduleDescription(
           context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
@@ -45,10 +45,10 @@ void main() {
       expect(result, 'No future dates');
     });
 
-    testDescription('when alarm is not enabled', (context) {
+    testDescription('when alarm is not enabled', (context) async {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
 
-      alarm.disable();
+      await alarm.disable();
 
       final result = getAlarmScheduleDescription(
           context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);

@@ -90,7 +90,7 @@ void main() {
 
     test('toJson() returns correct value', () async {
       const time = Time(hour: 10, minute: 30);
-      await schedule.schedule(time);
+      await schedule.schedule(time, "test");
 
       expect(schedule.toJson(), {
         'alarmRunner': {

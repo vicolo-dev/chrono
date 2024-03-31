@@ -269,7 +269,6 @@ class Alarm extends CustomizableListItem {
       // Disabling it if it is snoozed will cancel the snooze. This should only be
       // done by the user.
       if (activeSchedule.isDisabled && !isSnoozed) {
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         await disable();
       }
       if (activeSchedule.isFinished) {
