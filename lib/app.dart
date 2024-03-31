@@ -23,7 +23,6 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:receive_intent/receive_intent.dart' as intent_handler;
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -53,46 +52,11 @@ class _AppState extends State<App> {
   late SettingGroup _colorSettings;
   late SettingGroup _styleSettings;
 
-  late StreamSubscription _sub;
 
-  _showNextScheduleSnackBar(Alarm alarm) {
-    Future.delayed(Duration.zero).then((value) {
-      _messangerKey.currentState?.removeCurrentSnackBar();
-      DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
-      if (nextScheduleDateTime == null) return;
-      _messangerKey.currentState?.showSnackBar(
-          getSnackbar(getNewAlarmSnackbarText(alarm), fab: true, navBar: true));
-    });
-  }
-
-  Future<void> initReceiveIntent() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      final receivedIntent =
-          await intent_handler.ReceiveIntent.getInitialIntent();
-      print("------------------ $receivedIntent");
-      if (mounted) {
-        handleIntent(receivedIntent, context, _showNextScheduleSnackBar);
-      }
-    } on PlatformException {
-      // Handle exception
-    }
-
-    _sub = intent_handler.ReceiveIntent.receivedIntentStream.listen(
-        (intent_handler.Intent? receivedIntent) {
-      if (receivedIntent != null) {
-        handleIntent(receivedIntent, context, _showNextScheduleSnackBar);
-      }
-      // Validate receivedIntent and warn the user, if it is not correct,
-    }, onError: (err) {
-      // Handle exception
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    initReceiveIntent();
 
     NotificationController.setListeners();
 
@@ -107,7 +71,6 @@ class _AppState extends State<App> {
 
   @override
   void dispose() {
-    _sub.cancel();
     super.dispose();
   }
 
@@ -199,8 +162,9 @@ class _AppState extends State<App> {
                 return MaterialPageRoute(
                     builder: (context) => const OnBoardingScreen());
               } else {
+                final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{"tab": 0}) as Map;
                 return MaterialPageRoute(
-                    builder: (context) => const NavScaffold());
+                    builder: (context) =>  NavScaffold(initialTabIndex: arguments["tab"],));
               }
 
             case Routes.alarmNotificationRoute:

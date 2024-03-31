@@ -1,6 +1,8 @@
 
 import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/alarm/widgets/alarm_event_card.dart';
+import 'package:clock_app/common/types/list_filter.dart';
+import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
@@ -15,6 +17,33 @@ class AlarmEventsScreen extends StatefulWidget {
   @override
   State<AlarmEventsScreen> createState() => _AlarmEventsScreenState();
 }
+
+final List<ListFilter<AlarmEvent>> alarmEventsListFilters = [
+  ListFilter(
+    'All',
+    (event) => true,
+  ),
+   ListFilter(
+    'Active',
+    (event) {
+      return event.isActive;
+    },
+  ),
+  ListFilter('Tomorrow', (event) {
+   return event.startDate.isTomorrow();
+  }),
+
+  ListFilter(
+    'Today',
+    (event) {
+      return event.startDate.isToday();
+    },
+  ),
+  ListFilter('Tomorrow', (event) {
+   return event.startDate.isTomorrow();
+  }),
+
+];
 
 class _AlarmEventsScreenState extends State<AlarmEventsScreen> {
   final _listController = PersistentListController<AlarmEvent>();

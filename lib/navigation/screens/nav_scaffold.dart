@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:clock_app/alarm/logic/new_alarm_snackbar.dart';
+import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
 import 'package:clock_app/navigation/widgets/app_navigation_bar.dart';
@@ -5,19 +10,24 @@ import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/system/logic/handle_intents.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
+import 'package:receive_intent/receive_intent.dart' as intent_handler;
 class NavScaffold extends StatefulWidget {
-  const NavScaffold({super.key});
+  const NavScaffold({super.key, this.initialTabIndex = 0});
+
+  final int initialTabIndex;
 
   @override
   State<NavScaffold> createState() => _NavScaffoldState();
 }
 
 class _NavScaffoldState extends State<NavScaffold> {
-  int _selectedTabIndex = 0;
+  late int _selectedTabIndex;
   bool useMaterialNavBar  = false;
   late Setting useMaterialNavBarSetting;
+  late StreamSubscription _sub;
 
   void _onTabSelected(int index) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -26,26 +36,64 @@ class _NavScaffoldState extends State<NavScaffold> {
       _selectedTabIndex = index;
     });
   }
-void setUseMaterialnavBar(dynamic value) {
+void setUseMaterialNavBar(dynamic value) {
     setState(() {
       useMaterialNavBar = value;
     });
   }
+  _showNextScheduleSnackBar(Alarm alarm) {
+    Future.delayed(Duration.zero).then((value) {
+     ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
+      if (nextScheduleDateTime == null) return;
+     ScaffoldMessenger.of(context).showSnackBar(
+          getSnackbar(getNewAlarmSnackbarText(alarm), fab: true, navBar: true));
+    });
+  }
+
+
+    Future<void> initReceiveIntent() async {
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      final receivedIntent =
+          await intent_handler.ReceiveIntent.getInitialIntent();
+      if (mounted) {
+        handleIntent(receivedIntent, context, _showNextScheduleSnackBar,_onTabSelected);
+      }
+    } on PlatformException {
+      // Handle exception
+    }
+
+    _sub = intent_handler.ReceiveIntent.receivedIntentStream.listen(
+        (intent_handler.Intent? receivedIntent) {
+      if (receivedIntent != null) {
+        handleIntent(receivedIntent, context, _showNextScheduleSnackBar,_onTabSelected);
+      }
+      // Validate receivedIntent and warn the user, if it is not correct,
+    }, onError: (err) {
+      // Handle exception
+    });
+  }
+
 
   @override
   void initState() {
     super.initState();
+    initReceiveIntent();
     useMaterialNavBarSetting = appSettings
         .getGroup("Appearance")
         .getGroup("Style")
         .getSetting("Use Material Style");
-    setUseMaterialnavBar(useMaterialNavBarSetting.value);
-    useMaterialNavBarSetting.addListener(setUseMaterialnavBar);
+    setUseMaterialNavBar(useMaterialNavBarSetting.value);
+    useMaterialNavBarSetting.addListener(setUseMaterialNavBar);
+    _selectedTabIndex = widget.initialTabIndex;
+      
   }
 
   @override
   void dispose() {
-    useMaterialNavBarSetting.removeListener(setUseMaterialnavBar);
+    useMaterialNavBarSetting.removeListener(setUseMaterialNavBar);
+    _sub.cancel();
     super.dispose();
   }
 

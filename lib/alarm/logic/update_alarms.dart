@@ -37,9 +37,10 @@ Future<void> updateAlarms(String description) async {
 
   List<Alarm> alarms = await loadList("alarms");
 
-  alarms.where((alarm) => alarm.isEnabled).forEach((alarm)async {
+  for (Alarm alarm in alarms) {
     await alarm.update(description);
-  });
+  }
+
 
   await saveList("alarms", alarms);
 
@@ -49,12 +50,12 @@ Future<void> updateAlarms(String description) async {
 }
 
 Future<void> updateAlarmById(
-    int scheduleId, void Function(Alarm) callback) async {
+    int scheduleId, Future<void> Function(Alarm) callback) async {
   List<Alarm> alarms = await loadList("alarms");
   int alarmIndex =
       alarms.indexWhere((alarm) => alarm.hasScheduleWithId(scheduleId));
   Alarm alarm = alarms[alarmIndex];
-  callback(alarm);
+  await callback(alarm);
   alarms[alarmIndex] = alarm;
   await saveList("alarms", alarms);
   SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
