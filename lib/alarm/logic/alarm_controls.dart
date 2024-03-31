@@ -184,6 +184,13 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
 }
 
 void triggerTimer(int scheduleId, Json params) async {
+    ClockTimer timer = getTimerById(scheduleId);
+
+  if (timer.remainingSeconds <= 0) {
+    await updateTimers();
+    return;
+  }
+
   await updateTimers();
   // Notify the front-end to update the timers
 
@@ -201,7 +208,6 @@ void triggerTimer(int scheduleId, Json params) async {
         ScheduledNotificationType.timer);
   }
 
-  ClockTimer timer = getTimerById(scheduleId);
 
   RingtonePlayer.playTimer(timer);
   RingingManager.ringTimer(scheduleId);

@@ -51,25 +51,24 @@ class _TimerScreenState extends State<TimerScreen> {
     super.dispose();
   }
 
-  void _handleDeleteTimer(ClockTimer deletedTimer) async{
-    int index = _listController.getItemIndex(deletedTimer);
+   Future<void> _handleDeleteTimer(ClockTimer deletedTimer) async{
     await deletedTimer.reset();
-    _listController.changeItems((timers) => timers[index] = deletedTimer);
+    // _listController.deleteItem(deletedTimer);
   }
 
-  void _handleToggleState(ClockTimer timer) async {
+   Future<void> _handleToggleState(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     await timer.toggleState();
     _listController.changeItems((timers) => timers[index] = timer);
   }
 
-  void _handleResetTimer(ClockTimer timer) async {
+   Future<void> _handleResetTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     await timer.reset();
     _listController.changeItems((timers) => timers[index] = timer);
   }
 
-  void _handleAddTimeToTimer(ClockTimer timer) async {
+  Future<void> _handleAddTimeToTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     await timer.addTime();
     _listController.changeItems((timers) => timers[index] = timer);

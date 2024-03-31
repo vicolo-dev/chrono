@@ -21,9 +21,9 @@ class TimerFullscreen extends StatefulWidget {
   });
 
   final ClockTimer timer;
-  final void Function(ClockTimer) onToggleState;
-  final void Function(ClockTimer) onReset;
-  final void Function(ClockTimer) onAddTime;
+  final Future<void> Function(ClockTimer) onToggleState;
+  final Future<void> Function(ClockTimer) onReset;
+  final Future<void> Function(ClockTimer) onAddTime;
   final Future<ClockTimer?> Function(ClockTimer) onCustomize;
 
   @override
@@ -159,35 +159,39 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                               size: 32,
                               // size: 64,
                             )),
-                        onTap: () {
-                          widget.onReset(timer);
+                        onTap: () async {
+                          await widget.onReset(timer);
                           updateTimer();
                         },
                       ),
                     ),
-                  CardContainer(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: timer.isRunning
-                          ? Icon(
-                              Icons.pause_rounded,
-
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 112,
-                              // size: 64,
-                            )
-                          : Icon(
-                              Icons.play_arrow_rounded,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 112,
-
-                              // size: 64,
-                            ),
+                  Expanded(
+                  flex:999,
+                    child: CardContainer(
+                    alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: timer.isRunning
+                            ? Icon(
+                                Icons.pause_rounded,
+                    
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 96,
+                                // size: 64,
+                              )
+                            : Icon(
+                                Icons.play_arrow_rounded,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 96,
+                    
+                                // size: 64,
+                              ),
+                      ),
+                      onTap: ()async {
+                        await widget.onToggleState(timer);
+                        updateTimer();
+                      },
                     ),
-                    onTap: () {
-                      widget.onToggleState(timer);
-                      updateTimer();
-                    },
                   ),
                   if (timer.state != TimerState.stopped)
                     SizedBox(
@@ -200,8 +204,8 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                             child: Text('+${timer.addLength.floor()}:00',
                                 style:
                                     Theme.of(context).textTheme.displaySmall)),
-                        onTap: () {
-                          widget.onAddTime(timer);
+                        onTap: () async {
+                          await widget.onAddTime(timer);
                           updateTimer();
                         },
                       ),
