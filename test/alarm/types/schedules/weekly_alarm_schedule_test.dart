@@ -21,7 +21,7 @@ void main() {
     test('schedule sets currentScheduleDateTime to correct value', () async {
       const time = Time(hour: 10, minute: 30);
 
-      bool result = await schedule.schedule(time);
+      bool result = await schedule.schedule(time, 'test');
 
       expect(result, true);
       expect(schedule.currentScheduleDateTime?.hour, time.hour);
@@ -34,7 +34,7 @@ void main() {
         () async {
           const time = Time(hour: 10, minute: 30);
 
-          bool result = await schedule.schedule(time);
+          bool result = await schedule.schedule(time, 'test');
 
           expect(result, true);
           expect(
@@ -46,7 +46,7 @@ void main() {
         () async {
           const time = Time(hour: 10, minute: 30);
 
-          bool result = await schedule.schedule(time);
+          bool result = await schedule.schedule(time, 'test');
 
           expect(result, true);
           expect(
@@ -59,7 +59,7 @@ void main() {
       test(
         'cancels scheduled alarm',
         () async {
-          await schedule.schedule(const Time(hour: 10, minute: 30));
+          await schedule.schedule(const Time(hour: 10, minute: 30), 'test');
           schedule.cancel();
 
           expect(schedule.currentScheduleDateTime, null);
@@ -80,13 +80,13 @@ void main() {
         expect(schedule.alarmRunners, []);
       });
       test('returns list with one item when scheduled', () {
-        schedule.schedule(const Time(hour: 10, minute: 30));
+        schedule.schedule(const Time(hour: 10, minute: 30), 'test');
         expect(schedule.alarmRunners.length, 1);
       });
       test('returns list with 5 items when 5 weekdays are selected', () {
         weekdaySetting.setValueWithoutNotify(
             [true, true, true, false, true, false, true]);
-        schedule.schedule(const Time(hour: 10, minute: 30));
+        schedule.schedule(const Time(hour: 10, minute: 30), 'test');
         expect(schedule.alarmRunners.length, 5);
       });
     });
@@ -96,7 +96,7 @@ void main() {
         expect(schedule.hasId(-1), false);
       });
       test('returns true when id is in alarmRunners', () {
-        schedule.schedule(const Time(hour: 10, minute: 30));
+        schedule.schedule(const Time(hour: 10, minute: 30), 'test');
         expect(schedule.hasId(schedule.currentWeekdayAlarmRunnerId), true);
       });
     });
@@ -107,30 +107,30 @@ void main() {
             schedule.nextWeekdaySchedule.weekday, WeekdaySchedule(0).weekday);
       });
       test('returns correct weekday schedule when scheduled', () {
-        schedule.schedule(const Time(hour: 10, minute: 30));
+        schedule.schedule(const Time(hour: 10, minute: 30), 'test');
         expect(schedule.nextWeekdaySchedule.weekday, 1);
       });
     });
 
     group('scheduledWeekdays', () {
       test('returns list with one item when not scheduled', () {
-        schedule.schedule(const Time(hour: 10, minute: 30));
+        schedule.schedule(const Time(hour: 10, minute: 30), 'test');
         expect(schedule.scheduledWeekdays.length, 1);
       });
       test('returns list with one item when scheduled', () {
-        schedule.schedule(const Time(hour: 10, minute: 30));
+        schedule.schedule(const Time(hour: 10, minute: 30), 'test');
         expect(schedule.scheduledWeekdays.length, 1);
       });
       test('returns list with 5 items when 5 weekdays are selected', () {
         weekdaySetting.setValueWithoutNotify(
             [true, true, true, false, true, false, true]);
-        schedule.schedule(const Time(hour: 10, minute: 30));
+        schedule.schedule(const Time(hour: 10, minute: 30), 'test');
         expect(schedule.scheduledWeekdays.length, 5);
       });
     });
 
     test('toJson() returns correct value', () {
-      schedule.schedule(const Time(hour: 10, minute: 30));
+      schedule.schedule(const Time(hour: 10, minute: 30), 'test');
       final weekdayScheduleJson = {
         'weekday': 1,
         'alarmRunner': {
