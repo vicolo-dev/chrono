@@ -95,6 +95,7 @@ class _AlarmEventsScreenState extends State<AlarmEventsScreen> {
                   //   // _listController.reload();
                   // },
                   isDuplicateEnabled: false,
+                  isReorderable: false,
                   placeholderText: "No alarm events",
                   reloadOnPop: true,
                 ),
