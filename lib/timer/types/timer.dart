@@ -109,11 +109,13 @@ class ClockTimer extends CustomizableListItem {
   Future<void> setTime(TimeDuration newDuration) async {
     _currentDuration = TimeDuration.from(newDuration);
     _secondsRemainingOnPause = newDuration.inSeconds;
-    await scheduleAlarm(
+    if(isRunning)
+   {await scheduleAlarm(
         _id,
         DateTime.now().add(Duration(seconds: remainingSeconds)),
         'Timer.setTime',
         type: ScheduledNotificationType.timer);
+   }
   }
 
   Future<void> addTime() async {
@@ -122,11 +124,13 @@ class ClockTimer extends CustomizableListItem {
     // _startTime = _startTime.subtract(addedDuration.toDuration);
     _secondsRemainingOnPause =
         _secondsRemainingOnPause + addedDuration.inSeconds;
+    if(isRunning){
     await scheduleAlarm(
         _id,
         DateTime.now().add(Duration(seconds: remainingSeconds)),
         'Timer.addTime',
         type: ScheduledNotificationType.timer);
+    }
   }
 
   Future<void> pause() async {
