@@ -4,6 +4,7 @@ import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
         _stop,
         _addTime,
         "Stop ${widget.scheduleIds.length > 1 ? "All" : ""}",
-        '+${getTimerById(widget.scheduleIds.last).addLength.floor()}:00',
+        '+${getTimerById(widget.scheduleIds.last)?.addLength.floor()}:00',
       );
 
   void _addTime() {
@@ -71,7 +72,7 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
                     alignment: Alignment.center,
                     child: widget.scheduleIds.length == 1
                         ? Text(
-                            getTimerById(widget.scheduleIds.first).label,
+                            getTimerById(widget.scheduleIds.first)?.label ?? "Uknown Timer",
                             style: Theme.of(context).textTheme.displayMedium,
                             textAlign: TextAlign.center,
                             maxLines: 3,
@@ -80,7 +81,7 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
                         : ListView(
                             children: [
                               for (int id in widget.scheduleIds)
-                                TimerNotificationCard(timer: getTimerById(id)),
+                                TimerNotificationCard(timer: getTimerById(id) ?? ClockTimer(TimeDuration.zero))
                             ],
                           ),
                   ),

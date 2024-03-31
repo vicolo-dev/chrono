@@ -54,7 +54,8 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
   }
 
   void onTimerUpdated() {
-    timer = getTimerById(timer.id);
+    timer = getTimerById(timer.id) 
+    ?? ClockTimer(const TimeDuration());
     updateTimer();
   }
 

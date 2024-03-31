@@ -54,6 +54,9 @@ Future<void> updateAlarmById(
   List<Alarm> alarms = await loadList("alarms");
   int alarmIndex =
       alarms.indexWhere((alarm) => alarm.hasScheduleWithId(scheduleId));
+  if(alarmIndex == -1){
+        return;
+      }
   Alarm alarm = alarms[alarmIndex];
   await callback(alarm);
   alarms[alarmIndex] = alarm;

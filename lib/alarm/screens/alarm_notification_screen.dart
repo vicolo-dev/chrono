@@ -2,6 +2,7 @@ import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/types/notification_type.dart';
+import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
@@ -59,7 +60,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   @override
   void initState() {
     super.initState();
-    alarm = getAlarmByScheduleId(widget.scheduleId);
+    alarm = getAlarmByScheduleId(widget.scheduleId) ?? Alarm(const Time());
     _setNextWidget();
   }
 

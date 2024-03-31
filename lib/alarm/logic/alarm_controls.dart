@@ -5,6 +5,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
+import 'package:clock_app/common/types/timer_state.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -115,14 +116,13 @@ void triggerAlarm(int scheduleId, Json params) async {
     return;
   }
 
-  Alarm alarm = getAlarmByScheduleId(scheduleId);
+  Alarm? alarm = getAlarmByScheduleId(scheduleId);
   DateTime now = DateTime.now();
 
-  if (alarm.currentScheduleDateTime == null) {
-    await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
-  }
   // if alarm is triggered more than 10 minutes after the scheduled time, ignore
-  if (now.millisecondsSinceEpoch <
+  if (alarm == null ||
+      alarm.currentScheduleDateTime == null ||
+      now.millisecondsSinceEpoch <
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
       now.millisecondsSinceEpoch >
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
@@ -177,23 +177,26 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
   } else if (action == AlarmStopAction.dismiss) {
     // If there was a timer ringing when the alarm was triggered, resume it now
     if (RingingManager.isTimerRinging) {
-      RingtonePlayer.playTimer(getTimerById(RingingManager.activeTimerId));
+      ClockTimer? timer = getTimerById(RingingManager.activeTimerId);
+      if (timer != null) {
+        RingtonePlayer.playTimer(timer);
+      }
     }
   }
   RingingManager.stopAlarm();
 }
 
 void triggerTimer(int scheduleId, Json params) async {
-    ClockTimer timer = getTimerById(scheduleId);
+  ClockTimer? timer = getTimerById(scheduleId);
 
-  if (timer.remainingSeconds <= 0) {
+  if (timer == null || !timer.isRunning) {
     await updateTimers();
     return;
   }
 
   await updateTimers();
-  // Notify the front-end to update the timers
 
+  // Notify the front-end to update the timers
   GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
   // Pause any currently ringing alarms. We will continue them after the timer
@@ -207,7 +210,6 @@ void triggerTimer(int scheduleId, Json params) async {
     await AlarmNotificationManager.removeNotification(
         ScheduledNotificationType.timer);
   }
-
 
   RingtonePlayer.playTimer(timer);
   RingingManager.ringTimer(scheduleId);
@@ -224,7 +226,8 @@ void triggerTimer(int scheduleId, Json params) async {
 }
 
 void stopTimer(int scheduleId, AlarmStopAction action) async {
-  ClockTimer timer = getTimerById(scheduleId);
+  ClockTimer? timer = getTimerById(scheduleId);
+  if (timer == null) return;
   if (action == AlarmStopAction.snooze) {
     await scheduleSnoozeAlarm(
       scheduleId,
@@ -240,8 +243,10 @@ void stopTimer(int scheduleId, AlarmStopAction action) async {
     // If there was an alarm already ringing when the timer was triggered, we
     // need to resume it now
     if (RingingManager.isAlarmRinging) {
-      RingtonePlayer.playAlarm(
-          getAlarmByScheduleId(RingingManager.ringingAlarmId));
+      Alarm? alarm = getAlarmByScheduleId(RingingManager.ringingAlarmId);
+      if (alarm != null) {
+        RingtonePlayer.playAlarm(alarm);
+      }
     }
   }
   RingingManager.stopAllTimers();
