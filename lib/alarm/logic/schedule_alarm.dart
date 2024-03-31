@@ -1,98 +1,46 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/types/alarm_event.dart';
+import 'package:clock_app/common/types/notification_type.dart';
+import 'package:clock_app/common/types/schedule_id.dart';
 import 'package:clock_app/common/utils/date_time.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:clock_app/notifications/data/notification_channel.dart';
-
-enum ScheduledNotificationType {
-  alarm,
-  timer,
-}
 
 Future<bool> scheduleAlarm(
   int scheduleId,
-  DateTime startDate, {
+  DateTime startDate,
+  String description, {
   ScheduledNotificationType type = ScheduledNotificationType.alarm,
 }) async {
   if (startDate.isBefore(DateTime.now())) {
     throw Exception('Attempted to schedule alarm in the past ($startDate)');
   }
-  await cancelAlarm(scheduleId);
-  // FullScreenNotificationData data = alarmNotificationData[type]!;
-  //
-  // List<NotificationActionButton> actionButtons = [];
-  //
-  // if (scheduleIds.length > 1) {
-  //   actionButtons.add(NotificationActionButton(
-  //     showInCompactView: true,
-  //     key: _dismissActionKey,
-  //     label: '$dismissActionLabel All',
-  //     actionType: ActionType.SilentAction,
-  //     autoDismissible: true,
-  //   ));
-  // } else {
-  //   if (showSnoozeButton) {
-  //     actionButtons.add(NotificationActionButton(
-  //       showInCompactView: true,
-  //       key: _snoozeActionKey,
-  //       label: snoozeActionLabel,
-  //       actionType: ActionType.SilentAction,
-  //       autoDismissible: true,
-  //     ));
-  //   }
-  //
-  //   actionButtons.add(NotificationActionButton(
-  //     showInCompactView: true,
-  //     key: _dismissActionKey,
-  //     label: "${tasksRequired ? "Solve tasks to " : ""}$dismissActionLabel",
-  //     actionType:
-  //         tasksRequired ? ActionType.Default : ActionType.SilentAction,
-  //     autoDismissible: tasksRequired ? false : true,
-  //   ));
-  // }
-  //
-  // AwesomeNotifications().createNotification(
-  //     content: NotificationContent(
-  //       id: data.id,
-  //       channelKey: alarmNotificationChannelKey,
-  //       title: title,
-  //       body: body,
-  //       payload: {
-  //         "scheduleIds": json.encode(scheduleIds),
-  //         "type": type.name,
-  //         "tasksRequired": tasksRequired.toString(),
-  //       },
-  //       category: NotificationCategory.Alarm,
-  //       fullScreenIntent: true,
-  //       autoDismissible: false,
-  //       wakeUpScreen: true,
-  //       locked: true,
-  //     ),
-  //     actionButtons: actionButtons);
+
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
-    // await AwesomeNotifications().createNotification(
-    //     content: NotificationContent(
-    //       id: id,
-    //       channelKey: 'scheduled',
-    //       title: 'Just in time!',
-    //       body: 'This notification was scheduled to shows at ' +
-    //           (Utils.DateUtils.parseDateToString(scheduleTime.toLocal()) ??
-    //               '?') +
-    //           ' $timeZoneIdentifier (' +
-    //           (Utils.DateUtils.parseDateToString(scheduleTime.toUtc()) ?? '?') +
-    //           ' utc)',
-    //       wakeUpScreen: true,
-    //       category: NotificationCategory.Reminder,
-    //       notificationLayout: NotificationLayout.BigPicture,
-    //       bigPicture: 'asset://assets/images/delivery.jpeg',
-    //       payload: {'uuid': 'uuid-test'},
-    //       autoDismissible: false,
-    //     ),
-    //     schedule: NotificationCalendar.fromDate(date: scheduleTime));
+    await cancelAlarm(scheduleId, type);
+    List<AlarmEvent> alarmEvents = await loadList<AlarmEvent>('alarm_events');
+    alarmEvents.insert(
+        0,
+        AlarmEvent(
+          // type: AlarmEventType.schedule,
+          scheduleId: scheduleId,
+          description: description,
+          startDate: startDate,
+          eventTime: DateTime.now(),
+          notificationType: type,
+          isActive: true,
+        ));
+    await saveList<AlarmEvent>('alarm_events', alarmEvents);
+
+    String name = type == ScheduledNotificationType.alarm
+        ? 'alarm_schedule_ids'
+        : 'timer_schedule_ids';
+    List<ScheduleId> scheduleIds = await loadList<ScheduleId>(name);
+    scheduleIds.add(ScheduleId(id: scheduleId));
+    await saveList<ScheduleId>(name, scheduleIds);
+
     return AndroidAlarmManager.oneShotAt(
       startDate,
       scheduleId,
@@ -113,9 +61,23 @@ Future<bool> scheduleAlarm(
   }
 }
 
-Future<void> cancelAlarm(int scheduleId) async {
+Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
-    // await AwesomeNotifications().cancel(scheduleId);
+    List<AlarmEvent> alarmEvents = await loadList<AlarmEvent>('alarm_events');
+    for (var event in alarmEvents) {
+      if (event.scheduleId == scheduleId) {
+        event.isActive = false;
+      }
+    }
+    await saveList<AlarmEvent>('alarm_events', alarmEvents);
+
+    String name = type == ScheduledNotificationType.alarm
+        ? 'alarm_schedule_ids'
+        : 'timer_schedule_ids';
+    List<ScheduleId> scheduleIds = await loadList<ScheduleId>(name);
+    scheduleIds.removeWhere((id) => id.id == scheduleId);
+    await saveList<ScheduleId>(name, scheduleIds);
+
     await AndroidAlarmManager.cancel(scheduleId);
   }
 }
@@ -125,7 +87,8 @@ enum AlarmStopAction {
   snooze,
 }
 
-Future<void> scheduleSnoozeAlarm(
-    int scheduleId, Duration delay, ScheduledNotificationType type) async {
-  await scheduleAlarm(scheduleId, DateTime.now().add(delay), type: type);
+Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
+    ScheduledNotificationType type, String description) async {
+  await scheduleAlarm(scheduleId, DateTime.now().add(delay), description,
+      type: type);
 }

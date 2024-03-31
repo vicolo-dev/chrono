@@ -17,7 +17,7 @@ void main() {
     test('schedule sets currentScheduleDateTime to correct value', () async {
       const time = Time(hour: 10, minute: 30);
 
-      bool result = await schedule.schedule(time);
+      bool result = await schedule.schedule(time, 'test');
 
       expect(result, true);
       expect(schedule.currentScheduleDateTime?.hour, time.hour);
@@ -30,7 +30,7 @@ void main() {
           final dateTime = DateTime.now().add(const Duration(minutes: 1));
           final time = dateTime.getTime();
 
-          bool result = await schedule.schedule(time);
+          bool result = await schedule.schedule(time, 'test');
 
           expect(result, true);
           expect(
@@ -43,7 +43,7 @@ void main() {
           final dateTime = DateTime.now().subtract(const Duration(minutes: 1));
           final time = dateTime.getTime();
 
-          bool result = await schedule.schedule(time);
+          bool result = await schedule.schedule(time, 'test');
 
           expect(result, true);
           expect(
@@ -58,7 +58,7 @@ void main() {
         () async {
           const time = Time(hour: 10, minute: 30);
 
-          await schedule.schedule(time);
+          await schedule.schedule(time, 'test');
           schedule.cancel();
 
           expect(schedule.currentScheduleDateTime, null);
@@ -83,14 +83,14 @@ void main() {
         expect(schedule.hasId(-1), false);
       });
       test('returns true when id is in alarmRunners', () {
-        schedule.schedule(const Time(hour: 10, minute: 30));
+        schedule.schedule(const Time(hour: 10, minute: 30), 'test');
         expect(schedule.hasId(schedule.currentAlarmRunnerId), true);
       });
     });
 
     test('toJson() returns correct value', () async {
       const time = Time(hour: 10, minute: 30);
-      await schedule.schedule(time);
+      await schedule.schedule(time, 'test');
 
       expect(schedule.toJson(), {
         'alarmRunner': {

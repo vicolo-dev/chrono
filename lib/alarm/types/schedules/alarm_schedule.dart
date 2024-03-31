@@ -11,7 +11,7 @@ abstract class AlarmSchedule extends JsonSerializable {
   AlarmSchedule();
 
   List<AlarmRunner> get alarmRunners;
-  Future<bool> schedule(Time time);
-  void cancel();
+  Future<bool> schedule(Time time, String description);
+  Future<void> cancel();
   bool hasId(int id);
 }

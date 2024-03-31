@@ -1,4 +1,5 @@
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
@@ -9,9 +10,9 @@ import 'package:flutter/material.dart';
 
 class TimerNotificationScreen extends StatefulWidget {
   const TimerNotificationScreen({
-    Key? key,
+    super.key,
     required this.scheduleIds,
-  }) : super(key: key);
+  });
 
   final List<int> scheduleIds;
 

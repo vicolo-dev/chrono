@@ -25,19 +25,19 @@ class OnceAlarmSchedule extends AlarmSchedule {
         super();
 
   @override
-  Future<bool> schedule(Time time) async {
+  Future<bool> schedule(Time time, String description) async {
     // If the alarm has already been scheduled in the past, disable it.
     if (currentScheduleDateTime?.isBefore(DateTime.now()) ?? false) {
       _isDisabled = true;
       return false;
     }
     DateTime alarmDate = getDailyAlarmDate(time);
-    return _alarmRunner.schedule(alarmDate);
+    return _alarmRunner.schedule(alarmDate, description);
   }
 
   @override
-  void cancel() {
-    _alarmRunner.cancel();
+  Future<void> cancel() async {
+    await _alarmRunner.cancel();
   }
 
   @override

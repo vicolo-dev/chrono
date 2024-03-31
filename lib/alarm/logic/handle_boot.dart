@@ -17,5 +17,5 @@ void handleBoot() async {
   await initializeAppDataDirectory();
   // await RingtoneManager.initialize();
 
-  updateAlarms();
+  updateAlarms("handleBoot(): Update alarms on system boot");
 }

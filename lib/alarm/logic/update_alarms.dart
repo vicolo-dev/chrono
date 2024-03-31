@@ -1,18 +1,29 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/alarm/types/alarm_event.dart';
+import 'package:clock_app/common/types/notification_type.dart';
+import 'package:clock_app/common/types/schedule_id.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 
 import 'alarm_controls.dart';
 
-Future<void> updateAlarm(int scheduleId) async {
+Future<void> cancelAllAlarms() async {
+ List<ScheduleId> scheduleIds = await loadList<ScheduleId>('alarm_schedule_ids');
+  for (var scheduleId in scheduleIds) {
+    await cancelAlarm(scheduleId.id, ScheduledNotificationType.alarm);
+  }
+}
+
+Future<void> updateAlarm(int scheduleId,String description) async {
   List<Alarm> alarms = await loadList("alarms");
   int alarmIndex =
       alarms.indexWhere((alarm) => alarm.hasScheduleWithId(scheduleId));
   Alarm alarm = alarms[alarmIndex];
 
-  alarm.update();
+  await alarm.update(description);
 
   alarms[alarmIndex] = alarm;
   await saveList("alarms", alarms);
@@ -21,12 +32,15 @@ Future<void> updateAlarm(int scheduleId) async {
 // Update the state of all the alarms and save them to the disk
 // This is called both when an alarm triggers, as well as when the device boots
 // up, so we can check for alarms that rung when the device was off
-Future<void> updateAlarms() async {
+Future<void> updateAlarms(String description) async {
+  await cancelAllAlarms();
+
   List<Alarm> alarms = await loadList("alarms");
 
-  alarms.where((alarm) => alarm.isEnabled).forEach((alarm) {
-    alarm.update();
-  });
+  for (Alarm alarm in alarms) {
+    await alarm.update(description);
+  }
+
 
   await saveList("alarms", alarms);
 
@@ -36,12 +50,12 @@ Future<void> updateAlarms() async {
 }
 
 Future<void> updateAlarmById(
-    int scheduleId, void Function(Alarm) callback) async {
+    int scheduleId, Future<void> Function(Alarm) callback) async {
   List<Alarm> alarms = await loadList("alarms");
   int alarmIndex =
       alarms.indexWhere((alarm) => alarm.hasScheduleWithId(scheduleId));
   Alarm alarm = alarms[alarmIndex];
-  callback(alarm);
+  await callback(alarm);
   alarms[alarmIndex] = alarm;
   await saveList("alarms", alarms);
   SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);

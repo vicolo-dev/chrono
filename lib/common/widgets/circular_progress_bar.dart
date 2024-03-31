@@ -96,7 +96,7 @@ class CircularProgressBar extends StatefulWidget {
   /// center of the progress bar, define the [onGetCenterWidget] method. In this method
   /// you should return the widget for the current progress bar value.
   const CircularProgressBar({
-    Key? key,
+    super.key,
     this.size = 100,
     this.maxValue = 100,
     this.startAngle = 0,
@@ -109,7 +109,7 @@ class CircularProgressBar extends StatefulWidget {
     this.mergeMode = false,
     this.valueNotifier,
     this.onGetCenterWidget,
-  }) : super(key: key);
+  });
 
   @override
   State<CircularProgressBar> createState() => _CircularProgressBarState();

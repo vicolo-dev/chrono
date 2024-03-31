@@ -70,8 +70,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
           fab: true, navBar: true);
     } else {
       int index = _listController.getItemIndex(alarm);
-      _listController.changeItems((alarms) {
-        alarms[index].setIsEnabled(value);
+      _listController.changeItems((alarms) async {
+        await alarms[index].setIsEnabled(value, "_handleEnableChangeAlarm(): Alarm enable set to $value by user");
         _showNextScheduleSnackBar(alarms[index]);
       });
     }
@@ -79,7 +79,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   Future<Alarm?> _openCustomizeAlarmScreen(
     Alarm alarm, {
-    void Function(Alarm)? onSave,
+    Future<void> Function(Alarm)? onSave,
     bool isNewAlarm = false,
   }) async {
     return openCustomizeScreen(
@@ -104,8 +104,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
   _handleCustomizeAlarm(Alarm alarm) async {
     int index = _listController.getItemIndex(alarm);
     // if (index < 0) return;
-    await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) {
-      newAlarm.update();
+    await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
+     await newAlarm.update("_handleCustomizeAlarm(): Alarm customized by the user");
       _listController.changeItems((alarms) {
         alarms[index] = newAlarm;
       });
@@ -136,9 +136,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   _handleDismissAlarm(Alarm alarm) {
     int index = _listController.getItemIndex(alarm);
-    _listController.changeItems((alarms) {
-      alarms[index].cancelSnooze();
-      alarms[index].update();
+    _listController.changeItems((alarms)async {
+     await alarms[index].cancelSnooze();
+      await alarms[index].update("_handleDismissAlarm(): Alarm dismissed by user");
     });
   }
 
@@ -158,7 +158,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
       if (timePickerResult != null) {
         Alarm alarm = Alarm.fromTimeOfDay(timePickerResult.value);
         if (timePickerResult.isCustomize) {
-          await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) {
+          await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
             _listController.addItem(newAlarm);
           }, isNewAlarm: true);
         } else {
@@ -181,13 +181,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
             onSkipChange: (value) => _handleSkipChange(alarm, value),
           ),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
-          onAddItem: (alarm) {
-            alarm.update();
+          onAddItem: (alarm)async {
+            await alarm.update("onAddItem(): Alarm added by user");
             _showNextScheduleSnackBar(alarm);
           },
-          onDeleteItem: (alarm) => setState(() {
-            alarm.disable();
-          }),
+          onDeleteItem: (alarm) async {
+            await alarm.disable();
+                      },
           placeholderText: "No alarms created",
           reloadOnPop: true,
           listFilters: _showFilters.value ? alarmListFilters : [],

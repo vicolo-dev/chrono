@@ -7,6 +7,7 @@ class ListController<T> {
   void Function(T item)? _deleteItem;
   void Function(T item)? _duplicateItem;
   int Function(T item)? _getItemIndex;
+  void Function()? _clearItems;
   void Function(List<T>)? _reloadItems;
 
   ListController();
@@ -35,6 +36,10 @@ class ListController<T> {
     _reloadItems = callback;
   }
 
+  void setClearItems(void Function() callback) {
+    _clearItems = callback;
+  }
+
   void changeItems(ItemChangerCallback<T> callback,
       {bool callOnModifyList = true}) {
     _changeItems?.call(callback, callOnModifyList);
@@ -50,6 +55,10 @@ class ListController<T> {
 
   void deleteItem(T item) {
     _deleteItem?.call(item);
+  }
+
+  void clearItems() {
+    _clearItems?.call();
   }
 
   void reload(List<T> items){

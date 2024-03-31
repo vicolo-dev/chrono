@@ -50,7 +50,7 @@ void main() {
       testWidgets(
         'on disabled alarm',
         (tester) async {
-          sampleAlarm.disable();
+          await sampleAlarm.disable();
           await _renderWidget(tester);
           final finder = find.byWidgetPredicate(
               (widget) => widget is Switch && widget.value == false,

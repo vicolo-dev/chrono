@@ -59,6 +59,15 @@
         <action android:name="android.intent.action.SET_TIMER" />
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.intent.action.DISMISS_ALARM" />
+        <action android:name="android.intent.action.DISMISS_TIMER" />
+
+        <data android:scheme="id" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
     </activity>
     <!-- Don't delete the meta-data below.
       This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

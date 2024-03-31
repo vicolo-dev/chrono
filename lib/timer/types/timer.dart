@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class ClockTimer extends CustomizableListItem {
         _startTime = DateTime(0),
         _state = TimerState.stopped,
         _settings = timer._settings.copy(),
-        _id = timer.id;
+        _id = UniqueKey().hashCode;
 
   void setSetting(BuildContext context, String name, dynamic value) {
     _settings.getSetting(name).setValue(context, value);
@@ -89,10 +90,12 @@ class ClockTimer extends CustomizableListItem {
     _settings.getSetting(name).setValueWithoutNotify(value);
   }
 
-  void start() {
+  Future<void> start() async {
     _startTime = DateTime.now();
-    scheduleAlarm(
-        _id, DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),
+    await scheduleAlarm(
+        _id,
+        DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),
+        'Timer.start()',
         type: ScheduledNotificationType.timer);
     _state = TimerState.running;
   }
@@ -103,42 +106,48 @@ class ClockTimer extends CustomizableListItem {
     _secondsRemainingOnPause = newDuration.inSeconds;
   }
 
-  void setTime(TimeDuration newDuration) {
+  Future<void> setTime(TimeDuration newDuration) async {
     _currentDuration = TimeDuration.from(newDuration);
     _secondsRemainingOnPause = newDuration.inSeconds;
-    scheduleAlarm(_id, DateTime.now().add(Duration(seconds: remainingSeconds)),
+    await scheduleAlarm(
+        _id,
+        DateTime.now().add(Duration(seconds: remainingSeconds)),
+        'Timer.setTime',
         type: ScheduledNotificationType.timer);
   }
 
-  void addTime() {
+  Future<void> addTime() async {
     TimeDuration addedDuration = TimeDuration(minutes: addLength.floor());
     _currentDuration = _currentDuration.add(addedDuration);
     // _startTime = _startTime.subtract(addedDuration.toDuration);
     _secondsRemainingOnPause =
         _secondsRemainingOnPause + addedDuration.inSeconds;
-    scheduleAlarm(_id, DateTime.now().add(Duration(seconds: remainingSeconds)),
+    await scheduleAlarm(
+        _id,
+        DateTime.now().add(Duration(seconds: remainingSeconds)),
+        'Timer.addTime',
         type: ScheduledNotificationType.timer);
   }
 
-  void pause() {
-    cancelAlarm(_id);
+  Future<void> pause() async {
+    await cancelAlarm(_id, ScheduledNotificationType.timer);
     _secondsRemainingOnPause = _secondsRemainingOnPause -
         DateTime.now().difference(_startTime).toTimeDuration().inSeconds;
     _state = TimerState.paused;
   }
 
-  void reset() {
-    cancelAlarm(_id);
+  Future<void> reset() async {
+    await cancelAlarm(_id, ScheduledNotificationType.timer);
     _state = TimerState.stopped;
     _currentDuration = TimeDuration.from(_duration);
     _secondsRemainingOnPause = _duration.inSeconds;
   }
 
-  void toggleState() {
+  Future<void> toggleState() async {
     if (state == TimerState.running) {
-      pause();
+      await pause();
     } else {
-      start();
+      await start();
     }
   }
 

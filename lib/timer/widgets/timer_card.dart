@@ -9,12 +9,12 @@ import 'package:flutter/material.dart';
 
 class TimerCard extends StatefulWidget {
   const TimerCard({
-    Key? key,
+    super.key,
     required this.timer,
     required this.onToggleState,
     required this.onPressDelete,
     required this.onPressDuplicate,
-  }) : super(key: key);
+  });
 
   final ClockTimer timer;
   final VoidCallback onToggleState;
@@ -58,6 +58,7 @@ class _TimerCardState extends State<TimerCard> {
     valueNotifier = ValueNotifier(widget.timer.remainingSeconds.toDouble());
     remainingSeconds = widget.timer.remainingSeconds;
     valueNotifier.addListener(() {
+      // print("valueNotifier: ${valueNotifier.value}");
       setState(() {
         remainingSeconds = valueNotifier.value.toInt();
       });
@@ -84,12 +85,13 @@ class _TimerCardState extends State<TimerCard> {
     }
 
     return Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(
+            left: 16.0, right: 8.0, top: 16.0, bottom: 16.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircularProgressBar(
-              size: 64,
+              size: 56,
               valueNotifier: valueNotifier,
               progressStrokeWidth: 8,
               backStrokeWidth: 8,
@@ -100,6 +102,7 @@ class _TimerCardState extends State<TimerCard> {
                 return GestureDetector(
                   onTap: () {
                     widget.onToggleState();
+                    // print("================toglle");
                     updateTimer();
                   },
                   child: widget.timer.isRunning
@@ -136,7 +139,7 @@ class _TimerCardState extends State<TimerCard> {
                   Text(
                     TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
                     style: textTheme.displayMedium?.copyWith(
-                      fontSize: remainingSeconds > 3600 ? 40 : 48,
+                      fontSize: remainingSeconds > 3600 ? 36 : 44,
                     ),
                   ),
                 ],

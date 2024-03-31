@@ -74,6 +74,7 @@ class _CustomListViewState<Item extends ListItem>
     widget.listController.setGetItemIndex(_getItemIndex);
     widget.listController.setDuplicateItem(_handleDuplicateItem);
     widget.listController.setReloadItems(_reloadItems);
+    widget.listController.setClearItems(_handleClear);
   }
 
   void _reloadItems(List<Item> items) {
@@ -149,6 +150,22 @@ setState(() {
       index,
       1,
       _getChangeWidgetBuilder(deletedItem),
+    );
+    widget.onModifyList?.call();
+    lastListLength = widget.items.length;
+  }
+
+   void _handleClear() {
+    int listLength = widget.items.length;
+
+    setState(() {
+      widget.items.clear();
+    });
+
+    _controller.notifyRemovedRange(
+      0,
+     listLength,
+      _getChangeListBuilder(),
     );
     widget.onModifyList?.call();
     lastListLength = widget.items.length;
