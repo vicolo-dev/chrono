@@ -85,7 +85,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final bool isDuplicateEnabled;
   final bool reloadOnPop;
   final bool shouldInsertOnTop;
-  final List<ListFilter<Item>> listFilters;
+  final List<ListFilterItem<Item>> listFilters;
 
   @override
   State<PersistentListView> createState() => _PersistentListViewState<Item>();

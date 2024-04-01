@@ -1,27 +1,28 @@
-import 'package:clock_app/audio/types/audio.dart';
+import 'package:clock_app/common/logic/show_select.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/fields/select_field/field_cards/audio_field_card.dart';
 import 'package:clock_app/common/widgets/fields/select_field/field_cards/color_field_card.dart';
 import 'package:clock_app/common/widgets/fields/select_field/field_cards/text_field_card.dart';
-import 'package:clock_app/common/widgets/fields/select_field/select_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 class SelectField extends StatefulWidget {
   const SelectField({
-    Key? key,
-    required this.selectedIndex,
+    super.key,
+    required this.selectedIndices,
     required this.title,
     this.description,
     required this.choices,
     required this.onChanged,
-  }) : super(key: key);
+    this.multiSelect = false,
+  });
 
-  final int selectedIndex;
+  final List<int> selectedIndices;
   final String title;
   final String? description;
+  final bool multiSelect;
   final List<SelectChoice> choices;
-  final void Function(int index) onChanged;
+  final void Function(List<int> indices) onChanged;
 
   @override
   State<SelectField> createState() => _SelectFieldState();
@@ -29,7 +30,7 @@ class SelectField extends StatefulWidget {
 
 class _SelectFieldState<T> extends State<SelectField> {
   Widget _getFieldCard() {
-    SelectChoice choice = widget.choices[widget.selectedIndex];
+    SelectChoice choice = widget.choices[widget.selectedIndices[0]];
 
     if (choice.value is Color) {
       return ColorFieldCard(
@@ -58,42 +59,21 @@ class _SelectFieldState<T> extends State<SelectField> {
 
   @override
   Widget build(BuildContext context) {
-    void showSelect() async {
-      int? currentSelectedIndex = await showModalBottomSheet<int>(
-        context: context,
-        isScrollControlled: true,
-        enableDrag: true,
-        builder: (BuildContext context) {
-          int currentSelectedIndex = widget.selectedIndex;
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              void handleSelect(int index) {
-                setState(() {
-                  currentSelectedIndex = index;
-                });
-                Navigator.pop(context, currentSelectedIndex);
-              }
-
-              return SelectBottomSheet(
-                title: widget.title,
-                description: widget.description,
-                choices: widget.choices,
-                currentSelectedIndex: currentSelectedIndex,
-                onSelect: handleSelect,
-              );
-            },
-          );
-        },
-      );
+    void showSelect(List<int>? selectedIndices) async {
       setState(() {
-        widget.onChanged(currentSelectedIndex ?? widget.selectedIndex);
+        widget.onChanged(selectedIndices ?? widget.selectedIndices);
       });
     }
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: showSelect,
+        onTap: () => showSelectBottomSheet(context, showSelect,
+            title: widget.title,
+            description: widget.description,
+            choices: widget.choices,
+            initialSelectedIndices: widget.selectedIndices,
+            multiSelect: widget.multiSelect),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: _getFieldCard(),

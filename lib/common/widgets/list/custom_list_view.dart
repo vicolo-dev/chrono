@@ -49,7 +49,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
   final bool shouldInsertOnTop;
-  final List<ListFilter<Item>> listFilters;
+  final List<ListFilterItem<Item>> listFilters;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -61,9 +61,9 @@ class _CustomListViewState<Item extends ListItem>
   late int lastListLength = widget.items.length;
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
-  late ListFilter<Item> _selectedFilter = widget.listFilters.isEmpty
-      ? ListFilter("Default", (item) => true)
-      : widget.listFilters[0];
+  // late ListFilter<Item> _selectedFilter = widget.listFilters.isEmpty
+  //     ? ListFilter("Default", (item) => true)
+  //     : widget.listFilters[0];
 
   @override
   void initState() {
@@ -78,12 +78,13 @@ class _CustomListViewState<Item extends ListItem>
   }
 
   void _reloadItems(List<Item> items) {
-setState(() {
-  widget.items.clear();
-  widget.items.addAll(items);
-});
+    setState(() {
+      widget.items.clear();
+      widget.items.addAll(items);
+    });
 // TODO: MAN THIS SUCKS, WHY YOU GOTTA DO THIS
-    _controller.notifyRemovedRange(0, widget.items.length - 1,  _getChangeListBuilder());
+    _controller.notifyRemovedRange(
+        0, widget.items.length - 1, _getChangeListBuilder());
     _controller.notifyInsertedRange(0, widget.items.length);
   }
 
@@ -155,7 +156,7 @@ setState(() {
     lastListLength = widget.items.length;
   }
 
-   void _handleClear() {
+  void _handleClear() {
     int listLength = widget.items.length;
 
     setState(() {
@@ -164,7 +165,7 @@ setState(() {
 
     _controller.notifyRemovedRange(
       0,
-     listLength,
+      listLength,
       _getChangeListBuilder(),
     );
     widget.onModifyList?.call();
@@ -199,9 +200,13 @@ setState(() {
         duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
   }
 
-  _getItemBuilder(ListFilter<Item> filter) {
+  _getItemBuilder() {
     return (BuildContext context, Item item, data) {
-      if (!filter.filterFunction(item)) return Container();
+      for (var filter in widget.listFilters) {
+        if (!filter.filterFunction(item)) {
+          return Container();
+        }
+      }
       return data.measuring
           ? SizedBox(height: _itemCardHeight)
           : ListItemCard<Item>(
@@ -219,10 +224,62 @@ setState(() {
     };
   }
 
+  Widget getListFilterChip(ListFilterItem<Item> item) {
+    if (item.runtimeType == ListFilter<Item>) {
+      return ListFilterChip<Item>(
+        listFilter: item as ListFilter<Item>,
+        onChange: () {
+          setState(() {
+            _notifyChangeList();
+          });
+        },
+      );
+    } else if (item.runtimeType == ListFilterSelect<Item>) {
+      return ListFilterSelectChip<Item>(
+        listFilter: item as ListFilterSelect<Item>,
+        multiSelect: false,
+        onChange: () {
+          setState(() {
+            _notifyChangeList();
+          });
+        },
+      );
+    }
+    //       else if(item.runtimeType == DynamicListFilterMultiSelect)
+    //       {
+    //   return DynamicListFilterMultiSelectChip<Item>(
+    //     listFilter: item as DynamicListFilterMultiSelect<Item>,
+    //     onTap: () {
+    //       setState(() {
+    //     _selectedFilter = item;
+    //     _notifyChangeList();
+    //       });
+    //     },
+    //   );
+    //       }
+          else if(item.runtimeType == DynamicListFilterSelect)
+          {
+      return DynamicListFilterSelectChip<Item>(
+        listFilter: item as DynamicListFilterSelect<Item>,
+        onTap: () {
+          setState(() {
+        _selectedFilter = item;
+        _notifyChangeList();
+          });
+        },
+      );
+    //
+    // }
+    else {
+      return const Text("Unknown Filter Type");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     timeDilation = 0.75;
     return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 0,
@@ -230,19 +287,11 @@ setState(() {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
+
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: widget.listFilters
-                      .map((filter) => ListFilterChip<Item>(
-                            listFilter: filter,
-                            onTap: () {
-                              setState(() {
-                                _selectedFilter = filter;
-                                _notifyChangeList();
-                              });
-                            },
-                            isSelected: _selectedFilter == filter,
-                          ))
+                      .map((filter) => getListFilterChip(filter))
                       .toList()),
             ),
           ),
@@ -277,9 +326,7 @@ setState(() {
                   sameItem: (a, b) => a.id == b.id,
                   sameContent: (a, b) => a.id == b.id,
                 ),
-                itemBuilder: _getItemBuilder(widget.listFilters.isEmpty
-                    ? ListFilter("Default", (item) => true)
-                    : _selectedFilter),
+                itemBuilder: _getItemBuilder(),
                 // animator: DefaultAnimatedListAnimator,
                 listController: _controller,
                 scrollController: _scrollController,

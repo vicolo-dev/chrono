@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 
 class SelectTextOptionCard extends StatelessWidget {
   const SelectTextOptionCard({
-    Key? key,
-    required this.selectedIndex,
+    super.key,
+    required this.selectedIndices,
     required this.choice,
     required this.index,
     required this.onSelect,
-  }) : super(key: key);
+    required this.multiSelect,
+  });
 
-  final int selectedIndex;
+  final bool multiSelect;
+  final List<int> selectedIndices;
   final SelectChoice choice;
   final int index;
   final void Function(int) onSelect;
@@ -27,13 +29,19 @@ class SelectTextOptionCard extends StatelessWidget {
               vertical: choice.description.isNotEmpty ? 8.0 : 2.0),
           child: Row(
             children: [
-              Radio(
-                value: index,
-                groupValue: selectedIndex,
-                onChanged: (dynamic value) => onSelect(index),
-              ),
+              multiSelect
+                  ? Checkbox(
+                      // checkColor: Colors.white,
+                      // fillColor: MaterialStateProperty.resolveWith(getColor),
+                      value: selectedIndices.contains(index),
+                      onChanged: (bool? value) => onSelect(index))
+                  : Radio(
+                      value: index,
+                      groupValue: selectedIndices[0],
+                      onChanged: (dynamic value) => onSelect(index),
+                    ),
               Expanded(
-              flex:999,
+                flex: 999,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -41,12 +49,13 @@ class SelectTextOptionCard extends StatelessWidget {
                         style: Theme.of(context).textTheme.headlineMedium),
                     if (choice.description.isNotEmpty) ...[
                       const SizedBox(height: 4.0),
-                      Text(choice.description,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                maxLines: 5,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                          )
+                      Text(
+                        choice.description,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                      )
                     ],
                   ],
                 ),

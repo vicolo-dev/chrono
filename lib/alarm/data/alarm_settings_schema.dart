@@ -19,7 +19,7 @@ import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
-const alarmSchemaVersion = 4;
+const alarmSchemaVersion = 5;
 
 SettingGroup alarmSettingsSchema = SettingGroup(
   version: alarmSchemaVersion,
@@ -163,6 +163,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
       },
       itemPreviewBuilder: (item) => TryAlarmTaskButton(alarmTask: item),
     ),
+    // ListSetting<Tag>()
     // CustomSetting<AlarmTaskList>("Tasks", AlarmTaskList([]),
     //     (context, setting) {
     //   return CustomizeAlarmTasksScreen(setting: setting);

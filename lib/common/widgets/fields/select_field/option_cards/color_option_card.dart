@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 class SelectColorOptionCard extends StatelessWidget {
   const SelectColorOptionCard({
-    Key? key,
-    required this.selectedIndex,
+    super.key,
+    required this.isSelected,
     required this.choice,
     required this.index,
     required this.onSelect,
-  }) : super(key: key);
+  });
 
-  final int selectedIndex;
+  final bool isSelected;
   final SelectChoice choice;
   final int index;
   final void Function(int) onSelect;
@@ -30,7 +30,7 @@ class SelectColorOptionCard extends StatelessWidget {
           ),
           child: InkWell(
             onTap: () => onSelect(index),
-            child: selectedIndex == index
+            child: isSelected
                 ? const Icon(Icons.check, color: Colors.white)
                 : null,
           )),

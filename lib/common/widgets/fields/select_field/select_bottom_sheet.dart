@@ -11,14 +11,17 @@ class SelectBottomSheet extends StatelessWidget {
     required this.title,
     this.description,
     required this.choices,
-    required this.currentSelectedIndex,
+    required this.currentSelectedIndices,
     required this.onSelect,
+    this.multiSelect = false,
+      
   });
 
   final String title;
   final String? description;
   final List<SelectChoice> choices;
-  final int currentSelectedIndex;
+  final List<int> currentSelectedIndices;
+  final bool multiSelect;
   final void Function(int) onSelect;
 
   Widget _getOptionCard() {
@@ -35,7 +38,7 @@ class SelectBottomSheet extends StatelessWidget {
           return SelectColorOptionCard(
             index: index,
             choice: choices[index],
-            selectedIndex: currentSelectedIndex,
+            isSelected: currentSelectedIndices.contains(index),
             onSelect: onSelect,
           );
         },
@@ -49,7 +52,8 @@ class SelectBottomSheet extends StatelessWidget {
             return SelectAudioOptionCard(
               index: index,
               choice: choices[index],
-              selectedIndex: currentSelectedIndex,
+              selectedIndices: currentSelectedIndices,
+            multiSelect: multiSelect,
               onSelect: onSelect,
             );
           });
@@ -61,7 +65,8 @@ class SelectBottomSheet extends StatelessWidget {
           return SelectTextOptionCard(
             index: index,
             choice: choices[index],
-            selectedIndex: currentSelectedIndex,
+            multiSelect: multiSelect,
+            selectedIndices: currentSelectedIndices,
             onSelect: onSelect,
           );
         });
