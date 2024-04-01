@@ -60,7 +60,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   @override
   void initState() {
     super.initState();
-    alarm = getAlarmByScheduleId(widget.scheduleId) ?? Alarm(const Time());
+    alarm = getAlarmById(widget.scheduleId) ?? Alarm(const Time());
     _setNextWidget();
   }
 

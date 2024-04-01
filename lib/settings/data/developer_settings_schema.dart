@@ -16,7 +16,16 @@ SettingGroup developerSettingsSchema = SettingGroup(
             "Show a button on the alarm screen that creates an alarm that rings one second in the future",
       ),
     ]),
-    SettingPageLink("Alarm Logs", const AlarmEventsScreen())
+    SettingGroup("Logs", [
+      SliderSetting(
+        "Max logs",
+        10,
+        500,
+        100,
+        snapLength: 1,
+      ),
+      SettingPageLink("Alarm Logs", const AlarmEventsScreen()),
+    ]),
   ],
   icon: Icons.code_rounded,
 );
