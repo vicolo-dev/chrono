@@ -128,23 +128,28 @@ class SelectBottomSheet extends StatelessWidget {
             if (multiSelect)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
-                    onPressed: () {
-                      onSelect([]);
-                    },
-                    child: Text('Select None',
-                        style: textTheme.labelMedium
-                            ?.copyWith(color: colorScheme.primary)),
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          onSelect([]);
+                        },
+                        icon: Icon(Icons.clear_rounded, color: colorScheme.primary),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          onSelect([for (var i = 0; i < choices.length; i += 1) i]);
+                        },
+                        icon: Icon(Icons.select_all_rounded, color: colorScheme.primary),
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () {
-                      onSelect([for (var i = 0; i < choices.length; i += 1) i]);
-                    },
-                    child: Text('Select All',
-                        style: textTheme.labelMedium
-                            ?.copyWith(color: colorScheme.primary)),
-                  ),
+                  TextButton(onPressed: (){
+                    Navigator.of(context).pop();
+                    }, child: Text('Save',
+                              style: textTheme.labelMedium?.copyWith(
+                                  color:colorScheme.primary))),
                 ]),
               )
           ],
