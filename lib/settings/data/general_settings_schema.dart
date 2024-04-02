@@ -6,6 +6,7 @@ import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/screens/ringtones_screen.dart';
+import 'package:clock_app/settings/screens/tags_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -64,6 +65,11 @@ SettingGroup generalSettingsSchema = SettingGroup(
       "Melodies",
       const RingtonesScreen(),
       searchTags: ["ringtones", "music", "audio", "tones", "custom"],
+    ),
+    SettingPageLink(
+      "Tags",
+      const TagsScreen(),
+      searchTags: ["tags", "groups", "filter"],
     ),
     SettingGroup("Reliability", [
       SettingAction(

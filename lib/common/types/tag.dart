@@ -4,24 +4,31 @@ import 'package:flutter/material.dart';
 
 class Tag extends ListItem {
   final int _id;
-  final String name;
-  final String description;
-  final Color color;
-  Tag(this.name, {this.description = "", this.color = Colors.blue}):_id=UniqueKey().hashCode;
+  String name;
+  String description;
+  Color color;
+  Tag(this.name, {this.description = "", this.color = Colors.blue})
+      : _id = UniqueKey().hashCode;
 
-  Tag.fromJson(Json json):
-  _id = json?['id'] ?? UniqueKey().hashCode,
-  name = json?['name'] ?? "Unknown",
-  description = json?['description'] ?? "",
-  color = Color(json?['color'] ?? 0);
+  Tag.fromJson(Json json)
+      : _id = json?['id'] ?? UniqueKey().hashCode,
+        name = json?['name'] ?? "Unknown",
+        description = json?['description'] ?? "",
+        color = Color(json?['color'] ?? 0);
+
+  Tag.from(Tag tag)
+      : _id = UniqueKey().hashCode,
+        name = tag.name,
+        description = tag.description,
+        color = tag.color;
 
   @override
   Json toJson() => {
-    'id': _id,
-    'name': name,
-    'description': description,
-    'color': color.value,
-  };
+        'id': _id,
+        'name': name,
+        'description': description,
+        'color': color.value,
+      };
 
   @override
   copy() {

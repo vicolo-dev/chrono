@@ -567,7 +567,7 @@ class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
     return selectedIndices.map((index) => options[index].value).toList();
 }
   List<int> get selectedIndices =>
-      _value.map((id) => getIndexOfId(id)).toList();
+      _value.map((id) => getIndexOfId(id)).where((index)=>index>=0).toList();
 
   DynamicMultiSelectSetting(
     String name,
@@ -611,7 +611,7 @@ class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
 
   int getIndexOfId(int id) {
     int index = options.indexWhere((element) => element.value.id == id);
-    return index == -1 ? 0 : index;
+    return index;
   }
 
   int getIdAtIndex(int index) {
