@@ -1,14 +1,17 @@
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/debug.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class ListFilterItem<Item> {
   bool Function(Item) get filterFunction;
+  String get displayName;
 }
 
 ListFilter<Item> defaultFilter<Item extends ListItem>() {
   return ListFilter<Item>(
     'All',
     (item) => true,
+    id: -1,
   );
 }
 
@@ -22,15 +25,16 @@ class ListFilter<Item extends ListItem> extends ListFilterItem<Item> {
       : _id = id ?? UniqueKey().hashCode,
         _filterFunction = filterFunction;
 
-  void setSelected(bool selected) {
-    isSelected = selected;
-  }
-
   int get id => _id;
 
   @override
-  bool Function(Item) get filterFunction =>
-      isSelected ? _filterFunction : (Item item) => true;
+  bool Function(Item) get filterFunction {
+    // print("Filtering $name $isSelected");
+    return isSelected ? _filterFunction : (Item item) => true;
+  }
+
+  @override
+  String get displayName => name;
 }
 
 class ListFilterSearch<Item extends ListItem> extends ListFilterItem<Item> {
@@ -45,91 +49,186 @@ class ListFilterSearch<Item extends ListItem> extends ListFilterItem<Item> {
   }
 
   ListFilterSearch(this.name);
+  @override
+  String get displayName => name;
+}
+
+abstract class FilterMultiSelect<Item extends ListItem>
+    extends ListFilterItem<Item> {
+  List<int> get selectedIndices;
+  List<ListFilter<Item>> get selectedFilters;
+  List<ListFilter<Item>> get filters;
+  set selectedIndices(List<int> indices);
+   @override
+  bool Function(Item) get filterFunction {
+    final currentFilters = filters;
+
+    if (!currentFilters.any((filter) => filter.isSelected)) {
+      return (Item item) => true;
+    }
+    return (Item item) =>
+        currentFilters.where((filter)=>filter.isSelected).any((filter) => filter.filterFunction(item));
+  }
 }
 
 class ListFilterMultiSelect<Item extends ListItem>
-    extends ListFilterItem<Item> {
+    extends FilterMultiSelect<Item> {
   final String name;
+  @override
   final List<ListFilter<Item>> filters;
-  ListFilterMultiSelect(this.name, this.filters) {
-    // filters.insert(0, defaultFilter<Item>());
-    // if (filters.isNotEmpty) {
-    //   filters[0].setSelected(true);
-    // }
+  ListFilterMultiSelect(this.name, this.filters);
+
+  @override
+  List<int> get selectedIndices => filters
+      .where((filter) => filter.isSelected)
+      .map((filter) => filters.indexOf(filter))
+      .toList();
+
+  @override
+  List<ListFilter<Item>> get selectedFilters =>
+      filters.where((filter) => filter.isSelected).toList();
+
+  @override
+  set selectedIndices(List<int> indices) {
+    for (int i = 0; i < filters.length; i++) {
+      filters[i].isSelected = indices.contains(i);
+    }
   }
   @override
-  bool Function(Item) get filterFunction {
-    if (!filters.any((filter) => filter.isSelected)) {
-      return (Item item) => true;
-    }
-    return (Item item) => filters.any((filter) => filter.filterFunction(item));
-  }
+  String get displayName => name;
 }
 
 class DynamicListFilterMultiSelect<Item extends ListItem>
-    extends ListFilterItem<Item> {
+    extends FilterMultiSelect<Item> {
   final String name;
-  final List<ListFilter<Item>> Function() getfilters;
-  DynamicListFilterMultiSelect(this.name, this.getfilters);
+  final List<ListFilter<Item>> Function() getFilters;
+  List<int> selectedIds;
+  DynamicListFilterMultiSelect(this.name, this.getFilters) : selectedIds = [];
   @override
-  bool Function(Item) get filterFunction {
-    final filters = getfilters();
-    if (!filters.any((filter) => filter.isSelected)) {
-      return (Item item) => true;
+ 
+  @override
+  String get displayName => name;
+
+  @override
+  List<ListFilter<Item>> get selectedFilters =>
+      filters.where((filter) => selectedIds.contains(filter.id)).toList();
+
+  @override
+  List<int> get selectedIndices {
+    final currentFilters = filters;
+    return currentFilters
+        .where((filter) => filter.isSelected)
+        .map((filter) => currentFilters.indexOf(filter))
+        .toList();
+  }
+
+  @override
+  set selectedIndices(List<int> indices) {
+    final currentFilters = filters;
+    selectedIds = indices.map((index) => currentFilters[index].id).toList();
+  }
+
+  @override
+  List<ListFilter<Item>> get filters {
+    final currentFilters = getFilters();
+    for (var filter in currentFilters) {
+      filter.isSelected = selectedIds.contains(filter.id);
     }
-    return (Item item) => filters.any((filter) => filter.filterFunction(item));
+    return currentFilters;
   }
 }
 
-class ListFilterSelect<Item extends ListItem> extends ListFilterItem<Item> {
+abstract class FilterSelect<Item extends ListItem>
+    extends ListFilterItem<Item> {
+  int get selectedIndex;
+  set selectedIndex(int index);
+  ListFilter<Item> get selectedFilter;
+  List<ListFilter<Item>> get filters;
+   @override
+  bool Function(Item) get filterFunction {
+    try {
+      return selectedFilter.filterFunction;
+    } catch (e) {
+      printDebug("Error in getting filter function($displayName): $e");
+      return (Item item) => true;
+    }
+  }
+}
+
+class ListFilterSelect<Item extends ListItem> extends FilterSelect<Item> {
   final String name;
+  @override
   final List<ListFilter<Item>> filters;
   ListFilterSelect(this.name, this.filters) {
     filters.insert(0, defaultFilter<Item>());
     if (filters.isNotEmpty) {
-      filters[0].setSelected(true);
+      filters[0].isSelected = true;
     }
   }
 
-  int get selectedFilterIndex {
+  @override
+  int get selectedIndex {
     return filters.indexWhere((filter) => filter.isSelected);
   }
 
-  // String get name => selectedFilterIndex == 0 ? _name : selectedFilter.name;
-  // String get groupName => _name;
-
-  ListFilter get selectedFilter {
+  @override
+  ListFilter<Item> get selectedFilter {
     return filters.firstWhere((filter) => filter.isSelected);
   }
 
-  set selectedFilterIndex(int index) {
+  @override
+  set selectedIndex(int index) {
     for (int i = 0; i < filters.length; i++) {
-      filters[i].setSelected(i == index);
+      filters[i].isSelected = i == index;
     }
   }
 
   @override
-  bool Function(Item) get filterFunction {
-    try {
-      return filters.firstWhere((filter) => filter.isSelected).filterFunction;
-    } catch (e) {
-      return (Item item) => true;
-    }
-  }
+  String get displayName => name;
 }
 
 class DynamicListFilterSelect<Item extends ListItem>
-    extends ListFilterItem<Item> {
+    extends FilterSelect<Item> {
   final String name;
-  final List<ListFilter<Item>> Function() getfilters;
-  DynamicListFilterSelect(this.name, this.getfilters);
+  final List<ListFilter<Item>> Function() getFilters;
+  int selectedId;
+  DynamicListFilterSelect(this.name, this.getFilters) : selectedId = -1;
+
   @override
-  bool Function(Item) get filterFunction {
-    final filters = getfilters();
-    try {
-      return filters.firstWhere((filter) => filter.isSelected).filterFunction;
-    } catch (e) {
-      return (Item item) => true;
+  List<ListFilter<Item>> get filters {
+    final filters = getFilters();
+    filters.insert(0, defaultFilter<Item>());
+
+    for (var filter in filters) {
+      filter.isSelected = filter.id == selectedId;
     }
+
+    return filters;
   }
+
+  @override
+  int get selectedIndex {
+    final currentFilters = filters;
+    if (!currentFilters.any((filter) => filter.id == selectedId)) {
+      selectedIndex = 0;
+    }
+    final index =
+        currentFilters.indexWhere((filter) => filter.id == selectedId);
+    return index == -1 ? 0 : index;
+  }
+
+  @override
+  ListFilter<Item> get selectedFilter {
+    return filters.firstWhere((filter) => filter.id == selectedId, orElse: () {
+      return filters[0];
+    });
+  }
+
+  @override
+  set selectedIndex(int index) {
+    selectedId = filters[index].id;
+  }
+
+  @override
+  String get displayName => name;
 }

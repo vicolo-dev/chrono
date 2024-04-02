@@ -18,7 +18,7 @@ class SelectAudioOptionCard extends StatefulWidget {
   final List<int> selectedIndices;
   final SelectChoice choice;
   final int index;
-  final void Function(int) onSelect;
+  final void Function(List<int>) onSelect;
 
   @override
   State<SelectAudioOptionCard> createState() => _SelectAudioOptionCardState();
@@ -56,7 +56,7 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => widget.onSelect(widget.index),
+        onTap: () => widget.onSelect([widget.index]),
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: 16.0,
@@ -68,12 +68,12 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
                       // checkColor: Colors.white,
                       // fillColor: MaterialStateProperty.resolveWith(getColor),
                       value: widget.selectedIndices.contains(widget.index),
-                      onChanged: (bool? value) => widget.onSelect(widget.index))
+                      onChanged: (bool? value) => widget.onSelect([widget.index]))
                   : Radio(
                       value: widget.index,
                       groupValue: widget.selectedIndices[0],
                       onChanged: (dynamic value) =>
-                          widget.onSelect(widget.index),
+                          widget.onSelect([widget.index]),
                     ),
               Expanded(
                 flex: 100,

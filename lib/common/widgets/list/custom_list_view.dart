@@ -203,6 +203,7 @@ class _CustomListViewState<Item extends ListItem>
   _getItemBuilder() {
     return (BuildContext context, Item item, data) {
       for (var filter in widget.listFilters) {
+        // print("${filter.displayName} ${filter.filterFunction}");
         if (!filter.filterFunction(item)) {
           return Container();
         }
@@ -224,53 +225,40 @@ class _CustomListViewState<Item extends ListItem>
     };
   }
 
+  void onFilterChange() {
+    setState(() {
+      _notifyChangeList();
+    });
+  }
+
   Widget getListFilterChip(ListFilterItem<Item> item) {
     if (item.runtimeType == ListFilter<Item>) {
       return ListFilterChip<Item>(
         listFilter: item as ListFilter<Item>,
-        onChange: () {
-          setState(() {
-            _notifyChangeList();
-          });
-        },
+        onChange: onFilterChange,
       );
     } else if (item.runtimeType == ListFilterSelect<Item>) {
       return ListFilterSelectChip<Item>(
         listFilter: item as ListFilterSelect<Item>,
-        multiSelect: false,
-        onChange: () {
-          setState(() {
-            _notifyChangeList();
-          });
-        },
+        onChange: onFilterChange,
+      );
+    } else if (item.runtimeType == ListFilterMultiSelect<Item>) {
+      return ListFilterMultiSelectChip<Item>(
+        listFilter: item as ListFilterMultiSelect<Item>,
+        onChange: onFilterChange,
       );
     }
-    //       else if(item.runtimeType == DynamicListFilterMultiSelect)
-    //       {
-    //   return DynamicListFilterMultiSelectChip<Item>(
-    //     listFilter: item as DynamicListFilterMultiSelect<Item>,
-    //     onTap: () {
-    //       setState(() {
-    //     _selectedFilter = item;
-    //     _notifyChangeList();
-    //       });
-    //     },
-    //   );
-    //       }
-          else if(item.runtimeType == DynamicListFilterSelect)
-          {
-      return DynamicListFilterSelectChip<Item>(
+    else if (item.runtimeType == DynamicListFilterSelect<Item>) {
+      return ListFilterSelectChip<Item>(
         listFilter: item as DynamicListFilterSelect<Item>,
-        onTap: () {
-          setState(() {
-        _selectedFilter = item;
-        _notifyChangeList();
-          });
-        },
+        onChange: onFilterChange,
       );
-    //
-    // }
-    else {
+    } else if (item.runtimeType == DynamicListFilterMultiSelect<Item>) {
+      return ListFilterMultiSelectChip<Item>(
+        listFilter: item as DynamicListFilterMultiSelect<Item>,
+        onChange: onFilterChange,
+      );
+    } else {
       return const Text("Unknown Filter Type");
     }
   }
@@ -279,7 +267,7 @@ class _CustomListViewState<Item extends ListItem>
   Widget build(BuildContext context) {
     timeDilation = 0.75;
     return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 0,
@@ -287,7 +275,6 @@ class _CustomListViewState<Item extends ListItem>
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: widget.listFilters

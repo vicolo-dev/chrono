@@ -2,8 +2,7 @@ import 'package:clock_app/common/types/select_choice.dart';
 import 'package:flutter/material.dart';
 
 class ColorFieldCard extends StatelessWidget {
-  const ColorFieldCard({Key? key, required this.title, required this.choice})
-      : super(key: key);
+  const ColorFieldCard({super.key, required this.title, required this.choice});
 
   final String title;
   final SelectChoice<Color> choice;

@@ -14,7 +14,6 @@ class SelectBottomSheet extends StatelessWidget {
     required this.currentSelectedIndices,
     required this.onSelect,
     this.multiSelect = false,
-      
   });
 
   final String title;
@@ -22,7 +21,7 @@ class SelectBottomSheet extends StatelessWidget {
   final List<SelectChoice> choices;
   final List<int> currentSelectedIndices;
   final bool multiSelect;
-  final void Function(int) onSelect;
+  final void Function(List<int>) onSelect;
 
   Widget _getOptionCard() {
     if (choices[0].value is Color) {
@@ -53,7 +52,7 @@ class SelectBottomSheet extends StatelessWidget {
               index: index,
               choice: choices[index],
               selectedIndices: currentSelectedIndices,
-            multiSelect: multiSelect,
+              multiSelect: multiSelect,
               onSelect: onSelect,
             );
           });
@@ -124,7 +123,30 @@ class SelectBottomSheet extends StatelessWidget {
             const SizedBox(height: 16.0),
             Flexible(
               child: _getOptionCard(),
-            )
+            ),
+            if (multiSelect) const SizedBox(height: 8.0),
+            if (multiSelect)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  TextButton(
+                    onPressed: () {
+                      onSelect([]);
+                    },
+                    child: Text('Select None',
+                        style: textTheme.labelMedium
+                            ?.copyWith(color: colorScheme.primary)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      onSelect([for (var i = 0; i < choices.length; i += 1) i]);
+                    },
+                    child: Text('Select All',
+                        style: textTheme.labelMedium
+                            ?.copyWith(color: colorScheme.primary)),
+                  ),
+                ]),
+              )
           ],
         ),
       ),

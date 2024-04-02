@@ -77,7 +77,7 @@ class Alarm extends CustomizableListItem {
   bool get vibrate => _settings.getSetting("Vibration").value;
   double get snoozeLength => _settings.getSetting("Length").value;
   List<AlarmTask> get tasks => _settings.getSetting("Tasks").value;
-  List<int> get tags => [];
+  List<Tag> get tags => _settings.getSetting("Tags").value;
   int get maxSnoozes => _settings.getSetting("Max Snoozes").value.toInt();
   bool get canBeDisabledWhenSnoozed =>
       !_settings.getSetting("Prevent Disabling").value;

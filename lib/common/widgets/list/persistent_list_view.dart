@@ -129,7 +129,7 @@ class _PersistentListViewState<Item extends ListItem>
           List<Item> newList = loadListSync<Item>(widget.saveTag);
           items.clear();
           items.addAll(newList);
-          print("--------------------------------------------- ${listToString(items)}");
+/*           print("--------------------------------------------- ${listToString(items)}"); */
         },
         callOnModifyList: false,
       );

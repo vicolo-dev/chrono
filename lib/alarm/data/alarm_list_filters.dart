@@ -3,15 +3,10 @@ import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/timer/types/timer_preset.dart';
 
 final List<ListFilterItem<Alarm>> alarmListFilters = [
   ListFilterSelect("Date", [
-    // ListFilter(
-    //   'All',
-    //   (alarm) => true,
-    // ),
+
     ListFilter(
       'Today',
       (alarm) {
@@ -25,10 +20,7 @@ final List<ListFilterItem<Alarm>> alarmListFilters = [
     }),
   ]),
   ListFilterSelect("State", [
-    // ListFilter(
-    //   'All',
-    //   (alarm) => true,
-    // ),
+
     ListFilter(
       'Active',
       (alarm) => alarm.isEnabled && !alarm.isFinished,
@@ -46,19 +38,15 @@ final List<ListFilterItem<Alarm>> alarmListFilters = [
       (alarm) => alarm.isFinished,
     ),
   ]),
-  // DynamicListFilterMultiSelect("Tags", () {
-  //   final tags = loadListSync<Tag>("tags");
-  //   return [
-  //     ListFilter(
-  //       'All',
-  //       (alarm) => true,
-  //     ),
-  //     ...tags.map((tag) {
-  //       return ListFilter(
-  //         tag.name,
-  //         (alarm) => alarm.tags.contains(tag.id),
-  //       );
-  //     })
-  //   ];
-  // }),
-];
+   //
+  DynamicListFilterMultiSelect("Tags", () {
+    final tags = loadListSync<Tag>("tags");
+    return tags.map((tag) {
+        return ListFilter<Alarm>(
+          tag.name,
+          (alarm) => alarm.tags.any((element) => element.id == tag.id),
+          id: tag.id,
+        );
+      }).toList();
+  }),
+ ];

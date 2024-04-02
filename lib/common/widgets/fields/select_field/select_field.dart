@@ -1,8 +1,10 @@
 import 'package:clock_app/common/logic/show_select.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/widgets/fields/select_field/field_cards/audio_field_card.dart';
 import 'package:clock_app/common/widgets/fields/select_field/field_cards/color_field_card.dart';
+import 'package:clock_app/common/widgets/fields/select_field/field_cards/multi_select_field_card.dart';
 import 'package:clock_app/common/widgets/fields/select_field/field_cards/text_field_card.dart';
 import 'package:flutter/material.dart';
 
@@ -30,31 +32,46 @@ class SelectField extends StatefulWidget {
 
 class _SelectFieldState<T> extends State<SelectField> {
   Widget _getFieldCard() {
-    SelectChoice choice = widget.choices[widget.selectedIndices[0]];
+    if (widget.multiSelect) {
+      List<SelectChoice> choices =
+          widget.selectedIndices.map((index) => widget.choices[index]).toList();
+      if (choices.isNotEmpty && choices[0].value.runtimeType == Tag) {
+        return MultiSelectFieldCard(
+            title: widget.title,
+            choices: choices
+                .map((e) => SelectChoice<Tag>(
+                    name: e.name,
+                    value: e.value,
+                    description: e.description,
+                    color: e.value.color))
+                .toList());
+      }
+      return MultiSelectFieldCard(title: widget.title, choices: choices);
+    } else {
+      SelectChoice choice = widget.choices[widget.selectedIndices[0]];
+      if (choice.value is Color) {
+        return ColorFieldCard(
+          choice: SelectChoice<Color>(
+              name: choice.name,
+              value: choice.value,
+              description: choice.description),
+          title: widget.title,
+        );
+      } else if (choice.value is FileItem) {
+        return AudioFieldCard(
+          choice: SelectChoice<FileItem>(
+              name: choice.name,
+              value: choice.value,
+              description: choice.description),
+          title: widget.title,
+        );
+      }
 
-    if (choice.value is Color) {
-      return ColorFieldCard(
-        choice: SelectChoice<Color>(
-            name: choice.name,
-            value: choice.value,
-            description: choice.description),
+      return TextFieldCard(
+        choice: choice,
         title: widget.title,
       );
     }
-    if (choice.value is FileItem) {
-      return AudioFieldCard(
-        choice: SelectChoice<FileItem>(
-            name: choice.name,
-            value: choice.value,
-            description: choice.description),
-        title: widget.title,
-      );
-    }
-
-    return TextFieldCard(
-      choice: choice,
-      title: widget.title,
-    );
   }
 
   @override

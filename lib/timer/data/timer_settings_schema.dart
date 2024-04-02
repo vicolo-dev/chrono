@@ -1,7 +1,9 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/audio/audio_channels.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
+import 'package:clock_app/common/logic/tags.dart';
 import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
@@ -29,7 +31,7 @@ SettingGroup timerSettingsSchema = SettingGroup(
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },
-              shouldCloseOnSelect: false,
+              // shouldCloseOnSelect: false,
             ),
             SelectSetting<AndroidAudioUsage>(
                 "Audio Channel", audioChannelOptions,
@@ -42,7 +44,7 @@ SettingGroup timerSettingsSchema = SettingGroup(
             DurationSetting(
                 "Time To Full Volume", const TimeDuration(minutes: 1),
                 enableConditions: [
-                  ValueCondition(["Rising Volume"], (value)=>value==true)
+                  ValueCondition(["Rising Volume"], (value) => value == true)
                 ]),
           ],
         ),
@@ -55,5 +57,10 @@ SettingGroup timerSettingsSchema = SettingGroup(
       ],
     ),
     SliderSetting("Add Length", 1, 30, 1, unit: "minutes", snapLength: 1),
+    DynamicMultiSelectSetting<Tag>(
+      "Tags",
+      getTagOptions,
+      defaultValue: [],
+    ),
   ],
 );

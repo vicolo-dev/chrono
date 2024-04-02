@@ -5,6 +5,7 @@ import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/alarm/types/alarm_task.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/schedule_id.dart';
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/common/types/json.dart';
@@ -30,6 +31,7 @@ final fromJsonFactories = <Type, Function>{
   FileItem: (Json json) => FileItem.fromJson(json),
   AlarmEvent: (Json json) => AlarmEvent.fromJson(json),
   ScheduleId: (Json json) => ScheduleId.fromJson(json),
+  Tag: (Json json) => Tag.fromJson(json),
 
   // AlarmTaskList: (Json json) => AlarmTaskList.fromJson(json),
 };

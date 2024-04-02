@@ -3,7 +3,6 @@ import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/fields/select_field/select_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 class ListFilterChip<Item extends ListItem> extends StatelessWidget {
@@ -24,7 +23,7 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
 
     return CardContainer(
       color: listFilter.isSelected ? colorScheme.primary : null,
-      onTap: (){
+      onTap: () {
         listFilter.isSelected = !listFilter.isSelected;
         onChange();
       },
@@ -43,71 +42,40 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
   }
 }
 
-class ListFilterSelectChip<Item extends ListItem> extends StatefulWidget {
+class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
+  final FilterSelect<Item> listFilter;
+  final VoidCallback onChange;
+
   const ListFilterSelectChip({
     super.key,
     required this.listFilter,
     required this.onChange,
-    required this.multiSelect,
   });
-
-  final ListFilterSelect<Item> listFilter;
-  final VoidCallback onChange;
-  final bool multiSelect;
-
-  @override
-  State<ListFilterSelectChip<Item>> createState() =>
-      _ListFilterSelectChipState<Item>();
-}
-
-class _ListFilterSelectChipState<Item extends ListItem>
-    extends State<ListFilterSelectChip<Item>> {
-  List<PopupMenuEntry<String>> getItems() {
-    List<PopupMenuEntry<String>> items = [];
-    for (var filter in widget.listFilter.filters) {
-      items.add(PopupMenuItem(value: filter.name, child: Text(filter.name)));
-    }
-    return items;
-  }
-
-  void onSelected(String action) {
-    widget.listFilter.selectedFilterIndex = widget.listFilter.filters
-        .indexWhere((element) => element.name == action);
-  }
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
-    bool isFirstSelected = widget.listFilter.selectedFilterIndex == 0;
+    bool isFirstSelected = listFilter.selectedIndex == 0;
 
     void showSelect() async {
-      showSelectBottomSheet(
-          context,
-          (List<int>? selectedIndices) {
-            setState(() {
-                widget.listFilter.selectedFilterIndex =
-                    selectedIndices?[0] ?? widget.listFilter.selectedFilterIndex;
-              });
-            widget.onChange();
-          },
-          title: widget.listFilter.name,
+      showSelectBottomSheet(context, (List<int>? selectedIndices) {
+        listFilter.selectedIndex =
+            selectedIndices?[0] ?? listFilter.selectedIndex;
+        onChange();
+      },
+          title: listFilter.displayName,
           description: "",
-          choices: widget.listFilter.filters
+          choices: listFilter.filters
               .map((e) => SelectChoice(name: e.name, value: e.id))
               .toList(),
-          initialSelectedIndices: [widget.listFilter.selectedFilterIndex],
-          multiSelect: widget.multiSelect);
+          initialSelectedIndices: [listFilter.selectedIndex],
+          multiSelect: false);
     }
 
-    print(
-        "------------------------------- $isFirstSelected ${widget.listFilter.selectedFilterIndex} ${widget.listFilter.selectedFilter.name}");
-
     return CardContainer(
-      color: widget.listFilter.selectedFilterIndex != 0
-          ? colorScheme.primary
-          : null,
+      color: isFirstSelected ? null : colorScheme.primary,
       onTap: showSelect,
       child: Row(
         children: [
@@ -115,7 +83,9 @@ class _ListFilterSelectChipState<Item extends ListItem>
             padding: const EdgeInsets.only(
                 top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
             child: Text(
-              isFirstSelected ? widget.listFilter.name : widget.listFilter.selectedFilter.name,
+              isFirstSelected
+                  ? listFilter.displayName
+                  : listFilter.selectedFilter.name,
               style: textTheme.headlineSmall?.copyWith(
                   color: isFirstSelected
                       ? colorScheme.onSurface
@@ -136,3 +106,70 @@ class _ListFilterSelectChipState<Item extends ListItem>
     );
   }
 }
+class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
+  final FilterMultiSelect<Item> listFilter;
+  final VoidCallback onChange;
+
+  const ListFilterMultiSelectChip({
+    super.key,
+    required this.listFilter,
+    required this.onChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+    List<int> selectedIndices = listFilter.selectedIndices;
+    bool isSelected = selectedIndices.isNotEmpty;
+
+    void showSelect() async {
+      showSelectBottomSheet(context, (List<int>? newSelectedIndices) {
+        print("_________ $newSelectedIndices");
+        listFilter.selectedIndices =
+            newSelectedIndices ?? listFilter.selectedIndices;
+        onChange();
+      },
+          title: listFilter.displayName,
+          description: "",
+          choices: listFilter.filters
+              .map((e) => SelectChoice(name: e.name, value: e.id))
+              .toList(),
+          initialSelectedIndices: selectedIndices,
+          multiSelect: true);
+    }
+
+    return CardContainer(
+      color: isSelected ? colorScheme.primary : null,
+      onTap: showSelect,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
+            child: Text(
+              !isSelected
+                  ? listFilter.displayName
+                  : listFilter.selectedIndices.length == 1 ? listFilter.selectedFilters[0].name :  "${listFilter.selectedIndices.length} selected",
+              style: textTheme.headlineSmall?.copyWith(
+                  color: isSelected
+                      ? colorScheme.onPrimary
+                      : colorScheme.onSurface),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 2.0, right: 8.0),
+            child: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: isSelected
+                  ? colorScheme.onPrimary.withOpacity(0.6)
+                  : colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

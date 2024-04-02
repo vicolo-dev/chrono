@@ -9,7 +9,9 @@ void showSelectBottomSheet(
     required String? description,
     required List<SelectChoice> choices,
     required List<int> initialSelectedIndices}) async {
-  List<int>? selectedIndices = await showModalBottomSheet<List<int>>(
+  List<int>? selectedIndices;
+
+  await showModalBottomSheet<List<int>>(
     context: context,
     isScrollControlled: true,
     enableDrag: true,
@@ -17,19 +19,31 @@ void showSelectBottomSheet(
       List<int> currentSelectedIndices = initialSelectedIndices;
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          void handleSelect(int index) {
+          void handleSelect(List<int> indices) {
             setState(() {
               if (multiSelect) {
-                if (currentSelectedIndices.contains(index)) {
-                  currentSelectedIndices.remove(index);
+                if (indices.length == 1) {
+                  if (currentSelectedIndices.contains(indices[0])) {
+                    currentSelectedIndices.remove(indices[0]);
+                  } else {
+                    currentSelectedIndices.add(indices[0]);
+                  }
                 } else {
-                  currentSelectedIndices.add(index);
+                  currentSelectedIndices = indices;
                 }
               } else {
-                currentSelectedIndices = [index];
+                if (indices.length == 1) {
+                  currentSelectedIndices = [indices[0]];
+                }
+                else{
+                  debugPrint("Too many indices");
+                }
               }
             });
-            Navigator.pop(context, currentSelectedIndices);
+            if (!multiSelect) {
+              Navigator.pop(context, currentSelectedIndices);
+            }
+            selectedIndices = currentSelectedIndices;
           }
 
           return SelectBottomSheet(
@@ -38,6 +52,7 @@ void showSelectBottomSheet(
             choices: choices,
             currentSelectedIndices: currentSelectedIndices,
             onSelect: handleSelect,
+            multiSelect: multiSelect,
           );
         },
       );

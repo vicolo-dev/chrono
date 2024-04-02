@@ -8,6 +8,7 @@ import 'package:clock_app/audio/logic/system_ringtones.dart';
 import 'package:clock_app/clock/data/default_favorite_cities.dart';
 import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
 import 'package:clock_app/clock/types/city.dart';
+import 'package:clock_app/common/data/default_tags.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/schedule_id.dart';
@@ -65,7 +66,7 @@ Future<void> initializeStorage() async {
   }
 
   await initList<Alarm>("alarms", []);
-  await initList<Tag>("tags", []);
+  await initList<Tag>("tags", defaultTags);
   await initList<AlarmEvent>("alarm_events", []);
   await initList<ScheduleId>('schedule_ids', []);
   await initList<ClockTimer>('timers', []);

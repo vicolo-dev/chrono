@@ -1,3 +1,4 @@
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:flutter/material.dart';
 
@@ -6,25 +7,25 @@ class Tag extends ListItem {
   final String name;
   final String description;
   final Color color;
-  Tag({required this.name, this.description = "", this.color = Colors.blue}):_id=UniqueKey().hashCode;
+  Tag(this.name, {this.description = "", this.color = Colors.blue}):_id=UniqueKey().hashCode;
 
-  Tag.fromJson(Map<String, dynamic> json):
-  _id = json['id'],
-  name = json['name'],
-  description = json['description'],
-  color = json['color'];
+  Tag.fromJson(Json json):
+  _id = json?['id'] ?? UniqueKey().hashCode,
+  name = json?['name'] ?? "Unknown",
+  description = json?['description'] ?? "",
+  color = Color(json?['color'] ?? 0);
 
   @override
-  Map<String, dynamic> toJson() => {
+  Json toJson() => {
     'id': _id,
     'name': name,
     'description': description,
-    'color': color
+    'color': color.value,
   };
 
   @override
   copy() {
-    return Tag(name: name, description: description, color: color);
+    return Tag(name, description: description, color: color);
   }
 
   @override

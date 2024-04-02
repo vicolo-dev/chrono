@@ -4,6 +4,7 @@ import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,7 @@ class ClockTimer extends CustomizableListItem {
           ? _settings.getSetting("Time To Full Volume").value
           : TimeDuration.zero;
   double get addLength => _settings.getSetting("Add Length").value;
+List<Tag> get tags => _settings.getSetting("Tags").value;
   TimeDuration get duration => _duration;
   TimeDuration get currentDuration => _currentDuration;
   int get remainingSeconds {

@@ -15,14 +15,14 @@ class SelectTextOptionCard extends StatelessWidget {
   final List<int> selectedIndices;
   final SelectChoice choice;
   final int index;
-  final void Function(int) onSelect;
+  final void Function(List<int>) onSelect;
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => onSelect(index),
+        onTap: () => onSelect([index]),
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: 16.0,
@@ -34,11 +34,11 @@ class SelectTextOptionCard extends StatelessWidget {
                       // checkColor: Colors.white,
                       // fillColor: MaterialStateProperty.resolveWith(getColor),
                       value: selectedIndices.contains(index),
-                      onChanged: (bool? value) => onSelect(index))
+                      onChanged: (bool? value) => onSelect([index]))
                   : Radio(
                       value: index,
                       groupValue: selectedIndices[0],
-                      onChanged: (dynamic value) => onSelect(index),
+                      onChanged: (dynamic value) => onSelect([index]),
                     ),
               Expanded(
                 flex: 999,
