@@ -56,13 +56,12 @@ void main() async {
     }
   });
 
-  String appDataDirectory = await getAppDataDirectoryPath();
-  String path = '$appDataDirectory/ringing-alarm.txt';
-  File file = File(path);
-  if (!file.existsSync()) {
-    file.createSync();
-  }
-  file.writeAsStringSync("", mode: FileMode.writeOnly);
-
   runApp(const App());
+  // String appDataDirectory = await getAppDataDirectoryPath();
+  // String path = '$appDataDirectory/ringing-alarm.txt';
+  // File file = File(path);
+  // if (!file.existsSync()) {
+  //   file.createSync();
+  // }
+  // file.writeAsStringSync("", mode: FileMode.writeOnly);
 }

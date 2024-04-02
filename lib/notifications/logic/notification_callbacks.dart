@@ -21,7 +21,9 @@ Future<void> onNotificationDisplayedMethod(
 /// Use this method to detect if the user dismissed a notification
 @pragma("vm:entry-point")
 Future<void> onDismissActionReceivedMethod(
-    ReceivedAction receivedAction) async {}
+    ReceivedAction receivedAction) async {
+  AlarmNotificationManager.handleNotificationDismiss(receivedAction);
+}
 
 /// Use this method to detect when the user taps on a notification or action button
 @pragma("vm:entry-point")

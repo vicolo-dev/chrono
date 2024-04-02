@@ -9,7 +9,6 @@ import 'package:clock_app/app.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
-import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
@@ -117,12 +116,12 @@ class AlarmNotificationManager {
 
   static Future<void> snoozeAlarm(
       int scheduleId, ScheduledNotificationType type) async {
-    stopAlarm(scheduleId, type, AlarmStopAction.snooze);
+    await stopAlarm(scheduleId, type, AlarmStopAction.snooze);
   }
 
   static Future<void> dismissAlarm(
       int scheduleId, ScheduledNotificationType type) async {
-    stopAlarm(scheduleId, type, AlarmStopAction.dismiss);
+    await stopAlarm(scheduleId, type, AlarmStopAction.dismiss);
   }
 
   static Future<void> stopAlarm(int scheduleId, ScheduledNotificationType type,
@@ -131,7 +130,7 @@ class AlarmNotificationManager {
     SendPort? sendPort = IsolateNameServer.lookupPortByName(stopAlarmPortName);
     sendPort?.send([scheduleId, type.name, action.name]);
 
-    closeNotification(type);
+    await closeNotification(type);
   }
 
   static void handleNotificationCreated(ReceivedNotification notification) {
@@ -155,6 +154,18 @@ class AlarmNotificationManager {
     );
   }
 
+  static Future<void> handleNotificationDismiss(ReceivedAction action) async {
+    Payload payload = action.payload!;
+    final type = ScheduledNotificationType.values.byName((payload['type'])!);
+    // FullScreenNotificationData data = alarmNotificationData[type]!;
+    // bool tasksRequired = payload['tasksRequired'] == 'true';
+
+    List<int> scheduleIds =
+        (json.decode((payload['scheduleIds'])!) as List<dynamic>).cast<int>();
+
+    await dismissAlarm(scheduleIds.first, type);
+  }
+
   static Future<void> handleNotificationAction(ReceivedAction action) async {
     Payload payload = action.payload!;
     final type = ScheduledNotificationType.values.byName((payload['type'])!);
@@ -166,14 +177,14 @@ class AlarmNotificationManager {
 
     switch (action.buttonKeyPressed) {
       case _snoozeActionKey:
-        snoozeAlarm(scheduleIds.first, type);
+        await snoozeAlarm(scheduleIds.first, type);
         break;
 
       case _dismissActionKey:
         if (tasksRequired) {
           await openNotificationScreen(data, scheduleIds);
         } else {
-          dismissAlarm(scheduleIds.first, type);
+          await dismissAlarm(scheduleIds.first, type);
         }
         break;
 
