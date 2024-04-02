@@ -49,7 +49,7 @@ class ClockTimer extends CustomizableListItem {
           ? _settings.getSetting("Time To Full Volume").value
           : TimeDuration.zero;
   double get addLength => _settings.getSetting("Add Length").value;
-List<Tag> get tags => _settings.getSetting("Tags").value;
+  List<Tag> get tags => _settings.getSetting("Tags").value;
   TimeDuration get duration => _duration;
   TimeDuration get currentDuration => _currentDuration;
   int get remainingSeconds {
@@ -111,13 +111,13 @@ List<Tag> get tags => _settings.getSetting("Tags").value;
   Future<void> setTime(TimeDuration newDuration) async {
     _currentDuration = TimeDuration.from(newDuration);
     _secondsRemainingOnPause = newDuration.inSeconds;
-    if(isRunning)
-   {await scheduleAlarm(
-        _id,
-        DateTime.now().add(Duration(seconds: remainingSeconds)),
-        'Timer.setTime',
-        type: ScheduledNotificationType.timer);
-   }
+    if (isRunning) {
+      await scheduleAlarm(
+          _id,
+          DateTime.now().add(Duration(seconds: remainingSeconds)),
+          'Timer.setTime()',
+          type: ScheduledNotificationType.timer);
+    }
   }
 
   Future<void> addTime() async {
@@ -126,12 +126,12 @@ List<Tag> get tags => _settings.getSetting("Tags").value;
     // _startTime = _startTime.subtract(addedDuration.toDuration);
     _secondsRemainingOnPause =
         _secondsRemainingOnPause + addedDuration.inSeconds;
-    if(isRunning){
-    await scheduleAlarm(
-        _id,
-        DateTime.now().add(Duration(seconds: remainingSeconds)),
-        'Timer.addTime',
-        type: ScheduledNotificationType.timer);
+    if (isRunning) {
+      await scheduleAlarm(
+          _id,
+          DateTime.now().add(Duration(seconds: remainingSeconds)),
+          'Timer.addTime()',
+          type: ScheduledNotificationType.timer);
     }
   }
 
@@ -147,6 +147,20 @@ List<Tag> get tags => _settings.getSetting("Tags").value;
     _state = TimerState.stopped;
     _currentDuration = TimeDuration.from(_duration);
     _secondsRemainingOnPause = _duration.inSeconds;
+  }
+
+  Future<void> update(String description) async {
+    if(remainingSeconds <= 0) {
+      await reset();
+      return;
+    }
+    if (isRunning) {
+      await scheduleAlarm(
+        _id,
+        DateTime.now().add(Duration(seconds: remainingSeconds)),
+        description,
+        type: ScheduledNotificationType.timer);
+    }
   }
 
   Future<void> toggleState() async {

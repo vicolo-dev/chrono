@@ -1,10 +1,5 @@
-import 'dart:async';
-
-import 'package:clock_app/alarm/logic/new_alarm_snackbar.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
-import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/data/app_info.dart';
-import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
@@ -13,7 +8,6 @@ import 'package:clock_app/onboarding/screens/onboarding_screen.dart';
 import 'package:clock_app/settings/data/appearance_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
-import 'package:clock_app/system/logic/handle_intents.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
@@ -21,7 +15,6 @@ import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 
 class App extends StatefulWidget {

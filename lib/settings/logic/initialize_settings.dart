@@ -37,8 +37,8 @@ Future<void> _clearSettings() async {
   // for (var timer in timers) {
   //   timer.reset();
   // }
-  cancelAllAlarms();
-  cancelAllTimers();
+  await cancelAllAlarms();
+  await cancelAllTimers();
   await GetStorage().erase();
 
   // Delete all files in custom melodies directory

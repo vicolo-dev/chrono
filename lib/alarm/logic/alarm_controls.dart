@@ -166,11 +166,11 @@ void triggerTimer(int scheduleId, Json params) async {
   ClockTimer? timer = getTimerById(scheduleId);
 
   if (timer == null || !timer.isRunning) {
-    await updateTimers();
+    await updateTimers("triggerTimer(): Updating all timers on trigger");
     return;
   }
 
-  await updateTimers();
+  await updateTimers("triggerTimer(): Updating all timers on trigger");
 
   // Notify the front-end to update the timers
   GetStorage().write("fullScreenNotificationRecentlyShown", true);
