@@ -44,6 +44,7 @@ class ClockTimer extends CustomizableListItem {
   AndroidAudioUsage get audioChannel =>
       _settings.getSetting("Audio Channel").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
+  double get volume => _settings.getSetting("Volume").value;
   TimeDuration get risingVolumeDuration =>
       _settings.getSetting("Rising Volume").value
           ? _settings.getSetting("Time To Full Volume").value

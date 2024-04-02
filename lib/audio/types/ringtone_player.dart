@@ -37,6 +37,7 @@ class RingtonePlayer {
       alarm.ringtone.uri,
       vibrate: alarm.vibrate,
       loopMode: LoopMode.one,
+      volume: alarm.volume / 100,
       secondsToMaxVolume: alarm.risingVolumeDuration.inSeconds,
     );
   }
@@ -49,6 +50,7 @@ class RingtonePlayer {
       timer.ringtone.uri,
       vibrate: timer.vibrate,
       loopMode: LoopMode.one,
+      volume: timer.volume/100,
       secondsToMaxVolume: timer.risingVolumeDuration.inSeconds,
     );
   }
@@ -57,6 +59,7 @@ class RingtonePlayer {
     String ringtoneUri, {
     bool vibrate = false,
     LoopMode loopMode = LoopMode.one,
+    double volume = 1.0,
     int secondsToMaxVolume = 0,
   }) async {
     RingtoneManager.lastPlayedRingtoneUri = ringtoneUri;
@@ -67,13 +70,14 @@ class RingtonePlayer {
     await activePlayer?.stop();
     await activePlayer?.setLoopMode(loopMode);
     await activePlayer?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
+    await activePlayer?.setVolume(volume);
 
     if (secondsToMaxVolume > 0) {
       for (int i = 0; i <= 10; i++) {
         Future.delayed(
           Duration(milliseconds: i * (secondsToMaxVolume * 100)),
           () {
-            activePlayer?.setVolume(i / 10);
+            activePlayer?.setVolume((i / 10) * volume);
           },
         );
       }
