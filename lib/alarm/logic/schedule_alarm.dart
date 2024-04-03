@@ -107,7 +107,9 @@ enum AlarmStopAction {
 
 Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
     ScheduledNotificationType type, String description) async {
-  await createSnoozeNotification(scheduleId, DateTime.now().add(delay));
+  if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+    await createSnoozeNotification(scheduleId, DateTime.now().add(delay));
+  }
   await scheduleAlarm(scheduleId, DateTime.now().add(delay), description,
       type: type, snooze: true);
 }

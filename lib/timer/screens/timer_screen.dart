@@ -6,7 +6,6 @@ import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/timer/data/timer_list_filters.dart';
-import 'package:clock_app/timer/logic/timer_notification.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
 import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
 import 'package:clock_app/timer/widgets/timer_picker.dart';
