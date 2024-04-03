@@ -4,27 +4,28 @@ import 'package:clock_app/common/widgets/fields/select_field/select_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
-class SelectSettingCard<T> extends StatefulWidget {
-  const SelectSettingCard({
+class MultiSelectSettingCard<T> extends StatefulWidget {
+  const MultiSelectSettingCard({
     super.key,
     required this.setting,
     this.showAsCard = false,
     this.onChanged,
   });
-  final SelectSetting<T> setting;
+  final MultiSelectSetting<T> setting;
   final void Function(T)? onChanged;
   final bool showAsCard;
 
   @override
-  State<SelectSettingCard<T>> createState() => _SelectSettingCardState<T>();
+  State<MultiSelectSettingCard<T>> createState() => _MultiSelectSettingCardState<T>();
 }
 
-class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
+class _MultiSelectSettingCardState<T> extends State<MultiSelectSettingCard<T>> {
   @override
   Widget build(BuildContext context) {
     SelectField selectWidget = SelectField(
-      selectedIndices: [widget.setting.selectedIndex],
+      selectedIndices: widget.setting.selectedIndices,
       title: widget.setting.name,
+      multiSelect: true,
       choices: widget.setting.options
           .map((option) => SelectChoice(
               name: option.name,
@@ -33,7 +34,7 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
           .toList(),
       onChanged: (value) {
         setState(() {
-          widget.setting.setValue(context, value[0]);
+          widget.setting.setValue(context, value);
         });
         widget.onChanged?.call(widget.setting.value);
       },

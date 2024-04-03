@@ -1,25 +1,25 @@
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
-import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:flutter/material.dart';
 
-class TimerPresetCard extends StatefulWidget {
-  const TimerPresetCard({
+class TagCard extends StatefulWidget {
+  const TagCard({
     super.key,
-    required this.preset,
+    required this.tag,
     required this.onPressDelete,
     required this.onPressDuplicate,
   });
 
-  final TimerPreset preset;
+  final Tag tag;
   final VoidCallback onPressDelete;
   final VoidCallback onPressDuplicate;
 
   @override
-  State<TimerPresetCard> createState() => _TimerPresetCardState();
+  State<TagCard> createState() => _TagCardState();
 }
 
-class _TimerPresetCardState extends State<TimerPresetCard> {
+class _TagCardState extends State<TagCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,15 +32,8 @@ class _TimerPresetCardState extends State<TimerPresetCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.preset.name,
+                    widget.tag.name,
                     style: Theme.of(context).textTheme.displaySmall,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                  ),
-                  Text(
-                    widget.preset.duration.toReadableString(),
-                    style: Theme.of(context).textTheme.bodyMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,

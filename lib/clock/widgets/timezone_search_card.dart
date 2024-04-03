@@ -2,16 +2,17 @@ import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/clock/widgets/timezone_card_content.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
+import 'package:clock_app/common/widgets/clock/clock.dart';
 import 'package:flutter/material.dart';
+import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;
 
 class TimeZoneSearchCard extends StatelessWidget {
   TimeZoneSearchCard(
-      {Key? key,
+      {super.key,
       required this.city,
       required this.onTap,
-      this.disabled = false})
-      : super(key: key) {
+      this.disabled = false}) {
     timezoneLocation = timezone.getLocation(city.timezone);
   }
 
@@ -22,6 +23,9 @@ class TimeZoneSearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color? textColor = disabled
+        ? Theme.of(context).colorScheme.onBackground.withOpacity(0.6)
+        : null;
     return SizedBox(
       width: double.infinity,
       child: CardContainer(
@@ -35,15 +39,64 @@ class TimeZoneSearchCard extends StatelessWidget {
             onTap();
           }
         },
-        child: TimezoneCardContent(
-          title: city.name,
-          subtitle: city.country,
-          timezoneLocation: timezoneLocation,
-          textColor: disabled
-              ? Theme.of(context).colorScheme.onBackground.withOpacity(0.6)
-              : null,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      city.name,
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            color: textColor,
+                          ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                    ),
+                    const SizedBox(height: 4),
+                    TimerBuilder.periodic(
+                      const Duration(seconds: 1),
+                      builder: (context) {
+                        return Text(
+                          city.country,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: textColor,
+                                  ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Column(
+                children: [
+                  Clock(
+                    timezoneLocation: timezoneLocation,
+                    scale: 0.3,
+                    color: textColor,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
+// TimezoneCardContent(
+//           title: city.name,
+//           subtitle: city.country,
+//           timezoneLocation: timezoneLocation,
+//           textColor: ,
+//         ),
+//       ),
+//     );
   }
 }

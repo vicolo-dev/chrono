@@ -1,11 +1,9 @@
-import 'package:clock_app/audio/types/audio.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:flutter/material.dart';
 
 class AudioFieldCard extends StatelessWidget {
-  const AudioFieldCard({Key? key, required this.title, required this.choice})
-      : super(key: key);
+  const AudioFieldCard({super.key, required this.title, required this.choice});
 
   final String title;
   final SelectChoice<FileItem> choice;

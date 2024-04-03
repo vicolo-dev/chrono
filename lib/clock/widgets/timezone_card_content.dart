@@ -5,12 +5,12 @@ import 'package:timezone/timezone.dart' as timezone;
 
 class TimezoneCardContent extends StatelessWidget {
   const TimezoneCardContent({
-    Key? key,
+    super.key,
     required this.timezoneLocation,
     required this.title,
     required this.subtitle,
     this.textColor,
-  }) : super(key: key);
+  });
 
   final String title;
   final String subtitle;
@@ -55,10 +55,14 @@ class TimezoneCardContent extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Clock(
-            timezoneLocation: timezoneLocation,
-            scale: 0.3,
-            color: textColor,
+          Column(
+            children: [
+              Clock(
+                timezoneLocation: timezoneLocation,
+                scale: 0.3,
+                color: textColor,
+              ),
+            ],
           ),
         ],
       ),

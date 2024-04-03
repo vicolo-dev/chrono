@@ -11,6 +11,7 @@ import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/notification_type.dart';
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/weekday.dart';
@@ -74,8 +75,10 @@ class Alarm extends CustomizableListItem {
   Type get scheduleType => _settings.getSetting("Type").value;
   FileItem get ringtone => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
+  double get volume => _settings.getSetting("Volume").value;
   double get snoozeLength => _settings.getSetting("Length").value;
   List<AlarmTask> get tasks => _settings.getSetting("Tasks").value;
+  List<Tag> get tags => _settings.getSetting("Tags").value;
   int get maxSnoozes => _settings.getSetting("Max Snoozes").value.toInt();
   bool get canBeDisabledWhenSnoozed =>
       !_settings.getSetting("Prevent Disabling").value;

@@ -9,7 +9,7 @@ class ToggleOption<T> {
 
 class ToggleField<T> extends StatefulWidget {
   const ToggleField({
-    Key? key,
+    super.key,
     required this.selectedItems,
     required this.onChange,
     required this.options,
@@ -17,7 +17,7 @@ class ToggleField<T> extends StatefulWidget {
     this.description,
     this.innerPadding = 0,
     this.square = true,
-  }) : super(key: key);
+  });
 
   final String? name;
   final String? description;

@@ -4,7 +4,7 @@ import 'package:clock_app/timer/widgets/duration_picker.dart';
 import 'package:flutter/material.dart';
 
 class TimerDurationPicker extends StatefulWidget {
-  const TimerDurationPicker({Key? key, required this.timer}) : super(key: key);
+  const TimerDurationPicker({super.key, required this.timer});
 
   final ClockTimer timer;
 

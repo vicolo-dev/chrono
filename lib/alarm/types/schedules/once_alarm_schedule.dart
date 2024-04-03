@@ -32,7 +32,7 @@ class OnceAlarmSchedule extends AlarmSchedule {
       return false;
     }
     DateTime alarmDate = getDailyAlarmDate(time);
-    return _alarmRunner.schedule(alarmDate, description);
+    return await _alarmRunner.schedule(alarmDate, description);
   }
 
   @override

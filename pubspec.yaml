@@ -32,7 +32,7 @@ dependencies:
   just_audio: ^0.9.31
   awesome_notifications: ^0.9.3
   audio_session: ^0.1.13
-  flutter_windowmanager: ^0.2.0
+  # flutter_windowmanager: ^0.2.0
   flutter_fgbg: ^0.3.0
   move_to_background: ^1.0.2
   vibration: ^1.7.6

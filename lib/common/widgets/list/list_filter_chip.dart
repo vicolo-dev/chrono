@@ -1,18 +1,19 @@
+import 'package:clock_app/common/logic/show_select.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:flutter/material.dart';
 
 class ListFilterChip<Item extends ListItem> extends StatelessWidget {
-  const ListFilterChip(
-      {super.key,
-      required this.listFilter,
-      required this.onTap,
-      required this.isSelected});
+  const ListFilterChip({
+    super.key,
+    required this.listFilter,
+    required this.onChange,
+  });
 
   final ListFilter<Item> listFilter;
-  final VoidCallback onTap;
-  final bool isSelected;
+  final VoidCallback onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +22,19 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
     TextTheme textTheme = theme.textTheme;
 
     return CardContainer(
-      color: isSelected ? colorScheme.primary : null,
-      onTap: onTap,
+      color: listFilter.isSelected ? colorScheme.primary : null,
+      onTap: () {
+        listFilter.isSelected = !listFilter.isSelected;
+        onChange();
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Text(
           listFilter.name,
           style: textTheme.headlineSmall?.copyWith(
-            color: isSelected ? colorScheme.onPrimary : colorScheme.onSurface,
+            color: listFilter.isSelected
+                ? colorScheme.onPrimary
+                : colorScheme.onSurface,
           ),
         ),
       ),
@@ -37,57 +43,133 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
 }
 
 class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
+  final FilterSelect<Item> listFilter;
+  final VoidCallback onChange;
+
   const ListFilterSelectChip({
     super.key,
     required this.listFilter,
-    required this.onTap,
-    required this.isSelected,
+    required this.onChange,
   });
-
-  final ListFilterSelect<Item> listFilter;
-  final VoidCallback onTap;
-  final bool isSelected;
-
-  List<PopupMenuEntry<String>> getItems() {
-    List<PopupMenuEntry<String>> items = [];
-    for (var filter in listFilter.filters) {
-      items.add(PopupMenuItem(value: filter.name, child: Text(filter.name)));
-    }
-    return items;
-  }
-
-  void onSelected(String action) {
-    listFilter.selectedFilterIndex =
-        listFilter.filters.indexWhere((element) => element.name == action);
-  }
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
+    bool isFirstSelected = listFilter.selectedIndex == 0;
+
+    void showSelect() async {
+      showSelectBottomSheet(context, (List<int>? selectedIndices) {
+        listFilter.selectedIndex =
+            selectedIndices?[0] ?? listFilter.selectedIndex;
+        onChange();
+      },
+          title: listFilter.displayName,
+          description: "",
+          choices: listFilter.filters
+              .map((e) => SelectChoice(name: e.name, value: e.id))
+              .toList(),
+          initialSelectedIndices: [listFilter.selectedIndex],
+          multiSelect: false);
+    }
 
     return CardContainer(
-      color: isSelected ? colorScheme.primary : null,
-      // onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Row(
-          children: [
-            Text(
-              listFilter.name,
+      color: isFirstSelected ? null : colorScheme.primary,
+      onTap: showSelect,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
+            child: Text(
+              isFirstSelected
+                  ? listFilter.displayName
+                  : listFilter.selectedFilter.name,
               style: textTheme.headlineSmall?.copyWith(
-                color:
-                    isSelected ? colorScheme.onPrimary : colorScheme.onSurface,
-              ),
+                  color: isFirstSelected
+                      ? colorScheme.onSurface
+                      : colorScheme.onPrimary),
             ),
-            Icon(
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 2.0, right: 8.0),
+            child: Icon(
               Icons.keyboard_arrow_down_rounded,
-              color: colorScheme.onSurface,
+              color: isFirstSelected
+                  ? colorScheme.onSurface.withOpacity(0.6)
+                  : colorScheme.onPrimary.withOpacity(0.6),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
+class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
+  final FilterMultiSelect<Item> listFilter;
+  final VoidCallback onChange;
+
+  const ListFilterMultiSelectChip({
+    super.key,
+    required this.listFilter,
+    required this.onChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+    List<int> selectedIndices = listFilter.selectedIndices;
+    bool isSelected = selectedIndices.isNotEmpty;
+
+    void showSelect() async {
+      showSelectBottomSheet(context, (List<int>? newSelectedIndices) {
+        print("_________ $newSelectedIndices");
+        listFilter.selectedIndices =
+            newSelectedIndices ?? listFilter.selectedIndices;
+        onChange();
+      },
+          title: listFilter.displayName,
+          description: "",
+          choices: listFilter.filters
+              .map((e) => SelectChoice(name: e.name, value: e.id))
+              .toList(),
+          initialSelectedIndices: selectedIndices,
+          multiSelect: true);
+    }
+
+    return CardContainer(
+      color: isSelected ? colorScheme.primary : null,
+      onTap: showSelect,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
+            child: Text(
+              !isSelected
+                  ? listFilter.displayName
+                  : listFilter.selectedIndices.length == 1 ? listFilter.selectedFilters[0].name :  "${listFilter.selectedIndices.length} selected",
+              style: textTheme.headlineSmall?.copyWith(
+                  color: isSelected
+                      ? colorScheme.onPrimary
+                      : colorScheme.onSurface),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 2.0, right: 8.0),
+            child: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: isSelected
+                  ? colorScheme.onPrimary.withOpacity(0.6)
+                  : colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

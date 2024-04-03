@@ -8,8 +8,10 @@ import 'package:clock_app/settings/widgets/custom_setting_card.dart';
 
 import 'package:clock_app/settings/widgets/date_setting_card.dart';
 import 'package:clock_app/settings/widgets/duration_setting_card.dart';
+import 'package:clock_app/settings/widgets/dynamic_multi_select_setting_card.dart';
 import 'package:clock_app/settings/widgets/dynamic_select_setting_card.dart';
 import 'package:clock_app/settings/widgets/list_setting_card.dart';
+import 'package:clock_app/settings/widgets/multi_select_setting_card.dart';
 import 'package:clock_app/settings/widgets/select_setting_card.dart';
 import 'package:clock_app/settings/widgets/setting_action_card.dart';
 import 'package:clock_app/settings/widgets/setting_page_link_card.dart';
@@ -95,7 +97,22 @@ Widget? getSettingItemWidget(
         showAsCard: showAsCard,
         onChanged: onChanged,
       );
-    } else if (item is SwitchSetting) {
+    } 
+    if(item is MultiSelectSetting){
+      return MultiSelectSettingCard(
+      setting: item,
+      showAsCard: showAsCard,
+      onChanged: onChanged,
+      );
+    }
+    if(item is DynamicMultiSelectSetting){
+      return DynamicMultiSelectSettingCard(
+      setting: item,
+      showAsCard: showAsCard,
+      onChanged: onChanged,
+      );
+    }
+    else if (item is SwitchSetting) {
       return SwitchSettingCard(
         setting: item,
         showAsCard: showAsCard,

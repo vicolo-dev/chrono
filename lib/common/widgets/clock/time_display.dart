@@ -4,13 +4,13 @@ import 'package:intl/intl.dart';
 
 class TimeDisplay extends StatelessWidget {
   const TimeDisplay({
-    Key? key,
+    super.key,
     required this.format,
     required this.fontSize,
     this.height,
     this.color,
     required this.dateTime,
-  }) : super(key: key);
+  });
 
   final DateTime dateTime;
   final String format;

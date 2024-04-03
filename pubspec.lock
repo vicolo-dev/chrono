@@ -30,7 +30,7 @@ packages:
     description:
       path: "packages/android_alarm_manager_plus"
       ref: alarm_show_intent
-      resolved-ref: c29cb7e9e7a2319dac64d42dcf31deec8ac1280d
+      resolved-ref: "2b9a1f38f0f5f647153507cae3a0f00c896fd06a"
       url: "https://github.com/AhsanSarwar45/plus_plugins"
     source: git
     version: "4.0.1"
@@ -410,14 +410,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_windowmanager:
-    dependency: "direct main"
-    description:
-      name: flutter_windowmanager
-      sha256: b4d0bc06f6777952b729c0cdb7ce9ad1ecabd8b8b1cb0acb57a36621457dab1b
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   fuzzywuzzy:
     dependency: "direct main"
     description:

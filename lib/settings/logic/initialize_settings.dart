@@ -8,9 +8,11 @@ import 'package:clock_app/audio/logic/system_ringtones.dart';
 import 'package:clock_app/clock/data/default_favorite_cities.dart';
 import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
 import 'package:clock_app/clock/types/city.dart';
+import 'package:clock_app/common/data/default_tags.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/schedule_id.dart';
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
@@ -35,8 +37,8 @@ Future<void> _clearSettings() async {
   // for (var timer in timers) {
   //   timer.reset();
   // }
-  cancelAllAlarms();
-  cancelAllTimers();
+  await cancelAllAlarms();
+  await cancelAllTimers();
   await GetStorage().erase();
 
   // Delete all files in custom melodies directory
@@ -61,18 +63,10 @@ Future<void> initializeStorage() async {
     // This is used to show alarm and timer edit animations
     GetStorage().write('first_alarm_created', false);
     GetStorage().write('first_timer_created', false);
-
-    // initializeDefaultFavoriteCities();
-    // initializeDefaultTimerPresets();
-    // await saveList<ClockTimer>('timers', []);
-    // await saveList<FileItem>('ringtones', await getSystemRingtones());
-    //   await saveList<ClockStopwatch>('stopwatches', [ClockStopwatch()]);
-    //   await saveList<ColorSchemeData>('color_schemes', defaultColorSchemes);
-    //   await saveList<StyleTheme>('style_themes', defaultStyleThemes);
-    //   await saveTextFile("time_format_string", "h:mm a");
   }
 
   await initList<Alarm>("alarms", []);
+  await initList<Tag>("tags", defaultTags);
   await initList<AlarmEvent>("alarm_events", []);
   await initList<ScheduleId>('schedule_ids', []);
   await initList<ClockTimer>('timers', []);

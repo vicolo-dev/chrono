@@ -8,3 +8,9 @@ void printIsolateInfo() {
         "Isolate: ${Isolate.current.debugName}, id: ${Isolate.current.hashCode}");
   }
 }
+
+void printDebug(String message) {
+  if (kDebugMode) {
+    print(message);
+  }
+}

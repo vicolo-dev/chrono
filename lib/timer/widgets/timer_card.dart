@@ -91,7 +91,7 @@ class _TimerCardState extends State<TimerCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircularProgressBar(
-              size: 56,
+              size: 50,
               valueNotifier: valueNotifier,
               progressStrokeWidth: 8,
               backStrokeWidth: 8,
@@ -139,7 +139,7 @@ class _TimerCardState extends State<TimerCard> {
                   Text(
                     TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
                     style: textTheme.displayMedium?.copyWith(
-                      fontSize: remainingSeconds > 3600 ? 36 : 44,
+                      fontSize: remainingSeconds > 3600 ? 28 : 40,
                     ),
                   ),
                 ],
