@@ -124,10 +124,10 @@ class SelectBottomSheet extends StatelessWidget {
             Flexible(
               child: _getOptionCard(),
             ),
-            if (multiSelect) const SizedBox(height: 8.0),
+            // if (multiSelect) const SizedBox(height: 8.0),
             if (multiSelect)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.only(left: 16.0, right:16.0, bottom: 4.0),
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                   Row(
                     children: [
