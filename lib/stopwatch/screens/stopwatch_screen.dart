@@ -12,6 +12,7 @@ import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:clock_app/stopwatch/logic/stopwatch_notification.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/stopwatch/widgets/lap_card.dart';
@@ -143,7 +144,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     if (_stopwatch.currentLapTime.inMilliseconds == 0) return;
     _listController.addItem(_stopwatch.getLap());
     saveList('stopwatches', [_stopwatch]);
-    _updateNotification();
+    updateStopwatchNotification(_stopwatch);
   }
 
   void _handleToggleState() {
@@ -156,50 +157,15 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     } else {
       udpateNotificationAfter1Second?.cancel();
       udpateNotificationAfter1Second = null;
-      _updateNotification();
+      updateStopwatchNotification(_stopwatch);
     }
   }
 
   Future<void> showProgressNotification() async {
     udpateNotificationAfter1Second =
         Timer.periodic(const Duration(seconds: 1), (timer) {
-      _updateNotification();
+      updateStopwatchNotification(_stopwatch);
     });
-  }
-
-  void _updateNotification() {
-    AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: _stopwatch.id,
-          channelKey: stopwatchNotificationChannelKey,
-          title: 'Stopwatch',
-          body:
-              "${TimeDuration.fromMilliseconds(_stopwatch.elapsedMilliseconds).toTimeString(showMilliseconds: false)} (lap ${_stopwatch.laps.length + 1})",
-          category: NotificationCategory.StopWatch,
-        ),
-        actionButtons: [
-          NotificationActionButton(
-            showInCompactView: true,
-            key: "stopwatch_toggle_state",
-            label: _stopwatch.isRunning ? 'Pause' : 'Start',
-            actionType: ActionType.SilentAction,
-            autoDismissible: false,
-          ),
-          NotificationActionButton(
-            showInCompactView: true,
-            key: "stopwatch_reset",
-            label: 'Reset',
-            actionType: ActionType.SilentAction,
-            autoDismissible: false,
-          ),
-          NotificationActionButton(
-            showInCompactView: true,
-            key: "stopwatch_lap",
-            label: 'Lap',
-            actionType: ActionType.SilentAction,
-            autoDismissible: false,
-          )
-        ]);
   }
 
   @override

@@ -96,7 +96,7 @@ void triggerAlarm(int scheduleId, Json params) async {
   DateTime now = DateTime.now();
 
   // if alarm is triggered more than 10 minutes after the scheduled time, ignore
-  if (alarm == null ||
+  if (alarm == null || alarm.isEnabled == false ||
       alarm.currentScheduleDateTime == null ||
       now.millisecondsSinceEpoch <
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||

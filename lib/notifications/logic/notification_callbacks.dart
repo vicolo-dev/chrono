@@ -1,5 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:clock_app/alarm/logic/update_alarms.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
+import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 
@@ -38,7 +41,25 @@ Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
       AlarmNotificationManager.handleNotificationAction(receivedAction);
       break;
     case reminderNotificationChannelKey:
-
+      if (receivedAction.buttonKeyPressed == 'alarm_skip') {
+        Payload payload = receivedAction.payload!;
+        int? scheduleId = int.tryParse(payload['scheduleId']);
+        if (scheduleId != null) {
+          await updateAlarmById(scheduleId, (alarm) async {
+            alarm.setShouldSkip(true);
+            // await alarm.update("Skipped alarm");
+          });
+        }
+      } else if (receivedAction.buttonKeyPressed == 'alarm_skip_snooze') {
+        Payload payload = receivedAction.payload!;
+        int? scheduleId = int.tryParse(payload['scheduleId']);
+        if (scheduleId != null) {
+          await updateAlarmById(scheduleId, (alarm) async {
+            await alarm.cancelSnooze();
+            await alarm.update("Skipped snooze");
+          });
+        }
+      }
       // ReminderNotificationManager.handleNotificationAction(receivedAction);
       break;
     case stopwatchNotificationChannelKey:

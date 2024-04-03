@@ -3,7 +3,6 @@ import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
-import 'package:flutter/material.dart';
 
 Future<void> createAlarmReminderNotification(int id, DateTime time) async {
   DateTime now = DateTime.now();
@@ -27,8 +26,18 @@ Future<void> createAlarmReminderNotification(int id, DateTime time) async {
       // notificationLayout: NotificationLayout.BigPicture,
       // bigPicture: 'asset://assets/images/delivery.jpeg',
       payload: {'scheduleId': '$id'},
+
       // autoDismissible: false,
     ),
+    actionButtons: [
+      NotificationActionButton(
+        showInCompactView: true,
+        key: "alarm_skip",
+        label: 'Skip alarm',
+        actionType: ActionType.SilentAction,
+        autoDismissible: true,
+      )
+    ],
     schedule: NotificationCalendar.fromDate(
       date: notificationTime,
       preciseAlarm: true,
@@ -53,5 +62,14 @@ Future<void> createSnoozeNotification(int id, DateTime time) async {
       payload: {'scheduleId': '$id'},
       // autoDismissible: false,
     ),
+    actionButtons: [
+      NotificationActionButton(
+        showInCompactView: true,
+        key: "alarm_skip_snooze",
+        label: 'Dismiss alarm',
+        actionType: ActionType.SilentAction,
+        autoDismissible: true,
+      )
+    ],
   );
 }

@@ -61,6 +61,7 @@ Future<void> updateAlarmById(
   await callback(alarm);
   alarms[alarmIndex] = alarm;
   await saveList("alarms", alarms);
+
   SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
   sendPort?.send("updateAlarms");
 }
