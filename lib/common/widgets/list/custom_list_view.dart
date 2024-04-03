@@ -306,6 +306,7 @@ class _CustomListViewState<Item extends ListItem>
                 : Container(),
             SlidableAutoCloseBehavior(
               child: AutomaticAnimatedListView<Item>(
+
                 list: widget.items,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

@@ -34,6 +34,7 @@ Future<void> _renderWidget(WidgetTester tester) async {
       home: TimeZoneCard(
         city: sampleCity,
         key: testKey,
+        onDelete: (){},
       ),
     ),
   );
