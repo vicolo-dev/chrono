@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/audio/logic/system_ringtones.dart';
 import 'package:clock_app/clock/data/default_favorite_cities.dart';
-import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/common/data/default_tags.dart';
 import 'package:clock_app/common/data/paths.dart';

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:path/path.dart';
@@ -46,7 +47,12 @@ void unwatchList(String key) {
 }
 
 List<T> loadListSync<T extends JsonSerializable>(String key) {
+  try{
   return listFromString<T>(loadTextFileSync(key));
+  }catch(e){
+    debugPrint("Error loading list ($key): $e");
+    return [];
+  }
 }
 
 Future<List<T>> loadList<T extends JsonSerializable>(String key) async {

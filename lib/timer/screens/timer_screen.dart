@@ -1,11 +1,16 @@
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/picker_result.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
+import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/timer/data/timer_list_filters.dart';
+import 'package:clock_app/timer/logic/timer_notification.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
 import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
 import 'package:clock_app/timer/widgets/timer_picker.dart';
@@ -39,48 +44,62 @@ class _TimerScreenState extends State<TimerScreen> {
     _listController.changeItems((timers) => {});
   }
 
+  void onTimerUpdate() async {
+    if (mounted) {
+      setState(() {});
+      // _listController.changeItems((timers) => {});
+    }
+    showProgressNotification();
+  }
+
   @override
   void initState() {
     super.initState();
 
     _showFilters = appSettings.getGroup("Timer").getSetting("Show Filters");
-
     _showFilters.addListener(update);
+    ListenerManager.addOnChangeListener("timers", onTimerUpdate);
+    showProgressNotification();
   }
 
   @override
   void dispose() {
     _showFilters.removeListener(update);
+    // ListenerManager.removeOnChangeListener("timers", onTimerUpdate);
     super.dispose();
   }
 
-   Future<void> _handleDeleteTimer(ClockTimer deletedTimer) async{
+  Future<void> _handleDeleteTimer(ClockTimer deletedTimer) async {
     await deletedTimer.reset();
+    showProgressNotification();
     // _listController.deleteItem(deletedTimer);
   }
 
-   Future<void> _handleToggleState(ClockTimer timer) async {
+  Future<void> _handleToggleState(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     await timer.toggleState();
     _listController.changeItems((timers) => timers[index] = timer);
+    showProgressNotification();
   }
 
-   Future<void> _handleResetTimer(ClockTimer timer) async {
+  Future<void> _handleResetTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     await timer.reset();
     _listController.changeItems((timers) => timers[index] = timer);
+    showProgressNotification();
   }
 
   Future<void> _handleAddTimeToTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     await timer.addTime();
     _listController.changeItems((timers) => timers[index] = timer);
+    showProgressNotification();
   }
 
   Future<ClockTimer?> _openCustomizeTimerScreen(
     ClockTimer timer, {
     Future<void> Function(ClockTimer)? onSave,
-    Future<void>  Function()? onCancel,
+    Future<void> Function()? onCancel,
     bool isNewTimer = false,
   }) async {
     return openCustomizeScreen(
@@ -97,20 +116,37 @@ class _TimerScreenState extends State<TimerScreen> {
 
   Future<ClockTimer?> _handleCustomizeTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    return await _openCustomizeTimerScreen(timer, onSave: (newTimer) async {
+    final newTimer =
+        await _openCustomizeTimerScreen(timer, onSave: (newTimer) async {
       await newTimer.reset();
       await newTimer.start();
       _listController.changeItems((timers) => timers[index] = newTimer);
     });
+    showProgressNotification();
+    return newTimer;
   }
-  // Future<void> showProgressNotification() async {
-  //
-  //   updateNotificationInterval?.cancel();
-  //   updateNotificationInterval =
-  //       Timer.periodic(const Duration(seconds: 1), (timer) {
-  //     updateTimerNotification();
-  //   });
-  // }
+
+  Future<void> showProgressNotification() async {
+    final runningTimers = (await loadList<ClockTimer>("timers"))
+        .where((timer) => timer.isRunning)
+        .toList();
+    if (runningTimers.isEmpty) {
+      AwesomeNotifications()
+          .cancelNotificationsByChannelKey(timerNotificationChannelKey);
+      updateNotificationInterval?.cancel();
+      return;
+    }
+    // Get timer with lowest remaining time
+    final timer = runningTimers
+        .reduce((a, b) => a.remainingSeconds < b.remainingSeconds ? a : b);
+
+    updateNotificationInterval?.cancel();
+    updateNotificationInterval =
+        Timer.periodic(const Duration(seconds: 1), (t) {
+      updateTimerNotification(timer, runningTimers.length);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -170,6 +206,7 @@ class _TimerScreenState extends State<TimerScreen> {
               await timer.start();
               _listController.addItem(timer);
             }
+            showProgressNotification();
           }
         },
       )
