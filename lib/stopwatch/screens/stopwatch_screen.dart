@@ -135,6 +135,8 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     });
     saveList('stopwatches', [_stopwatch]);
     AwesomeNotifications().dismiss(_stopwatch.id);
+    udpateNotificationAfter1Second?.cancel();
+    udpateNotificationAfter1Second = null;
   }
 
   void _handleAddLap() {

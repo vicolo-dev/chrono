@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/types/schedule_id.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:clock_app/notifications/logic/reminder_notification.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 
 Future<bool> scheduleAlarm(
@@ -55,7 +55,7 @@ Future<bool> scheduleAlarm(
     await saveList<ScheduleId>(name, scheduleIds);
 
     if (type == ScheduledNotificationType.alarm) {
-      await createAlarmReminderNotification(scheduleId, startDate, snooze);
+      await createAlarmReminderNotification(scheduleId, startDate);
     }
 
     // Scheduling the actual alarm
@@ -107,6 +107,7 @@ enum AlarmStopAction {
 
 Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
     ScheduledNotificationType type, String description) async {
+  await createSnoozeNotification(scheduleId, DateTime.now().add(delay));
   await scheduleAlarm(scheduleId, DateTime.now().add(delay), description,
       type: type, snooze: true);
 }
