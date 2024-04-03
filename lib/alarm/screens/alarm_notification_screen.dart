@@ -40,7 +40,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
 
   void _setNextWidget() {
     setState(() {
-      if (_currentIndex == -1) {
+      if (_currentIndex < 0) {
         _currentWidget = actionWidget;
       } else if (_currentIndex >= alarm.tasks.length) {
         if (widget.onDismiss != null) {
