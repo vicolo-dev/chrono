@@ -16,11 +16,14 @@ class SlideNotificationAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SlideAction(
-      leftText: onSnooze != null ? snoozeLabel : null,
-      rightText: dismissLabel,
-      onSubmitRight: onDismiss,
-      onSubmitLeft: onSnooze,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: SlideAction(
+        leftText: onSnooze != null ? snoozeLabel : null,
+        rightText: dismissLabel,
+        onSubmitRight: onDismiss,
+        onSubmitLeft: onSnooze,
+      ),
     );
   }
 }

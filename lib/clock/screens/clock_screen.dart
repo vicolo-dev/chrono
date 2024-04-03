@@ -10,7 +10,7 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
 class ClockScreen extends StatefulWidget {
-  const ClockScreen({Key? key}) : super(key: key);
+  const ClockScreen({super.key});
 
   @override
   State<ClockScreen> createState() => _ClockScreenState();
