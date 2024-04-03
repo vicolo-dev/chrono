@@ -7,7 +7,6 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/linear_progress_bar.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
-import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -40,7 +39,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   late Setting _showFastestLapBarSetting;
   late Setting _showSlowestLapBarSetting;
   late Setting _showAverageLapBarSetting;
-  Timer? udpateNotificationAfter1Second;
+  Timer? updateNotificationInterval;
 
   late final ClockStopwatch _stopwatch;
 
@@ -111,6 +110,10 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
         'stopwatch_toggle_state', _handleToggleState);
     ListenerManager.addOnChangeListener('stopwatch_reset', _handleReset);
     ListenerManager.addOnChangeListener('stopwatch_lap', _handleAddLap);
+
+    if (_stopwatch.isRunning) {
+      showProgressNotification();
+    }
   }
 
   @override
@@ -121,6 +124,9 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     _showFastestLapBarSetting.removeListener(_setShowFastestLapBar);
     _showSlowestLapBarSetting.removeListener(_setShowSlowestLapBar);
     _showAverageLapBarSetting.removeListener(_setShowAverageLapBar);
+
+    updateNotificationInterval?.cancel();
+    updateNotificationInterval = null;
 
     ListenerManager.removeOnChangeListener(
         'stopwatch_toggle_state', _handleToggleState);
@@ -136,8 +142,8 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     });
     saveList('stopwatches', [_stopwatch]);
     AwesomeNotifications().dismiss(_stopwatch.id);
-    udpateNotificationAfter1Second?.cancel();
-    udpateNotificationAfter1Second = null;
+    // udpateNotificationAfter1Second?.cancel();
+    // udpateNotificationAfter1Second = null;
   }
 
   void _handleAddLap() {
@@ -155,14 +161,15 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     if (_stopwatch.isRunning) {
       showProgressNotification();
     } else {
-      udpateNotificationAfter1Second?.cancel();
-      udpateNotificationAfter1Second = null;
+      updateNotificationInterval?.cancel();
+      updateNotificationInterval = null;
       updateStopwatchNotification(_stopwatch);
     }
   }
 
   Future<void> showProgressNotification() async {
-    udpateNotificationAfter1Second =
+    updateNotificationInterval?.cancel();
+    updateNotificationInterval =
         Timer.periodic(const Duration(seconds: 1), (timer) {
       updateStopwatchNotification(_stopwatch);
     });
