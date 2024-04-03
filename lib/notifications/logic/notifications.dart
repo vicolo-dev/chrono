@@ -15,7 +15,7 @@ Future<void> initializeNotifications() async {
   });
 
   await AwesomeNotifications().initialize(
-    null,
+    null, // use default app icon
     [
       alarmNotificationChannel,
       reminderNotificationChannel,

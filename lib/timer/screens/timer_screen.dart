@@ -37,6 +37,7 @@ class TimerScreen extends StatefulWidget {
 class _TimerScreenState extends State<TimerScreen> {
   final _listController = PersistentListController<ClockTimer>();
   late Setting _showFilters;
+  late Setting _showNotification;
   Timer? updateNotificationInterval;
 
   void update(value) {
@@ -57,7 +58,10 @@ class _TimerScreenState extends State<TimerScreen> {
     super.initState();
 
     _showFilters = appSettings.getGroup("Timer").getSetting("Show Filters");
+    _showNotification =
+        appSettings.getGroup("Timer").getSetting("Show Notification");
     _showFilters.addListener(update);
+    _showNotification.addListener(update);
     ListenerManager.addOnChangeListener("timers", onTimerUpdate);
     showProgressNotification();
   }
@@ -65,6 +69,8 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   void dispose() {
     _showFilters.removeListener(update);
+    _showNotification.removeListener(update);
+
     // ListenerManager.removeOnChangeListener("timers", onTimerUpdate);
     super.dispose();
   }
@@ -127,8 +133,14 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   Future<void> showProgressNotification() async {
+    if (!_showNotification.value) {
+      AwesomeNotifications()
+          .cancelNotificationsByChannelKey(timerNotificationChannelKey);
+      updateNotificationInterval?.cancel();
+      return;
+    }
     final runningTimers = (await loadList<ClockTimer>("timers"))
-        .where((timer) => timer.isRunning)
+        .where((timer) => !timer.isStopped)
         .toList();
     if (runningTimers.isEmpty) {
       AwesomeNotifications()
@@ -140,6 +152,7 @@ class _TimerScreenState extends State<TimerScreen> {
     final timer = runningTimers
         .reduce((a, b) => a.remainingSeconds < b.remainingSeconds ? a : b);
 
+    updateTimerNotification(timer, runningTimers.length);
     updateNotificationInterval?.cancel();
     updateNotificationInterval =
         Timer.periodic(const Duration(seconds: 1), (t) {

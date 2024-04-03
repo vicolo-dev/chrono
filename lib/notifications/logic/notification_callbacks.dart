@@ -1,10 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
-import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
-import 'package:clock_app/settings/types/listener_manager.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/stopwatch/logic/update_stopwatch.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 
@@ -12,9 +11,14 @@ import 'package:clock_app/timer/logic/update_timers.dart';
 @pragma("vm:entry-point")
 Future<void> onNotificationCreatedMethod(
     ReceivedNotification receivedNotification) async {
+  appSettings.load();
   switch (receivedNotification.channelKey) {
     case alarmNotificationChannelKey:
+      Payload payload = receivedNotification.payload!;
+      int? scheduleId = int.tryParse(payload['scheduleId']);
+      if (scheduleId == null) return;
       AlarmNotificationManager.handleNotificationCreated(receivedNotification);
+      AwesomeNotifications().cancel(scheduleId);
       break;
   }
 }
@@ -28,6 +32,8 @@ Future<void> onNotificationDisplayedMethod(
 @pragma("vm:entry-point")
 Future<void> onDismissActionReceivedMethod(
     ReceivedAction receivedAction) async {
+  appSettings.load();
+
   switch (receivedAction.channelKey) {
     case alarmNotificationChannelKey:
       AlarmNotificationManager.handleNotificationDismiss(receivedAction);
@@ -38,6 +44,8 @@ Future<void> onDismissActionReceivedMethod(
 /// Use this method to detect when the user taps on a notification or action button
 @pragma("vm:entry-point")
 Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
+  appSettings.load();
+
   switch (receivedAction.channelKey) {
     case alarmNotificationChannelKey:
       AlarmNotificationManager.handleNotificationAction(receivedAction);
@@ -73,16 +81,16 @@ Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
           break;
         case 'stopwatch_lap':
           await updateStopwatch((stopwatch) async {
-           stopwatch.addLap();
+            stopwatch.addLap();
           });
           break;
         case 'stopwatch_reset':
-         await updateStopwatch((stopwatch) async {
-           stopwatch.pause();
-           stopwatch.reset();
+          await updateStopwatch((stopwatch) async {
+            stopwatch.pause();
+            stopwatch.reset();
           });
           break;
-             }
+      }
 
       break;
     case timerNotificationChannelKey:
@@ -112,6 +120,5 @@ Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
           await resetAllTimers();
           break;
       }
-
   }
 }

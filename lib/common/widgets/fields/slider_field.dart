@@ -4,15 +4,14 @@ import 'package:flutter/services.dart';
 
 class SliderField extends StatefulWidget {
   const SliderField(
-      {Key? key,
+      {super.key,
       required this.value,
       required this.onChanged,
       required this.min,
       required this.max,
       required this.title,
       this.unit = '',
-      this.snapLength})
-      : super(key: key);
+      this.snapLength});
 
   final String title;
   final double value;
@@ -98,6 +97,7 @@ class _SliderFieldState extends State<SliderField> {
                 // height: textSize.height,
                 // width: 50,
                 child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     IntrinsicWidth(
                       child: TextField(

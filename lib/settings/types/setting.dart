@@ -633,7 +633,6 @@ class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
     // If the value is no longer in the options, return the first option
     // If options is empty, set id to -1
     (value as List).removeWhere((id) => getIndexOfId(id) == -1);
-    print("%%%%%%%%%%%%%%%%%%%%%%%%%% ${value}");
     _value = value.map((id) => id as int).toList();
   }
 }

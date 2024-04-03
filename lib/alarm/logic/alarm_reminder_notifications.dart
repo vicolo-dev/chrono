@@ -3,10 +3,28 @@ import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+
+Future<void> cancelAlarmReminderNotification(int id) async {
+  await AwesomeNotifications().cancel(id);
+}
 
 Future<void> createAlarmReminderNotification(int id, DateTime time) async {
+  bool shouldShow = appSettings
+      .getGroup("Alarm")
+      .getGroup("Notifications")
+      .getSetting("Show Upcoming Alarm Notifications")
+      .value;
+
+  print("*********************** $shouldShow");
+  if (!shouldShow) return;
+
+  double leadTime =
+      appSettings.getGroup("Alarm").getSetting("Upcoming Lead Time").value;
+
   DateTime now = DateTime.now();
-  DateTime notificationTime = time.subtract(const Duration(minutes: 5));
+  DateTime notificationTime =
+      time.subtract(Duration(minutes: leadTime.round()));
   if (notificationTime.isBefore(now)) {
     notificationTime = now.add(const Duration(seconds: 2));
   }
@@ -47,6 +65,13 @@ Future<void> createAlarmReminderNotification(int id, DateTime time) async {
 }
 
 Future<void> createSnoozeNotification(int id, DateTime time) async {
+  bool shouldShow = appSettings
+      .getGroup("Alarm")
+      .getGroup("Notifications")
+      .getSetting("Show Snooze Notifications")
+      .value;
+  print("%%%^^^^^^^^^^^^^^^^^^^^^^^^ $shouldShow");
+  if (!shouldShow) return;
   String timeFormatString = await loadTextFile("time_format_string");
 
   await AwesomeNotifications().createNotification(

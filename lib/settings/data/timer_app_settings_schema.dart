@@ -65,6 +65,7 @@ SettingGroup timerAppSettingsSchema = SettingGroup(
       ),
     ]),
     SwitchSetting("Show Filters", true),
+    SwitchSetting("Show Notification", true),
   ],
   icon: FluxIcons.timer,
 );

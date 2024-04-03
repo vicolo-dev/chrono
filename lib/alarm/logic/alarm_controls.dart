@@ -5,6 +5,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
@@ -58,6 +59,7 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
 
   await initializeAppDataDirectory();
   await GetStorage.init();
+  appSettings.load();
   await AndroidAlarmManager.initialize();
   // await RingtoneManager.initialize();
   await RingtonePlayer.initialize();

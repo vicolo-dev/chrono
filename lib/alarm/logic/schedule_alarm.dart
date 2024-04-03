@@ -54,7 +54,7 @@ Future<bool> scheduleAlarm(
     scheduleIds.add(ScheduleId(id: scheduleId));
     await saveList<ScheduleId>(name, scheduleIds);
 
-    if (type == ScheduledNotificationType.alarm) {
+    if (type == ScheduledNotificationType.alarm && !snooze) {
       await createAlarmReminderNotification(scheduleId, startDate);
     }
 
@@ -95,6 +95,10 @@ Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
     List<ScheduleId> scheduleIds = await loadList<ScheduleId>(name);
     scheduleIds.removeWhere((id) => id.id == scheduleId);
     await saveList<ScheduleId>(name, scheduleIds);
+
+    if (type == ScheduledNotificationType.alarm) {
+      await cancelAlarmReminderNotification(scheduleId);
+    }
 
     await AndroidAlarmManager.cancel(scheduleId);
   }
