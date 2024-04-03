@@ -1,9 +1,15 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/linear_progress_bar.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
+import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
@@ -15,7 +21,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 class StopwatchScreen extends StatefulWidget {
-  const StopwatchScreen({Key? key}) : super(key: key);
+  const StopwatchScreen({super.key});
 
   @override
   State<StopwatchScreen> createState() => _StopwatchScreenState();
@@ -33,6 +39,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   late Setting _showFastestLapBarSetting;
   late Setting _showSlowestLapBarSetting;
   late Setting _showAverageLapBarSetting;
+  Timer? udpateNotificationAfter1Second;
 
   late final ClockStopwatch _stopwatch;
 
@@ -98,6 +105,11 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     _showFastestLapBarSetting.addListener(_setShowFastestLapBar);
     _showSlowestLapBarSetting.addListener(_setShowSlowestLapBar);
     _showAverageLapBarSetting.addListener(_setShowAverageLapBar);
+
+    ListenerManager.addOnChangeListener(
+        'stopwatch_toggle_state', _handleToggleState);
+    ListenerManager.addOnChangeListener('stopwatch_reset', _handleReset);
+    ListenerManager.addOnChangeListener('stopwatch_lap', _handleAddLap);
   }
 
   @override
@@ -109,6 +121,10 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     _showSlowestLapBarSetting.removeListener(_setShowSlowestLapBar);
     _showAverageLapBarSetting.removeListener(_setShowAverageLapBar);
 
+    ListenerManager.removeOnChangeListener(
+        'stopwatch_toggle_state', _handleToggleState);
+    ListenerManager.removeOnChangeListener('stopwatch_reset', _handleReset);
+    ListenerManager.removeOnChangeListener('stopwatch_lap', _handleAddLap);
     super.dispose();
   }
 
@@ -118,12 +134,14 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
       _stopwatch.reset();
     });
     saveList('stopwatches', [_stopwatch]);
+    AwesomeNotifications().dismiss(_stopwatch.id);
   }
 
   void _handleAddLap() {
     if (_stopwatch.currentLapTime.inMilliseconds == 0) return;
     _listController.addItem(_stopwatch.getLap());
     saveList('stopwatches', [_stopwatch]);
+    _updateNotification();
   }
 
   void _handleToggleState() {
@@ -131,6 +149,55 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
       _stopwatch.toggleState();
     });
     saveList('stopwatches', [_stopwatch]);
+    if (_stopwatch.isRunning) {
+      showProgressNotification();
+    } else {
+      udpateNotificationAfter1Second?.cancel();
+      udpateNotificationAfter1Second = null;
+      _updateNotification();
+    }
+  }
+
+  Future<void> showProgressNotification() async {
+    udpateNotificationAfter1Second =
+        Timer.periodic(const Duration(seconds: 1), (timer) {
+      _updateNotification();
+    });
+  }
+
+  void _updateNotification() {
+    AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: _stopwatch.id,
+          channelKey: stopwatchNotificationChannelKey,
+          title: 'Stopwatch',
+          body:
+              "${TimeDuration.fromMilliseconds(_stopwatch.elapsedMilliseconds).toTimeString(showMilliseconds: false)} (lap ${_stopwatch.laps.length + 1})",
+          category: NotificationCategory.StopWatch,
+        ),
+        actionButtons: [
+          NotificationActionButton(
+            showInCompactView: true,
+            key: "stopwatch_toggle_state",
+            label: _stopwatch.isRunning ? 'Pause' : 'Start',
+            actionType: ActionType.SilentAction,
+            autoDismissible: false,
+          ),
+          NotificationActionButton(
+            showInCompactView: true,
+            key: "stopwatch_reset",
+            label: 'Reset',
+            actionType: ActionType.SilentAction,
+            autoDismissible: false,
+          ),
+          NotificationActionButton(
+            showInCompactView: true,
+            key: "stopwatch_lap",
+            label: 'Lap',
+            actionType: ActionType.SilentAction,
+            autoDismissible: false,
+          )
+        ]);
   }
 
   @override

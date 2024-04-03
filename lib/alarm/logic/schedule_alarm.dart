@@ -7,6 +7,7 @@ import 'package:clock_app/common/types/schedule_id.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
+import 'package:clock_app/notifications/logic/reminder_notification.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 
 Future<bool> scheduleAlarm(
@@ -14,6 +15,7 @@ Future<bool> scheduleAlarm(
   DateTime startDate,
   String description, {
   ScheduledNotificationType type = ScheduledNotificationType.alarm,
+  bool snooze = false,
 }) async {
   if (startDate.isBefore(DateTime.now())) {
     throw Exception('Attempted to schedule alarm in the past ($startDate)');
@@ -21,11 +23,12 @@ Future<bool> scheduleAlarm(
 
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
     await cancelAlarm(scheduleId, type);
+
+    // This is for logging purposes
     List<AlarmEvent> alarmEvents = await loadList<AlarmEvent>('alarm_events');
     alarmEvents.insert(
         0,
         AlarmEvent(
-          // type: AlarmEventType.schedule,
           scheduleId: scheduleId,
           description: description,
           startDate: startDate,
@@ -33,12 +36,17 @@ Future<bool> scheduleAlarm(
           notificationType: type,
           isActive: true,
         ));
-    int maxLogs = appSettings.getGroup('Developer Options').getSetting('Max logs').value.floor();
-    while (alarmEvents.length > maxLogs){
+    int maxLogs = appSettings
+        .getGroup('Developer Options')
+        .getSetting('Max logs')
+        .value
+        .floor();
+    while (alarmEvents.length > maxLogs) {
       alarmEvents.removeLast();
     }
     await saveList<AlarmEvent>('alarm_events', alarmEvents);
 
+    // We store all scheduled ids so we can cancel them all if needed
     String name = type == ScheduledNotificationType.alarm
         ? 'alarm_schedule_ids'
         : 'timer_schedule_ids';
@@ -46,6 +54,11 @@ Future<bool> scheduleAlarm(
     scheduleIds.add(ScheduleId(id: scheduleId));
     await saveList<ScheduleId>(name, scheduleIds);
 
+    if (type == ScheduledNotificationType.alarm) {
+      await createAlarmReminderNotification(scheduleId, startDate, snooze);
+    }
+
+    // Scheduling the actual alarm
     return AndroidAlarmManager.oneShotAt(
       startDate,
       scheduleId,
@@ -95,5 +108,5 @@ enum AlarmStopAction {
 Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
     ScheduledNotificationType type, String description) async {
   await scheduleAlarm(scheduleId, DateTime.now().add(delay), description,
-      type: type);
+      type: type, snooze: true);
 }

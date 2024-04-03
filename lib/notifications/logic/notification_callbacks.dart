@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
+import 'package:clock_app/settings/types/listener_manager.dart';
 
 /// Use this method to detect when a new notification or a schedule is created
 @pragma("vm:entry-point")
@@ -22,11 +23,26 @@ Future<void> onNotificationDisplayedMethod(
 @pragma("vm:entry-point")
 Future<void> onDismissActionReceivedMethod(
     ReceivedAction receivedAction) async {
-  AlarmNotificationManager.handleNotificationDismiss(receivedAction);
+  switch (receivedAction.channelKey) {
+    case alarmNotificationChannelKey:
+      AlarmNotificationManager.handleNotificationDismiss(receivedAction);
+      break;
+  }
 }
 
 /// Use this method to detect when the user taps on a notification or action button
 @pragma("vm:entry-point")
 Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
-  AlarmNotificationManager.handleNotificationAction(receivedAction);
+  switch (receivedAction.channelKey) {
+    case alarmNotificationChannelKey:
+      AlarmNotificationManager.handleNotificationAction(receivedAction);
+      break;
+    case reminderNotificationChannelKey:
+
+      // ReminderNotificationManager.handleNotificationAction(receivedAction);
+      break;
+    case stopwatchNotificationChannelKey:
+      ListenerManager.notifyListeners(receivedAction.buttonKeyPressed);
+      break;
+  }
 }
