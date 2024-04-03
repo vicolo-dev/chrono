@@ -56,7 +56,6 @@ void main() async {
     }
   });
 
-  runApp(const App());
   // String appDataDirectory = await getAppDataDirectoryPath();
   // String path = '$appDataDirectory/ringing-alarm.txt';
   // File file = File(path);
@@ -64,4 +63,6 @@ void main() async {
   //   file.createSync();
   // }
   // file.writeAsStringSync("", mode: FileMode.writeOnly);
+  runApp(const App());
+
 }

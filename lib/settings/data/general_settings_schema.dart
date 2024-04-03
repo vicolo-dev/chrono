@@ -21,6 +21,11 @@ SelectSettingOption<String> _getDateSettingOption(String format) {
       "${DateFormat(format).format(DateTime.now())} ($format)", format);
 }
 
+enum SwipeAction {
+  cardActions,
+  switchTabs,
+}
+
 final timeFormatOptions = [
   SelectSettingOption("12 Hours", TimeFormat.h12),
   SelectSettingOption("24 Hours", TimeFormat.h24),
@@ -61,6 +66,21 @@ SettingGroup generalSettingsSchema = SettingGroup(
       }),
       SwitchSetting("Show Seconds", true),
     ]),
+    SelectSetting(
+      "Swipe Action",
+      [
+        SelectSettingOption(
+          "Card Actions",
+          SwipeAction.cardActions,
+          description: "Swipe cards to delete or duplicate them",
+        ),
+        SelectSettingOption(
+          "Switch Tabs",
+          SwipeAction.switchTabs,
+          description: "Swipe from one tab to the next",
+        )
+      ],
+    ),
     SettingPageLink(
       "Melodies",
       const RingtonesScreen(),

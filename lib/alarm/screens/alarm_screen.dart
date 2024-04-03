@@ -13,7 +13,6 @@ import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:great_list_view/great_list_view.dart';
