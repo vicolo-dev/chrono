@@ -124,9 +124,7 @@ class SettingGroup extends SettingItem {
     try {
       return _settingItems.firstWhere((item) => item.name == name);
     } catch (e) {
-      if (kDebugMode) {
-        print("Could not find setting item $name: $e");
-      }
+      debugPrint("Could not find setting item $name: $e");
       rethrow;
     }
   }
@@ -135,9 +133,7 @@ class SettingGroup extends SettingItem {
     try {
       return _settings.firstWhere((item) => item.name == name);
     } catch (e) {
-      if (kDebugMode) {
-        print("Could not find setting $name: $e");
-      }
+      debugPrint("Could not find setting $name: $e");
       rethrow;
     }
   }
@@ -199,12 +195,12 @@ class SettingGroup extends SettingItem {
 
       if (name == "AlarmSettings") {
         // if (value["version"] == 1) {
-          final old1 = value["Snooze"]["Prevent Disabling while Snoozed"];
-          final old2 = value["Snooze"]["Prevent Deleting while Snoozed"];
-          if (old1) {
-            value["Snooze"]["While Snoozed"]["Prevent Disabling"] = old1;
-          }
-          if (old2) value["Snooze"]["While Snoozed"]["Prevent Deletion"] = old2;
+        final old1 = value["Snooze"]["Prevent Disabling while Snoozed"];
+        final old2 = value["Snooze"]["Prevent Deleting while Snoozed"];
+        if (old1) {
+          value["Snooze"]["While Snoozed"]["Prevent Disabling"] = old1;
+        }
+        if (old2) value["Snooze"]["While Snoozed"]["Prevent Deletion"] = old2;
         // }
       }
     }
@@ -214,12 +210,10 @@ class SettingGroup extends SettingItem {
   }
 
   Future<void> save() {
-    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ${valueToJson()}");
     return GetStorage().write(id, json.encode(valueToJson()));
   }
 
   void load() {
     loadValueFromJson(json.decode(GetStorage().read(id)));
-    print("################################## ${valueToJson()}");
   }
 }

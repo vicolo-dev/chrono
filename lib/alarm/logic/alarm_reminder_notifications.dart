@@ -16,7 +16,6 @@ Future<void> createAlarmReminderNotification(int id, DateTime time) async {
       .getSetting("Show Upcoming Alarm Notifications")
       .value;
 
-  print("*********************** $shouldShow");
   if (!shouldShow) return;
 
   double leadTime =
@@ -70,7 +69,6 @@ Future<void> createSnoozeNotification(int id, DateTime time) async {
       .getGroup("Notifications")
       .getSetting("Show Snooze Notifications")
       .value;
-  print("%%%^^^^^^^^^^^^^^^^^^^^^^^^ $shouldShow");
   if (!shouldShow) return;
   String timeFormatString = await loadTextFile("time_format_string");
 

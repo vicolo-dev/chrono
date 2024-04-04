@@ -28,21 +28,15 @@ const String updatePortName = "updatePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
-  if (kDebugMode) {
-    print("Alarm triggered: $scheduleId");
-  }
+    debugPrint("Alarm triggered: $scheduleId");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
-    if (kDebugMode) {
-      print("Params was null when triggering alarm");
-    }
+      debugPrint("Params was null when triggering alarm");
     return;
   }
 
   if (params['type'] == null) {
-    if (kDebugMode) {
-      print("Params Type was null when triggering alarm");
-    }
+      debugPrint("Params Type was null when triggering alarm");
     return;
   }
 
