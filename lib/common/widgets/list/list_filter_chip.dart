@@ -126,7 +126,6 @@ class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
 
     void showSelect() async {
       showSelectBottomSheet(context, (List<int>? newSelectedIndices) {
-        print("_________ $newSelectedIndices");
         listFilter.selectedIndices =
             newSelectedIndices ?? listFilter.selectedIndices;
         onChange();

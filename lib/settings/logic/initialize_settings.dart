@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:clock_app/alarm/logic/schedule_alarm.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/audio/logic/system_ringtones.dart';
 import 'package:clock_app/clock/data/default_favorite_cities.dart';
-import 'package:clock_app/clock/logic/initialize_default_favorite_cities.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/common/data/default_tags.dart';
 import 'package:clock_app/common/data/paths.dart';
@@ -49,14 +48,16 @@ Future<void> _clearSettings() async {
   final dataDir = Directory(await getAppDataDirectoryPath());
   dataDir.deleteSync(recursive: true);
   dataDir.createSync(recursive: true);
+
+  AwesomeNotifications().cancelAll();
 }
 
-Future<void> initializeStorage() async {
+Future<void> initializeStorage([bool clearSettingsOnDebug = true]) async {
   await GetStorage.init();
 
   // Used to clear the preferences in case of a change in format of the data
   // Comment this out after the preferences are cleared
-  if (kDebugMode) await _clearSettings();
+  if (kDebugMode && clearSettingsOnDebug) await _clearSettings();
 
   bool? firstLaunch = GetStorage().read('first_launch');
   if (firstLaunch == null) {

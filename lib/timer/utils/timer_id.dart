@@ -9,3 +9,11 @@ ClockTimer? getTimerById(id) {
     return null;
   }
 }
+
+  Future<ClockTimer> getSmallestTimer()async{
+     return (await loadList<ClockTimer>("timers"))
+        .where((timer) => timer.isRunning)
+        .reduce((a, b) => a.remainingSeconds < b.remainingSeconds ? a : b);
+  }
+
+

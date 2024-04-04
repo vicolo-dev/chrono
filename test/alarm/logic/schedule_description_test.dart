@@ -1,6 +1,7 @@
 import 'package:clock_app/alarm/logic/schedule_description.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/clock/types/time.dart';
+import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,9 +20,9 @@ void testDescription(String name, Function(BuildContext) callback) {
   });
 }
 
-void main() {
+void main() async {
   group('getAlarmScheduleDescription', () {
-    testDescription('when alarm is snoozed', (context)async {
+    testDescription('when alarm is snoozed', (context) async {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
       await alarm.snooze();
 
@@ -34,7 +35,7 @@ void main() {
       );
     });
 
-    testDescription('when alarm is finished', (context)async {
+    testDescription('when alarm is finished', (context) async {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
 
       await alarm.finish();

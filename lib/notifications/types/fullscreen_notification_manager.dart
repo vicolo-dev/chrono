@@ -89,7 +89,7 @@ class AlarmNotificationManager {
   static Future<void> removeNotification(ScheduledNotificationType type) async {
     FullScreenNotificationData data = alarmNotificationData[type]!;
 
-    await AwesomeNotifications().cancel(data.id);
+    await AwesomeNotifications().cancelNotificationsByChannelKey(alarmNotificationChannelKey);
     await AndroidForegroundService.stopForeground(data.id);
   }
 

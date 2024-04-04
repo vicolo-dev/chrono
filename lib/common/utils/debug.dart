@@ -3,10 +3,8 @@ import 'dart:isolate';
 import 'package:flutter/foundation.dart';
 
 void printIsolateInfo() {
-  if (kDebugMode) {
-    print(
+    printDebug(
         "Isolate: ${Isolate.current.debugName}, id: ${Isolate.current.hashCode}");
-  }
 }
 
 void printDebug(String message) {

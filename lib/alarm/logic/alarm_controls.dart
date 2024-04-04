@@ -5,6 +5,8 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
@@ -26,21 +28,15 @@ const String updatePortName = "updatePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
-  if (kDebugMode) {
-    print("Alarm triggered: $scheduleId");
-  }
+    debugPrint("Alarm triggered: $scheduleId");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
-    if (kDebugMode) {
-      print("Params was null when triggering alarm");
-    }
+      debugPrint("Params was null when triggering alarm");
     return;
   }
 
   if (params['type'] == null) {
-    if (kDebugMode) {
-      print("Params Type was null when triggering alarm");
-    }
+      debugPrint("Params Type was null when triggering alarm");
     return;
   }
 
@@ -56,11 +52,7 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
     stopScheduledNotification(message);
   });
 
-  await initializeAppDataDirectory();
-  await GetStorage.init();
-  await AndroidAlarmManager.initialize();
-  // await RingtoneManager.initialize();
-  await RingtonePlayer.initialize();
+  await initializeIsolate();
 
   if (notificationType == ScheduledNotificationType.alarm) {
     triggerAlarm(scheduleId, params);
@@ -96,7 +88,7 @@ void triggerAlarm(int scheduleId, Json params) async {
   DateTime now = DateTime.now();
 
   // if alarm is triggered more than 10 minutes after the scheduled time, ignore
-  if (alarm == null ||
+  if (alarm == null || alarm.isEnabled == false ||
       alarm.currentScheduleDateTime == null ||
       now.millisecondsSinceEpoch <
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
@@ -145,6 +137,10 @@ void triggerAlarm(int scheduleId, Json params) async {
     snoozeActionLabel: "Snooze",
     dismissActionLabel: "Dismiss",
   );
+}
+
+void setVolume(double volume){
+  RingtonePlayer.setVolume(volume);
 }
 
 void stopAlarm(int scheduleId, AlarmStopAction action) async {

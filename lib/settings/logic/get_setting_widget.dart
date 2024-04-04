@@ -163,6 +163,8 @@ Widget? getSettingItemWidget(
       return ListSettingCard(
         setting: item,
         showAsCard: showAsCard,
+        onChanged: onChanged,
+              
       );
     } else {
       throw Exception('No widget for setting type: ${item.runtimeType}');

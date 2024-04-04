@@ -11,13 +11,16 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'alarm_controls.dart';
 
 Future<void> cancelAllAlarms() async {
- List<ScheduleId> scheduleIds = await loadList<ScheduleId>('alarm_schedule_ids');
+  List<ScheduleId> scheduleIds =
+      await loadList<ScheduleId>('alarm_schedule_ids');
   for (var scheduleId in scheduleIds) {
     await cancelAlarm(scheduleId.id, ScheduledNotificationType.alarm);
   }
+  scheduleIds.clear();
+  await saveList('alarm_schedule_ids', scheduleIds);
 }
 
-Future<void> updateAlarm(int scheduleId,String description) async {
+Future<void> updateAlarm(int scheduleId, String description) async {
   List<Alarm> alarms = await loadList("alarms");
   int alarmIndex =
       alarms.indexWhere((alarm) => alarm.hasScheduleWithId(scheduleId));
@@ -41,7 +44,6 @@ Future<void> updateAlarms(String description) async {
     await alarm.update(description);
   }
 
-
   await saveList("alarms", alarms);
 
   // Notify other isolates that are listening for alarm updates
@@ -54,13 +56,14 @@ Future<void> updateAlarmById(
   List<Alarm> alarms = await loadList("alarms");
   int alarmIndex =
       alarms.indexWhere((alarm) => alarm.hasScheduleWithId(scheduleId));
-  if(alarmIndex == -1){
-        return;
-      }
+  if (alarmIndex == -1) {
+    return;
+  }
   Alarm alarm = alarms[alarmIndex];
   await callback(alarm);
   alarms[alarmIndex] = alarm;
   await saveList("alarms", alarms);
+
   SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
   sendPort?.send("updateAlarms");
 }

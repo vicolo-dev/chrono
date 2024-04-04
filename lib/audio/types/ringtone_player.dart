@@ -50,9 +50,13 @@ class RingtonePlayer {
       timer.ringtone.uri,
       vibrate: timer.vibrate,
       loopMode: LoopMode.one,
-      volume: timer.volume/100,
+      volume: timer.volume / 100,
       secondsToMaxVolume: timer.risingVolumeDuration.inSeconds,
     );
+  }
+
+  static Future<void> setVolume(double volume) async {
+    await activePlayer?.setVolume(volume);
   }
 
   static Future<void> _play(

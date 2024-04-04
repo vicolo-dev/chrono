@@ -32,13 +32,13 @@ void main() async {
   await initializePackageInfo();
   await initializeAppDataDirectory();
   await initializeStorage();
+  await initializeNotifications();
   await initializeSettings();
   await initializeDatabases();
   await AndroidAlarmManager.initialize();
   await RingtonePlayer.initialize();
   await initializeAudioSession(); //Needs to be initialized after settings
   await BootReceiver.initialize(handleBoot);
-  await initializeNotifications();
   AppVisibility.initialize();
   await FlutterShowWhenLocked().hide();
   await updateAlarms("Update Alarms on Start");
@@ -53,6 +53,8 @@ void main() async {
       ListenerManager.notifyListeners("alarms");
     } else if (message == "updateTimers") {
       ListenerManager.notifyListeners("timers");
+    } else if (message == "updateStopwatches") {
+      ListenerManager.notifyListeners("stopwatch");
     }
   });
 
@@ -64,5 +66,4 @@ void main() async {
   // }
   // file.writeAsStringSync("", mode: FileMode.writeOnly);
   runApp(const App());
-
 }

@@ -15,6 +15,7 @@ import 'package:clock_app/common/logic/tags.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -164,6 +165,9 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         return Text("${setting.value.length} tasks");
       },
       itemPreviewBuilder: (item) => TryAlarmTaskButton(alarmTask: item),
+      // onChange: (context, value)async{
+      //   await appSettings.save();
+      // }
     ),
     DynamicMultiSelectSetting<Tag>(
       "Tags",
