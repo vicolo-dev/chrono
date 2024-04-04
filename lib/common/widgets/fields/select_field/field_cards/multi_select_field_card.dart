@@ -58,7 +58,7 @@ class MultiSelectChip extends StatelessWidget {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return CardContainer(
       key: Key(choice.name),
-      color: choice.color ?? colorScheme.primary,
+      color: colorScheme.primary,
       margin: const EdgeInsets.all(0),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
