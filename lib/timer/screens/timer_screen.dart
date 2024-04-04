@@ -21,6 +21,9 @@ import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/widgets/timer_card.dart';
 
+  Timer? timerNotificationInterval;
+
+
 typedef TimerCardBuilder = Widget Function(
   BuildContext context,
   int index,
@@ -38,7 +41,6 @@ class _TimerScreenState extends State<TimerScreen> {
   final _listController = PersistentListController<ClockTimer>();
   late Setting _showFilters;
   late Setting _showNotification;
-  Timer? updateNotificationInterval;
 
   void update(value) {
     setState(() {});
@@ -136,7 +138,7 @@ class _TimerScreenState extends State<TimerScreen> {
     if (!_showNotification.value) {
       AwesomeNotifications()
           .cancelNotificationsByChannelKey(timerNotificationChannelKey);
-      updateNotificationInterval?.cancel();
+      timerNotificationInterval?.cancel();
       return;
     }
     final runningTimers = (await loadList<ClockTimer>("timers"))
@@ -145,7 +147,7 @@ class _TimerScreenState extends State<TimerScreen> {
     if (runningTimers.isEmpty) {
       AwesomeNotifications()
           .cancelNotificationsByChannelKey(timerNotificationChannelKey);
-      updateNotificationInterval?.cancel();
+      timerNotificationInterval?.cancel();
       return;
     }
     // Get timer with lowest remaining time
@@ -153,8 +155,8 @@ class _TimerScreenState extends State<TimerScreen> {
         .reduce((a, b) => a.remainingSeconds < b.remainingSeconds ? a : b);
 
     updateTimerNotification(timer, runningTimers.length);
-    updateNotificationInterval?.cancel();
-    updateNotificationInterval =
+    timerNotificationInterval?.cancel();
+    timerNotificationInterval =
         Timer.periodic(const Duration(seconds: 1), (t) {
       updateTimerNotification(timer, runningTimers.length);
     });
