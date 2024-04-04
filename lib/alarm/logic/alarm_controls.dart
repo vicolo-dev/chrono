@@ -145,6 +145,10 @@ void triggerAlarm(int scheduleId, Json params) async {
   );
 }
 
+void setVolume(double volume){
+  RingtonePlayer.setVolume(volume);
+}
+
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
   if (action == AlarmStopAction.snooze) {
     await updateAlarmById(scheduleId, (alarm) async => await alarm.snooze());

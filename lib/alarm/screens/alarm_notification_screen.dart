@@ -1,5 +1,6 @@
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/widgets/clock/clock.dart';
@@ -45,6 +46,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
               widget.scheduleId, ScheduledNotificationType.alarm);
         }
       } else {
+        // RingtonePlayer.setVolume(0);
         _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
       }
       _currentIndex++;
