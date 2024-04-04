@@ -3,6 +3,7 @@ import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
+import 'package:clock_app/notifications/widgets/notification_actions/slide_notification_action.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -46,6 +47,29 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
 
   @override
   void initState() {
+    try {
+      actionWidget = appSettings
+          .getGroup("Timer")
+          .getSetting("Dismiss Action Type")
+          .value
+          .builder(
+            _stop,
+            _addTime,
+            "Stop ${widget.scheduleIds.length > 1 ? "All" : ""}",
+            '+${getTimerById(widget.scheduleIds.last)?.addLength.floor()}:00',
+          );
+    } catch (e) {
+      actionWidget = SlideNotificationAction(
+        onDismiss: _stop,
+        onSnooze: _addTime,
+        dismissLabel: "Stop ${widget.scheduleIds.length > 1 ? "All" : ""}",
+        snoozeLabel:
+            '+${getTimerById(widget.scheduleIds.last)?.addLength.floor()}:00',
+      );
+
+      debugPrint(e.toString());
+    }
+
     super.initState();
   }
 
@@ -72,7 +96,8 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
                     alignment: Alignment.center,
                     child: widget.scheduleIds.length == 1
                         ? Text(
-                            getTimerById(widget.scheduleIds.first)?.label ?? "Uknown Timer",
+                            getTimerById(widget.scheduleIds.first)?.label ??
+                                "Uknown Timer",
                             style: Theme.of(context).textTheme.displayMedium,
                             textAlign: TextAlign.center,
                             maxLines: 3,
@@ -81,7 +106,9 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
                         : ListView(
                             children: [
                               for (int id in widget.scheduleIds)
-                                TimerNotificationCard(timer: getTimerById(id) ?? ClockTimer(TimeDuration.zero))
+                                TimerNotificationCard(
+                                    timer: getTimerById(id) ??
+                                        ClockTimer(TimeDuration.zero))
                             ],
                           ),
                   ),

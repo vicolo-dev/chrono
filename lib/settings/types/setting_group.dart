@@ -214,10 +214,12 @@ class SettingGroup extends SettingItem {
   }
 
   Future<void> save() {
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ${valueToJson()}");
     return GetStorage().write(id, json.encode(valueToJson()));
   }
 
   void load() {
     loadValueFromJson(json.decode(GetStorage().read(id)));
+    print("################################## ${valueToJson()}");
   }
 }

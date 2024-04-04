@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 
 class ListSettingCard extends StatefulWidget {
   const ListSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
+    required this.onChanged,
     this.showAsCard = true,
-  }) : super(key: key);
+  });
 
   final ListSetting setting;
   final bool showAsCard;
+  final void Function(BuildContext context) onChanged;
 
   @override
   State<ListSettingCard> createState() => _ListSettingCardState();
@@ -26,7 +28,8 @@ class _ListSettingCardState extends State<ListSettingCard> {
         onTap: () async {
           await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ListSettingScreen(setting: widget.setting),
+              builder: (context) => ListSettingScreen(
+                  setting: widget.setting, onChanged: widget.onChanged),
             ),
           );
           setState(() {});

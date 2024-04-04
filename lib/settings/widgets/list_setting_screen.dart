@@ -14,9 +14,11 @@ class ListSettingScreen<Item extends CustomizableListItem>
   const ListSettingScreen({
     super.key,
     required this.setting,
+    required this.onChanged,
   });
 
   final ListSetting<Item> setting;
+  final void Function(BuildContext context) onChanged;
 
   @override
   State<ListSettingScreen> createState() => _ListSettingScreenState<Item>();
@@ -68,7 +70,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
                   onTapItem: (task, index) {
                     _handleCustomizeItem(task);
                   },
-                  onModifyList: () {},
+                  onModifyList: () => widget.onChanged(context),
                   placeholderText:
                       "No ${widget.setting.name.toLowerCase()} added yet",
                 ),
