@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/common/types/list_controller.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/linear_progress_bar.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
@@ -22,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:timer_builder/timer_builder.dart';
 
+Timer? stopwatchNotificationInterval;
+
 class StopwatchScreen extends StatefulWidget {
   const StopwatchScreen({super.key});
 
@@ -37,8 +36,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   late Setting _showSlowestLapBarSetting;
   late Setting _showAverageLapBarSetting;
   late Setting _showNotificationSetting;
-  Timer? updateNotificationInterval;
-
+  
   late final ClockStopwatch _stopwatch;
 
   void update(dynamic value) {
@@ -134,8 +132,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     if (_stopwatch.isRunning) {
       showProgressNotification();
     } else {
-      updateNotificationInterval?.cancel();
-      updateNotificationInterval = null;
+      stopwatchNotificationInterval?.cancel();
       showProgressNotification();
     }
   }
@@ -144,19 +141,16 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     if (!_showNotificationSetting.value) {
       AwesomeNotifications()
           .cancelNotificationsByChannelKey(stopwatchNotificationChannelKey);
-      updateNotificationInterval?.cancel();
-      updateNotificationInterval = null;
+      stopwatchNotificationInterval?.cancel();
       return;
     }
     updateStopwatchNotification(_stopwatch);
-    updateNotificationInterval?.cancel();
+    stopwatchNotificationInterval?.cancel();
     if (!_stopwatch.isStarted) {
       AwesomeNotifications()
           .cancelNotificationsByChannelKey(stopwatchNotificationChannelKey);
-      updateNotificationInterval?.cancel();
-      updateNotificationInterval = null;
     } else {
-      updateNotificationInterval =
+      stopwatchNotificationInterval =
           Timer.periodic(const Duration(seconds: 1), (timer) {
         updateStopwatchNotification(_stopwatch);
       });

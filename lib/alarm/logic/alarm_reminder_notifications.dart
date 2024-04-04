@@ -64,6 +64,7 @@ Future<void> createAlarmReminderNotification(int id, DateTime time) async {
 }
 
 Future<void> createSnoozeNotification(int id, DateTime time) async {
+  print(appSettings.valueToJson());
   bool shouldShow = appSettings
       .getGroup("Alarm")
       .getGroup("Notifications")

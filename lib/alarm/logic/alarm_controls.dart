@@ -28,17 +28,19 @@ const String updatePortName = "updatePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
-    debugPrint("Alarm triggered: $scheduleId");
+  debugPrint("Alarm triggered: $scheduleId");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
-      debugPrint("Params was null when triggering alarm");
+    debugPrint("Params was null when triggering alarm");
     return;
   }
 
   if (params['type'] == null) {
-      debugPrint("Params Type was null when triggering alarm");
+    debugPrint("Params Type was null when triggering alarm");
     return;
   }
+
+  await initializeIsolate();
 
   ScheduledNotificationType notificationType =
       ScheduledNotificationType.values.byName(params['type']);
@@ -51,8 +53,6 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
   receivePort.listen((message) {
     stopScheduledNotification(message);
   });
-
-  await initializeIsolate();
 
   if (notificationType == ScheduledNotificationType.alarm) {
     triggerAlarm(scheduleId, params);
@@ -88,7 +88,8 @@ void triggerAlarm(int scheduleId, Json params) async {
   DateTime now = DateTime.now();
 
   // if alarm is triggered more than 10 minutes after the scheduled time, ignore
-  if (alarm == null || alarm.isEnabled == false ||
+  if (alarm == null ||
+      alarm.isEnabled == false ||
       alarm.currentScheduleDateTime == null ||
       now.millisecondsSinceEpoch <
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
@@ -139,7 +140,7 @@ void triggerAlarm(int scheduleId, Json params) async {
   );
 }
 
-void setVolume(double volume){
+void setVolume(double volume) {
   RingtonePlayer.setVolume(volume);
 }
 

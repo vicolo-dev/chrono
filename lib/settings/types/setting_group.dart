@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
@@ -210,10 +211,12 @@ class SettingGroup extends SettingItem {
   }
 
   Future<void> save() {
-    return GetStorage().write(id, json.encode(valueToJson()));
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ${valueToJson()}");
+    return saveTextFile(id, json.encode(valueToJson()));
   }
 
-  void load() {
-    loadValueFromJson(json.decode(GetStorage().read(id)));
+  Future<void> load() async {
+    loadValueFromJson(json.decode(await loadTextFile(id)));
+    print("################################## ${valueToJson()}");
   }
 }
