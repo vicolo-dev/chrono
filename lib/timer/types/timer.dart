@@ -96,10 +96,12 @@ class ClockTimer extends CustomizableListItem {
   Future<void> start() async {
     _startTime = DateTime.now();
     await scheduleAlarm(
-        _id,
-        DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),
-        'Timer.start()',
-        type: ScheduledNotificationType.timer);
+      _id,
+      DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),
+      'Timer.start()',
+      type: ScheduledNotificationType.timer,
+      alarmClock: false,
+    );
     _state = TimerState.running;
   }
 
@@ -114,10 +116,12 @@ class ClockTimer extends CustomizableListItem {
     _secondsRemainingOnPause = newDuration.inSeconds;
     if (isRunning) {
       await scheduleAlarm(
-          _id,
-          DateTime.now().add(Duration(seconds: remainingSeconds)),
-          'Timer.setTime()',
-          type: ScheduledNotificationType.timer);
+        _id,
+        DateTime.now().add(Duration(seconds: remainingSeconds)),
+        'Timer.setTime()',
+        type: ScheduledNotificationType.timer,
+        alarmClock: false,
+      );
     }
   }
 
@@ -129,10 +133,12 @@ class ClockTimer extends CustomizableListItem {
         _secondsRemainingOnPause + addedDuration.inSeconds;
     if (isRunning) {
       await scheduleAlarm(
-          _id,
-          DateTime.now().add(Duration(seconds: remainingSeconds)),
-          'Timer.addTime()',
-          type: ScheduledNotificationType.timer);
+        _id,
+        DateTime.now().add(Duration(seconds: remainingSeconds)),
+        'Timer.addTime()',
+        type: ScheduledNotificationType.timer,
+        alarmClock: false,
+      );
     }
   }
 
@@ -151,7 +157,7 @@ class ClockTimer extends CustomizableListItem {
   }
 
   Future<void> update(String description) async {
-    if(remainingSeconds <= 0) {
+    if (remainingSeconds <= 0) {
       await reset();
       return;
     }
@@ -160,7 +166,9 @@ class ClockTimer extends CustomizableListItem {
         _id,
         DateTime.now().add(Duration(seconds: remainingSeconds)),
         description,
-        type: ScheduledNotificationType.timer);
+        type: ScheduledNotificationType.timer,
+        alarmClock: false,
+      );
     }
   }
 

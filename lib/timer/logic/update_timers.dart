@@ -14,6 +14,8 @@ Future<void> cancelAllTimers() async {
   for (var scheduleId in scheduleIds) {
     await cancelAlarm(scheduleId.id, ScheduledNotificationType.timer);
   }
+  scheduleIds.clear();
+  await saveList('timer_schedule_ids', scheduleIds);
 }
 
 Future<void> resetAllTimers() async {
@@ -58,7 +60,7 @@ Future<void> updateTimerById(
     int scheduleId, Future<void> Function(ClockTimer) callback) async {
   List<ClockTimer> timers = await loadList("timers");
   int timerIndex = timers.indexWhere((timer) => timer.id == scheduleId);
-  if(timerIndex == -1) return;
+  if (timerIndex == -1) return;
   ClockTimer timer = timers[timerIndex];
   await callback(timer);
   timers[timerIndex] = timer;

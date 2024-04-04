@@ -1,4 +1,5 @@
 import 'package:audio_session/audio_session.dart';
+import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/alarm_task.dart';
@@ -216,6 +217,7 @@ class Alarm extends CustomizableListItem {
   }
 
   Future<void> schedule(String description) async {
+    
     _isEnabled = true;
 
     // Only one of the schedules can be active at a time
@@ -230,6 +232,7 @@ class Alarm extends CustomizableListItem {
   }
 
   Future<void> cancel() async {
+      cancelAlarmReminderNotification(id);
     cancelSkip();
     for (var schedule in _schedules) {
       await schedule.cancel();

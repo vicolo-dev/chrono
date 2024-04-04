@@ -22,7 +22,7 @@ Future<void> initializeNotifications() async {
       stopwatchNotificationChannel,
       timerNotificationChannel
     ],
-    channelGroups: [alarmNotificationChannelGroup],
+    // channelGroups: [alarmNotificationChannelGroup],
     debug: false,
   );
 }

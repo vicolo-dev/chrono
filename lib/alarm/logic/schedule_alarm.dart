@@ -15,6 +15,7 @@ Future<bool> scheduleAlarm(
   DateTime startDate,
   String description, {
   ScheduledNotificationType type = ScheduledNotificationType.alarm,
+  bool alarmClock = true,
   bool snooze = false,
 }) async {
   if (startDate.isBefore(DateTime.now())) {
@@ -64,7 +65,7 @@ Future<bool> scheduleAlarm(
       scheduleId,
       triggerScheduledNotification,
       allowWhileIdle: true,
-      alarmClock: true,
+      alarmClock: alarmClock,
       exact: true,
       wakeup: true,
       rescheduleOnReboot: true,
@@ -96,10 +97,7 @@ Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
     scheduleIds.removeWhere((id) => id.id == scheduleId);
     await saveList<ScheduleId>(name, scheduleIds);
 
-    if (type == ScheduledNotificationType.alarm) {
-      await cancelAlarmReminderNotification(scheduleId);
-    }
-
+   
     await AndroidAlarmManager.cancel(scheduleId);
   }
 }

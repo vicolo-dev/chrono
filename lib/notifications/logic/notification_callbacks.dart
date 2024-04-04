@@ -1,24 +1,27 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/stopwatch/logic/update_stopwatch.dart';
+import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 
 /// Use this method to detect when a new notification or a schedule is created
 @pragma("vm:entry-point")
 Future<void> onNotificationCreatedMethod(
     ReceivedNotification receivedNotification) async {
-  appSettings.load();
+  await initializeIsolate();
+
   switch (receivedNotification.channelKey) {
     case alarmNotificationChannelKey:
       Payload payload = receivedNotification.payload!;
       int? scheduleId = int.tryParse(payload['scheduleId']);
       if (scheduleId == null) return;
+      await cancelAlarmReminderNotification(scheduleId);
       AlarmNotificationManager.handleNotificationCreated(receivedNotification);
-      AwesomeNotifications().cancel(scheduleId);
       break;
   }
 }
@@ -32,7 +35,7 @@ Future<void> onNotificationDisplayedMethod(
 @pragma("vm:entry-point")
 Future<void> onDismissActionReceivedMethod(
     ReceivedAction receivedAction) async {
-  appSettings.load();
+  await initializeIsolate();
 
   switch (receivedAction.channelKey) {
     case alarmNotificationChannelKey:
@@ -44,7 +47,7 @@ Future<void> onDismissActionReceivedMethod(
 /// Use this method to detect when the user taps on a notification or action button
 @pragma("vm:entry-point")
 Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
-  appSettings.load();
+  await initializeIsolate();
 
   switch (receivedAction.channelKey) {
     case alarmNotificationChannelKey:

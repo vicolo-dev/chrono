@@ -8,7 +8,8 @@ const String alarmNotificationChannelKey = 'alarms_and_timers';
 const String timerNotificationChannelKey = 'timers';
 
 final NotificationChannel alarmNotificationChannel = NotificationChannel(
-  channelGroupKey: chronoNotificationChannelGroupKey,
+  icon: 'resource://drawable/alarm_icon',
+  // channelGroupKey: chronoNotificationChannelGroupKey,
   channelKey: alarmNotificationChannelKey,
   channelName: 'Alarms and Timers',
   channelDescription: 'Notification channel for clock alarms and timers',
@@ -22,7 +23,8 @@ final NotificationChannel alarmNotificationChannel = NotificationChannel(
 );
 
 final NotificationChannel reminderNotificationChannel = NotificationChannel(
-  channelGroupKey: chronoNotificationChannelGroupKey,
+  icon: 'resource://drawable/alarm_icon',
+  // channelGroupKey: chronoNotificationChannelGroupKey,
   channelKey: reminderNotificationChannelKey,
   channelName: 'Reminders',
   channelDescription:
@@ -36,7 +38,8 @@ final NotificationChannel reminderNotificationChannel = NotificationChannel(
 );
 
 final NotificationChannel timerNotificationChannel = NotificationChannel(
-  channelGroupKey: chronoNotificationChannelGroupKey,
+  icon: 'resource://drawable/timer_icon',
+  // channelGroupKey: chronoNotificationChannelGroupKey,
   channelKey: timerNotificationChannelKey,
   channelName: 'Timers',
   channelDescription: 'Notification channel for showing timer progress',
@@ -49,7 +52,8 @@ final NotificationChannel timerNotificationChannel = NotificationChannel(
 );
 
 final NotificationChannel stopwatchNotificationChannel = NotificationChannel(
-  channelGroupKey: chronoNotificationChannelGroupKey,
+  icon: 'resource://drawable/stopwatch_icon',
+  // channelGroupKey: chronoNotificationChannelGroupKey,
   channelKey: stopwatchNotificationChannelKey,
   channelName: 'Stopwatch',
   channelDescription: 'Notification channel for showing stopwatch progress',
@@ -61,8 +65,9 @@ final NotificationChannel stopwatchNotificationChannel = NotificationChannel(
   enableLights: false,
 );
 
-final NotificationChannelGroup alarmNotificationChannelGroup =
-    NotificationChannelGroup(
-  channelGroupKey: chronoNotificationChannelGroupKey,
-  channelGroupName: 'Chrono',
-);
+// final NotificationChannelGroup alarmNotificationChannelGroup =
+//     NotificationChannelGroup(
+//   channelGroupKey: chronoNotificationChannelGroupKey,
+//   channelGroupName: 'Chrono',
+//
+// );
