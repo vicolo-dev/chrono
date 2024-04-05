@@ -6,6 +6,7 @@ import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
+import 'package:clock_app/notifications/data/update_notification_intervals.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -20,9 +21,6 @@ import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/widgets/timer_card.dart';
-
-  Timer? timerNotificationInterval;
-
 
 typedef TimerCardBuilder = Widget Function(
   BuildContext context,
@@ -156,8 +154,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
     updateTimerNotification(timer, runningTimers.length);
     timerNotificationInterval?.cancel();
-    timerNotificationInterval =
-        Timer.periodic(const Duration(seconds: 1), (t) {
+    timerNotificationInterval = Timer.periodic(const Duration(seconds: 1), (t) {
       updateTimerNotification(timer, runningTimers.length);
     });
   }

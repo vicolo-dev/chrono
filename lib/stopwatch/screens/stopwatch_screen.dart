@@ -6,6 +6,7 @@ import 'package:clock_app/common/widgets/linear_progress_bar.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
+import 'package:clock_app/notifications/data/update_notification_intervals.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -19,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:timer_builder/timer_builder.dart';
 
-Timer? stopwatchNotificationInterval;
 
 class StopwatchScreen extends StatefulWidget {
   const StopwatchScreen({super.key});

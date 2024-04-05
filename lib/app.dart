@@ -1,8 +1,11 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
+import 'package:clock_app/notifications/data/notification_channel.dart';
+import 'package:clock_app/notifications/data/update_notification_intervals.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/onboarding/screens/onboarding_screen.dart';
@@ -63,6 +66,10 @@ class _AppState extends State<App> {
 
   @override
   void dispose() {
+    stopwatchNotificationInterval?.cancel();
+    timerNotificationInterval?.cancel();
+    AwesomeNotifications().cancelNotificationsByChannelKey(stopwatchNotificationChannelKey);
+    AwesomeNotifications().cancelNotificationsByChannelKey(timerNotificationChannelKey);
     super.dispose();
   }
 
