@@ -97,7 +97,10 @@ Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
     scheduleIds.removeWhere((id) => id.id == scheduleId);
     await saveList<ScheduleId>(name, scheduleIds);
 
-   
+    if (type == ScheduledNotificationType.alarm) {
+      await cancelAlarmReminderNotification(scheduleId);
+    }
+
     await AndroidAlarmManager.cancel(scheduleId);
   }
 }
@@ -109,9 +112,9 @@ enum AlarmStopAction {
 
 Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
     ScheduledNotificationType type, String description) async {
+  await scheduleAlarm(scheduleId, DateTime.now().add(delay), description,
+      type: type, snooze: true);
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
     await createSnoozeNotification(scheduleId, DateTime.now().add(delay));
   }
-  await scheduleAlarm(scheduleId, DateTime.now().add(delay), description,
-      type: type, snooze: true);
 }

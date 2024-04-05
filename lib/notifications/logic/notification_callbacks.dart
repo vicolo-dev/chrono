@@ -20,7 +20,6 @@ Future<void> onNotificationCreatedMethod(
       Payload payload = receivedNotification.payload!;
       int? scheduleId = int.tryParse(payload['scheduleId']);
       if (scheduleId == null) return;
-      await cancelAlarmReminderNotification(scheduleId);
       AlarmNotificationManager.handleNotificationCreated(receivedNotification);
       break;
   }

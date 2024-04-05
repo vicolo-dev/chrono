@@ -2,6 +2,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
@@ -147,6 +148,7 @@ void setVolume(double volume) {
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
   if (action == AlarmStopAction.snooze) {
     await updateAlarmById(scheduleId, (alarm) async => await alarm.snooze());
+    // await createSnoozeNotification(scheduleId);
   } else if (action == AlarmStopAction.dismiss) {
     // If there was a timer ringing when the alarm was triggered, resume it now
     if (RingingManager.isTimerRinging) {
