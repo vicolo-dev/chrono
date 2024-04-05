@@ -124,7 +124,7 @@ class _AlarmCardState extends State<AlarmCard> {
               builder: (context) => AlarmNotificationScreen(
                 scheduleId: widget.alarm.id,
                 initialIndex: 0,
-                onDismiss: widget.onDismiss,
+                onPop: widget.onDismiss,
               ),
             ),
           );

@@ -1,6 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
+import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/alarm/utils/alarm_id.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
@@ -38,7 +41,8 @@ Future<void> onDismissActionReceivedMethod(
 
   switch (receivedAction.channelKey) {
     case alarmNotificationChannelKey:
-      AlarmNotificationManager.handleNotificationDismiss(receivedAction);
+      AlarmNotificationManager.handleNotificationDismiss(
+          receivedAction, AlarmDismissType.dismiss);
       break;
   }
 }
@@ -53,24 +57,15 @@ Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
       AlarmNotificationManager.handleNotificationAction(receivedAction);
       break;
     case reminderNotificationChannelKey:
-      if (receivedAction.buttonKeyPressed == 'alarm_skip') {
-        Payload payload = receivedAction.payload!;
-        int? scheduleId = int.tryParse(payload['scheduleId']);
-        if (scheduleId != null) {
-          await updateAlarmById(scheduleId, (alarm) async {
-            alarm.setShouldSkip(true);
-            // await alarm.update("Skipped alarm");
-          });
-        }
-      } else if (receivedAction.buttonKeyPressed == 'alarm_skip_snooze') {
-        Payload payload = receivedAction.payload!;
-        int? scheduleId = int.tryParse(payload['scheduleId']);
-        if (scheduleId != null) {
-          await updateAlarmById(scheduleId, (alarm) async {
-            await alarm.cancelSnooze();
-            await alarm.update("Skipped snooze");
-          });
-        }
+      switch (receivedAction.buttonKeyPressed) {
+        case 'alarm_skip':
+          await AlarmNotificationManager.handleNotificationDismiss(
+              receivedAction, AlarmDismissType.skip);
+          break;
+        case 'alarm_skip_snooze':
+          await AlarmNotificationManager.handleNotificationDismiss(
+              receivedAction, AlarmDismissType.unsnooze);
+          break;
       }
       // ReminderNotificationManager.handleNotificationAction(receivedAction);
       break;

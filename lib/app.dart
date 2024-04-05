@@ -3,6 +3,7 @@ import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
+import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/onboarding/screens/onboarding_screen.dart';
 import 'package:clock_app/settings/data/appearance_settings_schema.dart';
@@ -44,8 +45,6 @@ class _AppState extends State<App> {
   late SettingGroup _appearanceSettings;
   late SettingGroup _colorSettings;
   late SettingGroup _styleSettings;
-
-
 
   @override
   void initState() {
@@ -155,24 +154,31 @@ class _AppState extends State<App> {
                 return MaterialPageRoute(
                     builder: (context) => const OnBoardingScreen());
               } else {
-                final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{"tab": 0}) as Map;
+                final arguments = (ModalRoute.of(context)?.settings.arguments ??
+                    <String, dynamic>{"tab": 0}) as Map;
                 return MaterialPageRoute(
-                    builder: (context) =>  NavScaffold(initialTabIndex: arguments["tab"],));
+                    builder: (context) => NavScaffold(
+                          initialTabIndex: arguments["tab"],
+                        ));
               }
 
             case Routes.alarmNotificationRoute:
               return MaterialPageRoute(
                 builder: (context) {
-                  final List<int> scheduleIds = settings.arguments as List<int>;
-                  return AlarmNotificationScreen(scheduleId: scheduleIds[0]);
+                  final args = settings.arguments as AlarmNotificationArguments;
+                  return AlarmNotificationScreen(
+                    scheduleId: args.scheduleIds[0],
+                    initialIndex: args.tasksOnly ? 0 : -1,
+                    dismissType: args.dismissType,
+                  );
                 },
               );
 
             case Routes.timerNotificationRoute:
               return MaterialPageRoute(
                 builder: (context) {
-                  final List<int> scheduleIds = settings.arguments as List<int>;
-                  return TimerNotificationScreen(scheduleIds: scheduleIds);
+                  final args = settings.arguments as AlarmNotificationArguments;
+                  return TimerNotificationScreen(scheduleIds: args.scheduleIds);
                 },
               );
 

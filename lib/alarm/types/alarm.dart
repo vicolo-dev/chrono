@@ -159,6 +159,9 @@ class Alarm extends CustomizableListItem {
 
   void cancelSkip() {
     _skippedTime = null;
+    if (currentScheduleDateTime != null) {
+      createAlarmReminderNotification(id, currentScheduleDateTime!);
+    }
   }
 
   Future<void> toggle(String description) async {
@@ -217,7 +220,6 @@ class Alarm extends CustomizableListItem {
   }
 
   Future<void> schedule(String description) async {
-    
     _isEnabled = true;
 
     // Only one of the schedules can be active at a time
@@ -232,7 +234,7 @@ class Alarm extends CustomizableListItem {
   }
 
   Future<void> cancel() async {
-      cancelAlarmReminderNotification(id);
+    cancelAlarmReminderNotification(id);
     cancelSkip();
     for (var schedule in _schedules) {
       await schedule.cancel();

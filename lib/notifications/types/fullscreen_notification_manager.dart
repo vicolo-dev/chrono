@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
@@ -89,7 +90,8 @@ class AlarmNotificationManager {
   static Future<void> removeNotification(ScheduledNotificationType type) async {
     FullScreenNotificationData data = alarmNotificationData[type]!;
 
-    await AwesomeNotifications().cancelNotificationsByChannelKey(alarmNotificationChannelKey);
+    await AwesomeNotifications()
+        .cancelNotificationsByChannelKey(alarmNotificationChannelKey);
     await AndroidForegroundService.stopForeground(data.id);
   }
 
@@ -124,6 +126,32 @@ class AlarmNotificationManager {
     await stopAlarm(scheduleId, type, AlarmStopAction.dismiss);
   }
 
+  static Future<void> dismissNotification(int scheduleId,
+      AlarmDismissType dismissType, ScheduledNotificationType type) async {
+    switch (dismissType) {
+      case AlarmDismissType.dismiss:
+        await dismissAlarm(scheduleId, type);
+        break;
+      case AlarmDismissType.skip:
+        await updateAlarmById(scheduleId, (alarm) async {
+          alarm.setShouldSkip(true);
+        });
+        break;
+      case AlarmDismissType.snooze:
+        await snoozeAlarm(scheduleId, type);
+        break;
+
+      case AlarmDismissType.unsnooze:
+        await updateAlarmById(scheduleId, (alarm) async {
+          await alarm.cancelSnooze();
+          await alarm.update("Skipped snooze");
+        });
+        break;
+    }
+    await closeNotification(type);
+
+  }
+
   static Future<void> stopAlarm(int scheduleId, ScheduledNotificationType type,
       AlarmStopAction action) async {
     // Send a message to tell the alarm isolate to run the code to stop alarm
@@ -139,7 +167,9 @@ class AlarmNotificationManager {
   }
 
   static Future<void> openNotificationScreen(
-      FullScreenNotificationData data, List<int> scheduleIds) async {
+      FullScreenNotificationData data, List<int> scheduleIds,
+      {bool tasksOnly = false,
+      AlarmDismissType dismissType = AlarmDismissType.dismiss}) async {
     // await LockScreenFlagManager.setLockScreenFlags();
     await FlutterShowWhenLocked().show();
     // If we're already on the same notification screen, pop it off the
@@ -150,42 +180,46 @@ class AlarmNotificationManager {
     App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
       data.route,
       (route) => (route.settings.name != data.route) || route.isFirst,
-      arguments: scheduleIds,
+      arguments: AlarmNotificationArguments(
+          scheduleIds: scheduleIds,
+          tasksOnly: tasksOnly,
+          dismissType: dismissType),
     );
   }
 
-  static Future<void> handleNotificationDismiss(ReceivedAction action) async {
+  static Future<void> handleNotificationDismiss(
+      ReceivedAction action, AlarmDismissType dismissType) async {
     Payload payload = action.payload!;
     final type = ScheduledNotificationType.values.byName((payload['type'])!);
-    // FullScreenNotificationData data = alarmNotificationData[type]!;
-    // bool tasksRequired = payload['tasksRequired'] == 'true';
-
+    FullScreenNotificationData data = alarmNotificationData[type]!;
+    bool tasksRequired = payload['tasksRequired'] == 'true';
     List<int> scheduleIds =
         (json.decode((payload['scheduleIds'])!) as List<dynamic>).cast<int>();
+    if (scheduleIds.isEmpty) return;
 
-    await dismissAlarm(scheduleIds.first, type);
+    if (tasksRequired && dismissType != AlarmDismissType.snooze){
+      await openNotificationScreen(data, scheduleIds,
+          tasksOnly: true, dismissType: dismissType);
+    } else {
+      await dismissNotification(scheduleIds.first, dismissType, type);
+    }
   }
 
   static Future<void> handleNotificationAction(ReceivedAction action) async {
     Payload payload = action.payload!;
     final type = ScheduledNotificationType.values.byName((payload['type'])!);
     FullScreenNotificationData data = alarmNotificationData[type]!;
-    bool tasksRequired = payload['tasksRequired'] == 'true';
 
     List<int> scheduleIds =
         (json.decode((payload['scheduleIds'])!) as List<dynamic>).cast<int>();
 
     switch (action.buttonKeyPressed) {
       case _snoozeActionKey:
-        await snoozeAlarm(scheduleIds.first, type);
+        await handleNotificationDismiss(action, AlarmDismissType.snooze);
         break;
 
       case _dismissActionKey:
-        if (tasksRequired) {
-          await openNotificationScreen(data, scheduleIds);
-        } else {
-          await dismissAlarm(scheduleIds.first, type);
-        }
+        await handleNotificationDismiss(action, AlarmDismissType.dismiss);
         break;
 
       default:
@@ -193,4 +227,22 @@ class AlarmNotificationManager {
         break;
     }
   }
+}
+
+class AlarmNotificationArguments {
+  final List<int> scheduleIds;
+  final bool tasksOnly;
+  final AlarmDismissType dismissType;
+
+  AlarmNotificationArguments(
+      {required this.scheduleIds,
+      required this.tasksOnly,
+      required this.dismissType});
+}
+
+enum AlarmDismissType {
+  dismiss,
+  skip,
+  snooze,
+  unsnooze,
 }
