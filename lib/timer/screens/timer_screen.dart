@@ -43,7 +43,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void update(value) {
     setState(() {});
-    _listController.changeItems((timers)async => {});
+    _listController.changeItems((timers) async => {});
   }
 
   void onTimerUpdate() async {
@@ -85,7 +85,8 @@ class _TimerScreenState extends State<TimerScreen> {
   Future<void> _handleToggleState(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     await timer.toggleState();
-    _listController.changeItems((timers) async => await timers[index].toggleState());
+    _listController
+        .changeItems((timers) async => await timers[index].toggleState());
     showProgressNotification();
   }
 
@@ -99,7 +100,8 @@ class _TimerScreenState extends State<TimerScreen> {
   Future<void> _handleAddTimeToTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     // await timer.addTime();
-    _listController.changeItems((timers) async => await timers[index].addTime());
+    _listController
+        .changeItems((timers) async => await timers[index].addTime());
     showProgressNotification();
   }
 
@@ -200,15 +202,24 @@ class _TimerScreenState extends State<TimerScreen> {
                 ListFilterCustomAction(
                     name: "Reset all filtered timers",
                     icon: Icons.timer_off_rounded,
-                    action: (timer) async => await timer.reset()),
+                    action: (timer) async {
+                      await timer.reset();
+                      showProgressNotification();
+                    }),
                 ListFilterCustomAction(
                     name: "Play all filtered timers",
                     icon: Icons.play_arrow_rounded,
-                    action: (timer) async => await timer.start()),
+                    action: (timer) async {
+                      await timer.start();
+                      showProgressNotification();
+                    }),
                 ListFilterCustomAction(
                     name: "Pause all filtered timers",
                     icon: Icons.pause_rounded,
-                    action: (timer) async => await timer.pause())
+                    action: (timer) async {
+                      await timer.pause();
+                      showProgressNotification();
+                    }),
               ],
             ),
           ),

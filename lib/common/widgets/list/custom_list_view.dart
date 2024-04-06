@@ -34,6 +34,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
     this.shouldInsertOnTop = true,
     this.listFilters = const [],
     this.customActions = const [],
+    this.sortOptions = const [],
   });
 
   final List<Item> items;
@@ -52,6 +53,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final bool shouldInsertOnTop;
   final List<ListFilterItem<Item>> listFilters;
   final List<ListFilterCustomAction<Item>> customActions;
+  final List<ListSortOption> sortOptions;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -63,6 +65,7 @@ class _CustomListViewState<Item extends ListItem>
   late int lastListLength = widget.items.length;
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
+  int selectedSortIndex = 0;
   // late ListFilter<Item> _selectedFilter = widget.listFilters.isEmpty
   //     ? ListFilter("Default", (item) => true)
   //     : widget.listFilters[0];
@@ -109,7 +112,6 @@ class _CustomListViewState<Item extends ListItem>
   }
 
   void _notifyChangeList() {
-    // print("============================= ${widget.items.length}");
     _controller.notifyChangedRange(
       0,
       widget.items.length,
@@ -309,8 +311,8 @@ class _CustomListViewState<Item extends ListItem>
                     return AlertDialog(
                       actionsPadding:
                           const EdgeInsets.only(bottom: 6, right: 10),
-                      content:
-                          Text("Do you want to delete all filtered items?"),
+                      content: const Text(
+                          "Do you want to delete all filtered items?"),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -331,8 +333,6 @@ class _CustomListViewState<Item extends ListItem>
                   },
                 );
 
-                print("------------- $result");
-
                 if (result == null || result == false) return;
 
                 final toRemove = widget.items.where((item) => widget.listFilters
@@ -348,7 +348,24 @@ class _CustomListViewState<Item extends ListItem>
       }
       widgets.addAll(
           widget.listFilters.map((filter) => getListFilterChip(filter)));
+      // if (widget.sortOptions.isNotEmpty) {
+      //   widgets.add(
+      //     ListSortChip(
+      //       sortOptions: [
+      //         ListSortOption("Default", "", (a, b) => 0),
+      //         ...widget.sortOptions,
+      //       ],
+      //       onChange: (index) => setState(() => selectedSortIndex = index),
+      //     ),
+      //   );
+      // }
       return widgets;
+    }
+
+    final List<Item> items = List.from(widget.items);
+
+    if (selectedSortIndex != 0) {
+      items.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
     }
 
     timeDilation = 0.75;
@@ -392,6 +409,7 @@ class _CustomListViewState<Item extends ListItem>
             SlidableAutoCloseBehavior(
               child: AutomaticAnimatedListView<Item>(
                 list: widget.items,
+
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 comparator: AnimatedListDiffListComparator<Item>(

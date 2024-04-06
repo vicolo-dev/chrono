@@ -230,3 +230,65 @@ class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
     );
   }
 }
+
+class ListSortChip<Item extends ListItem> extends StatelessWidget {
+  final List<ListSortOption> sortOptions;
+  final Function(int) onChange;
+  final int selectedIndex = 0;
+
+  const ListSortChip({
+    super.key,
+    required this.sortOptions,
+    required this.onChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+    bool isFirstSelected = selectedIndex == 0;
+
+    void showSelect() async {
+      showSelectBottomSheet(context, (List<int>? selectedIndices) {
+        onChange(selectedIndices?[0] ?? selectedIndex);
+      },
+          title: "Sort by",
+          description: "",
+          choices: sortOptions
+              .map((e) => SelectChoice(name: e.name, value: e.name))
+              .toList(),
+          initialSelectedIndices: [selectedIndex],
+          multiSelect: false);
+    }
+
+    return CardContainer(
+      color: isFirstSelected ? null : colorScheme.primary,
+      onTap: showSelect,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
+            child: Text(
+              "Sort${isFirstSelected ? "" : ": ${sortOptions[selectedIndex].name}"}",
+              style: textTheme.headlineSmall?.copyWith(
+                  color: isFirstSelected
+                      ? colorScheme.onSurface
+                      : colorScheme.onPrimary),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 2.0, right: 8.0),
+            child: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: isFirstSelected
+                  ? colorScheme.onSurface.withOpacity(0.6)
+                  : colorScheme.onPrimary.withOpacity(0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

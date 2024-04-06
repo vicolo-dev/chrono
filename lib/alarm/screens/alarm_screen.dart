@@ -198,13 +198,39 @@ class _AlarmScreenState extends State<AlarmScreen> {
             ListFilterCustomAction(
                 name: "Enable all filtered alarms",
                 icon: Icons.alarm_on_rounded,
-                action: (alarm)  {
+                action: (alarm) {
                   alarm.enable("Enabled by list filter");
                 }),
             ListFilterCustomAction(
                 name: "Disable all filtered alarms",
                 icon: Icons.alarm_off_rounded,
-                action: (alarm)  => alarm.disable())
+                action: (alarm) => alarm.disable())
+          ],
+          sortOptions: [
+            ListSortOption<Alarm>("Date Descending", "9-1", (a, b) {
+              if (a.currentScheduleDateTime == null &&
+                  b.currentScheduleDateTime == null) {
+                return 0;
+              } else if (a.currentScheduleDateTime == null) {
+                return 1;
+              } else if (b.currentScheduleDateTime == null) {
+                return -1;
+              }
+              return b.currentScheduleDateTime!
+                  .compareTo(a.currentScheduleDateTime!);
+            }),
+            ListSortOption<Alarm>("Date Ascending", "1-9", (a, b) {
+              if (a.currentScheduleDateTime == null &&
+                  b.currentScheduleDateTime == null) {
+                return 0;
+              } else if (a.currentScheduleDateTime == null) {
+                return 1;
+              } else if (b.currentScheduleDateTime == null) {
+                return -1;
+              }
+              return a.currentScheduleDateTime!
+                  .compareTo(b.currentScheduleDateTime!);
+            }),
           ],
         ),
         FAB(

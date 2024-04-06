@@ -70,6 +70,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
     this.shouldInsertOnTop = true,
     this.listFilters = const [],
     this.customActions = const [],
+    this.sortOptions = const [],
   });
 
   final Widget Function(Item item) itemBuilder;
@@ -87,6 +88,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final bool shouldInsertOnTop;
   final List<ListFilterItem<Item>> listFilters;
   final List<ListFilterCustomAction<Item>> customActions;
+  final List<ListSortOption> sortOptions;
 
   @override
   State<PersistentListView> createState() => _PersistentListViewState<Item>();

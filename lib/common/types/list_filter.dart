@@ -1,9 +1,16 @@
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/debug.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-abstract class ListFilterItem<Item> {
+class ListSortOption<Item extends ListItem> {
+  final String name;
+  final String abbreviation;
+  final int Function(Item, Item) sortFunction;
+
+  ListSortOption(this.name, this.abbreviation, this.sortFunction);
+}
+
+abstract class ListFilterItem<Item extends ListItem> {
   bool Function(Item) get filterFunction;
   String get displayName;
   bool get isActive;
