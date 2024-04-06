@@ -80,8 +80,7 @@ class ActionBottomSheet extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(actions[index].icon,
-                                  color: actions[index].color ??
-                                      colorScheme.primary),
+                                  color: actions[index].color),
                               const SizedBox(
                                 width: 8,
                               ),

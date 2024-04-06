@@ -99,10 +99,10 @@ class _CustomListViewState<Item extends ListItem>
     }
   }
 
-  void _changeItems(ItemChangerCallback<Item> callback, bool callOnModifyList) {
-    setState(() {
-      callback(widget.items);
-    });
+  Future<void> _changeItems(
+      ItemChangerCallback<Item> callback, bool callOnModifyList) async {
+    await callback(widget.items);
+    setState(() {});
     _notifyChangeList();
 
     if (callOnModifyList) widget.onModifyList?.call();
@@ -289,10 +289,10 @@ class _CustomListViewState<Item extends ListItem>
             ...widget.customActions.map((action) => ListFilterAction(
                   name: action.name,
                   icon: action.icon,
-                  action: () {
-                    _changeItems((items) {
+                  action: () async {
+                    await _changeItems((items) async {
                       for (var item in items) {
-                        action.action(item);
+                        await action.action(item);
                       }
                     }, true);
                   },
@@ -309,8 +309,8 @@ class _CustomListViewState<Item extends ListItem>
                     return AlertDialog(
                       actionsPadding:
                           const EdgeInsets.only(bottom: 6, right: 10),
-                      content: Text(
-                          "Do you want to delete all filtered ${widget.placeholderText}?"),
+                      content:
+                          Text("Do you want to delete all filtered items?"),
                       actions: [
                         TextButton(
                           onPressed: () {

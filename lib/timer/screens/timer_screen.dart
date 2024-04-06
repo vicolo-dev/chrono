@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
+import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
@@ -42,7 +43,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void update(value) {
     setState(() {});
-    _listController.changeItems((timers) => {});
+    _listController.changeItems((timers)async => {});
   }
 
   void onTimerUpdate() async {
@@ -84,21 +85,21 @@ class _TimerScreenState extends State<TimerScreen> {
   Future<void> _handleToggleState(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     await timer.toggleState();
-    _listController.changeItems((timers) => timers[index] = timer);
+    _listController.changeItems((timers) async => await timers[index].toggleState());
     showProgressNotification();
   }
 
   Future<void> _handleResetTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    await timer.reset();
-    _listController.changeItems((timers) => timers[index] = timer);
+    // await timer.reset();
+    _listController.changeItems((timers) async => await timers[index].reset());
     showProgressNotification();
   }
 
   Future<void> _handleAddTimeToTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    await timer.addTime();
-    _listController.changeItems((timers) => timers[index] = timer);
+    // await timer.addTime();
+    _listController.changeItems((timers) async => await timers[index].addTime());
     showProgressNotification();
   }
 
@@ -195,6 +196,20 @@ class _TimerScreenState extends State<TimerScreen> {
               placeholderText: "No timers created",
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],
+              customActions: [
+                ListFilterCustomAction(
+                    name: "Reset all filtered timers",
+                    icon: Icons.timer_off_rounded,
+                    action: (timer) async => await timer.reset()),
+                ListFilterCustomAction(
+                    name: "Play all filtered timers",
+                    icon: Icons.play_arrow_rounded,
+                    action: (timer) async => await timer.start()),
+                ListFilterCustomAction(
+                    name: "Pause all filtered timers",
+                    icon: Icons.pause_rounded,
+                    action: (timer) async => await timer.pause())
+              ],
             ),
           ),
         ],

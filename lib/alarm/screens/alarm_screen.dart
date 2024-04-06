@@ -108,7 +108,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
       await newAlarm
           .update("_handleCustomizeAlarm(): Alarm customized by the user");
-      _listController.changeItems((alarms) {
+      _listController.changeItems((alarms) async {
         alarms[index] = newAlarm;
       });
       _showNextScheduleSnackBar(newAlarm);
@@ -131,7 +131,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   _handleSkipChange(Alarm alarm, bool value) {
     int index = _listController.getItemIndex(alarm);
-    _listController.changeItems((alarms) {
+    _listController.changeItems((alarms) async {
       alarms[index].setShouldSkip(value);
     });
   }
@@ -198,11 +198,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
             ListFilterCustomAction(
                 name: "Enable all filtered alarms",
                 icon: Icons.alarm_on_rounded,
-                action: (alarm) => alarm.enable("Enabled by list filter")),
+                action: (alarm)  {
+                  alarm.enable("Enabled by list filter");
+                }),
             ListFilterCustomAction(
                 name: "Disable all filtered alarms",
                 icon: Icons.alarm_off_rounded,
-                action: (alarm) => alarm.disable())
+                action: (alarm)  => alarm.disable())
           ],
         ),
         FAB(
