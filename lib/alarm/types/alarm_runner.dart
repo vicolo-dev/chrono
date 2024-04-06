@@ -14,12 +14,13 @@ class AlarmRunner extends JsonSerializable {
     _id = UniqueKey().hashCode;
   }
 
-  Future<bool> schedule(DateTime dateTime, String description) async {
+  Future<void> schedule(DateTime dateTime, String description) async {
     _currentScheduleDateTime = dateTime;
-    return await scheduleAlarm(_id, dateTime, description);
+    await scheduleAlarm(_id, dateTime, description);
   }
 
   Future<void> cancel() async {
+    if(_currentScheduleDateTime == null) return;
     _currentScheduleDateTime = null;
     await cancelAlarm(_id, ScheduledNotificationType.alarm);
   }

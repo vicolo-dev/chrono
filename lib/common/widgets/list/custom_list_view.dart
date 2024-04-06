@@ -144,7 +144,8 @@ class _CustomListViewState<Item extends ListItem>
     return true;
   }
 
-  Future<void> _handleDeleteItem(Item deletedItem) async {
+  Future<void> _handleDeleteItem(Item deletedItem,
+      [bool callOnModifyList = true]) async {
     await widget.onDeleteItem?.call(deletedItem);
     int index = _getItemIndex(deletedItem);
     setState(() {
@@ -156,9 +157,30 @@ class _CustomListViewState<Item extends ListItem>
       1,
       _getChangeWidgetBuilder(deletedItem),
     );
-    widget.onModifyList?.call();
+    if (callOnModifyList) widget.onModifyList?.call();
     lastListLength = widget.items.length;
   }
+
+  //  Future<void> _handleDeleteItemList(List<Item> deletedItems) async {
+  //     while (deletedItems.isNotEmpty) {
+  //                  await widget.onDeleteItem?.call(deletedItems.first);
+  //                  int index = _getItemIndex(deletedItems.first);
+  //                  widget.items.removeAt(index);
+  // _controller.notifyRemovedRange(
+  //      index,
+  //      1,
+  //      _getChangeWidgetBuilder(deletedItem),
+  //    );
+  //
+  //
+  //                  }
+  //
+  //    setState(() {
+  //          });
+  //
+  //       widget.onModifyList?.call();
+  //    lastListLength = widget.items.length;
+  //  }
 
   void _handleClear() {
     int listLength = widget.items.length;
@@ -185,7 +207,7 @@ class _CustomListViewState<Item extends ListItem>
     _controller.notifyInsertedRange(index, 1);
     _scrollToIndex(index);
     // TODO: Remove this delay
-    Future.delayed(const Duration(milliseconds: 250), () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       _scrollToIndex(index);
     });
     _updateItemHeight();
@@ -336,8 +358,10 @@ class _CustomListViewState<Item extends ListItem>
                 final toRemove = widget.items.where((item) => widget.listFilters
                     .every((filter) => filter.filterFunction(item)));
                 while (toRemove.isNotEmpty) {
-                  await _handleDeleteItem(toRemove.first);
+                  await _handleDeleteItem(toRemove.first, false);
                 }
+
+                widget.onModifyList?.call();
               },
             )
           ],
