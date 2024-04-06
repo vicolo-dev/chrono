@@ -60,8 +60,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
 
     Alarm? currentAlarm = getAlarmById(widget.scheduleId);
     if (currentAlarm == null) {
-     AlarmNotificationManager.dismissNotification(widget.scheduleId,
-              widget.dismissType, ScheduledNotificationType.alarm);
+      AlarmNotificationManager.dismissNotification(widget.scheduleId,
+          widget.dismissType, ScheduledNotificationType.alarm);
       return;
     }
     alarm = currentAlarm;

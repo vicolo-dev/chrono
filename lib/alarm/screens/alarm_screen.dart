@@ -198,13 +198,19 @@ class _AlarmScreenState extends State<AlarmScreen> {
             ListFilterCustomAction(
                 name: "Enable all filtered alarms",
                 icon: Icons.alarm_on_rounded,
-                action: (alarm) {
-                  alarm.enable("Enabled by list filter");
+                action: (alarms)async {
+                  for(var alarm in alarms){
+                  await _handleEnableChangeAlarm(alarm, true);
+                  }
                 }),
             ListFilterCustomAction(
                 name: "Disable all filtered alarms",
                 icon: Icons.alarm_off_rounded,
-                action: (alarm) => alarm.disable())
+                action: (alarms) async{
+                  for(var alarm in alarms){
+                  await _handleEnableChangeAlarm(alarm, false);
+                  }
+                }),
           ],
           sortOptions: [
             ListSortOption<Alarm>("Date Descending", "9-1", (a, b) {

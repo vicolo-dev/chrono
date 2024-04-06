@@ -309,7 +309,7 @@ class ListFilterCustomAction<Item extends ListItem> {
   final String name;
   final IconData icon;
   final Color? color;
-  final Function(Item) action;
+  final Function(List<Item>) action;
 
   ListFilterCustomAction(
       {this.color,

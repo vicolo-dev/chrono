@@ -85,23 +85,37 @@ class _TimerScreenState extends State<TimerScreen> {
   Future<void> _handleToggleState(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
     await timer.toggleState();
-    _listController
-        .changeItems((timers) async => await timers[index].toggleState());
+    _listController.changeItems((timers) async => timers[index] = timer);
+    showProgressNotification();
+  }
+
+  Future<void> _handleStartTimer(ClockTimer timer) async {
+    if (timer.isRunning) return;
+    int index = _listController.getItemIndex(timer);
+    await timer.start();
+    _listController.changeItems((timers) async => timers[index] = timer);
+    showProgressNotification();
+  }
+
+  Future<void> _handlePauseTimer(ClockTimer timer) async {
+    if (timer.isPaused) return;
+    int index = _listController.getItemIndex(timer);
+    await timer.pause();
+    _listController.changeItems((timers) async => timers[index] = timer);
     showProgressNotification();
   }
 
   Future<void> _handleResetTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    // await timer.reset();
-    _listController.changeItems((timers) async => await timers[index].reset());
+    await timer.reset();
+    _listController.changeItems((timers) async => timers[index] = timer);
     showProgressNotification();
   }
 
   Future<void> _handleAddTimeToTimer(ClockTimer timer) async {
     int index = _listController.getItemIndex(timer);
-    // await timer.addTime();
-    _listController
-        .changeItems((timers) async => await timers[index].addTime());
+    await timer.addTime();
+    _listController.changeItems((timers) async => timers[index] = timer);
     showProgressNotification();
   }
 
@@ -202,23 +216,26 @@ class _TimerScreenState extends State<TimerScreen> {
                 ListFilterCustomAction(
                     name: "Reset all filtered timers",
                     icon: Icons.timer_off_rounded,
-                    action: (timer) async {
-                      await timer.reset();
-                      showProgressNotification();
+                    action: (timers) async {
+                      for (var timer in timers) {
+                        await _handleResetTimer(timer);
+                      }
                     }),
                 ListFilterCustomAction(
                     name: "Play all filtered timers",
                     icon: Icons.play_arrow_rounded,
-                    action: (timer) async {
-                      await timer.start();
-                      showProgressNotification();
+                    action: (timers) async {
+                      for (var timer in timers) {
+                        await _handleStartTimer(timer);
+                      }
                     }),
                 ListFilterCustomAction(
                     name: "Pause all filtered timers",
                     icon: Icons.pause_rounded,
-                    action: (timer) async {
-                      await timer.pause();
-                      showProgressNotification();
+                    action: (timers) async {
+                      for (var timer in timers) {
+                        await _handlePauseTimer(timer);
+                      }
                     }),
               ],
             ),

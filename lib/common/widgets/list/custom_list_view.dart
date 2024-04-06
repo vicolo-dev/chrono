@@ -41,7 +41,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final Widget Function(Item item) itemBuilder;
   final void Function(Item item, int index)? onTapItem;
   final void Function(Item item)? onReorderItem;
-  final void Function(Item item)? onDeleteItem;
+  final Function(Item item)? onDeleteItem;
   final void Function(Item item)? onAddItem;
   // Called whenever an item is added, deleted or reordered
   final void Function()? onModifyList;
@@ -104,7 +104,7 @@ class _CustomListViewState<Item extends ListItem>
 
   Future<void> _changeItems(
       ItemChangerCallback<Item> callback, bool callOnModifyList) async {
-    await callback(widget.items);
+    callback(widget.items);
     setState(() {});
     _notifyChangeList();
 
@@ -144,8 +144,8 @@ class _CustomListViewState<Item extends ListItem>
     return true;
   }
 
-  void _handleDeleteItem(Item deletedItem) {
-    widget.onDeleteItem?.call(deletedItem);
+  Future<void> _handleDeleteItem(Item deletedItem) async {
+    await widget.onDeleteItem?.call(deletedItem);
     int index = _getItemIndex(deletedItem);
     setState(() {
       widget.items.removeAt(index);
@@ -291,13 +291,10 @@ class _CustomListViewState<Item extends ListItem>
             ...widget.customActions.map((action) => ListFilterAction(
                   name: action.name,
                   icon: action.icon,
-                  action: () async {
-                    await _changeItems((items) async {
-                      for (var item in items) {
-                        await action.action(item);
-                      }
-                    }, true);
-                  },
+                  action: () => action.action(widget.items
+                      .where((item) => widget.listFilters
+                          .every((filter) => filter.filterFunction(item)))
+                      .toList()),
                 )),
             ListFilterAction(
               name: "Delete all filtered items",
@@ -338,7 +335,7 @@ class _CustomListViewState<Item extends ListItem>
                 final toRemove = widget.items.where((item) => widget.listFilters
                     .every((filter) => filter.filterFunction(item)));
                 while (toRemove.isNotEmpty) {
-                  _handleDeleteItem(toRemove.first);
+                  await _handleDeleteItem(toRemove.first);
                 }
               },
             )
