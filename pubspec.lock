@@ -380,10 +380,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_show_when_locked
-      sha256: e5a3d756dc762a9f46728270450bfed644448abadf780b39abb4e1eca06649fe
+      sha256: "19796554990f44564621a040229e3785c84c261a34be9db04b76f06971f50b0a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   flutter_slidable:
     dependency: "direct main"
     description:

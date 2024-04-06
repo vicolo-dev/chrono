@@ -45,7 +45,7 @@ dependencies:
   table_calendar: ^3.0.8
   vector_math: ^2.1.4
   fuzzywuzzy: ^1.1.2
-  flutter_show_when_locked: ^0.0.1
+  flutter_show_when_locked: ^0.0.2
   # flex_color_picker:
   #   path: ../flex_color_picker
   flex_color_picker:
