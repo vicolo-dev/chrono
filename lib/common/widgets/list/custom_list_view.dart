@@ -40,9 +40,9 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final List<Item> items;
   final Widget Function(Item item) itemBuilder;
   final void Function(Item item, int index)? onTapItem;
-  final void Function(Item item)? onReorderItem;
+  final Function(Item item)? onReorderItem;
   final Function(Item item)? onDeleteItem;
-  final void Function(Item item)? onAddItem;
+  final Function(Item item)? onAddItem;
   // Called whenever an item is added, deleted or reordered
   final void Function()? onModifyList;
   final String placeholderText;
@@ -176,14 +176,15 @@ class _CustomListViewState<Item extends ListItem>
     lastListLength = widget.items.length;
   }
 
-  void _handleAddItem(Item item, {int index = -1}) {
+  Future<void> _handleAddItem(Item item, {int index = -1}) async {
     if (index == -1) {
       index = widget.shouldInsertOnTop ? 0 : widget.items.length;
     }
     setState(() => widget.items.insert(index, item));
-    widget.onAddItem?.call(item);
+    await widget.onAddItem?.call(item);
     _controller.notifyInsertedRange(index, 1);
     _scrollToIndex(index);
+    // TODO: Remove this delay
     Future.delayed(const Duration(milliseconds: 250), () {
       _scrollToIndex(index);
     });

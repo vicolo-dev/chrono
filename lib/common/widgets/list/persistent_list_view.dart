@@ -75,9 +75,9 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
 
   final Widget Function(Item item) itemBuilder;
   final void Function(Item item, int index)? onTapItem;
-  final void Function(Item item)? onReorderItem;
+  final  Function(Item item)? onReorderItem;
   final Function(Item item)? onDeleteItem;
-  final void Function(Item item)? onAddItem;
+  final  Function(Item item)? onAddItem;
   final String saveTag;
   final String placeholderText;
   final PersistentListController<Item> listController;
