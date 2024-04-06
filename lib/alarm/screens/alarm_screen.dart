@@ -5,6 +5,7 @@ import 'package:clock_app/alarm/widgets/alarm_card.dart';
 import 'package:clock_app/alarm/widgets/alarm_description.dart';
 import 'package:clock_app/alarm/widgets/alarm_time_picker.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
+import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
@@ -70,7 +71,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
     } else {
       int index = _listController.getItemIndex(alarm);
       _listController.changeItems((alarms) async {
-        await alarms[index].setIsEnabled(value, "_handleEnableChangeAlarm(): Alarm enable set to $value by user");
+        await alarms[index].setIsEnabled(value,
+            "_handleEnableChangeAlarm(): Alarm enable set to $value by user");
         _showNextScheduleSnackBar(alarms[index]);
       });
     }
@@ -104,7 +106,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
     int index = _listController.getItemIndex(alarm);
     // if (index < 0) return;
     await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
-     await newAlarm.update("_handleCustomizeAlarm(): Alarm customized by the user");
+      await newAlarm
+          .update("_handleCustomizeAlarm(): Alarm customized by the user");
       _listController.changeItems((alarms) {
         alarms[index] = newAlarm;
       });
@@ -135,9 +138,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   _handleDismissAlarm(Alarm alarm) {
     int index = _listController.getItemIndex(alarm);
-    _listController.changeItems((alarms)async {
-     await alarms[index].cancelSnooze();
-      await alarms[index].update("_handleDismissAlarm(): Alarm dismissed by user");
+    _listController.changeItems((alarms) async {
+      await alarms[index].cancelSnooze();
+      await alarms[index]
+          .update("_handleDismissAlarm(): Alarm dismissed by user");
     });
   }
 
@@ -180,16 +184,26 @@ class _AlarmScreenState extends State<AlarmScreen> {
             onSkipChange: (value) => _handleSkipChange(alarm, value),
           ),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
-          onAddItem: (alarm)async {
+          onAddItem: (alarm) async {
             await alarm.update("onAddItem(): Alarm added by user");
             _showNextScheduleSnackBar(alarm);
           },
           onDeleteItem: (alarm) async {
             await alarm.disable();
-                      },
+          },
           placeholderText: "No alarms created",
           reloadOnPop: true,
           listFilters: _showFilters.value ? alarmListFilters : [],
+          customActions: [
+            ListFilterCustomAction(
+                name: "Enable all filtered alarms",
+                icon: Icons.alarm_on_rounded,
+                action: (alarm) => alarm.enable("Enabled by list filter")),
+            ListFilterCustomAction(
+                name: "Disable all filtered alarms",
+                icon: Icons.alarm_off_rounded,
+                action: (alarm) => alarm.disable())
+          ],
         ),
         FAB(
           onPressed: () {

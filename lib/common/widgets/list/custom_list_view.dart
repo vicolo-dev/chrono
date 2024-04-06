@@ -33,6 +33,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
     this.isDuplicateEnabled = true,
     this.shouldInsertOnTop = true,
     this.listFilters = const [],
+    this.customActions = const [],
   });
 
   final List<Item> items;
@@ -50,6 +51,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final bool isDuplicateEnabled;
   final bool shouldInsertOnTop;
   final List<ListFilterItem<Item>> listFilters;
+  final List<ListFilterCustomAction<Item>> customActions;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -140,7 +142,7 @@ class _CustomListViewState<Item extends ListItem>
     return true;
   }
 
-  _handleDeleteItem(Item deletedItem) {
+  void _handleDeleteItem(Item deletedItem) {
     widget.onDeleteItem?.call(deletedItem);
     int index = _getItemIndex(deletedItem);
     setState(() {
@@ -247,8 +249,7 @@ class _CustomListViewState<Item extends ListItem>
         listFilter: item as ListFilterMultiSelect<Item>,
         onChange: onFilterChange,
       );
-    }
-    else if (item.runtimeType == DynamicListFilterSelect<Item>) {
+    } else if (item.runtimeType == DynamicListFilterSelect<Item>) {
       return ListFilterSelectChip<Item>(
         listFilter: item as DynamicListFilterSelect<Item>,
         onChange: onFilterChange,
@@ -265,6 +266,91 @@ class _CustomListViewState<Item extends ListItem>
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+
+    List<Widget> getFilterChips() {
+      List<Widget> widgets = [];
+      int activeFilterCount =
+          widget.listFilters.where((filter) => filter.isActive).length;
+      if (activeFilterCount > 0) {
+        widgets.add(ListFilterActionChip(
+          actions: [
+            ListFilterAction(
+              name: "Clear all filters",
+              icon: Icons.clear_rounded,
+              action: () {
+                for (var filter in widget.listFilters) {
+                  filter.reset();
+                }
+                onFilterChange();
+              },
+            ),
+            ...widget.customActions.map((action) => ListFilterAction(
+                  name: action.name,
+                  icon: action.icon,
+                  action: () {
+                    _changeItems((items) {
+                      for (var item in items) {
+                        action.action(item);
+                      }
+                    }, true);
+                  },
+                )),
+            ListFilterAction(
+              name: "Delete all filtered items",
+              icon: Icons.delete_rounded,
+              color: colorScheme.error,
+              action: () async {
+                Navigator.pop(context);
+                final result = await showDialog<bool>(
+                  context: context,
+                  builder: (buildContext) {
+                    return AlertDialog(
+                      actionsPadding:
+                          const EdgeInsets.only(bottom: 6, right: 10),
+                      content: Text(
+                          "Do you want to delete all filtered ${widget.placeholderText}?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context, false);
+                          },
+                          child: Text("No",
+                              style: TextStyle(color: colorScheme.primary)),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          child: Text("Yes",
+                              style: TextStyle(color: colorScheme.error)),
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                print("------------- $result");
+
+                if (result == null || result == false) return;
+
+                final toRemove = widget.items.where((item) => widget.listFilters
+                    .every((filter) => filter.filterFunction(item)));
+                while (toRemove.isNotEmpty) {
+                  _handleDeleteItem(toRemove.first);
+                }
+              },
+            )
+          ],
+          activeFilterCount: activeFilterCount,
+        ));
+      }
+      widgets.addAll(
+          widget.listFilters.map((filter) => getListFilterChip(filter)));
+      return widgets;
+    }
+
     timeDilation = 0.75;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,10 +362,9 @@ class _CustomListViewState<Item extends ListItem>
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: widget.listFilters
-                      .map((filter) => getListFilterChip(filter))
-                      .toList()),
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: getFilterChips(),
+              ),
             ),
           ),
         ),
@@ -306,7 +391,6 @@ class _CustomListViewState<Item extends ListItem>
                 : Container(),
             SlidableAutoCloseBehavior(
               child: AutomaticAnimatedListView<Item>(
-
                 list: widget.items,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

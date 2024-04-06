@@ -38,6 +38,7 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
     if (!fileItem.isDeletable) return;
     final file = File(fileItem.uri);
     file.deleteSync();
+    RingtonePlayer.stop();
   }
 
   @override

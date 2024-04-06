@@ -1,10 +1,13 @@
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/debug.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 abstract class ListFilterItem<Item> {
   bool Function(Item) get filterFunction;
   String get displayName;
+  bool get isActive;
+  void reset();
 }
 
 ListFilter<Item> defaultFilter<Item extends ListItem>() {
@@ -35,6 +38,14 @@ class ListFilter<Item extends ListItem> extends ListFilterItem<Item> {
 
   @override
   String get displayName => name;
+
+  @override
+  bool get isActive => isSelected;
+
+  @override
+  void reset() {
+    isSelected = false;
+  }
 }
 
 class ListFilterSearch<Item extends ListItem> extends ListFilterItem<Item> {
@@ -51,6 +62,12 @@ class ListFilterSearch<Item extends ListItem> extends ListFilterItem<Item> {
   ListFilterSearch(this.name);
   @override
   String get displayName => name;
+
+  @override
+  bool get isActive => false;
+
+  @override
+  void reset() {}
 }
 
 abstract class FilterMultiSelect<Item extends ListItem>
@@ -59,15 +76,16 @@ abstract class FilterMultiSelect<Item extends ListItem>
   List<ListFilter<Item>> get selectedFilters;
   List<ListFilter<Item>> get filters;
   set selectedIndices(List<int> indices);
-   @override
+  @override
   bool Function(Item) get filterFunction {
     final currentFilters = filters;
 
     if (!currentFilters.any((filter) => filter.isSelected)) {
       return (Item item) => true;
     }
-    return (Item item) =>
-        currentFilters.where((filter)=>filter.isSelected).any((filter) => filter.filterFunction(item));
+    return (Item item) => currentFilters
+        .where((filter) => filter.isSelected)
+        .any((filter) => filter.filterFunction(item));
   }
 }
 
@@ -94,8 +112,19 @@ class ListFilterMultiSelect<Item extends ListItem>
       filters[i].isSelected = indices.contains(i);
     }
   }
+
   @override
   String get displayName => name;
+
+  @override
+  bool get isActive => filters.any((filter) => filter.isSelected);
+
+  @override
+  void reset() {
+    for (var filter in filters) {
+      filter.isSelected = false;
+    }
+  }
 }
 
 class DynamicListFilterMultiSelect<Item extends ListItem>
@@ -105,7 +134,6 @@ class DynamicListFilterMultiSelect<Item extends ListItem>
   List<int> selectedIds;
   DynamicListFilterMultiSelect(this.name, this.getFilters) : selectedIds = [];
   @override
- 
   @override
   String get displayName => name;
 
@@ -136,6 +164,14 @@ class DynamicListFilterMultiSelect<Item extends ListItem>
     }
     return currentFilters;
   }
+
+  @override
+  bool get isActive => selectedIds.isNotEmpty;
+
+  @override
+  void reset() {
+    selectedIndices = [];
+  }
 }
 
 abstract class FilterSelect<Item extends ListItem>
@@ -144,7 +180,7 @@ abstract class FilterSelect<Item extends ListItem>
   set selectedIndex(int index);
   ListFilter<Item> get selectedFilter;
   List<ListFilter<Item>> get filters;
-   @override
+  @override
   bool Function(Item) get filterFunction {
     try {
       return selectedFilter.filterFunction;
@@ -185,6 +221,14 @@ class ListFilterSelect<Item extends ListItem> extends FilterSelect<Item> {
 
   @override
   String get displayName => name;
+
+  @override
+  bool get isActive => !filters[0].isSelected;
+
+  @override
+  void reset() {
+    selectedIndex = 0;
+  }
 }
 
 class DynamicListFilterSelect<Item extends ListItem>
@@ -231,4 +275,38 @@ class DynamicListFilterSelect<Item extends ListItem>
 
   @override
   String get displayName => name;
+
+  @override
+  bool get isActive => selectedIndex != 0;
+
+  @override
+  void reset() {
+    selectedIndex = 0;
+  }
+}
+
+class ListFilterAction<Item extends ListItem> {
+  final String name;
+  final IconData icon;
+  final Color? color;
+  final Function() action;
+
+  ListFilterAction(
+      {this.color,
+      required this.name,
+      required this.icon,
+      required this.action});
+}
+
+class ListFilterCustomAction<Item extends ListItem> {
+  final String name;
+  final IconData icon;
+  final Color? color;
+  final Function(Item) action;
+
+  ListFilterCustomAction(
+      {this.color,
+      required this.name,
+      required this.icon,
+      required this.action});
 }

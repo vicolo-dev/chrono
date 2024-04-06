@@ -3,6 +3,8 @@ import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
+import 'package:clock_app/common/widgets/card_edit_menu.dart';
+import 'package:clock_app/common/widgets/list/action_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 class ListFilterChip<Item extends ListItem> extends StatelessWidget {
@@ -35,6 +37,60 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
             color: listFilter.isSelected
                 ? colorScheme.onPrimary
                 : colorScheme.onSurface,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ListFilterActionChip<Item extends ListItem> extends StatelessWidget {
+  const ListFilterActionChip({
+    super.key,
+    required this.actions,
+    required this.activeFilterCount,
+  });
+
+  final List<ListFilterAction> actions;
+  final int activeFilterCount;
+
+  void _showPopupMenu(BuildContext context) async {
+    await showModalBottomSheet<List<int>>(
+      context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      builder: (BuildContext context) {
+        return ActionBottomSheet(
+          title: "Filter Actions",
+          actions: actions,
+          // description: description,
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+
+    return Badge(
+      label: Text(activeFilterCount.toString()),
+      offset: const Offset(0, 0),
+      child: CardContainer(
+        color: colorScheme.primary,
+        onTap: () {
+          _showPopupMenu(context);
+          // listFilter.isSelected = !listFilter.isSelected;
+          // onChange();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Icon(
+            Icons.filter_list_rounded,
+            color: colorScheme.onPrimary,
+            size: 20,
           ),
         ),
       ),
@@ -106,6 +162,7 @@ class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
     );
   }
 }
+
 class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
   final FilterMultiSelect<Item> listFilter;
   final VoidCallback onChange;
@@ -150,7 +207,9 @@ class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
             child: Text(
               !isSelected
                   ? listFilter.displayName
-                  : listFilter.selectedIndices.length == 1 ? listFilter.selectedFilters[0].name :  "${listFilter.selectedIndices.length} selected",
+                  : listFilter.selectedIndices.length == 1
+                      ? listFilter.selectedFilters[0].name
+                      : "${listFilter.selectedIndices.length} selected",
               style: textTheme.headlineSmall?.copyWith(
                   color: isSelected
                       ? colorScheme.onPrimary
@@ -171,4 +230,3 @@ class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
     );
   }
 }
-
