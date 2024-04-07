@@ -80,21 +80,24 @@ class ActionBottomSheet extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(actions[index].icon,
-                                  color: actions[index].color),
+                                  color: actions[index].color?.withOpacity(0.6) ?? colorScheme.onSurface.withOpacity(0.6)),
+                                                                
                               const SizedBox(
-                                width: 8,
+                                width: 16,
                               ),
                               Expanded(
                                 flex: 999,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(actions[index].name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineMedium
-                                            ?.copyWith(
-                                                color: actions[index].color)),
+                                    Text(
+                                      actions[index].name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium
+                                          ?.copyWith(
+                                              color: actions[index].color ?? colorScheme.onSurface),
+                                    ),
                                     // if (choice.description.isNotEmpty) ...[
                                     //   const SizedBox(height: 4.0),
                                     //   Text(

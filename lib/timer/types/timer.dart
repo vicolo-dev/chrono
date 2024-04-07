@@ -18,7 +18,7 @@ import 'package:clock_app/timer/types/time_duration.dart';
 class ClockTimer extends CustomizableListItem {
   TimeDuration _duration = TimeDuration.fromSeconds(5);
   TimeDuration _currentDuration = TimeDuration.fromSeconds(5);
-  int _secondsRemainingOnPause = 5;
+  int _milliSecondsRemainingOnPause = 5000;
   DateTime _startTime = DateTime(0);
   TimerState _state = TimerState.stopped;
   late final int _id;
@@ -53,15 +53,21 @@ class ClockTimer extends CustomizableListItem {
   List<Tag> get tags => _settings.getSetting("Tags").value;
   TimeDuration get duration => _duration;
   TimeDuration get currentDuration => _currentDuration;
-  int get remainingSeconds {
+  int get secondsRemainingOnPause =>
+      (_milliSecondsRemainingOnPause / 1000).round();
+  int get remainingMilliseconds {
     if (isRunning) {
       return math.max(
-          _secondsRemainingOnPause -
-              DateTime.now().difference(_startTime).toTimeDuration().inSeconds,
+          _milliSecondsRemainingOnPause -
+              DateTime.now().difference(_startTime).toTimeDuration().inMilliseconds,
           0);
     } else {
-      return _secondsRemainingOnPause;
+      return _milliSecondsRemainingOnPause;
     }
+  }
+
+  int get remainingSeconds {
+    return (remainingMilliseconds / 1000).round();
   }
 
   bool get isRunning => _state == TimerState.running;
@@ -72,14 +78,14 @@ class ClockTimer extends CustomizableListItem {
   ClockTimer(this._duration)
       : _id = UniqueKey().hashCode,
         _currentDuration = TimeDuration.from(_duration),
-        _secondsRemainingOnPause = _duration.inSeconds,
+        _milliSecondsRemainingOnPause = _duration.inSeconds * 1000,
         _startTime = DateTime(0),
         _state = TimerState.stopped;
 
   ClockTimer.from(ClockTimer timer)
       : _duration = timer._duration,
         _currentDuration = TimeDuration.from(timer._duration),
-        _secondsRemainingOnPause = timer._duration.inSeconds,
+        _milliSecondsRemainingOnPause = timer._duration.inSeconds * 1000,
         _startTime = DateTime(0),
         _state = TimerState.stopped,
         _settings = timer._settings.copy(),
@@ -97,7 +103,7 @@ class ClockTimer extends CustomizableListItem {
     _startTime = DateTime.now();
     await scheduleAlarm(
       _id,
-      DateTime.now().add(Duration(seconds: _secondsRemainingOnPause)),
+      DateTime.now().add(Duration(seconds: secondsRemainingOnPause)),
       'Timer.start()',
       type: ScheduledNotificationType.timer,
       alarmClock: false,
@@ -108,12 +114,12 @@ class ClockTimer extends CustomizableListItem {
   void setDuration(TimeDuration newDuration) {
     _duration = TimeDuration.from(newDuration);
     _currentDuration = TimeDuration.from(newDuration);
-    _secondsRemainingOnPause = newDuration.inSeconds;
+    _milliSecondsRemainingOnPause = newDuration.inSeconds * 1000;
   }
 
   Future<void> setTime(TimeDuration newDuration) async {
     _currentDuration = TimeDuration.from(newDuration);
-    _secondsRemainingOnPause = newDuration.inSeconds;
+    _milliSecondsRemainingOnPause = newDuration.inSeconds * 1000;
     if (isRunning) {
       await scheduleAlarm(
         _id,
@@ -129,8 +135,7 @@ class ClockTimer extends CustomizableListItem {
     TimeDuration addedDuration = TimeDuration(minutes: addLength.floor());
     _currentDuration = _currentDuration.add(addedDuration);
     // _startTime = _startTime.subtract(addedDuration.toDuration);
-    _secondsRemainingOnPause =
-        _secondsRemainingOnPause + addedDuration.inSeconds;
+    _milliSecondsRemainingOnPause += addedDuration.inSeconds * 1000;
     if (isRunning) {
       await scheduleAlarm(
         _id,
@@ -144,8 +149,8 @@ class ClockTimer extends CustomizableListItem {
 
   Future<void> pause() async {
     await cancelAlarm(_id, ScheduledNotificationType.timer);
-    _secondsRemainingOnPause = _secondsRemainingOnPause -
-        DateTime.now().difference(_startTime).toTimeDuration().inSeconds;
+    _milliSecondsRemainingOnPause -=
+        DateTime.now().difference(_startTime).toTimeDuration().inMilliseconds;
     _state = TimerState.paused;
   }
 
@@ -153,7 +158,7 @@ class ClockTimer extends CustomizableListItem {
     await cancelAlarm(_id, ScheduledNotificationType.timer);
     _state = TimerState.stopped;
     _currentDuration = TimeDuration.from(_duration);
-    _secondsRemainingOnPause = _duration.inSeconds;
+    _milliSecondsRemainingOnPause = _duration.inSeconds * 1000;
   }
 
   Future<void> update(String description) async {
@@ -183,7 +188,7 @@ class ClockTimer extends CustomizableListItem {
   bool equals(ClockTimer timer) {
     return _duration == timer._duration &&
         _currentDuration == timer._currentDuration &&
-        _secondsRemainingOnPause == timer._secondsRemainingOnPause &&
+        _milliSecondsRemainingOnPause == timer._milliSecondsRemainingOnPause &&
         _startTime == timer._startTime &&
         _state == timer._state &&
         _id == timer._id;
@@ -195,7 +200,8 @@ class ClockTimer extends CustomizableListItem {
       'duration': _duration.inSeconds,
       'currentDuration': _currentDuration.inSeconds,
       'id': _id,
-      'durationRemainingOnPause': _secondsRemainingOnPause,
+      'durationRemainingOnPause':
+          (_milliSecondsRemainingOnPause / 1000).round(),
       'startTime': _startTime.toIso8601String(),
       'state': _state.toString(),
       'settings': _settings.valueToJson(),
@@ -209,7 +215,8 @@ class ClockTimer extends CustomizableListItem {
     }
     _duration = TimeDuration.fromSeconds(json['duration'] ?? 0);
     _currentDuration = TimeDuration.fromSeconds(json['currentDuration'] ?? 0);
-    _secondsRemainingOnPause = json['durationRemainingOnPause'] ?? 0;
+    _milliSecondsRemainingOnPause =
+        json['durationRemainingOnPause'] * 1000 ?? 0;
     _startTime = json['startTime'] != null
         ? DateTime.parse(json['startTime'])
         : DateTime.now();
