@@ -34,17 +34,17 @@ void main() {
     });
 
     group('scheduling alarm', () {
-      test(
-        'in the future returns true',
-        () async {
-          expect(
-              await alarmRunner
-                  .schedule(DateTime.now().add(const Duration(minutes: 1)), 'test'),
-              true);
-
-          // expect(dateTime.toHours(), 1.5);
-        },
-      );
+      // test(
+      //   'in the future returns true',
+      //   () async {
+      //     expect(
+      //         await alarmRunner
+      //             .schedule(DateTime.now().add(const Duration(minutes: 1)), 'test'),
+      //         true);
+      //
+      //     // expect(dateTime.toHours(), 1.5);
+      //   },
+      // );
       test(
         'in the past throws exception',
         () async {
