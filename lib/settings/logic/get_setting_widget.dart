@@ -38,7 +38,7 @@ List<Widget> getSettingWidgets(
   double animationSpeed =  appSettings
       .getGroup("General")
       .getGroup("Animations")
-      .getSetting("AnimationSpeed")
+      .getSetting("Animation Speed")
       .value;
 
   List<Widget> widgets = [];
