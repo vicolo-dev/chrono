@@ -35,6 +35,12 @@ List<Widget> getSettingWidgets(
       .getGroup("Animations")
       .getSetting("Extra Animations")
       .value;
+  double animationSpeed =  appSettings
+      .getGroup("General")
+      .getGroup("Animations")
+      .getSetting("AnimationSpeed")
+      .value;
+
   List<Widget> widgets = [];
   for (var item in settingItems) {
     Widget? widget = getSettingItemWidget(
@@ -47,7 +53,7 @@ List<Widget> getSettingWidgets(
     if (widget != null) {
       if (showExtraAnimations) {
         widgets.add(AnimatedSize(
-            duration: const Duration(milliseconds: 250),
+            duration:  Duration(milliseconds: (250 / animationSpeed).round()),
             child: SizedBox(height: item.isEnabled ? null : 0, child: widget)));
       } else {
         widgets.add(widget);
