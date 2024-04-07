@@ -15,6 +15,7 @@ import 'package:clock_app/stopwatch/logic/stopwatch_notification.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/stopwatch/widgets/lap_card.dart';
+import 'package:clock_app/stopwatch/widgets/stopwatch_ticker.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -30,14 +31,11 @@ class StopwatchScreen extends StatefulWidget {
 
 class _StopwatchScreenState extends State<StopwatchScreen> {
   final _listController = ListController<Lap>();
-  late Setting _showMillisecondsSetting;
-  late Setting _showPreviousLapBarSetting;
-  late Setting _showFastestLapBarSetting;
-  late Setting _showSlowestLapBarSetting;
-  late Setting _showAverageLapBarSetting;
+
   late Setting _showNotificationSetting;
   
   late final ClockStopwatch _stopwatch;
+
 
   void update(dynamic value) {
     setState(() {});
@@ -47,28 +45,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   void initState() {
     super.initState();
     _stopwatch = loadListSync<ClockStopwatch>('stopwatches').first;
-    _showMillisecondsSetting = appSettings
-        .getGroup("Stopwatch")
-        .getGroup("Time Format")
-        .getSetting("Show Milliseconds");
-    _showMillisecondsSetting.addListener(update);
-
-    SettingGroup lapComparisonSettings =
-        appSettings.getGroup("Stopwatch").getGroup("Comparison Lap Bars");
-
-    _showPreviousLapBarSetting =
-        lapComparisonSettings.getSetting("Show Previous Lap");
-    _showFastestLapBarSetting =
-        lapComparisonSettings.getSetting("Show Fastest Lap");
-    _showSlowestLapBarSetting =
-        lapComparisonSettings.getSetting("Show Slowest Lap");
-    _showAverageLapBarSetting =
-        lapComparisonSettings.getSetting("Show Average Lap");
-    _showPreviousLapBarSetting.addListener(update);
-    _showFastestLapBarSetting.addListener(update);
-    _showSlowestLapBarSetting.addListener(update);
-    _showAverageLapBarSetting.addListener(update);
-
+   
     _showNotificationSetting =
         appSettings.getGroup("Stopwatch").getSetting("Show Notification");
 
@@ -94,12 +71,6 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   @override
   void dispose() {
-    _showMillisecondsSetting.removeListener(update);
-    _showPreviousLapBarSetting.removeListener(update);
-    _showFastestLapBarSetting.removeListener(update);
-    _showSlowestLapBarSetting.removeListener(update);
-    _showAverageLapBarSetting.removeListener(update);
-    _showNotificationSetting.removeListener(update);
 
     // updateNotificationInterval?.cancel();
     // updateNotificationInterval = null;
@@ -130,6 +101,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     });
     saveList('stopwatches', [_stopwatch]);
     if (_stopwatch.isRunning) {
+      // ticker!.start();
       showProgressNotification();
     } else {
       stopwatchNotificationInterval?.cancel();
@@ -170,66 +142,13 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TimerBuilder.periodic(const Duration(milliseconds: 30),
-                builder: (context) {
-              // print(_stopwatch.fastestLap?.lapTime.toTimeString());
-              // print(_stopwatch.slowestLap?.lapTime.toTimeString());
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        TimeDuration.fromMilliseconds(
-                                _stopwatch.elapsedMilliseconds)
-                            .toTimeString(
-                                showMilliseconds: _showMillisecondsSetting.value),
-                        style: textTheme.displayLarge?.copyWith(fontSize: 48),
-                      ),
-                      if (_showPreviousLapBarSetting.value) ...[
-                        const SizedBox(height: 8),
-                        LapComparer(
-                          stopwatch: _stopwatch,
-                          comparisonLap: _stopwatch.previousLap,
-                          label: "Previous",
-                          color: Colors.blue,
-                        ),
-                      ],
-                      if (_showFastestLapBarSetting.value) ...[
-                        const SizedBox(height: 4),
-                        LapComparer(
-                          stopwatch: _stopwatch,
-                          comparisonLap: _stopwatch.fastestLap,
-                          label: "Fastest",
-                          color: Colors.red,
-                        ),
-                      ],
-                      if (_showSlowestLapBarSetting.value) ...[
-                        const SizedBox(height: 4),
-                        LapComparer(
-                          stopwatch: _stopwatch,
-                          comparisonLap: _stopwatch.slowestLap,
-                          label: "Slowest",
-                          color: Colors.orange,
-                        ),
-                      ],
-                      if (_showAverageLapBarSetting.value) ...[
-                        const SizedBox(height: 4),
-                        LapComparer(
-                          stopwatch: _stopwatch,
-                          comparisonLap: _stopwatch.averageLap,
-                          label: "Average",
-                          color: Colors.green,
-                          showLapNumber: false,
-                        ),
-                      ]
-                    ],
-                  ),
-                ),
-              );
-            }),
+          StopwatchTicker(stopwatch:_stopwatch),
+            // TimerBuilder.periodic(const Duration(milliseconds: 33),
+            //     builder: (context) {
+            //   // print(_stopwatch.fastestLap?.lapTime.toTimeString());
+            //   // print(_stopwatch.slowestLap?.lapTime.toTimeString());
+            //   return ;
+            // }),
             const SizedBox(height: 8),
             Expanded(
               child: CustomListView<Lap>(
@@ -275,50 +194,4 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   }
 }
 
-class LapComparer extends StatelessWidget {
-  const LapComparer({
-    super.key,
-    required ClockStopwatch stopwatch,
-    required this.comparisonLap,
-    required this.label,
-    this.showLapNumber = true,
-    this.color = Colors.green,
-  }) : _stopwatch = stopwatch;
 
-  final Lap? comparisonLap;
-  final ClockStopwatch _stopwatch;
-  final String label;
-  final Color color;
-  final bool showLapNumber;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        LinearProgressBar(
-          minHeight: 16,
-          value: _stopwatch.currentLapTime.inMilliseconds /
-              (comparisonLap?.lapTime.inMilliseconds ?? double.infinity),
-          backgroundColor:
-              Theme.of(context).colorScheme.onBackground.withOpacity(0.25),
-          color: color,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 0.0, left: 8.0, right: 8.0),
-          child: Row(
-            children: [
-              Text(label,
-                  style: const TextStyle(fontSize: 10.0, color: Colors.white)),
-              const Spacer(),
-              Text(
-                  comparisonLap != null
-                      ? '${showLapNumber ? "Lap ${comparisonLap?.number}: " : ""}${comparisonLap?.lapTime.toTimeString(showMilliseconds: true)}'
-                      : '',
-                  style: const TextStyle(fontSize: 10.0, color: Colors.white)),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
