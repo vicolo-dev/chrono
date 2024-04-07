@@ -63,7 +63,7 @@ class _AppState extends State<App> {
     _styleSettings = _appearanceSettings.getGroup("Style");
     _animationSpeedSetting = appSettings
         .getGroup("General")
-        .getGroup("Display")
+        .getGroup("Animations")
         .getSetting("Animation Speed");
     _animationSpeedSetting.addListener(setAnimationSpeed);
   }

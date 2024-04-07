@@ -1,3 +1,4 @@
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -29,6 +30,11 @@ List<Widget> getSettingWidgets(
   VoidCallback? onSettingChanged,
   bool isAppSettings = true,
 }) {
+  bool showExtraAnimations = appSettings
+      .getGroup("General")
+      .getGroup("Animations")
+      .getSetting("Extra Animations")
+      .value;
   List<Widget> widgets = [];
   for (var item in settingItems) {
     Widget? widget = getSettingItemWidget(
@@ -39,7 +45,13 @@ List<Widget> getSettingWidgets(
       isAppSettings: isAppSettings,
     );
     if (widget != null) {
-      widgets.add(widget);
+      if (showExtraAnimations) {
+        widgets.add(AnimatedSize(
+            duration: const Duration(milliseconds: 250),
+            child: SizedBox(height: item.isEnabled ? null : 0, child: widget)));
+      } else {
+        widgets.add(widget);
+      }
     }
   }
   return widgets;
@@ -97,22 +109,21 @@ Widget? getSettingItemWidget(
         showAsCard: showAsCard,
         onChanged: onChanged,
       );
-    } 
-    if(item is MultiSelectSetting){
+    }
+    if (item is MultiSelectSetting) {
       return MultiSelectSettingCard(
-      setting: item,
-      showAsCard: showAsCard,
-      onChanged: onChanged,
+        setting: item,
+        showAsCard: showAsCard,
+        onChanged: onChanged,
       );
     }
-    if(item is DynamicMultiSelectSetting){
+    if (item is DynamicMultiSelectSetting) {
       return DynamicMultiSelectSettingCard(
-      setting: item,
-      showAsCard: showAsCard,
-      onChanged: onChanged,
+        setting: item,
+        showAsCard: showAsCard,
+        onChanged: onChanged,
       );
-    }
-    else if (item is SwitchSetting) {
+    } else if (item is SwitchSetting) {
       return SwitchSettingCard(
         setting: item,
         showAsCard: showAsCard,
@@ -164,7 +175,6 @@ Widget? getSettingItemWidget(
         setting: item,
         showAsCard: showAsCard,
         onChanged: onChanged,
-              
       );
     } else {
       throw Exception('No widget for setting type: ${item.runtimeType}');
