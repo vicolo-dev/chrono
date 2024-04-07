@@ -75,24 +75,33 @@ class ListFilterActionChip<Item extends ListItem> extends StatelessWidget {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    return Badge(
-      label: Text(activeFilterCount.toString()),
-      offset: const Offset(0, 0),
-      child: CardContainer(
-        color: colorScheme.primary,
-        onTap: () {
-          _showPopupMenu(context);
-          // listFilter.isSelected = !listFilter.isSelected;
-          // onChange();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Icon(
-            Icons.filter_list_rounded,
-            color: colorScheme.onPrimary,
-            size: 20,
+    return CardContainer(
+      color: colorScheme.primary,
+      onTap: () {
+        _showPopupMenu(context);
+        // listFilter.isSelected = !listFilter.isSelected;
+        // onChange();
+      },
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 6.0, top:6.0, bottom: 6.0),
+            child: Icon(
+              Icons.filter_list_rounded,
+              color: colorScheme.onPrimary,
+              size: 20,
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Text(
+              activeFilterCount.toString(),
+              style: textTheme.headlineSmall?.copyWith(
+                color: colorScheme.onPrimary.withOpacity(0.6),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
