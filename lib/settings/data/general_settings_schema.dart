@@ -65,6 +65,19 @@ SettingGroup generalSettingsSchema = SettingGroup(
             getTimeFormatString(context, timeFormatOptions[index].value));
       }),
       SwitchSetting("Show Seconds", true),
+      SliderSetting(
+          "Animation Speed",
+          0.5,
+          2,
+          1,
+          // unit: 'm',
+          snapLength: 0.1,
+          // enableConditions: [
+          //   ValueCondition(
+          //       ["Show Upcoming Alarm Notifications"], (value) => value),
+          // ],
+        ),
+
     ]),
     SelectSetting(
       "Swipe Action",

@@ -66,7 +66,12 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
                 child: CustomListView<Item>(
                   listController: _listController,
                   items: widget.setting.value,
-                  itemBuilder: (item) => widget.setting.getItemCard(item),
+                  itemBuilder: (item) =>
+                      widget.setting.getItemCard(item, onDelete: () {
+                    _listController.deleteItem(item);
+                  }, onDuplicate: () {
+                    _listController.duplicateItem(item);
+                  }),
                   onTapItem: (task, index) {
                     _handleCustomizeItem(task);
                   },

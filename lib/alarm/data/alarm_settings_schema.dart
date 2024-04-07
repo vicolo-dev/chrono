@@ -160,7 +160,12 @@ SettingGroup alarmSettingsSchema = SettingGroup(
       [],
       alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
       addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
-      cardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: false),
+      cardBuilder: (item, [onDelete, onDuplicate]) => AlarmTaskCard(
+        task: item,
+        isAddCard: false,
+        onPressDelete: onDelete,
+        onPressDuplicate: onDuplicate,
+      ),
       valueDisplayBuilder: (context, setting) {
         return Text("${setting.value.length} tasks");
       },
@@ -184,5 +189,3 @@ SettingGroup alarmSettingsSchema = SettingGroup(
     // }),
   ],
 );
-
-

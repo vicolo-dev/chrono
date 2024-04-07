@@ -390,7 +390,7 @@ class _CustomListViewState<Item extends ListItem>
       items.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
     }
 
-    timeDilation = 0.75;
+    // timeDilation = 1;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
