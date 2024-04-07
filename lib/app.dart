@@ -66,6 +66,7 @@ class _AppState extends State<App> {
         .getGroup("Animations")
         .getSetting("Animation Speed");
     _animationSpeedSetting.addListener(setAnimationSpeed);
+    setAnimationSpeed(_animationSpeedSetting.value);
   }
 
   void setAnimationSpeed(dynamic speed) {
