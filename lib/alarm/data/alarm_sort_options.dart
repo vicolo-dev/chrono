@@ -22,7 +22,11 @@ int sortRemainingTimeDescending(Alarm a, Alarm b) {
   } else if (b.currentScheduleDateTime == null) {
     return -1;
   }
-  return b.currentScheduleDateTime!.difference(DateTime.now()).inSeconds;
+  final remainingA =
+      a.currentScheduleDateTime!.difference(DateTime.now()).inSeconds;
+  final remainingB =
+      b.currentScheduleDateTime!.difference(DateTime.now()).inSeconds;
+  return remainingB.compareTo(remainingA);
 }
 
 int sortRemainingTimeAscending(Alarm a, Alarm b) {
@@ -33,7 +37,11 @@ int sortRemainingTimeAscending(Alarm a, Alarm b) {
   } else if (b.currentScheduleDateTime == null) {
     return -1;
   }
-  return a.currentScheduleDateTime!.difference(DateTime.now()).inSeconds;
+  final remainingA =
+      a.currentScheduleDateTime!.difference(DateTime.now()).inSeconds;
+  final remainingB =
+      b.currentScheduleDateTime!.difference(DateTime.now()).inSeconds;
+  return remainingA.compareTo(remainingB);
 }
 
 int sortDateDescending(Alarm a, Alarm b) {

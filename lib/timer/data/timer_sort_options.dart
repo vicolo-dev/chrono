@@ -12,11 +12,25 @@ const List<ListSortOption<ClockTimer>> timerSortOptions = [
 ];
 
 int sortRemainingTimeAscending(ClockTimer a, ClockTimer b) {
+  if(!a.isRunning && !b.isRunning) {
+    return 0;
+  } else if(!a.isRunning) {
+    return 1;
+  } else if(!b.isRunning) {
+    return -1;
+  }
   return a.remainingMilliseconds.compareTo(b.remainingMilliseconds);
  
 }
 
 int sortRemainingTimeDescending(ClockTimer a, ClockTimer b) {
+  if(!a.isRunning && !b.isRunning) {
+    return 0;
+  } else if(!a.isRunning) {
+    return 1;
+  } else if(!b.isRunning) {
+    return -1;
+  }
   return b.remainingMilliseconds.compareTo(a.remainingMilliseconds);
 }
 

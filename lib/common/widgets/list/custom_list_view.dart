@@ -177,26 +177,29 @@ class _CustomListViewState<Item extends ListItem>
     lastListLength = widget.items.length;
   }
 
-  //  Future<void> _handleDeleteItemList(List<Item> deletedItems) async {
-  //     while (deletedItems.isNotEmpty) {
-  //                  await widget.onDeleteItem?.call(deletedItems.first);
-  //                  int index = _getItemIndex(deletedItems.first);
-  //                  widget.items.removeAt(index);
-  // _controller.notifyRemovedRange(
-  //      index,
-  //      1,
-  //      _getChangeWidgetBuilder(deletedItem),
-  //    );
-  //
-  //
-  //                  }
-  //
-  //    setState(() {
-  //          });
-  //
-  //       widget.onModifyList?.call();
-  //    lastListLength = widget.items.length;
-  //  }
+  Future<void> _handleDeleteItemList(List<Item> deletedItems) async {
+    for(var item in deletedItems) {
+      int index = _getItemIndex(item);
+      int currentListIndex = _getCurrentListItemIndex(item);
+      setState(() {
+        widget.items.removeAt(index);
+        currentList.removeAt(currentListIndex);
+        updateCurrentList();
+      });
+
+      _controller.notifyRemovedRange(
+        currentListIndex,
+        1,
+        _getChangeWidgetBuilder(deletedItems.first),
+      );
+    }
+    for (var item in deletedItems) {
+      await widget.onDeleteItem?.call(item);
+    }
+
+    widget.onModifyList?.call();
+    lastListLength = widget.items.length;
+  }
 
   void _handleClear() {
     int listLength = widget.items.length;
@@ -341,11 +344,9 @@ class _CustomListViewState<Item extends ListItem>
                 final result = await showDeleteAlertDialogue(context);
                 if (result == null || result == false) return;
 
-                final toRemove = widget.items.where((item) => widget.listFilters
-                    .every((filter) => filter.filterFunction(item)));
-                while (toRemove.isNotEmpty) {
-                  await _handleDeleteItem(toRemove.first, false);
-                }
+                final toRemove = List<Item>.from(widget.items.where((item) => widget.listFilters
+                    .every((filter) => filter.filterFunction(item))));
+                  await _handleDeleteItemList(toRemove);
 
                 widget.onModifyList?.call();
               },
