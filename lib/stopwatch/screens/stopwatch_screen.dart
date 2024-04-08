@@ -83,6 +83,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
       _stopwatch.pause();
       _stopwatch.reset();
     });
+    _listController.clearItems();
     saveList('stopwatches', [_stopwatch]);
 
     showProgressNotification();

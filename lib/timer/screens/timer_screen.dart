@@ -12,6 +12,7 @@ import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/timer/data/timer_list_filters.dart';
+import 'package:clock_app/timer/data/timer_sort_options.dart';
 import 'package:clock_app/timer/logic/timer_notification.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
 import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
@@ -212,6 +213,7 @@ class _TimerScreenState extends State<TimerScreen> {
               placeholderText: "No timers created",
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],
+              sortOptions: timerSortOptions,
               customActions: [
                 ListFilterCustomAction(
                     name: "Reset all filtered timers",

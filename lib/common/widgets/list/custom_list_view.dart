@@ -1,11 +1,13 @@
+import 'package:clock_app/common/logic/get_list_filter_chips.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
+import 'package:clock_app/common/widgets/list/delete_alert_dialogue.dart';
 import 'package:clock_app/common/widgets/list/list_filter_chip.dart';
 import 'package:clock_app/common/widgets/list/list_item_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:great_list_view/great_list_view.dart';
 
@@ -53,7 +55,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final bool shouldInsertOnTop;
   final List<ListFilterItem<Item>> listFilters;
   final List<ListFilterCustomAction<Item>> customActions;
-  final List<ListSortOption> sortOptions;
+  final List<ListSortOption<Item>> sortOptions;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -61,6 +63,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
 
 class _CustomListViewState<Item extends ListItem>
     extends State<CustomListView<Item>> {
+  late List<Item> currentList = List.from(widget.items);
   double _itemCardHeight = 0;
   late int lastListLength = widget.items.length;
   final _scrollController = ScrollController();
@@ -76,7 +79,7 @@ class _CustomListViewState<Item extends ListItem>
     widget.listController.setChangeItems(_changeItems);
     widget.listController.setAddItem(_handleAddItem);
     widget.listController.setDeleteItem(_handleDeleteItem);
-    widget.listController.setGetItemIndex(_getItemIndex);
+    widget.listController.setGetItemIndex(_getCurrentListItemIndex);
     widget.listController.setDuplicateItem(_handleDuplicateItem);
     widget.listController.setReloadItems(_reloadItems);
     widget.listController.setClearItems(_handleClear);
@@ -86,6 +89,9 @@ class _CustomListViewState<Item extends ListItem>
     setState(() {
       widget.items.clear();
       widget.items.addAll(items);
+      currentList.clear();
+      currentList.addAll(items);
+      updateCurrentList();
     });
 // TODO: MAN THIS SUCKS, WHY YOU GOTTA DO THIS
     _controller.notifyRemovedRange(
@@ -96,6 +102,9 @@ class _CustomListViewState<Item extends ListItem>
   int _getItemIndex(Item item) =>
       widget.items.indexWhere((element) => element.id == item.id);
 
+  int _getCurrentListItemIndex(Item item) =>
+      currentList.indexWhere((element) => element.id == item.id);
+
   void _updateItemHeight() {
     if (_itemCardHeight == 0) {
       _itemCardHeight = _controller.computeItemBox(0)?.height ?? 0;
@@ -104,8 +113,11 @@ class _CustomListViewState<Item extends ListItem>
 
   Future<void> _changeItems(
       ItemChangerCallback<Item> callback, bool callOnModifyList) async {
-    callback(widget.items);
-    setState(() {});
+    setState(() {
+      callback(widget.items);
+      callback(currentList);
+      updateCurrentList();
+    });
     _notifyChangeList();
 
     if (callOnModifyList) widget.onModifyList?.call();
@@ -114,7 +126,7 @@ class _CustomListViewState<Item extends ListItem>
   void _notifyChangeList() {
     _controller.notifyChangedRange(
       0,
-      widget.items.length,
+      currentList.length,
       _getChangeListBuilder(),
     );
   }
@@ -136,9 +148,10 @@ class _CustomListViewState<Item extends ListItem>
       _getChangeWidgetBuilder(widget.items[index])(context, index, data);
 
   bool _handleReorderItems(int oldIndex, int newIndex, Object? slot) {
-    if (newIndex >= widget.items.length) return false;
+    if (newIndex >= widget.items.length || selectedSortIndex != 0) return false;
     widget.onReorderItem?.call(widget.items[oldIndex]);
     widget.items.insert(newIndex, widget.items.removeAt(oldIndex));
+    currentList.insert(newIndex, currentList.removeAt(oldIndex));
     widget.onModifyList?.call();
 
     return true;
@@ -146,17 +159,20 @@ class _CustomListViewState<Item extends ListItem>
 
   Future<void> _handleDeleteItem(Item deletedItem,
       [bool callOnModifyList = true]) async {
-    await widget.onDeleteItem?.call(deletedItem);
     int index = _getItemIndex(deletedItem);
+    int currentListIndex = _getCurrentListItemIndex(deletedItem);
     setState(() {
       widget.items.removeAt(index);
+      currentList.removeAt(currentListIndex);
+      updateCurrentList();
     });
 
     _controller.notifyRemovedRange(
-      index,
+      currentListIndex,
       1,
       _getChangeWidgetBuilder(deletedItem),
     );
+    await widget.onDeleteItem?.call(deletedItem);
     if (callOnModifyList) widget.onModifyList?.call();
     lastListLength = widget.items.length;
   }
@@ -187,6 +203,7 @@ class _CustomListViewState<Item extends ListItem>
 
     setState(() {
       widget.items.clear();
+      currentList.clear();
     });
 
     _controller.notifyRemovedRange(
@@ -198,17 +215,34 @@ class _CustomListViewState<Item extends ListItem>
     lastListLength = widget.items.length;
   }
 
+  void updateCurrentList() {
+    if (selectedSortIndex != 0) {
+      print("currentlist before sort: ${currentList.map((e) => e.id)}");
+      currentList.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
+      print("currentlist after sort: ${currentList.map((e) => e.id)}");
+    } else {
+      currentList.clear();
+      currentList.addAll(widget.items);
+    }
+    // = getCurrentList();
+  }
+
   Future<void> _handleAddItem(Item item, {int index = -1}) async {
     if (index == -1) {
       index = widget.shouldInsertOnTop ? 0 : widget.items.length;
     }
-    setState(() => widget.items.insert(index, item));
+    setState(() {
+      widget.items.insert(index, item);
+      currentList.insert(index, item);
+      updateCurrentList();
+    });
+    int currentListIndex = _getCurrentListItemIndex(item);
+    _controller.notifyInsertedRange(currentListIndex, 1);
     await widget.onAddItem?.call(item);
-    _controller.notifyInsertedRange(index, 1);
-    _scrollToIndex(index);
+    // _scrollToIndex(index);
     // TODO: Remove this delay
     Future.delayed(const Duration(milliseconds: 100), () {
-      _scrollToIndex(index);
+      _scrollToIndex(currentListIndex);
     });
     _updateItemHeight();
     widget.onModifyList?.call();
@@ -258,35 +292,14 @@ class _CustomListViewState<Item extends ListItem>
     });
   }
 
-  Widget getListFilterChip(ListFilterItem<Item> item) {
-    if (item.runtimeType == ListFilter<Item>) {
-      return ListFilterChip<Item>(
-        listFilter: item as ListFilter<Item>,
-        onChange: onFilterChange,
-      );
-    } else if (item.runtimeType == ListFilterSelect<Item>) {
-      return ListFilterSelectChip<Item>(
-        listFilter: item as ListFilterSelect<Item>,
-        onChange: onFilterChange,
-      );
-    } else if (item.runtimeType == ListFilterMultiSelect<Item>) {
-      return ListFilterMultiSelectChip<Item>(
-        listFilter: item as ListFilterMultiSelect<Item>,
-        onChange: onFilterChange,
-      );
-    } else if (item.runtimeType == DynamicListFilterSelect<Item>) {
-      return ListFilterSelectChip<Item>(
-        listFilter: item as DynamicListFilterSelect<Item>,
-        onChange: onFilterChange,
-      );
-    } else if (item.runtimeType == DynamicListFilterMultiSelect<Item>) {
-      return ListFilterMultiSelectChip<Item>(
-        listFilter: item as DynamicListFilterMultiSelect<Item>,
-        onChange: onFilterChange,
-      );
-    } else {
-      return const Text("Unknown Filter Type");
+  List<Item> getCurrentList() {
+    final List<Item> items = List.from(widget.items);
+
+    if (selectedSortIndex != 0) {
+      items.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
     }
+
+    return items;
   }
 
   @override
@@ -325,34 +338,7 @@ class _CustomListViewState<Item extends ListItem>
               color: colorScheme.error,
               action: () async {
                 Navigator.pop(context);
-                final result = await showDialog<bool>(
-                  context: context,
-                  builder: (buildContext) {
-                    return AlertDialog(
-                      actionsPadding:
-                          const EdgeInsets.only(bottom: 6, right: 10),
-                      content: const Text(
-                          "Do you want to delete all filtered items?"),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context, false);
-                          },
-                          child: Text("No",
-                              style: TextStyle(color: colorScheme.primary)),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                          child: Text("Yes",
-                              style: TextStyle(color: colorScheme.error)),
-                        ),
-                      ],
-                    );
-                  },
-                );
-
+                final result = await showDeleteAlertDialogue(context);
                 if (result == null || result == false) return;
 
                 final toRemove = widget.items.where((item) => widget.listFilters
@@ -368,27 +354,28 @@ class _CustomListViewState<Item extends ListItem>
           activeFilterCount: activeFilterCount,
         ));
       }
-      widgets.addAll(
-          widget.listFilters.map((filter) => getListFilterChip(filter)));
-      // if (widget.sortOptions.isNotEmpty) {
-      //   widgets.add(
-      //     ListSortChip(
-      //       sortOptions: [
-      //         ListSortOption("Default", "", (a, b) => 0),
-      //         ...widget.sortOptions,
-      //       ],
-      //       onChange: (index) => setState(() => selectedSortIndex = index),
-      //     ),
-      //   );
-      // }
+      widgets.addAll(widget.listFilters
+          .map((filter) => getListFilterChip(filter, onFilterChange)));
+      if (widget.sortOptions.isNotEmpty) {
+        widgets.add(
+          ListSortChip(
+            selectedIndex: selectedSortIndex,
+            sortOptions: [
+              ListSortOption("Default", "", (a, b) => 0),
+              ...widget.sortOptions,
+            ],
+            onChange: (index) => setState(() {
+              selectedSortIndex = index;
+              updateCurrentList();
+              _notifyChangeList();
+            }),
+          ),
+        );
+      }
       return widgets;
     }
 
-    final List<Item> items = List.from(widget.items);
-
-    if (selectedSortIndex != 0) {
-      items.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
-    }
+    print(currentList.map((e) => e.id));
 
     // timeDilation = 1;
     return Column(
@@ -430,8 +417,7 @@ class _CustomListViewState<Item extends ListItem>
                 : Container(),
             SlidableAutoCloseBehavior(
               child: AutomaticAnimatedListView<Item>(
-                list: widget.items,
-
+                list: currentList,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 comparator: AnimatedListDiffListComparator<Item>(
@@ -443,7 +429,7 @@ class _CustomListViewState<Item extends ListItem>
                 listController: _controller,
                 scrollController: _scrollController,
                 addLongPressReorderable: widget.isReorderable,
-                reorderModel: widget.isReorderable
+                reorderModel: widget.isReorderable && selectedSortIndex == 0
                     ? AnimatedListReorderModel(
                         onReorderStart: (index, dx, dy) => true,
                         onReorderFeedback: (int index, int dropIndex,

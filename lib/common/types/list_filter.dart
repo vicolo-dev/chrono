@@ -7,7 +7,7 @@ class ListSortOption<Item extends ListItem> {
   final String abbreviation;
   final int Function(Item, Item) sortFunction;
 
-  ListSortOption(this.name, this.abbreviation, this.sortFunction);
+  const ListSortOption(this.name, this.abbreviation, this.sortFunction);
 }
 
 abstract class ListFilterItem<Item extends ListItem> {

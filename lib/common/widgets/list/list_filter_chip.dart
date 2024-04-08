@@ -243,12 +243,12 @@ class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
 class ListSortChip<Item extends ListItem> extends StatelessWidget {
   final List<ListSortOption> sortOptions;
   final Function(int) onChange;
-  final int selectedIndex = 0;
+  final int selectedIndex;
 
   const ListSortChip({
     super.key,
     required this.sortOptions,
-    required this.onChange,
+    required this.onChange, required this.selectedIndex,
   });
 
   @override

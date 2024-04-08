@@ -233,6 +233,10 @@ class Alarm extends CustomizableListItem {
     }
   }
 
+  Future<void> cancelAllSchedules()async{
+
+  }
+
   Future<void> cancel() async {
     cancelAlarmReminderNotification(id);
     cancelSkip();

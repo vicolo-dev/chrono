@@ -1,4 +1,5 @@
 import 'package:clock_app/alarm/data/alarm_list_filters.dart';
+import 'package:clock_app/alarm/data/alarm_sort_options.dart';
 import 'package:clock_app/alarm/logic/new_alarm_snackbar.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
@@ -64,15 +65,16 @@ class _AlarmScreenState extends State<AlarmScreen> {
     super.dispose();
   }
 
-  _handleEnableChangeAlarm(Alarm alarm, bool value) {
+  _handleEnableChangeAlarm(Alarm alarm, bool value) async {
     if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
       showSnackBar(context, "Cannot disable alarm while it is snoozed",
           fab: true, navBar: true);
     } else {
       int index = _listController.getItemIndex(alarm);
+      await alarm.setIsEnabled(value,
+          "_handleEnableChangeAlarm(): Alarm enable set to $value by user");
       _listController.changeItems((alarms) async {
-        await alarms[index].setIsEnabled(value,
-            "_handleEnableChangeAlarm(): Alarm enable set to $value by user");
+        alarms[index] = alarm;
         _showNextScheduleSnackBar(alarms[index]);
       });
     }
@@ -131,17 +133,18 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   _handleSkipChange(Alarm alarm, bool value) {
     int index = _listController.getItemIndex(alarm);
+    alarm.setShouldSkip(value);
     _listController.changeItems((alarms) async {
-      alarms[index].setShouldSkip(value);
+      alarms[index] = alarm;
     });
   }
 
-  _handleDismissAlarm(Alarm alarm) {
+  _handleDismissAlarm(Alarm alarm) async {
     int index = _listController.getItemIndex(alarm);
+    await alarm.cancelSnooze();
+    await alarm.update("_handleDismissAlarm(): Alarm dismissed by user");
     _listController.changeItems((alarms) async {
-      await alarms[index].cancelSnooze();
-      await alarms[index]
-          .update("_handleDismissAlarm(): Alarm dismissed by user");
+      alarms[index] = alarm;
     });
   }
 
@@ -198,46 +201,21 @@ class _AlarmScreenState extends State<AlarmScreen> {
             ListFilterCustomAction(
                 name: "Enable all filtered alarms",
                 icon: Icons.alarm_on_rounded,
-                action: (alarms)async {
-                  for(var alarm in alarms){
-                  await _handleEnableChangeAlarm(alarm, true);
+                action: (alarms) async {
+                  for (var alarm in alarms) {
+                    await _handleEnableChangeAlarm(alarm, true);
                   }
                 }),
             ListFilterCustomAction(
                 name: "Disable all filtered alarms",
                 icon: Icons.alarm_off_rounded,
-                action: (alarms) async{
-                  for(var alarm in alarms){
-                  await _handleEnableChangeAlarm(alarm, false);
+                action: (alarms) async {
+                  for (var alarm in alarms) {
+                    await _handleEnableChangeAlarm(alarm, false);
                   }
                 }),
           ],
-          sortOptions: [
-            ListSortOption<Alarm>("Date Descending", "9-1", (a, b) {
-              if (a.currentScheduleDateTime == null &&
-                  b.currentScheduleDateTime == null) {
-                return 0;
-              } else if (a.currentScheduleDateTime == null) {
-                return 1;
-              } else if (b.currentScheduleDateTime == null) {
-                return -1;
-              }
-              return b.currentScheduleDateTime!
-                  .compareTo(a.currentScheduleDateTime!);
-            }),
-            ListSortOption<Alarm>("Date Ascending", "1-9", (a, b) {
-              if (a.currentScheduleDateTime == null &&
-                  b.currentScheduleDateTime == null) {
-                return 0;
-              } else if (a.currentScheduleDateTime == null) {
-                return 1;
-              } else if (b.currentScheduleDateTime == null) {
-                return -1;
-              }
-              return a.currentScheduleDateTime!
-                  .compareTo(b.currentScheduleDateTime!);
-            }),
-          ],
+          sortOptions: alarmSortOptions,
         ),
         FAB(
           onPressed: () {

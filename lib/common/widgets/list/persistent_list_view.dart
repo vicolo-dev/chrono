@@ -88,7 +88,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final bool shouldInsertOnTop;
   final List<ListFilterItem<Item>> listFilters;
   final List<ListFilterCustomAction<Item>> customActions;
-  final List<ListSortOption> sortOptions;
+  final List<ListSortOption<Item>> sortOptions;
 
   @override
   State<PersistentListView> createState() => _PersistentListViewState<Item>();
@@ -163,6 +163,7 @@ class _PersistentListViewState<Item extends ListItem>
       shouldInsertOnTop: widget.shouldInsertOnTop,
       listFilters: widget.listFilters,
       customActions: widget.customActions,
+      sortOptions: widget.sortOptions,
     );
   }
 }
