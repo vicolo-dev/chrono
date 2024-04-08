@@ -20,13 +20,13 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: "17"
-          # cache: 'gradle'
+          cache: 'gradle'
 
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.19.3"
           channel: 'stable'
-          cache: false
+          cache: true
 
       - name: Create key.properties
         run: |
@@ -43,11 +43,7 @@ jobs:
       - name: Pub Get Packages
         run: flutter pub get
 
-      - name: Clear cache
-        run: |
-          flutter clean
-          rm -rf ~/.gradle/caches
-
+    
       - name: Build APK
         run: flutter build apk --release --split-per-abi --flavor dev
 
