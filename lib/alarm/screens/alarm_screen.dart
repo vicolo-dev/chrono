@@ -36,6 +36,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
   final _listController = PersistentListController<Alarm>();
   late Setting _showInstantAlarmButton;
   late Setting _showFilters;
+  late Setting _showSort;
 
   void update(value) {
     setState(() {});
@@ -49,11 +50,19 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _showInstantAlarmButton = appSettings
         .getGroup("Developer Options")
         .getSetting("Show Instant Alarm Button");
-    _showFilters = appSettings.getGroup("Alarm").getSetting("Show Filters");
-    appSettings.getGroup("Accessibility").getSetting("Left Handed Mode");
+    _showFilters = appSettings
+        .getGroup("Alarm")
+        .getGroup("Filters")
+        .getSetting("Show Filters");
+    _showSort = appSettings
+        .getGroup("Alarm")
+        .getGroup("Filters")
+        .getSetting("Show Sort");
+    // appSettings.getGroup("Accessibility").getSetting("Left Handed Mode");
 
     _showInstantAlarmButton.addListener(update);
     _showFilters.addListener(update);
+    _showSort.addListener(update);
 
     // ListenerManager().addListener();
   }
@@ -62,6 +71,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
   void dispose() {
     _showInstantAlarmButton.removeListener(update);
     _showFilters.removeListener(update);
+    _showSort.removeListener(update);
     super.dispose();
   }
 
@@ -197,25 +207,27 @@ class _AlarmScreenState extends State<AlarmScreen> {
           placeholderText: "No alarms created",
           reloadOnPop: true,
           listFilters: _showFilters.value ? alarmListFilters : [],
-          customActions: [
-            ListFilterCustomAction(
-                name: "Enable all filtered alarms",
-                icon: Icons.alarm_on_rounded,
-                action: (alarms) async {
-                  for (var alarm in alarms) {
-                    await _handleEnableChangeAlarm(alarm, true);
-                  }
-                }),
-            ListFilterCustomAction(
-                name: "Disable all filtered alarms",
-                icon: Icons.alarm_off_rounded,
-                action: (alarms) async {
-                  for (var alarm in alarms) {
-                    await _handleEnableChangeAlarm(alarm, false);
-                  }
-                }),
-          ],
-          sortOptions: alarmSortOptions,
+          customActions: _showFilters.value
+              ? [
+                  ListFilterCustomAction(
+                      name: "Enable all filtered alarms",
+                      icon: Icons.alarm_on_rounded,
+                      action: (alarms) async {
+                        for (var alarm in alarms) {
+                          await _handleEnableChangeAlarm(alarm, true);
+                        }
+                      }),
+                  ListFilterCustomAction(
+                      name: "Disable all filtered alarms",
+                      icon: Icons.alarm_off_rounded,
+                      action: (alarms) async {
+                        for (var alarm in alarms) {
+                          await _handleEnableChangeAlarm(alarm, false);
+                        }
+                      }),
+                ]
+              : [],
+          sortOptions: _showSort.value ? alarmSortOptions : [],
         ),
         FAB(
           onPressed: () {

@@ -40,6 +40,7 @@ class TimerScreen extends StatefulWidget {
 class _TimerScreenState extends State<TimerScreen> {
   final _listController = PersistentListController<ClockTimer>();
   late Setting _showFilters;
+  late Setting _showSort;
   late Setting _showNotification;
 
   void update(value) {
@@ -59,10 +60,12 @@ class _TimerScreenState extends State<TimerScreen> {
   void initState() {
     super.initState();
 
-    _showFilters = appSettings.getGroup("Timer").getSetting("Show Filters");
+    _showFilters = appSettings.getGroup("Timer").getGroup("Filters").getSetting("Show Filters");
+    _showSort = appSettings.getGroup("Timer").getGroup("Filters").getSetting("Show Sort");
     _showNotification =
         appSettings.getGroup("Timer").getSetting("Show Notification");
     _showFilters.addListener(update);
+    _showSort.addListener(update);
     _showNotification.addListener(update);
     ListenerManager.addOnChangeListener("timers", onTimerUpdate);
     showProgressNotification();
@@ -71,6 +74,7 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   void dispose() {
     _showFilters.removeListener(update);
+    _showSort.removeListener(update);
     _showNotification.removeListener(update);
 
     // ListenerManager.removeOnChangeListener("timers", onTimerUpdate);
@@ -213,8 +217,8 @@ class _TimerScreenState extends State<TimerScreen> {
               placeholderText: "No timers created",
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],
-              sortOptions: timerSortOptions,
-              customActions: [
+              sortOptions: _showSort.value ? timerSortOptions : [],
+              customActions:  _showFilters.value ?[
                 ListFilterCustomAction(
                     name: "Reset all filtered timers",
                     icon: Icons.timer_off_rounded,
@@ -239,7 +243,7 @@ class _TimerScreenState extends State<TimerScreen> {
                         await _handlePauseTimer(timer);
                       }
                     }),
-              ],
+              ]: [],
             ),
           ),
         ],

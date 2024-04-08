@@ -178,7 +178,7 @@ class _CustomListViewState<Item extends ListItem>
   }
 
   Future<void> _handleDeleteItemList(List<Item> deletedItems) async {
-    for(var item in deletedItems) {
+    for (var item in deletedItems) {
       int index = _getItemIndex(item);
       int currentListIndex = _getCurrentListItemIndex(item);
       setState(() {
@@ -219,10 +219,11 @@ class _CustomListViewState<Item extends ListItem>
   }
 
   void updateCurrentList() {
+    if (selectedSortIndex > widget.sortOptions.length) {
+      selectedSortIndex = 0;
+    }
     if (selectedSortIndex != 0) {
-      print("currentlist before sort: ${currentList.map((e) => e.id)}");
       currentList.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
-      print("currentlist after sort: ${currentList.map((e) => e.id)}");
     } else {
       currentList.clear();
       currentList.addAll(widget.items);
@@ -310,6 +311,11 @@ class _CustomListViewState<Item extends ListItem>
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
 
+    if (selectedSortIndex > widget.sortOptions.length) {
+      currentList.clear();
+      currentList.addAll(widget.items);
+    }
+
     List<Widget> getFilterChips() {
       List<Widget> widgets = [];
       int activeFilterCount =
@@ -344,9 +350,10 @@ class _CustomListViewState<Item extends ListItem>
                 final result = await showDeleteAlertDialogue(context);
                 if (result == null || result == false) return;
 
-                final toRemove = List<Item>.from(widget.items.where((item) => widget.listFilters
-                    .every((filter) => filter.filterFunction(item))));
-                  await _handleDeleteItemList(toRemove);
+                final toRemove = List<Item>.from(widget.items.where((item) =>
+                    widget.listFilters
+                        .every((filter) => filter.filterFunction(item))));
+                await _handleDeleteItemList(toRemove);
 
                 widget.onModifyList?.call();
               },
@@ -375,8 +382,6 @@ class _CustomListViewState<Item extends ListItem>
       }
       return widgets;
     }
-
-    print(currentList.map((e) => e.id));
 
     // timeDilation = 1;
     return Column(
