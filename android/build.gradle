@@ -4,17 +4,17 @@ allprojects {
         mavenCentral()
     }
 
-    subprojects {
-        afterEvaluate { project ->
-            if (project.hasProperty('android')) {
-                project.android {
-                    if (namespace == null) {
-                        namespace project.group
-                    }
-                }
-            }
-        }
-    }
+    // subprojects {
+    //     afterEvaluate { project ->
+    //         if (project.hasProperty('android')) {
+    //             project.android {
+    //                 if (namespace == null) {
+    //                     namespace project.group
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 rootProject.buildDir = '../build'
@@ -25,7 +25,7 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
-ext.kotlin_version = "1.9.23"
+ext.kotlin_version = "1.9.10"
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
