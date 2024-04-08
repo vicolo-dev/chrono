@@ -26,7 +26,7 @@ jobs:
         with:
           flutter-version: "3.19.3"
           channel: 'stable'
-          cache: true
+          cache: false
 
       - name: Create key.properties
         run: |
