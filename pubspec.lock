@@ -300,10 +300,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_boot_receiver
-      sha256: "7a4acbd4a45487c8a7daf1e9ea3b7ecf734a90ad931a744b492901d3c6a6c83c"
+      sha256: "0860fa1bc49d050b5d4b70b9d48587adeed52653c99f553b2a2547594e450ed5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   flutter_fgbg:
     dependency: "direct main"
     description:

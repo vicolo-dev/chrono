@@ -87,6 +87,7 @@
       android:name="dev.fluttercommunity.plus.androidalarmmanager.RebootBroadcastReceiver"
       android:enabled="false"
       android:exported="true"
+      android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
       android:directBootAware="true"
       >
       <intent-filter>
