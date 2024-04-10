@@ -3,8 +3,7 @@ import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:flutter/material.dart';
 
 class TryAlarmTaskScreen extends StatelessWidget {
-  const TryAlarmTaskScreen({Key? key, required this.alarmTask})
-      : super(key: key);
+  const TryAlarmTaskScreen({super.key, required this.alarmTask});
 
   final AlarmTask alarmTask;
 

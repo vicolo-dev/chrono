@@ -26,111 +26,117 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
       List<TimerPreset> presets = loadListSync<TimerPreset>("timer_presets");
       TimerPreset? selectedPreset;
 
-      return StatefulBuilder(
-        builder: (context, StateSetter setState) {
-          return Modal(
-            onSave: () {
-              Navigator.of(context).pop(PickerResult(timer, false));
-            },
-            isSaveEnabled: timer.duration.inSeconds > 0,
-            title: "Choose Duration",
-            additionalAction: ModalAction(
-              title: "Customize",
-              onPressed: () async {
-                Navigator.of(context).pop(PickerResult(timer, true));
+      return OrientationBuilder(
+        builder: (context, orientation) => StatefulBuilder(
+          builder: (context, StateSetter setState) {
+            return Modal(
+              onSave: () {
+                Navigator.of(context).pop(PickerResult(timer, false));
               },
-            ),
-            child: Builder(
-              builder: (context) {
-                var width = MediaQuery.of(context).size.width;
+              isSaveEnabled: timer.duration.inSeconds > 0,
+              title: "Choose Duration",
+              additionalAction: ModalAction(
+                title: "Customize",
+                onPressed: () async {
+                  Navigator.of(context).pop(PickerResult(timer, true));
+                },
+              ),
+              child: Builder(
+                builder: (context) {
+                  var width = MediaQuery.of(context).size.width;
 
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 16),
-                    Text(timer.duration.toString(),
-                        style: textTheme.displayMedium),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: width - 64,
-                      width: width - 64,
-                      child: DialDurationPicker(
-                        duration: timer.duration,
-                        onChange: (TimeDuration newDuration) {
-                          setState(() {
-                            timer = ClockTimer(newDuration);
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text("Presets", style: textTheme.labelMedium),
-                            const Spacer(),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.all(0),
-                                minimumSize: const Size(48, 24),
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              onPressed: () async {
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const PresetsScreen(),
-                                  ),
-                                );
-
-                                List<TimerPreset> newPresets =
-                                    loadListSync<TimerPreset>("timer_presets");
-
-                                setState(() {
-                                  presets = newPresets;
-                                });
-                              },
-                              child: Text(
-                                "Edit",
-                                style: textTheme.labelSmall
-                                    ?.copyWith(color: colorScheme.primary),
-                              ),
-                            ),
-                          ],
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 16),
+                      Text(timer.duration.toString(),
+                          style: textTheme.displayMedium),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: width - 64,
+                        width: width - 64,
+                        child: DialDurationPicker(
+                          duration: timer.duration,
+                          onChange: (TimeDuration newDuration) {
+                            setState(() {
+                              timer = ClockTimer(newDuration);
+                            });
+                          },
                         ),
-                        SizedBox(
-                          height: 48,
-                          width: width - 64,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: presets.length,
-                            itemBuilder: (context, index) {
-                              return PresetChip(
-                                isSelected: presets[index] == selectedPreset,
-                                preset: presets[index],
-                                onTap: () {
+                      ),
+                      const SizedBox(height: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text("Presets", style: textTheme.labelMedium),
+                              const Spacer(),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.all(0),
+                                  minimumSize: const Size(48, 24),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                onPressed: () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PresetsScreen(),
+                                    ),
+                                  );
+
+                                  List<TimerPreset> newPresets =
+                                      loadListSync<TimerPreset>(
+                                          "timer_presets");
+
                                   setState(() {
-                                    timer = ClockTimer(presets[index].duration);
-                                    selectedPreset = presets[index];
-                                    timer.setSetting(
-                                        context, "Label", presets[index].name);
+                                    presets = newPresets;
                                   });
                                 },
-                              );
-                            },
+                                child: Text(
+                                  "Edit",
+                                  style: textTheme.labelSmall
+                                      ?.copyWith(color: colorScheme.primary),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    )
-                  ],
-                );
-              },
-            ),
-          );
-        },
+                          SizedBox(
+                            height: 48,
+                            width: width - 64,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: presets.length,
+                              itemBuilder: (context, index) {
+                                return PresetChip(
+                                  isSelected: presets[index] == selectedPreset,
+                                  preset: presets[index],
+                                  onTap: () {
+                                    setState(() {
+                                      timer =
+                                          ClockTimer(presets[index].duration);
+                                      selectedPreset = presets[index];
+                                      timer.setSetting(context, "Label",
+                                          presets[index].name);
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  );
+                },
+              ),
+            );
+          },
+        ),
       );
     },
   );

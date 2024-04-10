@@ -1,5 +1,5 @@
-typedef ItemChangerCallback<T> = void Function(List<T> item);
-typedef ItemChanger<T> = void Function(ItemChangerCallback<T>, bool);
+typedef ItemChangerCallback<T> = Function(List<T> item);
+typedef ItemChanger<T> = Function(ItemChangerCallback<T>, bool);
 
 class ListController<T> {
   ItemChanger<T>? _changeItems;

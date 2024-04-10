@@ -9,11 +9,10 @@ class SwitchSettingCard extends StatefulWidget {
   final void Function(bool)? onChanged;
 
   const SwitchSettingCard(
-      {Key? key,
+      {super.key,
       required this.setting,
       this.showAsCard = false,
-      this.onChanged})
-      : super(key: key);
+      this.onChanged});
 
   @override
   State<SwitchSettingCard> createState() => _SwitchSettingCardState();

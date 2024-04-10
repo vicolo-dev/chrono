@@ -10,7 +10,7 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 
-Future<bool> scheduleAlarm(
+Future<void> scheduleAlarm(
   int scheduleId,
   DateTime startDate,
   String description, {
@@ -23,10 +23,27 @@ Future<bool> scheduleAlarm(
   }
 
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
-    await cancelAlarm(scheduleId, type);
+    // await cancelAlarm(scheduleId, type);
+    List<AlarmEvent> alarmEvents = await loadList<AlarmEvent>('alarm_events');
+    for (var event in alarmEvents) {
+      if (event.scheduleId == scheduleId) {
+        event.isActive = false;
+      }
+    }
+
+    String name = type == ScheduledNotificationType.alarm
+        ? 'alarm_schedule_ids'
+        : 'timer_schedule_ids';
+    List<ScheduleId> scheduleIds = await loadList<ScheduleId>(name);
+    scheduleIds.removeWhere((id) => id.id == scheduleId);
+
+    if (type == ScheduledNotificationType.alarm) {
+      await cancelAlarmReminderNotification(scheduleId);
+    }
+
+    AndroidAlarmManager.cancel(scheduleId);
 
     // This is for logging purposes
-    List<AlarmEvent> alarmEvents = await loadList<AlarmEvent>('alarm_events');
     alarmEvents.insert(
         0,
         AlarmEvent(
@@ -48,10 +65,6 @@ Future<bool> scheduleAlarm(
     await saveList<AlarmEvent>('alarm_events', alarmEvents);
 
     // We store all scheduled ids so we can cancel them all if needed
-    String name = type == ScheduledNotificationType.alarm
-        ? 'alarm_schedule_ids'
-        : 'timer_schedule_ids';
-    List<ScheduleId> scheduleIds = await loadList<ScheduleId>(name);
     scheduleIds.add(ScheduleId(id: scheduleId));
     await saveList<ScheduleId>(name, scheduleIds);
 
@@ -60,7 +73,7 @@ Future<bool> scheduleAlarm(
     }
 
     // Scheduling the actual alarm
-    return AndroidAlarmManager.oneShotAt(
+    AndroidAlarmManager.oneShotAt(
       startDate,
       scheduleId,
       triggerScheduledNotification,
@@ -75,10 +88,8 @@ Future<bool> scheduleAlarm(
         'type': type.name,
       },
     );
-  } else {
-    return true;
   }
-}
+  }
 
 Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
@@ -97,8 +108,11 @@ Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
     scheduleIds.removeWhere((id) => id.id == scheduleId);
     await saveList<ScheduleId>(name, scheduleIds);
 
-   
-    await AndroidAlarmManager.cancel(scheduleId);
+    if (type == ScheduledNotificationType.alarm) {
+      await cancelAlarmReminderNotification(scheduleId);
+    }
+
+    AndroidAlarmManager.cancel(scheduleId);
   }
 }
 
@@ -109,9 +123,9 @@ enum AlarmStopAction {
 
 Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
     ScheduledNotificationType type, String description) async {
+  await scheduleAlarm(scheduleId, DateTime.now().add(delay), description,
+      type: type, snooze: true);
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
     await createSnoozeNotification(scheduleId, DateTime.now().add(delay));
   }
-  await scheduleAlarm(scheduleId, DateTime.now().add(delay), description,
-      type: type, snooze: true);
 }

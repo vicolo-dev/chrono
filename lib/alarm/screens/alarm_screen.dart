@@ -1,10 +1,12 @@
 import 'package:clock_app/alarm/data/alarm_list_filters.dart';
+import 'package:clock_app/alarm/data/alarm_sort_options.dart';
 import 'package:clock_app/alarm/logic/new_alarm_snackbar.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
 import 'package:clock_app/alarm/widgets/alarm_description.dart';
 import 'package:clock_app/alarm/widgets/alarm_time_picker.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
+import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
@@ -34,6 +36,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
   final _listController = PersistentListController<Alarm>();
   late Setting _showInstantAlarmButton;
   late Setting _showFilters;
+  late Setting _showSort;
 
   void update(value) {
     setState(() {});
@@ -47,11 +50,19 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _showInstantAlarmButton = appSettings
         .getGroup("Developer Options")
         .getSetting("Show Instant Alarm Button");
-    _showFilters = appSettings.getGroup("Alarm").getSetting("Show Filters");
-    appSettings.getGroup("Accessibility").getSetting("Left Handed Mode");
+    _showFilters = appSettings
+        .getGroup("Alarm")
+        .getGroup("Filters")
+        .getSetting("Show Filters");
+    _showSort = appSettings
+        .getGroup("Alarm")
+        .getGroup("Filters")
+        .getSetting("Show Sort");
+    // appSettings.getGroup("Accessibility").getSetting("Left Handed Mode");
 
     _showInstantAlarmButton.addListener(update);
     _showFilters.addListener(update);
+    _showSort.addListener(update);
 
     // ListenerManager().addListener();
   }
@@ -60,17 +71,20 @@ class _AlarmScreenState extends State<AlarmScreen> {
   void dispose() {
     _showInstantAlarmButton.removeListener(update);
     _showFilters.removeListener(update);
+    _showSort.removeListener(update);
     super.dispose();
   }
 
-  _handleEnableChangeAlarm(Alarm alarm, bool value) {
+  _handleEnableChangeAlarm(Alarm alarm, bool value) async {
     if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
       showSnackBar(context, "Cannot disable alarm while it is snoozed",
           fab: true, navBar: true);
     } else {
       int index = _listController.getItemIndex(alarm);
+      await alarm.setIsEnabled(value,
+          "_handleEnableChangeAlarm(): Alarm enable set to $value by user");
       _listController.changeItems((alarms) async {
-        await alarms[index].setIsEnabled(value, "_handleEnableChangeAlarm(): Alarm enable set to $value by user");
+        alarms[index] = alarm;
         _showNextScheduleSnackBar(alarms[index]);
       });
     }
@@ -104,8 +118,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
     int index = _listController.getItemIndex(alarm);
     // if (index < 0) return;
     await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
-     await newAlarm.update("_handleCustomizeAlarm(): Alarm customized by the user");
-      _listController.changeItems((alarms) {
+      await newAlarm
+          .update("_handleCustomizeAlarm(): Alarm customized by the user");
+      _listController.changeItems((alarms) async {
         alarms[index] = newAlarm;
       });
       _showNextScheduleSnackBar(newAlarm);
@@ -128,16 +143,18 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   _handleSkipChange(Alarm alarm, bool value) {
     int index = _listController.getItemIndex(alarm);
-    _listController.changeItems((alarms) {
-      alarms[index].setShouldSkip(value);
+    alarm.setShouldSkip(value);
+    _listController.changeItems((alarms) async {
+      alarms[index] = alarm;
     });
   }
 
-  _handleDismissAlarm(Alarm alarm) {
+  _handleDismissAlarm(Alarm alarm) async {
     int index = _listController.getItemIndex(alarm);
-    _listController.changeItems((alarms)async {
-     await alarms[index].cancelSnooze();
-      await alarms[index].update("_handleDismissAlarm(): Alarm dismissed by user");
+    await alarm.cancelSnooze();
+    await alarm.update("_handleDismissAlarm(): Alarm dismissed by user");
+    _listController.changeItems((alarms) async {
+      alarms[index] = alarm;
     });
   }
 
@@ -180,16 +197,37 @@ class _AlarmScreenState extends State<AlarmScreen> {
             onSkipChange: (value) => _handleSkipChange(alarm, value),
           ),
           onTapItem: (alarm, index) => _handleCustomizeAlarm(alarm),
-          onAddItem: (alarm)async {
+          onAddItem: (alarm) async {
             await alarm.update("onAddItem(): Alarm added by user");
             _showNextScheduleSnackBar(alarm);
           },
           onDeleteItem: (alarm) async {
             await alarm.disable();
-                      },
+          },
           placeholderText: "No alarms created",
           reloadOnPop: true,
           listFilters: _showFilters.value ? alarmListFilters : [],
+          customActions: _showFilters.value
+              ? [
+                  ListFilterCustomAction(
+                      name: "Enable all filtered alarms",
+                      icon: Icons.alarm_on_rounded,
+                      action: (alarms) async {
+                        for (var alarm in alarms) {
+                          await _handleEnableChangeAlarm(alarm, true);
+                        }
+                      }),
+                  ListFilterCustomAction(
+                      name: "Disable all filtered alarms",
+                      icon: Icons.alarm_off_rounded,
+                      action: (alarms) async {
+                        for (var alarm in alarms) {
+                          await _handleEnableChangeAlarm(alarm, false);
+                        }
+                      }),
+                ]
+              : [],
+          sortOptions: _showSort.value ? alarmSortOptions : [],
         ),
         FAB(
           onPressed: () {

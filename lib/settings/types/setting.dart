@@ -65,7 +65,7 @@ abstract class Setting<T> extends SettingItem {
 
 class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
   List<T> possibleItems;
-  Widget Function(T item) cardBuilder;
+  Widget Function(T item, [VoidCallback?,VoidCallback?]) cardBuilder;
   Widget Function(T item) addCardBuilder;
   Widget Function(T item)? itemPreviewBuilder;
   // The widget that will be used to display the value of this setting.
@@ -122,8 +122,8 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
     return addCardBuilder(item);
   }
 
-  Widget getItemCard(T item) {
-    return cardBuilder(item);
+  Widget getItemCard(T item, {VoidCallback? onDelete, VoidCallback? onDuplicate}) {
+    return cardBuilder(item,onDelete,onDuplicate);
   }
 
   Widget? getPreviewCard(T item) {

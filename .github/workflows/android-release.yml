@@ -21,13 +21,13 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: "17"
-          cache: 'gradle'
+          # cache: 'gradle'
 
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.19.3"
           channel: 'stable'
-          cache: true
+          cache: false
 
       - name: Create key.properties
         run: |
@@ -43,6 +43,11 @@ jobs:
 
       - name: Turn off analytics
         run: flutter config --no-analytics
+
+      - name: Clear cache
+        run: |
+          flutter clean
+          rm -rf ~/.gradle/caches
 
       - name: Pub Get Packages
         run: flutter pub get

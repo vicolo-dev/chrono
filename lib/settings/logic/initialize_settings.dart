@@ -88,5 +88,5 @@ Future<void> initializeSettings() async {
     await appSettings.save();
   }
 
-  appSettings.load();
+  await appSettings.load();
 }

@@ -1,12 +1,17 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
+import 'package:clock_app/notifications/data/notification_channel.dart';
+import 'package:clock_app/notifications/data/update_notification_intervals.dart';
+import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/onboarding/screens/onboarding_screen.dart';
 import 'package:clock_app/settings/data/appearance_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/theme.dart';
@@ -15,6 +20,7 @@ import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get_storage/get_storage.dart';
 
 class App extends StatefulWidget {
@@ -44,8 +50,7 @@ class _AppState extends State<App> {
   late SettingGroup _appearanceSettings;
   late SettingGroup _colorSettings;
   late SettingGroup _styleSettings;
-
-
+  late Setting _animationSpeedSetting;
 
   @override
   void initState() {
@@ -56,6 +61,18 @@ class _AppState extends State<App> {
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
+    _animationSpeedSetting = appSettings
+        .getGroup("General")
+        .getGroup("Animations")
+        .getSetting("Animation Speed");
+    _animationSpeedSetting.addListener(setAnimationSpeed);
+    setAnimationSpeed(_animationSpeedSetting.value);
+  }
+
+  void setAnimationSpeed(dynamic speed) {
+    // setState(() {
+      timeDilation = 1 / speed;
+    // });
   }
 
   refreshTheme() {
@@ -64,6 +81,15 @@ class _AppState extends State<App> {
 
   @override
   void dispose() {
+    stopwatchNotificationInterval?.cancel();
+    timerNotificationInterval?.cancel();
+    AwesomeNotifications()
+        .cancelNotificationsByChannelKey(stopwatchNotificationChannelKey);
+    AwesomeNotifications()
+        .cancelNotificationsByChannelKey(timerNotificationChannelKey);
+
+    _animationSpeedSetting.removeListener(setAnimationSpeed);
+
     super.dispose();
   }
 
@@ -155,24 +181,31 @@ class _AppState extends State<App> {
                 return MaterialPageRoute(
                     builder: (context) => const OnBoardingScreen());
               } else {
-                final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{"tab": 0}) as Map;
+                final arguments = (ModalRoute.of(context)?.settings.arguments ??
+                    <String, dynamic>{"tab": 0}) as Map;
                 return MaterialPageRoute(
-                    builder: (context) =>  NavScaffold(initialTabIndex: arguments["tab"],));
+                    builder: (context) => NavScaffold(
+                          initialTabIndex: arguments["tab"],
+                        ));
               }
 
             case Routes.alarmNotificationRoute:
               return MaterialPageRoute(
                 builder: (context) {
-                  final List<int> scheduleIds = settings.arguments as List<int>;
-                  return AlarmNotificationScreen(scheduleId: scheduleIds[0]);
+                  final args = settings.arguments as AlarmNotificationArguments;
+                  return AlarmNotificationScreen(
+                    scheduleId: args.scheduleIds[0],
+                    initialIndex: args.tasksOnly ? 0 : -1,
+                    dismissType: args.dismissType,
+                  );
                 },
               );
 
             case Routes.timerNotificationRoute:
               return MaterialPageRoute(
                 builder: (context) {
-                  final List<int> scheduleIds = settings.arguments as List<int>;
-                  return TimerNotificationScreen(scheduleIds: scheduleIds);
+                  final args = settings.arguments as AlarmNotificationArguments;
+                  return TimerNotificationScreen(scheduleIds: args.scheduleIds);
                 },
               );
 

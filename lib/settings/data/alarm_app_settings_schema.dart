@@ -62,7 +62,10 @@ SettingGroup alarmAppSettingsSchema = SettingGroup(
         ),
       )
     ]),
-    SwitchSetting("Show Filters", true),
+    SettingGroup("Filters", [
+      SwitchSetting("Show Filters", true),
+      SwitchSetting("Show Sort", true),
+    ]),
     SettingGroup(
       "Notifications",
       [

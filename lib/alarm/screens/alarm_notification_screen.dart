@@ -1,8 +1,7 @@
+import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/types/notification_type.dart';
-import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/widgets/clock/clock.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
@@ -15,13 +14,15 @@ class AlarmNotificationScreen extends StatefulWidget {
   const AlarmNotificationScreen({
     super.key,
     required this.scheduleId,
-    this.onDismiss,
+    this.onPop,
     this.initialIndex = -1,
+    this.dismissType = AlarmDismissType.dismiss,
   });
 
   final int scheduleId;
   final int initialIndex;
-  final Function? onDismiss;
+  final Function? onPop;
+  final AlarmDismissType dismissType;
 
   @override
   State<AlarmNotificationScreen> createState() =>
@@ -38,12 +39,12 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
       if (_currentIndex < 0) {
         _currentWidget = actionWidget;
       } else if (_currentIndex >= alarm.tasks.length) {
-        if (widget.onDismiss != null) {
-          widget.onDismiss!();
+        if (widget.onPop != null) {
+          widget.onPop!();
           Navigator.of(context).pop(true);
         } else {
-          AlarmNotificationManager.dismissAlarm(
-              widget.scheduleId, ScheduledNotificationType.alarm);
+          AlarmNotificationManager.dismissNotification(widget.scheduleId,
+              widget.dismissType, ScheduledNotificationType.alarm);
         }
       } else {
         // RingtonePlayer.setVolume(0);
@@ -56,17 +57,16 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   @override
   void initState() {
     super.initState();
-   
+
     Alarm? currentAlarm = getAlarmById(widget.scheduleId);
     if (currentAlarm == null) {
-      AlarmNotificationManager.dismissAlarm(
-          widget.scheduleId, ScheduledNotificationType.alarm);
-      Navigator.of(context).pop(true);
+      AlarmNotificationManager.dismissNotification(widget.scheduleId,
+          widget.dismissType, ScheduledNotificationType.alarm);
       return;
     }
     alarm = currentAlarm;
 
-     try {
+    try {
       actionWidget = appSettings
           .getGroup("Alarm")
           .getSetting("Dismiss Action Type")
@@ -83,7 +83,6 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
 
       debugPrint(e.toString());
     }
-
 
     _setNextWidget();
   }

@@ -38,12 +38,12 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
     if (!fileItem.isDeletable) return;
     final file = File(fileItem.uri);
     file.deleteSync();
+    RingtonePlayer.stop();
   }
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
     return Scaffold(

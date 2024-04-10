@@ -300,10 +300,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_boot_receiver
-      sha256: "7a4acbd4a45487c8a7daf1e9ea3b7ecf734a90ad931a744b492901d3c6a6c83c"
+      sha256: "0860fa1bc49d050b5d4b70b9d48587adeed52653c99f553b2a2547594e450ed5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   flutter_fgbg:
     dependency: "direct main"
     description:
@@ -380,10 +380,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_show_when_locked
-      sha256: e5a3d756dc762a9f46728270450bfed644448abadf780b39abb4e1eca06649fe
+      sha256: e288dbc49f01623d7e657251f85a1ecd28c1ac20602e197e00f7801d0e32d697
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.3"
   flutter_slidable:
     dependency: "direct main"
     description:

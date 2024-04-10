@@ -1,7 +1,6 @@
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
@@ -70,13 +69,15 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
     this.reloadOnPop = false,
     this.shouldInsertOnTop = true,
     this.listFilters = const [],
+    this.customActions = const [],
+    this.sortOptions = const [],
   });
 
   final Widget Function(Item item) itemBuilder;
   final void Function(Item item, int index)? onTapItem;
-  final void Function(Item item)? onReorderItem;
-  final void Function(Item item)? onDeleteItem;
-  final void Function(Item item)? onAddItem;
+  final  Function(Item item)? onReorderItem;
+  final Function(Item item)? onDeleteItem;
+  final  Function(Item item)? onAddItem;
   final String saveTag;
   final String placeholderText;
   final PersistentListController<Item> listController;
@@ -86,6 +87,8 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final bool reloadOnPop;
   final bool shouldInsertOnTop;
   final List<ListFilterItem<Item>> listFilters;
+  final List<ListFilterCustomAction<Item>> customActions;
+  final List<ListSortOption<Item>> sortOptions;
 
   @override
   State<PersistentListView> createState() => _PersistentListViewState<Item>();
@@ -159,6 +162,8 @@ class _PersistentListViewState<Item extends ListItem>
       isDuplicateEnabled: widget.isDuplicateEnabled,
       shouldInsertOnTop: widget.shouldInsertOnTop,
       listFilters: widget.listFilters,
+      customActions: widget.customActions,
+      sortOptions: widget.sortOptions,
     );
   }
 }

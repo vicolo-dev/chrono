@@ -81,13 +81,17 @@ class _AlarmEventsScreenState extends State<AlarmEventsScreen> {
                   itemBuilder: (event) => AlarmEventCard(
                     key: ValueKey(event),
                     event: event,
+                    
+                                      
                   ),
                   // onTapItem: (fileItem, index) {
                   //   // widget.setting.setValue(context, themeItem);
                   //   // _listController.reload();
                   // },
+                  // onDeleteItem: (event){},
                   isDuplicateEnabled: false,
                   isReorderable: false,
+                  // isDeleteEnabled: true,
                   placeholderText: "No alarm events",
                   reloadOnPop: true,
                   listFilters: alarmEventsListFilters,

@@ -21,9 +21,8 @@ void main() {
     test('schedule sets currentScheduleDateTime to correct value', () async {
       const time = Time(hour: 10, minute: 30);
 
-      bool result = await schedule.schedule(time, 'test');
+      await schedule.schedule(time, 'test');
 
-      expect(result, true);
       expect(schedule.currentScheduleDateTime?.hour, time.hour);
       expect(schedule.currentScheduleDateTime?.minute, time.minute);
     });
@@ -34,9 +33,8 @@ void main() {
         () async {
           const time = Time(hour: 10, minute: 30);
 
-          bool result = await schedule.schedule(time, 'test');
+          await schedule.schedule(time, 'test');
 
-          expect(result, true);
           expect(
               schedule.currentScheduleDateTime?.isAfter(DateTime.now()), true);
         },
@@ -46,9 +44,8 @@ void main() {
         () async {
           const time = Time(hour: 10, minute: 30);
 
-          bool result = await schedule.schedule(time, 'test');
+          await schedule.schedule(time, 'test');
 
-          expect(result, true);
           expect(
               schedule.currentScheduleDateTime?.isAfter(DateTime.now()), true);
         },

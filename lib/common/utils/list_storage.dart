@@ -72,10 +72,8 @@ Future<void> initList<T extends JsonSerializable>(
 Future<void> initTextFile(String key, String value) async {
   if (GetStorage().read('init_$key') == null) {
     GetStorage().write('init_$key', true);
-    try {
-      loadTextFileSync(key);
-    } catch (e) {
-      print("Initializing $key");
+    if(!textFileExistsSync(key)){
+      debugPrint("Initializing $key");
       await saveTextFile(key, value);
     }
   }
@@ -111,6 +109,11 @@ String loadTextFileSync<T extends JsonSerializable>(String key) {
   }
 }
 
+bool textFileExistsSync(String key) {
+  File file = File(path.join(getAppDataDirectoryPathSync(), '$key.txt'));
+  return file.existsSync();
+}
+
 Future<String> loadTextFile(String key) async {
   final String content = await queue.add(() async {
     String appDataDirectory = getAppDataDirectoryPathSync();
@@ -120,6 +123,7 @@ Future<String> loadTextFile(String key) async {
       return file.readAsString();
     } else {
       return '[]';
+
     }
   });
   return content;

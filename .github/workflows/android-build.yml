@@ -43,6 +43,7 @@ jobs:
       - name: Pub Get Packages
         run: flutter pub get
 
+    
       - name: Build APK
         run: flutter build apk --release --split-per-abi --flavor dev
 

@@ -42,16 +42,15 @@ class RangeAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  Future<bool> schedule(Time time,String description) async {
+  Future<void> schedule(Time time,String description) async {
     // All the dates are not scheduled at once
     // Instead we schedule the next date after the current one is finished
 
     DateTime alarmDate = getDailyAlarmDate(time, scheduledDate: startDate);
     if (alarmDate.day <= endDate.day) {
-      return await _alarmRunner.schedule(alarmDate,description);
+      await _alarmRunner.schedule(alarmDate,description);
     } else {
       _isFinished = true;
-      return false;
     }
   }
 

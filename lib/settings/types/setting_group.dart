@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
@@ -177,43 +178,58 @@ class SettingGroup extends SettingItem {
 
   @override
   void loadValueFromJson(dynamic value) {
-    if (value == null) return;
-    if (_version != null && value["version"] != _version) {
-      //TODO: Add migration code
+    try {
+      if (value == null) return;
+      if (_version != null && value["version"] != _version) {
+        //TODO: Add migration code
 
-      //In case of name change:
-      //value["New Name"] = value["Old Name"];
-      //OR
-      //value["Group 1"]["New Name"] = value["Group 1"]["Old Name"];
-      //value.remove("Old Name");
+        //In case of name change:
+        //value["New Name"] = value["Old Name"];
+        //OR
+        //value["Group 1"]["New Name"] = value["Group 1"]["Old Name"];
+        //value.remove("Old Name");
 
-      //Incase of addition
-      //value["New Setting"] = defaultValue;
+        //Incase of addition
+        //value["New Setting"] = defaultValue;
 
-      //Incase of removal
-      //value.remove("Old Setting");
+        //Incase of removal
+        //value.remove("Old Setting");
 
-      if (name == "AlarmSettings") {
-        // if (value["version"] == 1) {
-        final old1 = value["Snooze"]["Prevent Disabling while Snoozed"];
-        final old2 = value["Snooze"]["Prevent Deleting while Snoozed"];
-        if (old1) {
-          value["Snooze"]["While Snoozed"]["Prevent Disabling"] = old1;
+        if (name == "AlarmSettings") {
+          // if (value["version"] == 1) {
+          final old1 = value["Snooze"]["Prevent Disabling while Snoozed"];
+          final old2 = value["Snooze"]["Prevent Deleting while Snoozed"];
+          if (old1) {
+            value["Snooze"]["While Snoozed"]["Prevent Disabling"] = old1;
+          }
+          if (old2) value["Snooze"]["While Snoozed"]["Prevent Deletion"] = old2;
+          // }
         }
-        if (old2) value["Snooze"]["While Snoozed"]["Prevent Deletion"] = old2;
-        // }
       }
-    }
-    for (var setting in _settingItems) {
-      if (value != null) setting.loadValueFromJson(value[setting.name]);
+      for (var setting in _settingItems) {
+        if (value != null) setting.loadValueFromJson(value[setting.name]);
+      }
+    } catch (e) {
+      debugPrint(
+          "Error loading value from json in setting group ($name): ${e.toString()}");
     }
   }
 
   Future<void> save() {
-    return GetStorage().write(id, json.encode(valueToJson()));
+    // print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ${valueToJson()}");
+    return saveTextFile(id, json.encode(valueToJson()));
   }
 
-  void load() {
-    loadValueFromJson(json.decode(GetStorage().read(id)));
+  Future<void> load() async {
+    String value;
+    try {
+      value = loadTextFileSync(id);
+    } catch (e) {
+      debugPrint("Error loading $id: $e");
+      value = GetStorage().read(id);
+    }
+    loadValueFromJson(json.decode(value));
+
+    // print("################################## ${valueToJson()}");
   }
 }

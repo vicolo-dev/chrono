@@ -25,6 +25,16 @@ class Time extends JsonSerializable {
 
   Time add(Duration duration) => Time.fromDateTime(toDateTime().add(duration));
 
+  int compareTo(Time other) {
+    if (hour != other.hour) {
+      return hour.compareTo(other.hour);
+    } else if (minute != other.minute) {
+      return minute.compareTo(other.minute);
+    } else {
+      return second.compareTo(other.second);
+    }
+  }
+
   DateTime toDateTime() {
     DateTime currentDateTime = DateTime.now();
     return DateTime(currentDateTime.year, currentDateTime.month,

@@ -2,6 +2,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
@@ -28,17 +29,19 @@ const String updatePortName = "updatePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
-    debugPrint("Alarm triggered: $scheduleId");
+  debugPrint("Alarm triggered: $scheduleId");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
-      debugPrint("Params was null when triggering alarm");
+    debugPrint("Params was null when triggering alarm");
     return;
   }
 
   if (params['type'] == null) {
-      debugPrint("Params Type was null when triggering alarm");
+    debugPrint("Params Type was null when triggering alarm");
     return;
   }
+
+  await initializeIsolate();
 
   ScheduledNotificationType notificationType =
       ScheduledNotificationType.values.byName(params['type']);
@@ -51,8 +54,6 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
   receivePort.listen((message) {
     stopScheduledNotification(message);
   });
-
-  await initializeIsolate();
 
   if (notificationType == ScheduledNotificationType.alarm) {
     triggerAlarm(scheduleId, params);
@@ -88,7 +89,8 @@ void triggerAlarm(int scheduleId, Json params) async {
   DateTime now = DateTime.now();
 
   // if alarm is triggered more than 10 minutes after the scheduled time, ignore
-  if (alarm == null || alarm.isEnabled == false ||
+  if (alarm == null ||
+      alarm.isEnabled == false ||
       alarm.currentScheduleDateTime == null ||
       now.millisecondsSinceEpoch <
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
@@ -139,13 +141,14 @@ void triggerAlarm(int scheduleId, Json params) async {
   );
 }
 
-void setVolume(double volume){
+void setVolume(double volume) {
   RingtonePlayer.setVolume(volume);
 }
 
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
   if (action == AlarmStopAction.snooze) {
     await updateAlarmById(scheduleId, (alarm) async => await alarm.snooze());
+    // await createSnoozeNotification(scheduleId);
   } else if (action == AlarmStopAction.dismiss) {
     // If there was a timer ringing when the alarm was triggered, resume it now
     if (RingingManager.isTimerRinging) {
