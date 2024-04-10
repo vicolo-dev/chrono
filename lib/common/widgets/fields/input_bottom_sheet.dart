@@ -46,6 +46,7 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
+
         decoration: BoxDecoration(
           color: colorScheme.surface,
           borderRadius: borderRadius,
@@ -92,7 +93,7 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                                 _controller.text.isEmpty) {
                               return;
                             }
-                            Navigator.pop(context);
+                            Navigator.pop(context, _controller.text);
                           },
                           child: Text('Save',
                               style: textTheme.labelMedium?.copyWith(

@@ -1,11 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/types/file_item.dart';
-import 'package:clock_app/common/types/json.dart';
-import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/file_item_card.dart';
@@ -43,12 +38,12 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
     if (!fileItem.isDeletable) return;
     final file = File(fileItem.uri);
     file.deleteSync();
+    RingtonePlayer.stop();
   }
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
     return Scaffold(

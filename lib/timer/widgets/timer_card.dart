@@ -5,16 +5,17 @@ import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/circular_progress_bar.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
+import 'package:clock_app/timer/widgets/timer_progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class TimerCard extends StatefulWidget {
   const TimerCard({
-    Key? key,
+    super.key,
     required this.timer,
     required this.onToggleState,
     required this.onPressDelete,
     required this.onPressDuplicate,
-  }) : super(key: key);
+  });
 
   final ClockTimer timer;
   final VoidCallback onToggleState;
@@ -58,6 +59,7 @@ class _TimerCardState extends State<TimerCard> {
     valueNotifier = ValueNotifier(widget.timer.remainingSeconds.toDouble());
     remainingSeconds = widget.timer.remainingSeconds;
     valueNotifier.addListener(() {
+      // print("valueNotifier: ${valueNotifier.value}");
       setState(() {
         remainingSeconds = valueNotifier.value.toInt();
       });
@@ -84,22 +86,15 @@ class _TimerCardState extends State<TimerCard> {
     }
 
     return Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(
+            left: 16.0, right: 8.0, top: 16.0, bottom: 16.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircularProgressBar(
-              size: 64,
-              valueNotifier: valueNotifier,
-              progressStrokeWidth: 8,
-              backStrokeWidth: 8,
-              maxValue: widget.timer.currentDuration.inSeconds.toDouble(),
-              mergeMode: true,
-              animationDuration: 0,
-              onGetCenterWidget: (value) {
-                return GestureDetector(
+          TimerProgressBar(timer: widget.timer, size: 50,centerWidget:GestureDetector(
                   onTap: () {
                     widget.onToggleState();
+                    // print("================toglle");
                     updateTimer();
                   },
                   child: widget.timer.isRunning
@@ -113,11 +108,22 @@ class _TimerCardState extends State<TimerCard> {
                           color: colorScheme.onSurface.withOpacity(0.6),
                           size: 32,
                         ),
-                );
-              },
-              progressColors: [colorScheme.primary],
-              backColor: Colors.black.withOpacity(0.15),
-            ),
+                )
+),
+
+            // CircularProgressBar(
+            //   size: 50,
+            //   valueNotifier: valueNotifier,
+            //   progressStrokeWidth: 8,
+            //   backStrokeWidth: 8,
+            //   maxValue: widget.timer.currentDuration.inSeconds.toDouble(),
+            //   mergeMode: true,
+            //   animationDuration: 0,
+            //   onGetCenterWidget: (value) {
+            //     return               },
+            //   progressColors: [colorScheme.primary],
+            //   backColor: Colors.black.withOpacity(0.15),
+            // ),
             const SizedBox(width: 16),
             Expanded(
               flex: 999,
@@ -136,7 +142,7 @@ class _TimerCardState extends State<TimerCard> {
                   Text(
                     TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
                     style: textTheme.displayMedium?.copyWith(
-                      fontSize: remainingSeconds > 3600 ? 40 : 48,
+                      fontSize: remainingSeconds > 3600 ? 28 : 40,
                     ),
                   ),
                 ],

@@ -2,7 +2,9 @@ import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -108,7 +110,7 @@ class AboutScreen extends StatelessWidget {
                           ),
                         ],
                       ),
- const SizedBox(height: 8.0),
+                      const SizedBox(height: 8.0),
                       InkWell(
                         onTap: () async {
                           await launchUrl(Uri.parse(
@@ -124,28 +126,79 @@ class AboutScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 16.0),
- Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "License",
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: colorScheme.onSurface,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "License",
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: colorScheme.onSurface,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'GNU GPL v3.0',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color:
-                                      colorScheme.onBackground.withOpacity(0.6),
+                                Text(
+                                  'GNU GPL v3.0',
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: colorScheme.onBackground
+                                        .withOpacity(0.6),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
-
+                      const SizedBox(height: 8.0),
+                      InkWell(
+                        onTap: () async {
+                          String mailUrl = 'mailto:ahsansarwar.as45@gmail.com';
+                          try {
+                            await launchUrlString(mailUrl);
+                          } catch (e) {
+                            Clipboard.setData(const ClipboardData(
+                                text: "ahsansarwar.as45@gmail.com"));
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text("Email copied to clipboard")));
+                            }
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 48,
+                              child: Icon(
+                                Icons.mail_outline_rounded,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(width: 16.0),
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Email",
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  Text(
+                                    "ahsansarwar.as45@gmail.com",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 3,
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: colorScheme.onBackground
+                                          .withOpacity(0.6),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 8.0),
                       InkWell(
                         onTap: () async {
@@ -171,8 +224,6 @@ class AboutScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      
-
                     ],
                   ),
                 ),

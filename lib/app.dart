@@ -1,19 +1,18 @@
-import 'dart:async';
-
-import 'package:clock_app/alarm/logic/new_alarm_snackbar.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
-import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/data/app_info.dart';
-import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
+import 'package:clock_app/notifications/data/notification_channel.dart';
+import 'package:clock_app/notifications/data/update_notification_intervals.dart';
+import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/notifications/types/notifications_controller.dart';
 import 'package:clock_app/onboarding/screens/onboarding_screen.dart';
 import 'package:clock_app/settings/data/appearance_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
-import 'package:clock_app/system/logic/handle_intents.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
@@ -21,9 +20,8 @@ import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:receive_intent/receive_intent.dart' as intent_handler;
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -52,53 +50,29 @@ class _AppState extends State<App> {
   late SettingGroup _appearanceSettings;
   late SettingGroup _colorSettings;
   late SettingGroup _styleSettings;
-
-  late StreamSubscription _sub;
-
-  _showNextScheduleSnackBar(Alarm alarm) {
-    Future.delayed(Duration.zero).then((value) {
-      _messangerKey.currentState?.removeCurrentSnackBar();
-      DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
-      if (nextScheduleDateTime == null) return;
-      _messangerKey.currentState?.showSnackBar(
-          getSnackbar(getNewAlarmSnackbarText(alarm), fab: true, navBar: true));
-    });
-  }
-
-  Future<void> initReceiveIntent() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      final receivedIntent =
-          await intent_handler.ReceiveIntent.getInitialIntent();
-      if (mounted) {
-        handleIntent(receivedIntent, context, _showNextScheduleSnackBar);
-      }
-    } on PlatformException {
-      // Handle exception
-    }
-
-    _sub = intent_handler.ReceiveIntent.receivedIntentStream.listen(
-        (intent_handler.Intent? receivedIntent) {
-      if (receivedIntent != null) {
-        handleIntent(receivedIntent, context, _showNextScheduleSnackBar);
-      }
-      // Validate receivedIntent and warn the user, if it is not correct,
-    }, onError: (err) {
-      // Handle exception
-    });
-  }
+  late Setting _animationSpeedSetting;
 
   @override
   void initState() {
     super.initState();
-    initReceiveIntent();
 
     NotificationController.setListeners();
 
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
+    _animationSpeedSetting = appSettings
+        .getGroup("General")
+        .getGroup("Animations")
+        .getSetting("Animation Speed");
+    _animationSpeedSetting.addListener(setAnimationSpeed);
+    setAnimationSpeed(_animationSpeedSetting.value);
+  }
 
+  void setAnimationSpeed(dynamic speed) {
+    // setState(() {
+      timeDilation = 1 / speed;
+    // });
   }
 
   refreshTheme() {
@@ -107,7 +81,15 @@ class _AppState extends State<App> {
 
   @override
   void dispose() {
-    _sub.cancel();
+    stopwatchNotificationInterval?.cancel();
+    timerNotificationInterval?.cancel();
+    AwesomeNotifications()
+        .cancelNotificationsByChannelKey(stopwatchNotificationChannelKey);
+    AwesomeNotifications()
+        .cancelNotificationsByChannelKey(timerNotificationChannelKey);
+
+    _animationSpeedSetting.removeListener(setAnimationSpeed);
+
     super.dispose();
   }
 
@@ -199,23 +181,31 @@ class _AppState extends State<App> {
                 return MaterialPageRoute(
                     builder: (context) => const OnBoardingScreen());
               } else {
+                final arguments = (ModalRoute.of(context)?.settings.arguments ??
+                    <String, dynamic>{"tab": 0}) as Map;
                 return MaterialPageRoute(
-                    builder: (context) => const NavScaffold());
+                    builder: (context) => NavScaffold(
+                          initialTabIndex: arguments["tab"],
+                        ));
               }
 
             case Routes.alarmNotificationRoute:
               return MaterialPageRoute(
                 builder: (context) {
-                  final List<int> scheduleIds = settings.arguments as List<int>;
-                  return AlarmNotificationScreen(scheduleId: scheduleIds[0]);
+                  final args = settings.arguments as AlarmNotificationArguments;
+                  return AlarmNotificationScreen(
+                    scheduleId: args.scheduleIds[0],
+                    initialIndex: args.tasksOnly ? 0 : -1,
+                    dismissType: args.dismissType,
+                  );
                 },
               );
 
             case Routes.timerNotificationRoute:
               return MaterialPageRoute(
                 builder: (context) {
-                  final List<int> scheduleIds = settings.arguments as List<int>;
-                  return TimerNotificationScreen(scheduleIds: scheduleIds);
+                  final args = settings.arguments as AlarmNotificationArguments;
+                  return TimerNotificationScreen(scheduleIds: args.scheduleIds);
                 },
               );
 

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class CustomSettingCard extends StatefulWidget {
   const CustomSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = true,
-  }) : super(key: key);
+  });
 
   final CustomSetting setting;
   final bool showAsCard;

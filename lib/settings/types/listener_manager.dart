@@ -1,16 +1,19 @@
 class ListenerManager {
-  static final Map<String, List<void Function()>> _listeners = {};
+  static final Map<String, List<Function>> _listeners = {};
 
-  static void addOnChangeListener(String key, void Function() listener) {
+  static void addOnChangeListener(String key, Function listener) {
     final listeners = _listeners[key];
     if (listeners == null) {
       _listeners[key] = [listener];
     } else {
+      if(listeners.contains(listener)) {
+        return;
+      }
       listeners.add(listener);
     }
   }
 
-  static void removeOnChangeListener(String key, void Function() listener) {
+  static void removeOnChangeListener(String key, Function listener) {
     _listeners[key]?.remove(listener);
   }
 

@@ -5,15 +5,13 @@
     android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission
     android:name="android.permission.WAKE_LOCK" />
+  <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> -->
+  <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" /> -->
   <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
   <uses-permission
     android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-  <!-- <uses-permission -->
-  <!--   android:name="android.permission.SYSTEM_ALERT_WINDOW" /> -->
   <uses-permission
     android:name="android.permission.VIBRATE" />
-  <!-- <uses-permission -->
-  <!--   android:name="android.permission.INTERNET" /> -->
   <uses-permission
     android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
   <!-- For Android 12 and higher -->
@@ -36,9 +34,6 @@
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
       android:hardwareAccelerated="true"
       android:windowSoftInputMode="adjustResize"
-      android:showWhenLocked="true"
-      android:showOnLockScreen="true"
-      android:turnScreenOn="true"
       android:directBootAware="true"
       >
       <!-- Specifies an Android theme to apply to this Activity as soon as
@@ -62,6 +57,15 @@
         <action android:name="android.intent.action.SET_TIMER" />
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.intent.action.DISMISS_ALARM" />
+        <action android:name="android.intent.action.DISMISS_TIMER" />
+
+        <data android:scheme="id" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
     </activity>
     <!-- Don't delete the meta-data below.
       This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
@@ -83,6 +87,7 @@
       android:name="dev.fluttercommunity.plus.androidalarmmanager.RebootBroadcastReceiver"
       android:enabled="false"
       android:exported="true"
+      android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
       android:directBootAware="true"
       >
       <intent-filter>
@@ -99,6 +104,13 @@
       android:permission="android.permission.BIND_JOB_SERVICE" 
       android:directBootAware="true"
       />
+     <!-- <service android:name="me.carda.awesome_notifications.core.services.ForegroundService" -->
+     <!--      android:enabled="true"             -->
+     <!--      android:exported="false" -->
+     <!--      android:stopWithTask="true" -->
+     <!--  android:foregroundServiceType="phoneCall" -->
+     <!--  tools:replace="android:foregroundServiceType" -->
+     <!--  ></service> -->
     <receiver
       android:enabled="true"
       android:exported="true"

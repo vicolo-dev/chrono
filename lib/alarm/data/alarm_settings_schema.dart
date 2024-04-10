@@ -11,15 +11,18 @@ import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
 import 'package:clock_app/alarm/widgets/try_alarm_task_button.dart';
 import 'package:clock_app/audio/audio_channels.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
+import 'package:clock_app/common/logic/tags.dart';
 import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
-const alarmSchemaVersion = 4;
+const alarmSchemaVersion = 5;
 
 SettingGroup alarmSettingsSchema = SettingGroup(
   version: alarmSchemaVersion,
@@ -56,14 +59,14 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             ToggleSettingOption("S", 7),
           ],
           enableConditions: [
-            ValueCondition(["Type"], (value)=>value==WeeklyAlarmSchedule)
+            ValueCondition(["Type"], (value) => value == WeeklyAlarmSchedule)
           ],
         ),
         DateTimeSetting(
           "Dates",
           [],
           enableConditions: [
-            ValueCondition(["Type"], (value)=>value==DatesAlarmSchedule)
+            ValueCondition(["Type"], (value) => value == DatesAlarmSchedule)
           ],
         ),
         DateTimeSetting(
@@ -71,7 +74,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
           [],
           rangeOnly: true,
           enableConditions: [
-            ValueCondition(["Type"], (value)=>value==RangeAlarmSchedule)
+            ValueCondition(["Type"], (value) => value == RangeAlarmSchedule)
           ],
         ),
         SelectSetting<RangeInterval>(
@@ -81,7 +84,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             SelectSettingOption("Weekly", RangeInterval.weekly),
           ],
           enableConditions: [
-            ValueCondition(["Type"], (value)=>value==RangeAlarmSchedule)
+            ValueCondition(["Type"], (value) => value == RangeAlarmSchedule)
           ],
         ),
       ],
@@ -99,7 +102,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },
-              shouldCloseOnSelect: false,
+              // shouldCloseOnSelect: false,
             ),
             SelectSetting<AndroidAudioUsage>(
                 "Audio Channel", audioChannelOptions,
@@ -112,7 +115,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             DurationSetting(
                 "Time To Full Volume", const TimeDuration(minutes: 1),
                 enableConditions: [
-                  ValueCondition(["Rising Volume"], (value)=>value==true)
+                  ValueCondition(["Rising Volume"], (value) => value == true)
                 ]),
           ],
         ),
@@ -129,7 +132,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
       [
         SwitchSetting("Enabled", true),
         SliderSetting("Length", 1, 30, 5, unit: "minutes", enableConditions: [
-          ValueCondition(["Enabled"], (value)=>value==true)
+          ValueCondition(["Enabled"], (value) => value == true)
         ]),
         SliderSetting("Max Snoozes", 1, 10, 3,
             unit: "times",
@@ -137,13 +140,13 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             description:
                 "The maximum number of times the alarm can be snoozed before it is dismissed",
             enableConditions: [
-              ValueCondition(["Enabled"], (value)=>value==true)
+              ValueCondition(["Enabled"], (value) => value == true)
             ]),
         SettingGroup("While Snoozed", [
           SwitchSetting("Prevent Disabling", false),
           SwitchSetting("Prevent Deletion", false),
         ], enableConditions: [
-          ValueCondition(["Enabled"], (value)=>value==true)
+          ValueCondition(["Enabled"], (value) => value == true)
         ]),
       ],
       icon: Icons.snooze_rounded,
@@ -157,12 +160,27 @@ SettingGroup alarmSettingsSchema = SettingGroup(
       [],
       alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
       addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
-      cardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: false),
+      cardBuilder: (item, [onDelete, onDuplicate]) => AlarmTaskCard(
+        task: item,
+        isAddCard: false,
+        onPressDelete: onDelete,
+        onPressDuplicate: onDuplicate,
+      ),
       valueDisplayBuilder: (context, setting) {
         return Text("${setting.value.length} tasks");
       },
       itemPreviewBuilder: (item) => TryAlarmTaskButton(alarmTask: item),
+      // onChange: (context, value)async{
+      //   await appSettings.save();
+      // }
     ),
+    DynamicMultiSelectSetting<Tag>(
+      "Tags",
+      getTagOptions,
+      defaultValue: [],
+    ),
+
+    // ListSetting<Tag>()
     // CustomSetting<AlarmTaskList>("Tasks", AlarmTaskList([]),
     //     (context, setting) {
     //   return CustomizeAlarmTasksScreen(setting: setting);

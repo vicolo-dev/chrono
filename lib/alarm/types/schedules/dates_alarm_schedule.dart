@@ -55,7 +55,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  Future<bool> schedule(Time time) async {
+  Future<void> schedule(Time time,String description) async {
     List<DateTime> dates = _datesSetting.value;
 
     for (int i = 0; i < dates.length; i++) {
@@ -71,18 +71,17 @@ class DatesAlarmSchedule extends AlarmSchedule {
       // We also schedule just the next upcoming date
       // When that schedule is finished, we will schedule the next one and so on
       if (date.isAfter(DateTime.now())) {
-        return _alarmRunner.schedule(date);
+       await _alarmRunner.schedule(date,description);
       }
     }
 
     // There are no more dates to schedule, so finish the schedule
     _isFinished = true;
-    return false;
   }
 
   @override
-  void cancel() {
-    _alarmRunner.cancel();
+  Future<void> cancel() async {
+    await _alarmRunner.cancel();
   }
 
   @override

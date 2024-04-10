@@ -5,14 +5,16 @@ import 'dart:ui';
 import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/app.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
-import 'package:clock_app/common/logic/lock_screen_flags.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
+import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:move_to_background/move_to_background.dart';
 
@@ -88,7 +90,8 @@ class AlarmNotificationManager {
   static Future<void> removeNotification(ScheduledNotificationType type) async {
     FullScreenNotificationData data = alarmNotificationData[type]!;
 
-    await AwesomeNotifications().cancel(data.id);
+    await AwesomeNotifications()
+        .cancelNotificationsByChannelKey(alarmNotificationChannelKey);
     await AndroidForegroundService.stopForeground(data.id);
   }
 
@@ -96,7 +99,8 @@ class AlarmNotificationManager {
     await removeNotification(type);
 
     await GetStorage.init();
-    await LockScreenFlagManager.clearLockScreenFlags();
+    // await LockScreenFlagManager.clearLockScreenFlags();
+    await FlutterShowWhenLocked().hide();
 
     // If we were on the alarm screen, pop it off the stack. Sometimes the system
     // decides to show a heads up notification instead of a full screen one, so
@@ -114,12 +118,38 @@ class AlarmNotificationManager {
 
   static Future<void> snoozeAlarm(
       int scheduleId, ScheduledNotificationType type) async {
-    stopAlarm(scheduleId, type, AlarmStopAction.snooze);
+    await stopAlarm(scheduleId, type, AlarmStopAction.snooze);
   }
 
   static Future<void> dismissAlarm(
       int scheduleId, ScheduledNotificationType type) async {
-    stopAlarm(scheduleId, type, AlarmStopAction.dismiss);
+    await stopAlarm(scheduleId, type, AlarmStopAction.dismiss);
+  }
+
+  static Future<void> dismissNotification(int scheduleId,
+      AlarmDismissType dismissType, ScheduledNotificationType type) async {
+    switch (dismissType) {
+      case AlarmDismissType.dismiss:
+        await dismissAlarm(scheduleId, type);
+        break;
+      case AlarmDismissType.skip:
+        await updateAlarmById(scheduleId, (alarm) async {
+          alarm.setShouldSkip(true);
+        });
+        break;
+      case AlarmDismissType.snooze:
+        await snoozeAlarm(scheduleId, type);
+        break;
+
+      case AlarmDismissType.unsnooze:
+        await updateAlarmById(scheduleId, (alarm) async {
+          await alarm.cancelSnooze();
+          await alarm.update("Skipped snooze");
+        });
+        break;
+    }
+    await closeNotification(type);
+
   }
 
   static Future<void> stopAlarm(int scheduleId, ScheduledNotificationType type,
@@ -128,7 +158,7 @@ class AlarmNotificationManager {
     SendPort? sendPort = IsolateNameServer.lookupPortByName(stopAlarmPortName);
     sendPort?.send([scheduleId, type.name, action.name]);
 
-    closeNotification(type);
+    await closeNotification(type);
   }
 
   static void handleNotificationCreated(ReceivedNotification notification) {
@@ -137,8 +167,11 @@ class AlarmNotificationManager {
   }
 
   static Future<void> openNotificationScreen(
-      FullScreenNotificationData data, List<int> scheduleIds) async {
-    await LockScreenFlagManager.setLockScreenFlags();
+      FullScreenNotificationData data, List<int> scheduleIds,
+      {bool tasksOnly = false,
+      AlarmDismissType dismissType = AlarmDismissType.dismiss}) async {
+    // await LockScreenFlagManager.setLockScreenFlags();
+    await FlutterShowWhenLocked().show();
     // If we're already on the same notification screen, pop it off the
     // stack so we don't have two of them on the stack.
     if (Routes.currentRoute == data.route) {
@@ -147,30 +180,46 @@ class AlarmNotificationManager {
     App.navigatorKey.currentState?.pushNamedAndRemoveUntil(
       data.route,
       (route) => (route.settings.name != data.route) || route.isFirst,
-      arguments: scheduleIds,
+      arguments: AlarmNotificationArguments(
+          scheduleIds: scheduleIds,
+          tasksOnly: tasksOnly,
+          dismissType: dismissType),
     );
+  }
+
+  static Future<void> handleNotificationDismiss(
+      ReceivedAction action, AlarmDismissType dismissType) async {
+    Payload payload = action.payload!;
+    final type = ScheduledNotificationType.values.byName((payload['type'])!);
+    FullScreenNotificationData data = alarmNotificationData[type]!;
+    bool tasksRequired = payload['tasksRequired'] == 'true';
+    List<int> scheduleIds =
+        (json.decode((payload['scheduleIds'])!) as List<dynamic>).cast<int>();
+    if (scheduleIds.isEmpty) return;
+
+    if (tasksRequired && dismissType != AlarmDismissType.snooze){
+      await openNotificationScreen(data, scheduleIds,
+          tasksOnly: true, dismissType: dismissType);
+    } else {
+      await dismissNotification(scheduleIds.first, dismissType, type);
+    }
   }
 
   static Future<void> handleNotificationAction(ReceivedAction action) async {
     Payload payload = action.payload!;
     final type = ScheduledNotificationType.values.byName((payload['type'])!);
     FullScreenNotificationData data = alarmNotificationData[type]!;
-    bool tasksRequired = payload['tasksRequired'] == 'true';
 
     List<int> scheduleIds =
         (json.decode((payload['scheduleIds'])!) as List<dynamic>).cast<int>();
 
     switch (action.buttonKeyPressed) {
       case _snoozeActionKey:
-        snoozeAlarm(scheduleIds.first, type);
+        await handleNotificationDismiss(action, AlarmDismissType.snooze);
         break;
 
       case _dismissActionKey:
-        if (tasksRequired) {
-          await openNotificationScreen(data, scheduleIds);
-        } else {
-          dismissAlarm(scheduleIds.first, type);
-        }
+        await handleNotificationDismiss(action, AlarmDismissType.dismiss);
         break;
 
       default:
@@ -178,4 +227,22 @@ class AlarmNotificationManager {
         break;
     }
   }
+}
+
+class AlarmNotificationArguments {
+  final List<int> scheduleIds;
+  final bool tasksOnly;
+  final AlarmDismissType dismissType;
+
+  AlarmNotificationArguments(
+      {required this.scheduleIds,
+      required this.tasksOnly,
+      required this.dismissType});
+}
+
+enum AlarmDismissType {
+  dismiss,
+  skip,
+  snooze,
+  unsnooze,
 }

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 
 class TimerPresetCard extends StatefulWidget {
   const TimerPresetCard({
-    Key? key,
+    super.key,
     required this.preset,
     required this.onPressDelete,
     required this.onPressDuplicate,
-  }) : super(key: key);
+  });
 
   final TimerPreset preset;
   final VoidCallback onPressDelete;

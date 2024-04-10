@@ -14,6 +14,15 @@ Future<void> initializeNotifications() async {
     }
   });
 
-  await AwesomeNotifications().initialize(null, [alarmNotificationChannel],
-      channelGroups: [alarmNotificationChannelGroup], debug: false);
+  await AwesomeNotifications().initialize(
+    null, // use default app icon
+    [
+      alarmNotificationChannel,
+      reminderNotificationChannel,
+      stopwatchNotificationChannel,
+      timerNotificationChannel
+    ],
+    // channelGroups: [alarmNotificationChannelGroup],
+    debug: false,
+  );
 }

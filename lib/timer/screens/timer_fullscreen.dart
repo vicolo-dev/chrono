@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:clock_app/common/types/timer_state.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/circular_progress_bar.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
+import 'package:clock_app/timer/widgets/timer_progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class TimerFullscreen extends StatefulWidget {
@@ -21,9 +21,9 @@ class TimerFullscreen extends StatefulWidget {
   });
 
   final ClockTimer timer;
-  final void Function(ClockTimer) onToggleState;
-  final void Function(ClockTimer) onReset;
-  final void Function(ClockTimer) onAddTime;
+  final Future<void> Function(ClockTimer) onToggleState;
+  final Future<void> Function(ClockTimer) onReset;
+  final Future<void> Function(ClockTimer) onAddTime;
   final Future<ClockTimer?> Function(ClockTimer) onCustomize;
 
   @override
@@ -31,30 +31,16 @@ class TimerFullscreen extends StatefulWidget {
 }
 
 class _TimerFullscreenState extends State<TimerFullscreen> {
-  late ValueNotifier<double> valueNotifier;
   late ClockTimer timer;
-  late int remainingSeconds;
-  double maxValue = 0;
-
-  Timer? periodicTimer;
 
   void updateTimer() {
+    // ticker.stop();
     setState(() {
-      periodicTimer?.cancel();
-      if (timer.isRunning) {
-        periodicTimer =
-            Timer.periodic(const Duration(seconds: 1), (Timer periodicTimer) {
-          valueNotifier.value = timer.remainingSeconds.toDouble();
-        });
-      }
-      valueNotifier.value = timer.remainingSeconds.toDouble();
-      maxValue = timer.currentDuration.inSeconds.toDouble();
-      remainingSeconds = timer.remainingSeconds;
     });
   }
 
   void onTimerUpdated() {
-    timer = getTimerById(timer.id);
+    timer = getTimerById(timer.id) ?? ClockTimer(const TimeDuration());
     updateTimer();
   }
 
@@ -63,21 +49,12 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
   void initState() {
     super.initState();
     timer = widget.timer;
-    valueNotifier = ValueNotifier(timer.remainingSeconds.toDouble());
-    remainingSeconds = timer.remainingSeconds;
-    valueNotifier.addListener(() {
-      setState(() {
-        remainingSeconds = valueNotifier.value.toInt();
-      });
-    });
-    updateTimer();
     ListenerManager.addOnChangeListener("timers", onTimerUpdated);
   }
 
   @override
   void dispose() {
     ListenerManager.removeOnChangeListener("timers", onTimerUpdated);
-    periodicTimer?.cancel();
     super.dispose();
   }
 
@@ -119,25 +96,7 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
               ),
             ),
             const SizedBox(height: 32),
-            CircularProgressBar(
-              size: 256,
-              valueNotifier: valueNotifier,
-              progressStrokeWidth: 8,
-              backStrokeWidth: 8,
-              maxValue: maxValue,
-              mergeMode: true,
-              // animationDuration: 0,
-              onGetCenterWidget: (value) {
-                return Text(
-                  TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontSize: remainingSeconds > 3600 ? 48 : 64,
-                      ),
-                );
-              },
-              progressColors: [Theme.of(context).colorScheme.primary],
-              backColor: Colors.black.withOpacity(0.15),
-            ),
+            TimerProgressBar(timer: timer, size: 256),
             const SizedBox(height: 32),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -159,35 +118,39 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                               size: 32,
                               // size: 64,
                             )),
-                        onTap: () {
-                          widget.onReset(timer);
+                        onTap: () async {
+                          await widget.onReset(timer);
                           updateTimer();
                         },
                       ),
                     ),
-                  CardContainer(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: timer.isRunning
-                          ? Icon(
-                              Icons.pause_rounded,
+                  Expanded(
+                    flex: 999,
+                    child: CardContainer(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: timer.isRunning
+                            ? Icon(
+                                Icons.pause_rounded,
 
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 112,
-                              // size: 64,
-                            )
-                          : Icon(
-                              Icons.play_arrow_rounded,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 112,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 96,
+                                // size: 64,
+                              )
+                            : Icon(
+                                Icons.play_arrow_rounded,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 96,
 
-                              // size: 64,
-                            ),
+                                // size: 64,
+                              ),
+                      ),
+                      onTap: () async {
+                        await widget.onToggleState(timer);
+                        updateTimer();
+                      },
                     ),
-                    onTap: () {
-                      widget.onToggleState(timer);
-                      updateTimer();
-                    },
                   ),
                   if (timer.state != TimerState.stopped)
                     SizedBox(
@@ -200,8 +163,8 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                             child: Text('+${timer.addLength.floor()}:00',
                                 style:
                                     Theme.of(context).textTheme.displaySmall)),
-                        onTap: () {
-                          widget.onAddTime(timer);
+                        onTap: () async {
+                          await widget.onAddTime(timer);
                           updateTimer();
                         },
                       ),

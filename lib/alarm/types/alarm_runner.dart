@@ -1,5 +1,6 @@
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:flutter/material.dart';
 
 class AlarmRunner extends JsonSerializable {
@@ -13,14 +14,15 @@ class AlarmRunner extends JsonSerializable {
     _id = UniqueKey().hashCode;
   }
 
-  Future<bool> schedule(DateTime dateTime) async {
+  Future<void> schedule(DateTime dateTime, String description) async {
     _currentScheduleDateTime = dateTime;
-    return await scheduleAlarm(_id, dateTime);
+    await scheduleAlarm(_id, dateTime, description);
   }
 
-  void cancel() {
+  Future<void> cancel() async {
+    if(_currentScheduleDateTime == null) return;
     _currentScheduleDateTime = null;
-    cancelAlarm(_id);
+    await cancelAlarm(_id, ScheduledNotificationType.alarm);
   }
 
   AlarmRunner.fromJson(Json? json) {

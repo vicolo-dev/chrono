@@ -1,13 +1,17 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
-
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
@@ -25,23 +29,19 @@ const String updatePortName = "updatePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
-  if (kDebugMode) {
-    print("Alarm triggered: $scheduleId");
-  }
+  debugPrint("Alarm triggered: $scheduleId");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
-    if (kDebugMode) {
-      print("Params was null when triggering alarm");
-    }
+    debugPrint("Params was null when triggering alarm");
     return;
   }
 
   if (params['type'] == null) {
-    if (kDebugMode) {
-      print("Params Type was null when triggering alarm");
-    }
+    debugPrint("Params Type was null when triggering alarm");
     return;
   }
+
+  await initializeIsolate();
 
   ScheduledNotificationType notificationType =
       ScheduledNotificationType.values.byName(params['type']);
@@ -54,11 +54,6 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
   receivePort.listen((message) {
     stopScheduledNotification(message);
   });
-
-  await initializeAppDataDirectory();
-  await GetStorage.init();
-  // await RingtoneManager.initialize();
-  await RingtonePlayer.initialize();
 
   if (notificationType == ScheduledNotificationType.alarm) {
     triggerAlarm(scheduleId, params);
@@ -90,9 +85,23 @@ void triggerAlarm(int scheduleId, Json params) async {
     return;
   }
 
-  Alarm alarm = getAlarmByScheduleId(scheduleId);
+  Alarm? alarm = getAlarmById(scheduleId);
+  DateTime now = DateTime.now();
 
-  await updateAlarms();
+  // if alarm is triggered more than 10 minutes after the scheduled time, ignore
+  if (alarm == null ||
+      alarm.isEnabled == false ||
+      alarm.currentScheduleDateTime == null ||
+      now.millisecondsSinceEpoch <
+          alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
+      now.millisecondsSinceEpoch >
+          alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
+              1000 * 60 * 10) {
+    await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
+    return;
+  }
+
+  await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
 
   if (alarm.shouldSkipNextAlarm) {
     alarm.cancelSkip();
@@ -132,22 +141,37 @@ void triggerAlarm(int scheduleId, Json params) async {
   );
 }
 
+void setVolume(double volume) {
+  RingtonePlayer.setVolume(volume);
+}
+
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
   if (action == AlarmStopAction.snooze) {
-    await updateAlarmById(scheduleId, (alarm) => alarm.snooze());
+    await updateAlarmById(scheduleId, (alarm) async => await alarm.snooze());
+    // await createSnoozeNotification(scheduleId);
   } else if (action == AlarmStopAction.dismiss) {
     // If there was a timer ringing when the alarm was triggered, resume it now
     if (RingingManager.isTimerRinging) {
-      RingtonePlayer.playTimer(getTimerById(RingingManager.activeTimerId));
+      ClockTimer? timer = getTimerById(RingingManager.activeTimerId);
+      if (timer != null) {
+        RingtonePlayer.playTimer(timer);
+      }
     }
   }
   RingingManager.stopAlarm();
 }
 
 void triggerTimer(int scheduleId, Json params) async {
-  await updateTimers();
-  // Notify the front-end to update the timers
+  ClockTimer? timer = getTimerById(scheduleId);
 
+  if (timer == null || !timer.isRunning) {
+    await updateTimers("triggerTimer(): Updating all timers on trigger");
+    return;
+  }
+
+  await updateTimers("triggerTimer(): Updating all timers on trigger");
+
+  // Notify the front-end to update the timers
   GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
   // Pause any currently ringing alarms. We will continue them after the timer
@@ -161,8 +185,6 @@ void triggerTimer(int scheduleId, Json params) async {
     await AlarmNotificationManager.removeNotification(
         ScheduledNotificationType.timer);
   }
-
-  ClockTimer timer = getTimerById(scheduleId);
 
   RingtonePlayer.playTimer(timer);
   RingingManager.ringTimer(scheduleId);
@@ -179,23 +201,27 @@ void triggerTimer(int scheduleId, Json params) async {
 }
 
 void stopTimer(int scheduleId, AlarmStopAction action) async {
-  ClockTimer timer = getTimerById(scheduleId);
+  ClockTimer? timer = getTimerById(scheduleId);
+  if (timer == null) return;
   if (action == AlarmStopAction.snooze) {
-    scheduleSnoozeAlarm(
+    await scheduleSnoozeAlarm(
       scheduleId,
       Duration(minutes: timer.addLength.floor()),
       ScheduledNotificationType.timer,
+      "stopTimer(): ${timer.addLength.floor()} added to timer",
     );
-    updateTimerById(scheduleId, (timer) {
+    updateTimerById(scheduleId, (timer) async {
       timer.setTime(const TimeDuration(minutes: 1));
-      timer.start();
+      await timer.start();
     });
   } else if (action == AlarmStopAction.dismiss) {
     // If there was an alarm already ringing when the timer was triggered, we
     // need to resume it now
     if (RingingManager.isAlarmRinging) {
-      RingtonePlayer.playAlarm(
-          getAlarmByScheduleId(RingingManager.ringingAlarmId));
+      Alarm? alarm = getAlarmById(RingingManager.ringingAlarmId);
+      if (alarm != null) {
+        RingtonePlayer.playAlarm(alarm);
+      }
     }
   }
   RingingManager.stopAllTimers();

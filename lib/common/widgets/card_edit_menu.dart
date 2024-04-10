@@ -51,8 +51,7 @@ class CardEditMenu extends StatelessWidget {
 
 class CardEditMenuItem extends StatelessWidget {
   const CardEditMenuItem(
-      {Key? key, required this.icon, required this.text, this.color})
-      : super(key: key);
+      {super.key, required this.icon, required this.text, this.color});
 
   final IconData icon;
   final String text;

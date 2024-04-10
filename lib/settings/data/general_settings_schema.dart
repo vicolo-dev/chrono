@@ -6,11 +6,13 @@ import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/settings/screens/ringtones_screen.dart';
+import 'package:clock_app/settings/screens/tags_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,6 +20,11 @@ import 'package:url_launcher/url_launcher.dart';
 SelectSettingOption<String> _getDateSettingOption(String format) {
   return SelectSettingOption(
       "${DateFormat(format).format(DateTime.now())} ($format)", format);
+}
+
+enum SwipeAction {
+  cardActions,
+  switchTabs,
 }
 
 final timeFormatOptions = [
@@ -60,10 +67,30 @@ SettingGroup generalSettingsSchema = SettingGroup(
       }),
       SwitchSetting("Show Seconds", true),
     ]),
+    SelectSetting(
+      "Swipe Action",
+      [
+        SelectSettingOption(
+          "Card Actions",
+          SwipeAction.cardActions,
+          description: "Swipe cards to delete or duplicate them",
+        ),
+        SelectSettingOption(
+          "Switch Tabs",
+          SwipeAction.switchTabs,
+          description: "Swipe from one tab to the next",
+        )
+      ],
+    ),
     SettingPageLink(
       "Melodies",
       const RingtonesScreen(),
       searchTags: ["ringtones", "music", "audio", "tones", "custom"],
+    ),
+    SettingPageLink(
+      "Tags",
+      const TagsScreen(),
+      searchTags: ["tags", "groups", "filter"],
     ),
     SettingGroup("Reliability", [
       SettingAction(
@@ -98,8 +125,10 @@ SettingGroup generalSettingsSchema = SettingGroup(
               await getAutoStartPermission();
             } else {
               // ignore: use_build_context_synchronously
-              showSnackBar(
-                  context, "Auto Start is not available for your device");
+              if (context.mounted) {
+                showSnackBar(
+                    context, "Auto Start is not available for your device");
+              }
             }
           } on PlatformException catch (e) {
             if (kDebugMode) print(e.message);
@@ -107,8 +136,23 @@ SettingGroup generalSettingsSchema = SettingGroup(
         },
         description:
             "Some devices require Auto Start to be enabled for alarms to ring while app is closed.",
-      )
+      ),
     ]),
+    SettingGroup("Animations", [
+      SliderSetting(
+        "Animation Speed",
+        0.5,
+        2,
+        1,
+        // unit: 'm',
+        snapLength: 0.1,
+        // enableConditions: [
+        //   ValueCondition(
+        //       ["Show Upcoming Alarm Notifications"], (value) => value),
+        // ],
+      ),
+      SwitchSetting("Extra Animations", false),
+    ])
   ],
   icon: FluxIcons.settings,
   description: "Set app wide settings like time format",

@@ -66,6 +66,24 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
               ),
             );
 
+    Widget? selectedDateLabelBuilder(
+            BuildContext context, DateTime date, DateTime focusedDay) =>
+        Container(
+          margin: const EdgeInsets.all(4.0),
+          decoration: BoxDecoration(
+            color: colorScheme.primary,
+            borderRadius: BorderRadius.circular(themeStyle?.borderRadius ?? 8),
+          ),
+          child: Center(
+            child: Text(
+              date.day.toString(),
+              style: textTheme.labelLarge?.copyWith(
+                color: colorScheme.onPrimary,
+              ),
+            ),
+          ),
+        );
+
     return Padding(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -190,11 +208,27 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                             color: colorScheme.onSurface.withOpacity(0.6),
                           ),
                         ),
+
                         daysOfWeekHeight: 48,
                         rangeSelectionMode: widget.rangeOnly
                             ? RangeSelectionMode.enforced
                             : RangeSelectionMode.disabled,
                         calendarBuilders: CalendarBuilders(
+                          rangeStartBuilder: selectedDateLabelBuilder,
+                          rangeEndBuilder: selectedDateLabelBuilder,
+                          // withinRangeBuilder: selectedDateLabelBuilder,
+                          rangeHighlightBuilder:
+                              (context, date, isWithinnRange) => isWithinnRange
+                                  ? Container(
+                                      margin: const EdgeInsets.all(4.0),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.primary
+                                            .withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(
+                                            themeStyle?.borderRadius ?? 8),
+                                      ),
+                                    )
+                                  : null,
                           disabledBuilder: dateLabelBuilder(
                               colorScheme.onSurface.withOpacity(0.25)),
                           holidayBuilder: dateLabelBuilder(
@@ -203,23 +237,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                               dateLabelBuilder(colorScheme.onSurface),
                           outsideBuilder: dateLabelBuilder(
                               colorScheme.onSurface.withOpacity(0.5)),
-                          selectedBuilder: (context, date, focusedDay) =>
-                              Container(
-                            margin: const EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                              color: colorScheme.primary,
-                              borderRadius: BorderRadius.circular(
-                                  themeStyle?.borderRadius ?? 8),
-                            ),
-                            child: Center(
-                              child: Text(
-                                date.day.toString(),
-                                style: textTheme.labelLarge?.copyWith(
-                                  color: colorScheme.onPrimary,
-                                ),
-                              ),
-                            ),
-                          ),
+                          selectedBuilder: selectedDateLabelBuilder,
                           // rangeStartBuilder:
                           //     dateLabelBuilder(colorScheme.onSurface),
                           //     rangeHighlightBuilder: ,

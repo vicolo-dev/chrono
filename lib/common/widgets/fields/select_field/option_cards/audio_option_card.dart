@@ -6,17 +6,19 @@ import 'package:just_audio/just_audio.dart';
 
 class SelectAudioOptionCard extends StatefulWidget {
   const SelectAudioOptionCard({
-    Key? key,
-    required this.selectedIndex,
+    super.key,
+    required this.selectedIndices,
     required this.choice,
     required this.index,
     required this.onSelect,
-  }) : super(key: key);
+    required this.multiSelect,
+  });
 
-  final int selectedIndex;
+  final bool multiSelect;
+  final List<int> selectedIndices;
   final SelectChoice choice;
   final int index;
-  final void Function(int) onSelect;
+  final void Function(List<int>) onSelect;
 
   @override
   State<SelectAudioOptionCard> createState() => _SelectAudioOptionCardState();
@@ -54,18 +56,25 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => widget.onSelect(widget.index),
+        onTap: () => widget.onSelect([widget.index]),
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: widget.choice.description.isNotEmpty ? 8.0 : 2.0),
           child: Row(
             children: [
-              Radio(
-                value: widget.index,
-                groupValue: widget.selectedIndex,
-                onChanged: (dynamic value) => widget.onSelect(widget.index),
-              ),
+              widget.multiSelect
+                  ? Checkbox(
+                      // checkColor: Colors.white,
+                      // fillColor: MaterialStateProperty.resolveWith(getColor),
+                      value: widget.selectedIndices.contains(widget.index),
+                      onChanged: (bool? value) => widget.onSelect([widget.index]))
+                  : Radio(
+                      value: widget.index,
+                      groupValue: widget.selectedIndices[0],
+                      onChanged: (dynamic value) =>
+                          widget.onSelect([widget.index]),
+                    ),
               Expanded(
                 flex: 100,
                 child: Column(

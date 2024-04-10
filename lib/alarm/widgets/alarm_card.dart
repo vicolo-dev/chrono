@@ -3,13 +3,11 @@ import 'package:clock_app/alarm/logic/time_icon.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/time_of_day_icon.dart';
-import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/clock/clock_display.dart';
-import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
@@ -126,7 +124,7 @@ class _AlarmCardState extends State<AlarmCard> {
               builder: (context) => AlarmNotificationScreen(
                 scheduleId: widget.alarm.id,
                 initialIndex: 0,
-                onDismiss: widget.onDismiss,
+                onPop: widget.onDismiss,
               ),
             ),
           );
