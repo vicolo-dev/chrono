@@ -9,14 +9,14 @@ class ModalAction {
 
 class Modal extends StatelessWidget {
   const Modal({
-    Key? key,
+    super.key,
     this.title,
     required this.child,
     this.onSave,
     this.additionalAction,
     this.titleWidget,
     this.isSaveEnabled = true,
-  }) : super(key: key);
+  });
 
   final String? title;
   final Widget child;

@@ -9,8 +9,7 @@ class AppNavigationBar extends StatefulWidget {
   final void Function(int) onTabSelected;
 
   const AppNavigationBar(
-      {Key? key, required this.selectedTabIndex, required this.onTabSelected})
-      : super(key: key);
+      {super.key, required this.selectedTabIndex, required this.onTabSelected});
 
   @override
   State<AppNavigationBar> createState() => _AppNavigationBarState();
