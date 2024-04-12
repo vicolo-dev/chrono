@@ -208,5 +208,9 @@
   "alarmDescriptionWeekday": "Hafta içi her gün",
   "@alarmDescriptionWeekday": {},
   "stopwatchFastest": "En hızlı",
-  "@stopwatchFastest": {}
+  "@stopwatchFastest": {},
+  "taskTryButton": "Dene",
+  "@taskTryButton": {},
+  "skippingDescriptionSuffix": "(sonraki atlanacak)",
+  "@skippingDescriptionSuffix": {}
 }
