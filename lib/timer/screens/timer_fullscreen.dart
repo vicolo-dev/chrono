@@ -35,8 +35,7 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
 
   void updateTimer() {
     // ticker.stop();
-    setState(() {
-    });
+    setState(() {});
   }
 
   void onTimerUpdated() {
@@ -60,6 +59,14 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+    Orientation orientation = MediaQuery.of(context).orientation;
+    double buttonSize = orientation == Orientation.portrait ? 84 : 64;
+    double largeButtonSize = orientation == Orientation.portrait ? 96 : 72;
+    double width = MediaQuery.of(context).size.width - 64;
+    double height = MediaQuery.of(context).size.height - 128;
     return Scaffold(
       appBar: AppTopBar(actions: [
         TextButton(
@@ -75,8 +82,12 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
             child: const Text("Edit"))
       ]),
       body: SizedBox(
-        width: double.infinity,
-        child: Column(
+        width: orientation == Orientation.portrait ? double.infinity : null,
+        height: orientation == Orientation.landscape ? double.infinity : null,
+        child: Flex(
+          direction: orientation == Orientation.portrait
+              ? Axis.vertical
+              : Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -96,25 +107,28 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
               ),
             ),
             const SizedBox(height: 32),
-            TimerProgressBar(timer: timer, size: 256),
+            TimerProgressBar(timer: timer, size: orientation == Orientation.portrait ? width : height),
             const SizedBox(height: 32),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
+              padding: const EdgeInsets.only(left: 20.0, right:20.0, bottom:20.0),
+              child: Flex(
+                direction: orientation == Orientation.portrait
+                    ? Axis.horizontal
+                    : Axis.vertical,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   if (timer.state != TimerState.stopped)
                     SizedBox(
-                      width: 84,
-                      height: 84,
+                      width: buttonSize,
+                      height: buttonSize,
                       child: CardContainer(
                         child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.replay_rounded,
 
-                              color: Theme.of(context).colorScheme.primary,
+                              color: colorScheme.primary,
                               size: 32,
                               // size: 64,
                             )),
@@ -134,14 +148,14 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                             ? Icon(
                                 Icons.pause_rounded,
 
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 96,
+                                color: colorScheme.primary,
+                                size: largeButtonSize,
                                 // size: 64,
                               )
                             : Icon(
                                 Icons.play_arrow_rounded,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 96,
+                                color: colorScheme.primary,
+                                size: largeButtonSize,
 
                                 // size: 64,
                               ),
@@ -154,15 +168,15 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                   ),
                   if (timer.state != TimerState.stopped)
                     SizedBox(
-                      width: 84,
-                      height: 84,
+                      width: buttonSize,
+                      height: buttonSize,
                       child: CardContainer(
                         alignment: Alignment.center,
                         child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text('+${timer.addLength.floor()}:00',
                                 style:
-                                    Theme.of(context).textTheme.displaySmall)),
+                                    orientation == Orientation.portrait ? textTheme.displaySmall: textTheme.titleSmall)),
                         onTap: () async {
                           await widget.onAddTime(timer);
                           updateTimer();
