@@ -66,6 +66,11 @@ Pull Requests are highly welcome. When contributing to this repository, please f
 You can help translate the app into your preferred language using weblate at https://hosted.weblate.org/projects/chrono/.
 ### Spread the word!
 If you found the app useful, you can help the project by sharing it with friends and family.
+### Donate
+The amount of time I can given to the app is bound by financial constraints. Donations will really help allow me in giving more and more time to the development of this app.
+
+<span class="badge-patreon"><a href="https://patreon.com/vicolo" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-orange.svg" alt="Patreon donate button" /></a></span>
+
 
 ## Development
 
