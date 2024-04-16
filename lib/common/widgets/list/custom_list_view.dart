@@ -36,6 +36,8 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
     this.listFilters = const [],
     this.customActions = const [],
     this.sortOptions = const [],
+    this.initialSortIndex = 0,
+    this.onChangeSortIndex,
   });
 
   final List<Item> items;
@@ -51,10 +53,12 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final bool isReorderable;
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
+  final int initialSortIndex;
   final bool shouldInsertOnTop;
   final List<ListFilterItem<Item>> listFilters;
   final List<ListFilterCustomAction<Item>> customActions;
   final List<ListSortOption<Item>> sortOptions;
+  final Function(int index)? onChangeSortIndex;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -66,10 +70,7 @@ class _CustomListViewState<Item extends ListItem>
   double _itemCardHeight = 0;
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
-  int selectedSortIndex = 0;
-  // late ListFilter<Item> _selectedFilter = widget.listFilters.isEmpty
-  //     ? ListFilter("Default", (item) => true)
-  //     : widget.listFilters[0];
+  late int selectedSortIndex = widget.initialSortIndex;
 
   @override
   void initState() {
@@ -81,6 +82,7 @@ class _CustomListViewState<Item extends ListItem>
     widget.listController.setDuplicateItem(_handleDuplicateItem);
     widget.listController.setReloadItems(_handleReloadItems);
     widget.listController.setClearItems(_handleClear);
+    updateCurrentList();
     // widget.listController.setChangeItemWithId(_handleChangeItemWithId);
   }
 
@@ -352,6 +354,7 @@ class _CustomListViewState<Item extends ListItem>
             ],
             onChange: (index) => setState(() {
               selectedSortIndex = index;
+              widget.onChangeSortIndex?.call(index);
               updateCurrentList();
               _notifyChangeList();
             }),
