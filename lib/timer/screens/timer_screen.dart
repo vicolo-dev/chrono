@@ -106,6 +106,15 @@ class _TimerScreenState extends State<TimerScreen> {
     showProgressNotification();
   }
 
+  Future<void> _handleStartMultipleTimers(List<ClockTimer> timers) async {
+    for (var timer in timers) {
+      if (timer.isRunning) return;
+      await timer.start();
+    }
+    _listController.changeItems((timers) {});
+    showProgressNotification();
+  }
+
   Future<void> _handlePauseTimer(ClockTimer timer) async {
     if (timer.isPaused) return;
     await timer.pause();
@@ -113,8 +122,25 @@ class _TimerScreenState extends State<TimerScreen> {
     showProgressNotification();
   }
 
+  Future<void> _handlePauseMultipleTimers(List<ClockTimer> timers) async {
+    for (var timer in timers) {
+      if (timer.isPaused) return;
+      await timer.pause();
+    }
+    _listController.changeItems((timers) {});
+    showProgressNotification();
+  }
+
   Future<void> _handleResetTimer(ClockTimer timer) async {
     await timer.reset();
+    _listController.changeItems((timers) {});
+    showProgressNotification();
+  }
+
+  Future<void> _handleResetMultipleTimers(List<ClockTimer> timers) async {
+    for (var timer in timers) {
+      await timer.reset();
+    }
     _listController.changeItems((timers) {});
     showProgressNotification();
   }
@@ -220,30 +246,21 @@ class _TimerScreenState extends State<TimerScreen> {
               sortOptions: _showSort.value ? timerSortOptions : [],
               customActions: _showFilters.value
                   ? [
-                      ListFilterCustomAction(
+                      ListFilterCustomAction<ClockTimer>(
                           name: "Reset all filtered timers",
                           icon: Icons.timer_off_rounded,
-                          action: (timers) async {
-                            for (var timer in timers) {
-                              await _handleResetTimer(timer);
-                            }
-                          }),
-                      ListFilterCustomAction(
+                          action: (timers) =>
+                              _handleResetMultipleTimers(timers)),
+                      ListFilterCustomAction<ClockTimer>(
                           name: "Play all filtered timers",
                           icon: Icons.play_arrow_rounded,
-                          action: (timers) async {
-                            for (var timer in timers) {
-                              await _handleStartTimer(timer);
-                            }
-                          }),
-                      ListFilterCustomAction(
+                          action: (timers) =>
+                              _handleStartMultipleTimers(timers)),
+                      ListFilterCustomAction<ClockTimer>(
                           name: "Pause all filtered timers",
                           icon: Icons.pause_rounded,
-                          action: (timers) async {
-                            for (var timer in timers) {
-                              await _handlePauseTimer(timer);
-                            }
-                          }),
+                          action: (timers) =>
+                              _handlePauseMultipleTimers(timers)),
                     ]
                   : [],
             ),

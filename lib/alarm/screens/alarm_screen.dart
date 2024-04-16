@@ -99,7 +99,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     );
   }
 
-  _handleCustomizeAlarm(Alarm alarm) async {
+  Future<void> _handleCustomizeAlarm(Alarm alarm) async {
     await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
       // The alarm id changes for the new alarm, so we have to cancel the old one
       await alarm.cancel();
@@ -111,7 +111,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     });
   }
 
-  _showNextScheduleSnackBar(Alarm alarm) {
+  void _showNextScheduleSnackBar(Alarm alarm) {
     Future.delayed(Duration.zero).then((value) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
@@ -121,7 +121,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     });
   }
 
-  _handleEnableChangeAlarm(Alarm alarm, bool value) async {
+  Future<void> _handleEnableChangeAlarm(Alarm alarm, bool value) async {
     if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
       showSnackBar(context, "Cannot disable alarm while it is snoozed",
           fab: true, navBar: true);
@@ -133,16 +133,31 @@ class _AlarmScreenState extends State<AlarmScreen> {
     }
   }
 
-  _handleDeleteAlarm(Alarm alarm) {
+  Future<void> _handleEnableChangeMultipleAlarms(
+      List<Alarm> alarms, bool value) async {
+    for (var alarm in alarms) {
+      if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
+        showSnackBar(context, "Cannot disable alarm while it is snoozed",
+            fab: true, navBar: true);
+      } else {
+        await alarm.setIsEnabled(value,
+            "_handleEnableChangeMultipleAlarms(): Alarm enable set to $value by user");
+        _showNextScheduleSnackBar(alarm);
+      }
+    }
+    _listController.changeItems((alarms) {});
+  }
+
+  void _handleDeleteAlarm(Alarm alarm) {
     _listController.deleteItem(alarm);
   }
 
-  _handleSkipChange(Alarm alarm, bool value) {
+  void _handleSkipChange(Alarm alarm, bool value) {
     alarm.setShouldSkip(value);
     _listController.changeItems((alarms) {});
   }
 
-  _handleDismissAlarm(Alarm alarm) async {
+  Future<void> _handleDismissAlarm(Alarm alarm) async {
     await alarm.cancelSnooze();
     await alarm.update("_handleDismissAlarm(): Alarm dismissed by user");
     _listController.changeItems((alarms) {});
@@ -202,18 +217,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
                   ListFilterCustomAction(
                       name: "Enable all filtered alarms",
                       icon: Icons.alarm_on_rounded,
-                      action: (alarms) async {
-                        for (var alarm in alarms) {
-                          await _handleEnableChangeAlarm(alarm, true);
-                        }
+                      action: (alarms) {
+                        _handleEnableChangeMultipleAlarms(alarms, true);
                       }),
                   ListFilterCustomAction(
                       name: "Disable all filtered alarms",
                       icon: Icons.alarm_off_rounded,
-                      action: (alarms) async {
-                        for (var alarm in alarms) {
-                          await _handleEnableChangeAlarm(alarm, false);
-                        }
+                      action: (alarms) {
+                        _handleEnableChangeMultipleAlarms(alarms, false);
                       }),
                 ]
               : [],
