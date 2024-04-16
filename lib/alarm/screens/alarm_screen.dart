@@ -101,6 +101,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   _handleCustomizeAlarm(Alarm alarm) async {
     await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
+      // The alarm id changes for the new alarm, so we have to cancel the old one
+      await alarm.cancel();
       alarm.copyFrom(newAlarm);
       await alarm
           .update("_handleCustomizeAlarm(): Alarm customized by the user");
