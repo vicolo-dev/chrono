@@ -8,10 +8,10 @@ import 'package:flutter/services.dart';
 
 class RetypeTask extends StatefulWidget {
   const RetypeTask({
-    Key? key,
+    super.key,
     required this.onSolve,
     required this.settings,
-  }) : super(key: key);
+  });
 
   final VoidCallback onSolve;
   final SettingGroup settings;

@@ -22,6 +22,19 @@ class PersistentListController<T> {
       {bool callOnModifyList = true}) {
     _listController.changeItems(callback, callOnModifyList: callOnModifyList);
   }
+  //
+  // void changeItemWithId(int id, SingleItemChangerCallback<T> callback,
+  //     {bool callOnModifyList = true}) {
+  //   _listController.changeItemWithId(id, callback,
+  //       callOnModifyList: callOnModifyList);
+  // }
+  //
+  //  void changeItemAtIndex(int index, SingleItemChangerCallback<T> callback,
+  //     {bool callOnModifyList = true}) {
+  //   _listController.changeItemAtIndex(index, callback,
+  //       callOnModifyList: callOnModifyList);
+  // }
+
 
   void addItem(T item) {
     _listController.addItem(item);
@@ -75,9 +88,9 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
 
   final Widget Function(Item item) itemBuilder;
   final void Function(Item item, int index)? onTapItem;
-  final  Function(Item item)? onReorderItem;
+  final Function(Item item)? onReorderItem;
   final Function(Item item)? onDeleteItem;
-  final  Function(Item item)? onAddItem;
+  final Function(Item item)? onAddItem;
   final String saveTag;
   final String placeholderText;
   final PersistentListController<Item> listController;
@@ -119,11 +132,11 @@ class _PersistentListViewState<Item extends ListItem>
     // unwatchList(widget.saveTag);
     super.dispose();
   }
-
-  void reloadItems() {
-    List<Item> newList = loadListSync<Item>(widget.saveTag);
-    widget.listController.reloadItems(newList);
-  }
+  //
+  // void reloadItems() {
+  //   List<Item> newList = loadListSync<Item>(widget.saveTag);
+  //   widget.listController.reloadItems(newList);
+  // }
 
   void loadItems() {
     if (widget.saveTag.isNotEmpty) {

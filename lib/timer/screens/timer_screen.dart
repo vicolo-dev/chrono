@@ -45,7 +45,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void update(value) {
     setState(() {});
-    _listController.changeItems((timers) async => {});
+    _listController.changeItems((timers) => {});
   }
 
   void onTimerUpdate() async {
@@ -60,8 +60,14 @@ class _TimerScreenState extends State<TimerScreen> {
   void initState() {
     super.initState();
 
-    _showFilters = appSettings.getGroup("Timer").getGroup("Filters").getSetting("Show Filters");
-    _showSort = appSettings.getGroup("Timer").getGroup("Filters").getSetting("Show Sort");
+    _showFilters = appSettings
+        .getGroup("Timer")
+        .getGroup("Filters")
+        .getSetting("Show Filters");
+    _showSort = appSettings
+        .getGroup("Timer")
+        .getGroup("Filters")
+        .getSetting("Show Sort");
     _showNotification =
         appSettings.getGroup("Timer").getSetting("Show Notification");
     _showFilters.addListener(update);
@@ -88,39 +94,34 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   Future<void> _handleToggleState(ClockTimer timer) async {
-    int index = _listController.getItemIndex(timer);
     await timer.toggleState();
-    _listController.changeItems((timers) async => timers[index] = timer);
+    _listController.changeItems((timers) {});
     showProgressNotification();
   }
 
   Future<void> _handleStartTimer(ClockTimer timer) async {
     if (timer.isRunning) return;
-    int index = _listController.getItemIndex(timer);
     await timer.start();
-    _listController.changeItems((timers) async => timers[index] = timer);
+    _listController.changeItems((timers) {});
     showProgressNotification();
   }
 
   Future<void> _handlePauseTimer(ClockTimer timer) async {
     if (timer.isPaused) return;
-    int index = _listController.getItemIndex(timer);
     await timer.pause();
-    _listController.changeItems((timers) async => timers[index] = timer);
+    _listController.changeItems((timers) {});
     showProgressNotification();
   }
 
   Future<void> _handleResetTimer(ClockTimer timer) async {
-    int index = _listController.getItemIndex(timer);
     await timer.reset();
-    _listController.changeItems((timers) async => timers[index] = timer);
+    _listController.changeItems((timers) {});
     showProgressNotification();
   }
 
   Future<void> _handleAddTimeToTimer(ClockTimer timer) async {
-    int index = _listController.getItemIndex(timer);
     await timer.addTime();
-    _listController.changeItems((timers) async => timers[index] = timer);
+    _listController.changeItems((timers) {});
     showProgressNotification();
   }
 
@@ -143,15 +144,14 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   Future<ClockTimer?> _handleCustomizeTimer(ClockTimer timer) async {
-    int index = _listController.getItemIndex(timer);
-    final newTimer =
-        await _openCustomizeTimerScreen(timer, onSave: (newTimer) async {
-      await newTimer.reset();
-      await newTimer.start();
-      _listController.changeItems((timers) => timers[index] = newTimer);
+    await _openCustomizeTimerScreen(timer, onSave: (newTimer) async {
+      timer.copyFrom(newTimer);
+      await timer.reset();
+      await timer.start();
+      _listController.changeItems((timers) {});
     });
     showProgressNotification();
-    return newTimer;
+    return timer;
   }
 
   Future<void> showProgressNotification() async {
@@ -218,32 +218,34 @@ class _TimerScreenState extends State<TimerScreen> {
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],
               sortOptions: _showSort.value ? timerSortOptions : [],
-              customActions:  _showFilters.value ?[
-                ListFilterCustomAction(
-                    name: "Reset all filtered timers",
-                    icon: Icons.timer_off_rounded,
-                    action: (timers) async {
-                      for (var timer in timers) {
-                        await _handleResetTimer(timer);
-                      }
-                    }),
-                ListFilterCustomAction(
-                    name: "Play all filtered timers",
-                    icon: Icons.play_arrow_rounded,
-                    action: (timers) async {
-                      for (var timer in timers) {
-                        await _handleStartTimer(timer);
-                      }
-                    }),
-                ListFilterCustomAction(
-                    name: "Pause all filtered timers",
-                    icon: Icons.pause_rounded,
-                    action: (timers) async {
-                      for (var timer in timers) {
-                        await _handlePauseTimer(timer);
-                      }
-                    }),
-              ]: [],
+              customActions: _showFilters.value
+                  ? [
+                      ListFilterCustomAction(
+                          name: "Reset all filtered timers",
+                          icon: Icons.timer_off_rounded,
+                          action: (timers) async {
+                            for (var timer in timers) {
+                              await _handleResetTimer(timer);
+                            }
+                          }),
+                      ListFilterCustomAction(
+                          name: "Play all filtered timers",
+                          icon: Icons.play_arrow_rounded,
+                          action: (timers) async {
+                            for (var timer in timers) {
+                              await _handleStartTimer(timer);
+                            }
+                          }),
+                      ListFilterCustomAction(
+                          name: "Pause all filtered timers",
+                          icon: Icons.pause_rounded,
+                          action: (timers) async {
+                            for (var timer in timers) {
+                              await _handlePauseTimer(timer);
+                            }
+                          }),
+                    ]
+                  : [],
             ),
           ),
         ],

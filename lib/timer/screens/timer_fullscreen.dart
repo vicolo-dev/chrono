@@ -74,7 +74,7 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
               ClockTimer? newTimer = await widget.onCustomize(timer);
               if (newTimer != null) {
                 setState(() {
-                  timer = newTimer;
+                  timer.copyFrom(newTimer);
                   updateTimer();
                 });
               }

@@ -136,6 +136,18 @@ class Alarm extends CustomizableListItem {
     _schedules = createSchedules(_settings);
   }
 
+  @override
+  void copyFrom(dynamic other) {
+    _isEnabled = other._isEnabled;
+    _isFinished = other._isFinished;
+    _time = other._time;
+    _snoozeCount = other._snoozeCount;
+    _snoozeTime = other._snoozeTime;
+    _skippedTime = other._skippedTime;
+    _settings = other._settings.copy();
+    _schedules = other._schedules;
+  }
+
   T getSchedule<T extends AlarmSchedule>() {
     return _schedules.whereType<T>().first;
   }
@@ -233,9 +245,7 @@ class Alarm extends CustomizableListItem {
     }
   }
 
-  Future<void> cancelAllSchedules()async{
-
-  }
+  Future<void> cancelAllSchedules() async {}
 
   Future<void> cancel() async {
     cancelAlarmReminderNotification(id);

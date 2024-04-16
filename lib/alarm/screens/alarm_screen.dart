@@ -75,21 +75,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
     super.dispose();
   }
 
-  _handleEnableChangeAlarm(Alarm alarm, bool value) async {
-    if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
-      showSnackBar(context, "Cannot disable alarm while it is snoozed",
-          fab: true, navBar: true);
-    } else {
-      int index = _listController.getItemIndex(alarm);
-      await alarm.setIsEnabled(value,
-          "_handleEnableChangeAlarm(): Alarm enable set to $value by user");
-      _listController.changeItems((alarms) async {
-        alarms[index] = alarm;
-        _showNextScheduleSnackBar(alarms[index]);
-      });
-    }
-  }
-
   Future<Alarm?> _openCustomizeAlarmScreen(
     Alarm alarm, {
     Future<void> Function(Alarm)? onSave,
@@ -115,14 +100,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
   }
 
   _handleCustomizeAlarm(Alarm alarm) async {
-    int index = _listController.getItemIndex(alarm);
-    // if (index < 0) return;
     await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
-      await newAlarm
+      alarm.copyFrom(newAlarm);
+      await alarm
           .update("_handleCustomizeAlarm(): Alarm customized by the user");
-      _listController.changeItems((alarms) async {
-        alarms[index] = newAlarm;
-      });
+      _listController.changeItems((alarms) {});
       _showNextScheduleSnackBar(newAlarm);
     });
   }
@@ -137,25 +119,31 @@ class _AlarmScreenState extends State<AlarmScreen> {
     });
   }
 
+  _handleEnableChangeAlarm(Alarm alarm, bool value) async {
+    if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
+      showSnackBar(context, "Cannot disable alarm while it is snoozed",
+          fab: true, navBar: true);
+    } else {
+      await alarm.setIsEnabled(value,
+          "_handleEnableChangeAlarm(): Alarm enable set to $value by user");
+      _listController.changeItems((alarms) {});
+      _showNextScheduleSnackBar(alarm);
+    }
+  }
+
   _handleDeleteAlarm(Alarm alarm) {
     _listController.deleteItem(alarm);
   }
 
   _handleSkipChange(Alarm alarm, bool value) {
-    int index = _listController.getItemIndex(alarm);
     alarm.setShouldSkip(value);
-    _listController.changeItems((alarms) async {
-      alarms[index] = alarm;
-    });
+    _listController.changeItems((alarms) {});
   }
 
   _handleDismissAlarm(Alarm alarm) async {
-    int index = _listController.getItemIndex(alarm);
     await alarm.cancelSnooze();
     await alarm.update("_handleDismissAlarm(): Alarm dismissed by user");
-    _listController.changeItems((alarms) async {
-      alarms[index] = alarm;
-    });
+    _listController.changeItems((alarms) {});
   }
 
   @override

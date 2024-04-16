@@ -65,7 +65,6 @@ class _CustomListViewState<Item extends ListItem>
     extends State<CustomListView<Item>> {
   late List<Item> currentList = List.from(widget.items);
   double _itemCardHeight = 0;
-  late int lastListLength = widget.items.length;
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
   int selectedSortIndex = 0;
@@ -76,21 +75,21 @@ class _CustomListViewState<Item extends ListItem>
   @override
   void initState() {
     super.initState();
-    widget.listController.setChangeItems(_changeItems);
+    widget.listController.setChangeItems(_handleChangeItems);
     widget.listController.setAddItem(_handleAddItem);
     widget.listController.setDeleteItem(_handleDeleteItem);
-    widget.listController.setGetItemIndex(_getCurrentListItemIndex);
+    widget.listController.setGetItemIndex(_getItemIndex);
     widget.listController.setDuplicateItem(_handleDuplicateItem);
-    widget.listController.setReloadItems(_reloadItems);
+    widget.listController.setReloadItems(_handleReloadItems);
     widget.listController.setClearItems(_handleClear);
+    // widget.listController.setChangeItemWithId(_handleChangeItemWithId);
   }
 
-  void _reloadItems(List<Item> items) {
+  void _handleReloadItems(List<Item> items) {
     setState(() {
       widget.items.clear();
       widget.items.addAll(items);
-      currentList.clear();
-      currentList.addAll(items);
+
       updateCurrentList();
     });
 // TODO: MAN THIS SUCKS, WHY YOU GOTTA DO THIS
@@ -99,28 +98,30 @@ class _CustomListViewState<Item extends ListItem>
     _controller.notifyInsertedRange(0, widget.items.length);
   }
 
-  int _getItemIndex(Item item) =>
-      widget.items.indexWhere((element) => element.id == item.id);
+  // int _getItemIndex(Item item) =>
+  //     widget.items.indexWhere((element) => element.id == item.id);
+  void updateCurrentList() {
+    if (selectedSortIndex > widget.sortOptions.length) {
+      selectedSortIndex = 0;
+    }
+    currentList.clear();
+    if (selectedSortIndex != 0) {
+      final temp = [...widget.items];
+      temp.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
+      currentList.addAll(temp);
+    } else {
+      currentList.addAll(widget.items);
+    }
+    // = getCurrentList();
+  }
 
-  int _getCurrentListItemIndex(Item item) =>
+  int _getItemIndex(Item item) =>
       currentList.indexWhere((element) => element.id == item.id);
 
   void _updateItemHeight() {
     if (_itemCardHeight == 0) {
       _itemCardHeight = _controller.computeItemBox(0)?.height ?? 0;
     }
-  }
-
-  Future<void> _changeItems(
-      ItemChangerCallback<Item> callback, bool callOnModifyList) async {
-    setState(() {
-      callback(widget.items);
-      callback(currentList);
-      updateCurrentList();
-    });
-    _notifyChangeList();
-
-    if (callOnModifyList) widget.onModifyList?.call();
   }
 
   void _notifyChangeList() {
@@ -151,44 +152,88 @@ class _CustomListViewState<Item extends ListItem>
     if (newIndex >= widget.items.length || selectedSortIndex != 0) return false;
     widget.onReorderItem?.call(widget.items[oldIndex]);
     widget.items.insert(newIndex, widget.items.removeAt(oldIndex));
-    currentList.insert(newIndex, currentList.removeAt(oldIndex));
+    updateCurrentList();
     widget.onModifyList?.call();
 
     return true;
   }
 
+  void _handleChangeItems(
+      ItemChangerCallback<Item> callback, bool callOnModifyList) {
+    callback(widget.items);
+
+    setState(() {
+      updateCurrentList();
+    });
+    _notifyChangeList();
+
+    if (callOnModifyList) widget.onModifyList?.call();
+  }
+  //
+  // void _handleChangeItemWithId(
+  //     int id, SingleItemChangerCallback<Item> callback, bool callOnModifyList) {
+  //   Item item = widget.items.firstWhere((element) => element.id == id);
+  //   int index = _getItemIndex(item);
+  //   callback(item);
+  //
+  //   setState(() {
+  //     updateCurrentList();
+  //   });
+  //   _controller.notifyChangedRange(
+  //     index,
+  //     1,
+  //     _getChangeListBuilder(),
+  //   );
+  //
+  //   if (callOnModifyList) widget.onModifyList?.call();
+  // }
+
+  // void _handleChangeItemWithIndex(
+  //     int index, SingleItemChangerCallback<Item> callback, bool callOnModifyList) {
+  //   Item item = widget.items[index];
+  //   callback(item);
+  //
+  //   setState(() {
+  //     updateCurrentList();
+  //   });
+  //   _controller.notifyChangedRange(
+  //     index,
+  //     1,
+  //     _getChangeListBuilder(),
+  //   );
+  //
+  //   if (callOnModifyList) widget.onModifyList?.call();
+  // }
+
   Future<void> _handleDeleteItem(Item deletedItem,
       [bool callOnModifyList = true]) async {
     int index = _getItemIndex(deletedItem);
-    int currentListIndex = _getCurrentListItemIndex(deletedItem);
+
     setState(() {
-      widget.items.removeAt(index);
-      currentList.removeAt(currentListIndex);
+      widget.items.removeWhere((element) => element.id == deletedItem.id);
       updateCurrentList();
     });
 
     _controller.notifyRemovedRange(
-      currentListIndex,
+      index,
       1,
       _getChangeWidgetBuilder(deletedItem),
     );
     await widget.onDeleteItem?.call(deletedItem);
     if (callOnModifyList) widget.onModifyList?.call();
-    lastListLength = widget.items.length;
   }
 
   Future<void> _handleDeleteItemList(List<Item> deletedItems) async {
     for (var item in deletedItems) {
       int index = _getItemIndex(item);
-      int currentListIndex = _getCurrentListItemIndex(item);
+
       setState(() {
-        widget.items.removeAt(index);
-        currentList.removeAt(currentListIndex);
+        widget.items.removeWhere((element) => element.id == item.id);
         updateCurrentList();
       });
 
       _controller.notifyRemovedRange(
-        currentListIndex,
+        index,
         1,
         _getChangeWidgetBuilder(deletedItems.first),
       );
@@ -198,7 +243,6 @@ class _CustomListViewState<Item extends ListItem>
     }
 
     widget.onModifyList?.call();
-    lastListLength = widget.items.length;
   }
 
   void _handleClear() {
@@ -206,7 +250,7 @@ class _CustomListViewState<Item extends ListItem>
 
     setState(() {
       widget.items.clear();
-      currentList.clear();
+      updateCurrentList();
     });
 
     _controller.notifyRemovedRange(
@@ -215,34 +259,20 @@ class _CustomListViewState<Item extends ListItem>
       _getChangeListBuilder(),
     );
     widget.onModifyList?.call();
-    lastListLength = widget.items.length;
-  }
-
-  void updateCurrentList() {
-    if (selectedSortIndex > widget.sortOptions.length) {
-      selectedSortIndex = 0;
-    }
-    if (selectedSortIndex != 0) {
-      currentList.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
-    } else {
-      currentList.clear();
-      currentList.addAll(widget.items);
-    }
-    // = getCurrentList();
   }
 
   Future<void> _handleAddItem(Item item, {int index = -1}) async {
     if (index == -1) {
       index = widget.shouldInsertOnTop ? 0 : widget.items.length;
     }
+    widget.items.insert(index, item);
+    await widget.onAddItem?.call(item);
     setState(() {
-      widget.items.insert(index, item);
-      currentList.insert(index, item);
       updateCurrentList();
     });
-    int currentListIndex = _getCurrentListItemIndex(item);
+
+    int currentListIndex = _getItemIndex(item);
     _controller.notifyInsertedRange(currentListIndex, 1);
-    await widget.onAddItem?.call(item);
     // _scrollToIndex(index);
     // TODO: Remove this delay
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -312,8 +342,7 @@ class _CustomListViewState<Item extends ListItem>
     ColorScheme colorScheme = theme.colorScheme;
 
     if (selectedSortIndex > widget.sortOptions.length) {
-      currentList.clear();
-      currentList.addAll(widget.items);
+      updateCurrentList();
     }
 
     List<Widget> getFilterChips() {

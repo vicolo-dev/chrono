@@ -18,31 +18,29 @@ class TagsScreen extends StatefulWidget {
 class _TagsScreenState extends State<TagsScreen> {
   final _listController = PersistentListController<Tag>();
 
-  Future<Tag?> showTagEditor([Tag? initialTag])async{
-    Tag newTag = Tag.from(initialTag ??
-          Tag("New Preset"));
+  Future<Tag?> showTagEditor([Tag? initialTag]) async {
+    Tag newTag = Tag.from(initialTag ?? Tag("New Preset"));
 
- String? tagName = await showModalBottomSheet<String>(
-        context: context,
-        isScrollControlled: true,
-        enableDrag: true,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return InputBottomSheet(
-                title: "Edit Tag",
-                description: "",
-                initialValue: newTag.name,
-                hintText: "Tag name",
-                onChange: (value){
-                },
-              );
-            },
-          );
-        },
-      );
-newTag.name = tagName ?? newTag.name;
-return newTag;
+    String? tagName = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      enableDrag: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return InputBottomSheet(
+              title: "Edit Tag",
+              description: "",
+              initialValue: newTag.name,
+              hintText: "Tag name",
+              onChange: (value) {},
+            );
+          },
+        );
+      },
+    );
+    newTag.name = tagName ?? newTag.name;
+    return newTag;
   }
 
   @override
@@ -63,15 +61,13 @@ return newTag;
                     key: ValueKey(tag),
                     tag: tag,
                     onPressDelete: () => _listController.deleteItem(tag),
-                    onPressDuplicate: () =>
-                        _listController.duplicateItem(tag),
+                    onPressDuplicate: () => _listController.duplicateItem(tag),
                   ),
                   onTapItem: (tag, index) async {
                     Tag? newTag = await showTagEditor(tag);
                     if (newTag == null) return;
-                    _listController.changeItems((tags) {
-                      tags[index] = newTag;
-                    });
+                    tag.copyFrom(newTag);
+                    _listController.changeItems((tags) {});
                   },
                   // onDeleteItem: _handleDeleteTimer,
                   placeholderText: "No tags created",
@@ -83,7 +79,7 @@ return newTag;
           FAB(
             bottomPadding: 8,
             onPressed: () async {
-              Tag?  tag= await showTagEditor();
+              Tag? tag = await showTagEditor();
               if (tag == null) return;
               _listController.addItem(tag);
             },

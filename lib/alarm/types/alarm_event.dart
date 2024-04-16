@@ -9,13 +9,13 @@ import 'package:flutter/foundation.dart';
 // }
 
 class AlarmEvent extends ListItem {
-  late  final int id;
+  late  int id;
   // late  final AlarmEventType type;
-  late  final DateTime eventTime;
-  late  final ScheduledNotificationType notificationType;
-  late  final String description;
-  late  final int scheduleId;
-  late  final DateTime startDate;
+  late  DateTime eventTime;
+  late  ScheduledNotificationType notificationType;
+  late  String description;
+  late  int scheduleId;
+  late  DateTime startDate;
   late bool isActive;
 
   AlarmEvent({
@@ -26,8 +26,7 @@ class AlarmEvent extends ListItem {
     required this.scheduleId,
     required this.startDate,
     required this.isActive,
-  }):id=UniqueKey().hashCode;
-
+  }) : id = UniqueKey().hashCode;
 
   AlarmEvent.fromJson(Json json) {
     if (json == null) {
@@ -40,32 +39,29 @@ class AlarmEvent extends ListItem {
       startDate = DateTime.now();
       isActive = false;
       return;
-  }
+    }
     id = json['id'] ?? 0;
     // type = AlarmEventType.values[json['eventType'] ?? 0];
     eventTime = DateTime.fromMillisecondsSinceEpoch(json['eventTime'] ?? 0);
-    notificationType = ScheduledNotificationType.values[json['notificationType'] ?? 0];
+    notificationType =
+        ScheduledNotificationType.values[json['notificationType'] ?? 0];
     description = json['description'] ?? '';
     scheduleId = json['scheduleId'] ?? 0;
     startDate = DateTime.fromMillisecondsSinceEpoch(json['startDate'] ?? 0);
     isActive = json['isActive'] ?? false;
-      
-
   }
 
-
-
   @override
-  Json? toJson()  =>{
-    'id': id,
-    'scheduleId': scheduleId,
-  'eventTime': eventTime.millisecondsSinceEpoch,
-'startDate': startDate.millisecondsSinceEpoch,
+  Json? toJson() => {
+        'id': id,
+        'scheduleId': scheduleId,
+        'eventTime': eventTime.millisecondsSinceEpoch,
+        'startDate': startDate.millisecondsSinceEpoch,
 // 'eventType': type.index,
-'notificationType': notificationType.index,
-'description':description,
-'isActive': isActive,
-  };
+        'notificationType': notificationType.index,
+        'description': description,
+        'isActive': isActive,
+      };
 
   @override
   copy() {
@@ -78,10 +74,22 @@ class AlarmEvent extends ListItem {
       startDate: startDate,
       isActive: isActive,
     );
-      
   }
 
   @override
   bool get isDeletable => false;
 
+  @override
+  void copyFrom(other) {
+    id = other.id;
+    // type = other.type;
+    eventTime = other.eventTime;
+    notificationType = other.notificationType;
+    description = other.description;
+    scheduleId = other.scheduleId;
+    startDate = other.startDate;
+    isActive = other.isActive;
+      
+
   }
+}

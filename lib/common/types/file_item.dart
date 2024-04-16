@@ -13,10 +13,10 @@ enum FileItemType {
 }
 
 class FileItem extends ListItem {
-  final int _id;
-  final String name;
+  int _id;
+  String name;
   String _uri;
-  final bool _isDeletable;
+  bool _isDeletable;
 
   set uri(String value) {
     _uri = value;
@@ -57,5 +57,13 @@ class FileItem extends ListItem {
   @override
   copy() {
     return FileItem(name, _uri, isDeletable: _isDeletable);
+  }
+
+  @override
+  void copyFrom(other) {
+    _id = other.id;
+    name = other.name;
+    _uri = other.uri;
+    _isDeletable = other.isDeletable;
   }
 }
