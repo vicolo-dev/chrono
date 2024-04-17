@@ -167,13 +167,12 @@ class Alarm extends CustomizableListItem {
 
   void skip() {
     _skippedTime = currentScheduleDateTime;
+    cancelReminderNotification();
   }
 
   void cancelSkip() {
     _skippedTime = null;
-    if (currentScheduleDateTime != null) {
-      createAlarmReminderNotification(id, currentScheduleDateTime!);
-    }
+    createReminderNotification();
   }
 
   Future<void> toggle(String description) async {
@@ -243,12 +242,25 @@ class Alarm extends CustomizableListItem {
         await schedule.cancel();
       }
     }
+
+    createReminderNotification();
+  }
+
+  Future<void> createReminderNotification() async {
+    if (!isSnoozed && currentScheduleDateTime != null) {
+      await createAlarmReminderNotification(
+          id, currentScheduleDateTime!, tasks.isNotEmpty);
+    }
+  }
+
+  Future<void> cancelReminderNotification() async {
+    await cancelAlarmReminderNotification(id);
   }
 
   Future<void> cancelAllSchedules() async {}
 
   Future<void> cancel() async {
-    cancelAlarmReminderNotification(id);
+    cancelReminderNotification();
     cancelSkip();
     for (var schedule in _schedules) {
       await schedule.cancel();

@@ -20,7 +20,7 @@ class AlarmRunner extends JsonSerializable {
   }
 
   Future<void> cancel() async {
-    if(_currentScheduleDateTime == null) return;
+    if (_currentScheduleDateTime == null) return;
     _currentScheduleDateTime = null;
     await cancelAlarm(_id, ScheduledNotificationType.alarm);
   }
