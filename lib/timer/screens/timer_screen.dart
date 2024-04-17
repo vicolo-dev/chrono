@@ -87,7 +87,7 @@ class _TimerScreenState extends State<TimerScreen> {
     super.dispose();
   }
 
-  Future<void> _handleDeleteTimer(ClockTimer deletedTimer) async {
+  Future<void> _onDeleteTimer(ClockTimer deletedTimer) async {
     await deletedTimer.reset();
     showProgressNotification();
     // _listController.deleteItem(deletedTimer);
@@ -171,8 +171,9 @@ class _TimerScreenState extends State<TimerScreen> {
 
   Future<ClockTimer?> _handleCustomizeTimer(ClockTimer timer) async {
     await _openCustomizeTimerScreen(timer, onSave: (newTimer) async {
-      timer.copyFrom(newTimer);
+      // Timer id gets reset after copyFrom, so we have to cancel the old one
       await timer.reset();
+      timer.copyFrom(newTimer);
       await timer.start();
       _listController.changeItems((timers) {});
     });
@@ -187,9 +188,8 @@ class _TimerScreenState extends State<TimerScreen> {
       timerNotificationInterval?.cancel();
       return;
     }
-    final runningTimers = (await loadList<ClockTimer>("timers"))
-        .where((timer) => !timer.isStopped)
-        .toList();
+    final runningTimers =
+        _listController.getItems().where((timer) => !timer.isStopped).toList();
     if (runningTimers.isEmpty) {
       AwesomeNotifications()
           .cancelNotificationsByChannelKey(timerNotificationChannelKey);
@@ -239,7 +239,7 @@ class _TimerScreenState extends State<TimerScreen> {
                 _listController.reload();
                 // _listController.changeItems((item) {});
               },
-              onDeleteItem: _handleDeleteTimer,
+              onDeleteItem: _onDeleteTimer,
               placeholderText: "No timers created",
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],

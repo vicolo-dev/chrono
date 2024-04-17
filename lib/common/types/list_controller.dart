@@ -6,12 +6,11 @@ typedef SingleItemChanger<T> = Function(
 
 class ListController<T> {
   ItemChanger<T>? _changeItems;
-  // SingleItemChanger<T>? _changeItemWithId;
-  // SingleItemChanger<T>? _changeItemAtIndex;
   void Function(T item)? _addItem;
   void Function(T item)? _deleteItem;
   void Function(T item)? _duplicateItem;
   int Function(T item)? _getItemIndex;
+  List<T> Function()? _getItems;
   void Function()? _clearItems;
   void Function(List<T>)? _reloadItems;
 
@@ -21,14 +20,9 @@ class ListController<T> {
     _changeItems = changeItems;
   }
 
-  // void setChangeItemWithId(SingleItemChanger<T> changeItems) {
-  //   _changeItemWithId = changeItems;
-  // }
-  //
-  //  void setChangeItemAtIndex(SingleItemChanger<T> changeItems) {
-  //   _changeItemAtIndex = changeItems;
-  // }
-
+  void setGetItems(List<T> Function() callback) {
+    _getItems = callback;
+  }
 
   void setGetItemIndex(int Function(T item) callback) {
     _getItemIndex = callback;
@@ -58,17 +52,6 @@ class ListController<T> {
       {bool callOnModifyList = true}) {
     _changeItems?.call(callback, callOnModifyList);
   }
-  //
-  // void changeItemWithId(int id, SingleItemChangerCallback<T> callback,
-  //     {bool callOnModifyList = true}) {
-  //   _changeItemWithId?.call(id, callback, callOnModifyList);
-  // }
-  //
-  //  void changeItemAtIndex(int index, SingleItemChangerCallback<T> callback,
-  //     {bool callOnModifyList = true}) {
-  //   _changeItemAtIndex?.call(index, callback, callOnModifyList);
-  // }
-
 
   void duplicateItem(T item) {
     _duplicateItem?.call(item);
@@ -93,4 +76,6 @@ class ListController<T> {
   int getItemIndex(T item) {
     return _getItemIndex?.call(item) ?? 0;
   }
+
+  List<T> getItems () => _getItems?.call() ?? [];
 }

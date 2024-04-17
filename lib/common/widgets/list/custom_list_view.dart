@@ -82,6 +82,7 @@ class _CustomListViewState<Item extends ListItem>
     widget.listController.setDuplicateItem(_handleDuplicateItem);
     widget.listController.setReloadItems(_handleReloadItems);
     widget.listController.setClearItems(_handleClear);
+    widget.listController.setGetItems(() => widget.items);
     updateCurrentList();
     // widget.listController.setChangeItemWithId(_handleChangeItemWithId);
   }

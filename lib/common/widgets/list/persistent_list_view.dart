@@ -50,6 +50,10 @@ class PersistentListController<T> {
   void reload() {
     _onReload?.call();
   }
+
+  List<T> getItems() {
+    return _listController.getItems();
+  }
 }
 
 class PersistentListView<Item extends ListItem> extends StatefulWidget {
