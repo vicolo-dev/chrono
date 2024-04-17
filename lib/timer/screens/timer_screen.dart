@@ -50,6 +50,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void onTimerUpdate() async {
     if (mounted) {
+      _listController.reload();
       setState(() {});
       // _listController.changeItems((timers) => {});
     }
