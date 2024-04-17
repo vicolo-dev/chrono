@@ -5,6 +5,7 @@
 🐛 Fixes
 
 * Fixed dates schedule not working
+* Fixed disabled alarms not scheduling on editing
 * Fixed weird behaviours when alarms were sorted
 * Fixed alarm logs not updating correctly when changing alarm or timer
 * Fixed sort order not being saved correctly
@@ -12,4 +13,6 @@
 * Fixed stopwatch flashing when resetting
 * Fixed timer not editable in landscape mode
 * Fixed timer notification not updating correctly
-
+* Fixed date and range schedule not updating after finishing
+* Fixed date and range schedule not duplicating correctly after finishing
+* Fixed animation speed not applying correctly on start
