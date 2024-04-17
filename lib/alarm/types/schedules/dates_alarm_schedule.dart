@@ -72,6 +72,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
       // When that schedule is finished, we will schedule the next one and so on
       if (date.isAfter(DateTime.now())) {
         await _alarmRunner.schedule(date, description);
+        _isFinished = false;
         return;
       }
     }

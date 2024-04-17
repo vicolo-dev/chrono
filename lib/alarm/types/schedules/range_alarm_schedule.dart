@@ -49,6 +49,7 @@ class RangeAlarmSchedule extends AlarmSchedule {
     DateTime alarmDate = getDailyAlarmDate(time, scheduledDate: startDate);
     if (alarmDate.day <= endDate.day) {
       await _alarmRunner.schedule(alarmDate,description);
+      _isFinished = false;
     } else {
       _isFinished = true;
     }
