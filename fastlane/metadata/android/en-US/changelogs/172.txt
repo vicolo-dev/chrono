@@ -1,0 +1,15 @@
+✨ Enhancements
+
+* Improve UI in landscape mode
+
+🐛 Fixes
+
+* Fixed dates schedule not working
+* Fixed weird behaviours when alarms were sorted
+* Fixed alarm logs not updating correctly when changing alarm or timer
+* Fixed sort order not being saved correctly
+* Fixed card color in style preview not appearing correctly
+* Fixed stopwatch flashing when resetting
+* Fixed timer not editable in landscape mode
+* Fixed timer notification not updating correctly
+
