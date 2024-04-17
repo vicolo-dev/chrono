@@ -132,7 +132,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    timeDilation = 0.5;
+    // timeDilation = 0.5;
     return Stack(
       alignment: Alignment.center,
       fit: StackFit.expand,

@@ -47,7 +47,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
   DatesAlarmSchedule(Setting datesSetting)
       : _datesSetting = datesSetting as DateTimeSetting,
         _alarmRunner = AlarmRunner(),
-        _isFinished = false,
+        _isFinished = true,
         super() {
     if (_datesSetting.value.isEmpty) {
       _datesSetting.setValueWithoutNotify([DateTime.now()]);
@@ -96,11 +96,11 @@ class DatesAlarmSchedule extends AlarmSchedule {
     _datesSetting = datesSetting as DateTimeSetting;
     if (json == null) {
       _alarmRunner = AlarmRunner();
-      _isFinished = false;
+      _isFinished = true;
       return;
     }
     _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
-    _isFinished = json['isFinished'] ?? false;
+    _isFinished = json['isFinished'] ?? true;
   }
 
   @override
