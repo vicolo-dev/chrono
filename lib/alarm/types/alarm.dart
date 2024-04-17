@@ -283,6 +283,12 @@ class Alarm extends CustomizableListItem {
     _isFinished = true;
   }
 
+  Future<void> handleEdit(String description) async {
+    _isEnabled = true;
+    _unSnooze();
+    await update(description);
+  }
+
   Future<void> update(String description) async {
     if (isEnabled) {
       await schedule(description);

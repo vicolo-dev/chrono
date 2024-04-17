@@ -105,7 +105,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
       await alarm.cancel();
       alarm.copyFrom(newAlarm);
       await alarm
-          .update("_handleCustomizeAlarm(): Alarm customized by the user");
+          .handleEdit("_handleCustomizeAlarm(): Alarm customized by the user");
       _listController.changeItems((alarms) {});
       _showNextScheduleSnackBar(newAlarm);
     });
