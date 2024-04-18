@@ -36,10 +36,10 @@ Future<void> scheduleAlarm(
         : 'timer_schedule_ids';
     List<ScheduleId> scheduleIds = await loadList<ScheduleId>(name);
     scheduleIds.removeWhere((id) => id.id == scheduleId);
-
-    if (type == ScheduledNotificationType.alarm) {
-      await cancelAlarmReminderNotification(scheduleId);
-    }
+    //
+    // if (type == ScheduledNotificationType.alarm) {
+    //   await cancelAlarmReminderNotification(scheduleId);
+    // }
 
     AndroidAlarmManager.cancel(scheduleId);
 
@@ -68,10 +68,10 @@ Future<void> scheduleAlarm(
     scheduleIds.add(ScheduleId(id: scheduleId));
     await saveList<ScheduleId>(name, scheduleIds);
 
-    if (type == ScheduledNotificationType.alarm && !snooze) {
-      await createAlarmReminderNotification(scheduleId, startDate);
-    }
-
+    // 
+    // if (type == ScheduledNotificationType.alarm && !snooze) {
+    // }
+    //
     // Scheduling the actual alarm
     AndroidAlarmManager.oneShotAt(
       startDate,

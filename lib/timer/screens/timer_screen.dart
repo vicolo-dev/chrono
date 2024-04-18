@@ -4,7 +4,6 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/data/update_notification_intervals.dart';
@@ -50,6 +49,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void onTimerUpdate() async {
     if (mounted) {
+      _listController.reload();
       setState(() {});
       // _listController.changeItems((timers) => {});
     }
@@ -87,7 +87,7 @@ class _TimerScreenState extends State<TimerScreen> {
     super.dispose();
   }
 
-  Future<void> _handleDeleteTimer(ClockTimer deletedTimer) async {
+  Future<void> _onDeleteTimer(ClockTimer deletedTimer) async {
     await deletedTimer.reset();
     showProgressNotification();
     // _listController.deleteItem(deletedTimer);
@@ -106,6 +106,15 @@ class _TimerScreenState extends State<TimerScreen> {
     showProgressNotification();
   }
 
+  Future<void> _handleStartMultipleTimers(List<ClockTimer> timers) async {
+    for (var timer in timers) {
+      if (timer.isRunning) return;
+      await timer.start();
+    }
+    _listController.changeItems((timers) {});
+    showProgressNotification();
+  }
+
   Future<void> _handlePauseTimer(ClockTimer timer) async {
     if (timer.isPaused) return;
     await timer.pause();
@@ -113,8 +122,25 @@ class _TimerScreenState extends State<TimerScreen> {
     showProgressNotification();
   }
 
+  Future<void> _handlePauseMultipleTimers(List<ClockTimer> timers) async {
+    for (var timer in timers) {
+      if (timer.isPaused) return;
+      await timer.pause();
+    }
+    _listController.changeItems((timers) {});
+    showProgressNotification();
+  }
+
   Future<void> _handleResetTimer(ClockTimer timer) async {
     await timer.reset();
+    _listController.changeItems((timers) {});
+    showProgressNotification();
+  }
+
+  Future<void> _handleResetMultipleTimers(List<ClockTimer> timers) async {
+    for (var timer in timers) {
+      await timer.reset();
+    }
     _listController.changeItems((timers) {});
     showProgressNotification();
   }
@@ -145,8 +171,9 @@ class _TimerScreenState extends State<TimerScreen> {
 
   Future<ClockTimer?> _handleCustomizeTimer(ClockTimer timer) async {
     await _openCustomizeTimerScreen(timer, onSave: (newTimer) async {
-      timer.copyFrom(newTimer);
+      // Timer id gets reset after copyFrom, so we have to cancel the old one
       await timer.reset();
+      timer.copyFrom(newTimer);
       await timer.start();
       _listController.changeItems((timers) {});
     });
@@ -161,9 +188,8 @@ class _TimerScreenState extends State<TimerScreen> {
       timerNotificationInterval?.cancel();
       return;
     }
-    final runningTimers = (await loadList<ClockTimer>("timers"))
-        .where((timer) => !timer.isStopped)
-        .toList();
+    final runningTimers =
+        _listController.getItems().where((timer) => !timer.isStopped).toList();
     if (runningTimers.isEmpty) {
       AwesomeNotifications()
           .cancelNotificationsByChannelKey(timerNotificationChannelKey);
@@ -196,6 +222,8 @@ class _TimerScreenState extends State<TimerScreen> {
                 onToggleState: () => _handleToggleState(timer),
                 onPressDelete: () => _listController.deleteItem(timer),
                 onPressDuplicate: () => _listController.duplicateItem(timer),
+                onPressReset: ()=> _handleResetTimer(timer),
+                onPressAddTime: ()=> _handleAddTimeToTimer(timer),
               ),
               onTapItem: (timer, index) async {
                 await Navigator.push(
@@ -213,37 +241,28 @@ class _TimerScreenState extends State<TimerScreen> {
                 _listController.reload();
                 // _listController.changeItems((item) {});
               },
-              onDeleteItem: _handleDeleteTimer,
+              onDeleteItem: _onDeleteTimer,
               placeholderText: "No timers created",
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],
               sortOptions: _showSort.value ? timerSortOptions : [],
               customActions: _showFilters.value
                   ? [
-                      ListFilterCustomAction(
+                      ListFilterCustomAction<ClockTimer>(
                           name: "Reset all filtered timers",
                           icon: Icons.timer_off_rounded,
-                          action: (timers) async {
-                            for (var timer in timers) {
-                              await _handleResetTimer(timer);
-                            }
-                          }),
-                      ListFilterCustomAction(
+                          action: (timers) =>
+                              _handleResetMultipleTimers(timers)),
+                      ListFilterCustomAction<ClockTimer>(
                           name: "Play all filtered timers",
                           icon: Icons.play_arrow_rounded,
-                          action: (timers) async {
-                            for (var timer in timers) {
-                              await _handleStartTimer(timer);
-                            }
-                          }),
-                      ListFilterCustomAction(
+                          action: (timers) =>
+                              _handleStartMultipleTimers(timers)),
+                      ListFilterCustomAction<ClockTimer>(
                           name: "Pause all filtered timers",
                           icon: Icons.pause_rounded,
-                          action: (timers) async {
-                            for (var timer in timers) {
-                              await _handlePauseTimer(timer);
-                            }
-                          }),
+                          action: (timers) =>
+                              _handlePauseMultipleTimers(timers)),
                     ]
                   : [],
             ),

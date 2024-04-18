@@ -1,15 +1,17 @@
 <div align="center">
 
-<image src="fastlane/metadata/android/en-US/images/icon.png" height="100"/>
+<image src="icon.png" height="100"/>
 
 # Chrono
 
 ### A modern and powerful clock, alarms, timer and stopwatch app for Android!
 
+
 ![tests](https://github.com/vicolo-dev/chrono/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/vicolo-dev/chrono/branch/master/graph/badge.svg?token=cKxMm8KVev)](https://codecov.io/gh/vicolo-dev/chrono)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7dc1e51c1616482baa5392bc0826c50a)](https://app.codacy.com/gh/vicolo-dev/chrono/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.vicolo.chrono)
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height=80/>](https://apt.izzysoft.de/fdroid/index/apk/com.vicolo.chrono)
 [<img src="https://i.ibb.co/q0mdc4Z/get-it-on-github.png" alt="Get it on Github" height=80/>](https://github.com/vicolo-dev/chrono/releases/latest)
 
@@ -64,6 +66,11 @@ Pull Requests are highly welcome. When contributing to this repository, please f
 You can help translate the app into your preferred language using weblate at https://hosted.weblate.org/projects/chrono/.
 ### Spread the word!
 If you found the app useful, you can help the project by sharing it with friends and family.
+### Donate
+The amount of time I can given to the app is bound by financial constraints. Donations will really help allow me in giving more and more time to the development of this app.
+
+<span class="badge-patreon"><a href="https://patreon.com/vicolo" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-orange.svg" alt="Patreon donate button" /></a></span>
+
 
 ## Development
 

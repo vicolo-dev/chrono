@@ -15,7 +15,7 @@ Future<void> cancelAlarmReminderNotification(int id) async {
   await AwesomeNotifications().cancel(id);
 }
 
-Future<void> createAlarmReminderNotification(int id, DateTime time) async {
+Future<void> createAlarmReminderNotification(int id, DateTime time, bool tasksRequired) async {
   bool shouldShow = appSettings
       .getGroup("Alarm")
       .getGroup("Notifications")
@@ -35,10 +35,10 @@ Future<void> createAlarmReminderNotification(int id, DateTime time) async {
   }
   String timeFormatString = await loadTextFile("time_format_string");
 
-  Alarm? alarm = getAlarmById(id);
-  if (alarm == null) return;
-  bool tasksRequired = alarm.tasks.isNotEmpty;
-
+  // Alarm? alarm = getAlarmById(id);
+  // if (alarm == null) return;
+  // bool tasksRequired = alarm.tasks.isNotEmpty;
+  //
   // debugPrint(
   //     "Createing alarm reminder notification for $id at $time with title $title");
 

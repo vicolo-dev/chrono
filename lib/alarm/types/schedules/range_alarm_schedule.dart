@@ -10,7 +10,7 @@ class RangeAlarmSchedule extends AlarmSchedule {
   late final AlarmRunner _alarmRunner;
   late final DateTimeSetting _datesRangeSetting;
   late final SelectSetting<RangeInterval> _intervalSetting;
-  bool _isFinished = false;
+  bool _isFinished = true;
 
   RangeInterval get interval => _intervalSetting.value;
   DateTime get startDate => _datesRangeSetting.value.first;
@@ -49,6 +49,7 @@ class RangeAlarmSchedule extends AlarmSchedule {
     DateTime alarmDate = getDailyAlarmDate(time, scheduledDate: startDate);
     if (alarmDate.day <= endDate.day) {
       await _alarmRunner.schedule(alarmDate,description);
+      _isFinished = false;
     } else {
       _isFinished = true;
     }

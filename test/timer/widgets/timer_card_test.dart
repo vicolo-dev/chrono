@@ -84,6 +84,8 @@ Future<void> _renderWidget(WidgetTester tester, [ClockTimer? timer]) async {
           onToggleState: () {},
           onPressDelete: () {},
           onPressDuplicate: () {},
+          onPressReset: (){},
+          onPressAddTime: (){},
           key: testKey,
         ),
       ),

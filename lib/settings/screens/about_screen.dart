@@ -41,7 +41,7 @@ class AboutScreen extends StatelessWidget {
                           ),
                           const SizedBox(width: 16.0),
                           Text(
-                            getAppName(),
+                            packageInfo?.appName ?? 'Chrono',
                             style: textTheme.titleMedium?.copyWith(
                               color: colorScheme.onSurface,
                             ),

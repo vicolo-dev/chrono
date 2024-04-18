@@ -205,19 +205,20 @@ class _AlarmCardState extends State<AlarmCard> {
                 if (widget.alarm.isDeletable)
                   getDeletePopupAction(context, widget.onPressDelete),
                 getDuplicatePopupAction(widget.onPressDuplicate),
-                PopupAction(
-                  widget.alarm.shouldSkipNextAlarm
-                      ? "Cancel Skip"
-                      : "Skip Next Alarm",
-                  () {
-                    if (widget.alarm.shouldSkipNextAlarm) {
-                      widget.onSkipChange(false);
-                    } else {
-                      widget.onSkipChange(true);
-                    }
-                  },
-                  Icons.skip_next_rounded,
-                )
+                if (widget.alarm.canBeSkipped)
+                  PopupAction(
+                    widget.alarm.shouldSkipNextAlarm
+                        ? "Cancel Skip"
+                        : "Skip Next Alarm",
+                    () {
+                      if (widget.alarm.shouldSkipNextAlarm) {
+                        widget.onSkipChange(false);
+                      } else {
+                        widget.onSkipChange(true);
+                      }
+                    },
+                    Icons.skip_next_rounded,
+                  )
               ]),
             ],
           ),
