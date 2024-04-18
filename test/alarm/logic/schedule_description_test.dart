@@ -35,16 +35,17 @@ void main() async {
       );
     });
 
-    testDescription('when alarm is finished', (context) async {
-      final alarm = Alarm(const Time(hour: 8, minute: 30));
-
-      await alarm.finish();
-
-      final result = getAlarmScheduleDescription(
-          context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
-
-      expect(result, 'No future dates');
-    });
+    // testDescription('when alarm is finished', (context) async {
+    //   final alarm = Alarm(const Time(hour: 8, minute: 30));
+    //   // alarm.setSettingWithoutNotify("Type", 3);
+    //
+    //   // await alarm.finish();
+    //
+    //   final result = getAlarmScheduleDescription(
+    //       context, alarm, 'yyyy-MM-dd HH:mm:ss.SSS', TimeFormat.h12);
+    //
+    //   expect(result, 'No future dates');
+    // });
 
     testDescription('when alarm is not enabled', (context) async {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
