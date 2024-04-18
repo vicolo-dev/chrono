@@ -222,6 +222,8 @@ class _TimerScreenState extends State<TimerScreen> {
                 onToggleState: () => _handleToggleState(timer),
                 onPressDelete: () => _listController.deleteItem(timer),
                 onPressDuplicate: () => _listController.duplicateItem(timer),
+                onPressReset: ()=> _handleResetTimer(timer),
+                onPressAddTime: ()=> _handleAddTimeToTimer(timer),
               ),
               onTapItem: (timer, index) async {
                 await Navigator.push(

@@ -107,10 +107,13 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
               ),
             ),
             const SizedBox(height: 32),
-            TimerProgressBar(timer: timer, size: orientation == Orientation.portrait ? width : height),
+            TimerProgressBar(
+                timer: timer,
+                size: orientation == Orientation.portrait ? width : height),
             const SizedBox(height: 32),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, right:20.0, bottom:20.0),
+              padding:
+                  const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
               child: Flex(
                 direction: orientation == Orientation.portrait
                     ? Axis.horizontal
@@ -127,7 +130,6 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: Icon(
                               Icons.replay_rounded,
-
                               color: colorScheme.primary,
                               size: 32,
                               // size: 64,
@@ -175,8 +177,9 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
                         child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text('+${timer.addLength.floor()}:00',
-                                style:
-                                    orientation == Orientation.portrait ? textTheme.displaySmall: textTheme.titleSmall)),
+                                style: orientation == Orientation.portrait
+                                    ? textTheme.displaySmall
+                                    : textTheme.titleSmall)),
                         onTap: () async {
                           await widget.onAddTime(timer);
                           updateTimer();
