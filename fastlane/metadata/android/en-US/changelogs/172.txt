@@ -1,6 +1,8 @@
 ✨ Enhancements
 
 * Improve UI in landscape mode
+* Add skip-alarm filter action
+* Add option to reset and add time to timer from dropdown menu on cards
 
 🐛 Fixes
 
