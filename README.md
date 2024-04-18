@@ -5,7 +5,7 @@
 # Chrono
 
 ### A modern and powerful clock, alarms, timer and stopwatch app for Android!
-
+![alt text](cover.png)
 
 ![tests](https://github.com/vicolo-dev/chrono/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/vicolo-dev/chrono/branch/master/graph/badge.svg?token=cKxMm8KVev)](https://codecov.io/gh/vicolo-dev/chrono)
@@ -17,7 +17,9 @@
 
 </div>
 
-Its usable, but still WIP, so you might encounter some bugs. So its not recommended to use to for critical alarms at the moment. Feel free to open an issue.
+Its usable, but still WIP, so you might encounter some bugs. Make sure to test it out thorougly on your device before using it for critical alarms. Feel free to open an issue.
+
+
 
 # Table of Content
 - [Features](#features)
