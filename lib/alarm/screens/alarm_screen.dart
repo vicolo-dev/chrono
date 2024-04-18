@@ -133,7 +133,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     }
   }
 
-  Future<void> _handleEnableChangeMultipleAlarms(
+  Future<void> _handleEnableChangeMultiple(
       List<Alarm> alarms, bool value) async {
     for (var alarm in alarms) {
       if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
@@ -154,6 +154,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   void _handleSkipChange(Alarm alarm, bool value) {
     alarm.setShouldSkip(value);
+    _listController.changeItems((alarms) {});
+  }
+
+  void _handleSkipChangeMultiple(List<Alarm> alarms, bool value) {
+    for (var alarm in alarms) {
+      alarm.setShouldSkip(value);
+    }
     _listController.changeItems((alarms) {});
   }
 
@@ -218,13 +225,25 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       name: "Enable all filtered alarms",
                       icon: Icons.alarm_on_rounded,
                       action: (alarms) {
-                        _handleEnableChangeMultipleAlarms(alarms, true);
+                        _handleEnableChangeMultiple(alarms, true);
                       }),
                   ListFilterCustomAction(
                       name: "Disable all filtered alarms",
                       icon: Icons.alarm_off_rounded,
                       action: (alarms) {
-                        _handleEnableChangeMultipleAlarms(alarms, false);
+                        _handleEnableChangeMultiple(alarms, false);
+                      }),
+                  ListFilterCustomAction(
+                      name: "Skip all filtered alarms",
+                      icon: Icons.skip_next_rounded,
+                      action: (alarms) {
+                        _handleSkipChangeMultiple(alarms, true);
+                      }),
+                  ListFilterCustomAction(
+                      name: "Cancel skip all filtered alarms",
+                      icon: Icons.skip_next_rounded,
+                      action: (alarms) {
+                        _handleSkipChangeMultiple(alarms, false);
                       }),
                 ]
               : [],
