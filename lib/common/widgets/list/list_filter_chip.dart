@@ -272,7 +272,7 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
     }
 
     return CardContainer(
-      color: isFirstSelected ? null : colorScheme.primary,
+      // color: isFirstSelected ? null : colorScheme.primary,
       onTap: showSelect,
       child: Row(
         children: [
@@ -282,18 +282,15 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
             child: Text(
               "Sort${isFirstSelected ? "" : ": ${sortOptions[selectedIndex].abbreviation}"}",
               style: textTheme.headlineSmall?.copyWith(
-                  color: isFirstSelected
-                      ? colorScheme.onSurface
-                      : colorScheme.onPrimary),
+                  color: colorScheme.onSurface
+                      ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 2.0, right: 8.0),
             child: Icon(
               Icons.keyboard_arrow_down_rounded,
-              color: isFirstSelected
-                  ? colorScheme.onSurface.withOpacity(0.6)
-                  : colorScheme.onPrimary.withOpacity(0.6),
+              color:colorScheme.onSurface.withOpacity(0.6)
             ),
           ),
         ],

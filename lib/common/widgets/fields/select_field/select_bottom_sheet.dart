@@ -120,7 +120,7 @@ class SelectBottomSheet extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16.0),
+            // const SizedBox(height: 16.0),
             Flexible(
               child: _getOptionCard(),
             ),

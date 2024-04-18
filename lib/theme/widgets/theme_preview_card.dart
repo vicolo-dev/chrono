@@ -1,3 +1,4 @@
+import 'package:clock_app/common/logic/card_decoration.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,7 @@ class ThemePreviewCard extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: CardContainer(
-                    color: colorScheme.surface,
+                    color: getCardColor(context),
                     key: const Key("Preview Card - Card"),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),

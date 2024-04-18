@@ -29,12 +29,88 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
       return OrientationBuilder(
         builder: (context, orientation) => StatefulBuilder(
           builder: (context, StateSetter setState) {
+            Widget presetChips(double width) =>
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("Presets", style: textTheme.labelMedium),
+                      const Spacer(),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.all(0),
+                          minimumSize: const Size(48, 24),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PresetsScreen(),
+                            ),
+                          );
+
+                          List<TimerPreset> newPresets =
+                              loadListSync<TimerPreset>("timer_presets");
+
+                          setState(() {
+                            presets = newPresets;
+                          });
+                        },
+                        child: Text(
+                          "Edit",
+                          style: textTheme.labelSmall
+                              ?.copyWith(color: colorScheme.primary),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: width - 64,
+                    height: 48,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: presets.length,
+                      itemBuilder: (context, index) {
+                        return PresetChip(
+                          isSelected: presets[index] == selectedPreset,
+                          preset: presets[index],
+                          onTap: () {
+                            setState(() {
+                              timer = ClockTimer(presets[index].duration);
+                              selectedPreset = presets[index];
+                              timer.setSetting(
+                                  context, "Label", presets[index].name);
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ]);
+
+            Widget durationPicker(double width) => SizedBox(
+                  height: width - 64,
+                  width: width - 64,
+                  child: DialDurationPicker(
+                    duration: timer.duration,
+                    onChange: (TimeDuration newDuration) {
+                      setState(() {
+                        timer = ClockTimer(newDuration);
+                      });
+                    },
+                  ),
+                );
+
+            Widget label() =>
+                Text(timer.duration.toString(), style: textTheme.displayMedium);
+
             return Modal(
               onSave: () {
                 Navigator.of(context).pop(PickerResult(timer, false));
               },
               isSaveEnabled: timer.duration.inSeconds > 0,
-              title: "Choose Duration",
+              // title: "Choose Duration",
               additionalAction: ModalAction(
                 title: "Customize",
                 onPressed: () async {
@@ -45,93 +121,54 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                 builder: (context) {
                   var width = MediaQuery.of(context).size.width;
 
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 16),
-                      Text(timer.duration.toString(),
-                          style: textTheme.displayMedium),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        height: width - 64,
-                        width: width - 64,
-                        child: DialDurationPicker(
-                          duration: timer.duration,
-                          onChange: (TimeDuration newDuration) {
-                            setState(() {
-                              timer = ClockTimer(newDuration);
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("Presets", style: textTheme.labelMedium),
-                              const Spacer(),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.all(0),
-                                  minimumSize: const Size(48, 24),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                onPressed: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PresetsScreen(),
-                                    ),
-                                  );
-
-                                  List<TimerPreset> newPresets =
-                                      loadListSync<TimerPreset>(
-                                          "timer_presets");
-
-                                  setState(() {
-                                    presets = newPresets;
-                                  });
-                                },
-                                child: Text(
-                                  "Edit",
-                                  style: textTheme.labelSmall
-                                      ?.copyWith(color: colorScheme.primary),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 48,
-                            width: width - 64,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: presets.length,
-                              itemBuilder: (context, index) {
-                                return PresetChip(
-                                  isSelected: presets[index] == selectedPreset,
-                                  preset: presets[index],
-                                  onTap: () {
-                                    setState(() {
-                                      timer =
-                                          ClockTimer(presets[index].duration);
-                                      selectedPreset = presets[index];
-                                      timer.setSetting(context, "Label",
-                                          presets[index].name);
-                                    });
-                                  },
-                                );
-                              },
+                  return orientation == Orientation.portrait
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 16),
+                            Text("Choose Duration",
+                                style: textTheme.titleMedium?.copyWith(
+                                    color: colorScheme.onSurface
+                                        .withOpacity(0.6))),
+                            const SizedBox(height: 16),
+                            label(),
+                            const SizedBox(height: 16),
+                            durationPicker(width),
+                            const SizedBox(height: 16),
+                            presetChips(width),
+                          ],
+                        )
+                      : Row(children: [
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              // mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 16),
+                                Text("Choose Duration",
+                                    style: textTheme.titleMedium?.copyWith(
+                                        color: colorScheme.onSurface
+                                            .withOpacity(0.6))),
+                                const SizedBox(height: 16),
+                                label(),
+                                const SizedBox(height: 16),
+                                presetChips(width),
+                              ],
                             ),
                           ),
-                        ],
-                      )
-                    ],
-                  );
+                          const SizedBox(width: 16),
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              // mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(height: 16),
+                                durationPicker(width),
+                              ],
+                            ),
+                          ),
+                        ]);
                 },
               ),
             );

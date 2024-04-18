@@ -132,10 +132,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    // ColorScheme colorScheme = theme.colorScheme;
-    TextTheme textTheme = theme.textTheme;
-    timeDilation = 0.5;
+    // timeDilation = 0.5;
     return Stack(
       alignment: Alignment.center,
       fit: StackFit.expand,
@@ -144,13 +141,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
           StopwatchTicker(stopwatch:_stopwatch),
-            // TimerBuilder.periodic(const Duration(milliseconds: 33),
-            //     builder: (context) {
-            //   // print(_stopwatch.fastestLap?.lapTime.toTimeString());
-            //   // print(_stopwatch.slowestLap?.lapTime.toTimeString());
-            //   return ;
-            // }),
-            const SizedBox(height: 8),
+                      const SizedBox(height: 8),
             Expanded(
               child: CustomListView<Lap>(
                 items: _stopwatch.laps,

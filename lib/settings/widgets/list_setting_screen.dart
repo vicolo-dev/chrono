@@ -38,7 +38,6 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
   }
 
   _handleCustomizeItem(Item itemToCustomize) async {
-    int index = _listController.getItemIndex(itemToCustomize);
     openCustomizeScreen<Item>(
       context,
       CustomizeListItemScreen<Item>(
@@ -47,7 +46,8 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
         itemPreviewBuilder: (item) => widget.setting.getPreviewCard(item),
       ),
       onSave: (newItem) async {
-        _listController.changeItems((items) async => items[index] = newItem);
+        itemToCustomize.copyFrom(newItem);
+        _listController.changeItems((items) {});
       },
     );
   }

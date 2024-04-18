@@ -41,14 +41,14 @@ class _NavScaffoldState extends State<NavScaffold> {
     });
   }
 
-   void _handlePageViewChanged(int currentPageIndex) {
-       setState(() {
-       _selectedTabIndex = currentPageIndex;
+  void _handlePageViewChanged(int currentPageIndex) {
+    setState(() {
+      _selectedTabIndex = currentPageIndex;
     });
   }
+
   void update(dynamic value) {
-    setState(() {
-    });
+    setState(() {});
   }
 
   _showNextScheduleSnackBar(Alarm alarm) {
@@ -94,7 +94,8 @@ class _NavScaffoldState extends State<NavScaffold> {
         .getGroup("Appearance")
         .getGroup("Style")
         .getSetting("Use Material Style");
-    swipeActionSetting = appSettings.getGroup("General").getSetting("Swipe Action");
+    swipeActionSetting =
+        appSettings.getGroup("General").getSetting("Swipe Action");
     swipeActionSetting.addListener(update);
     useMaterialNavBarSetting.addListener(update);
     _controller = PageController(initialPage: widget.initialTabIndex);
@@ -112,56 +113,109 @@ class _NavScaffoldState extends State<NavScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
-      appBar: AppTopBar(
-        title: Text(tabs[_selectedTabIndex].title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+      appBar: orientation == Orientation.portrait
+          ? AppTopBar(
+              title: Text(tabs[_selectedTabIndex].title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onBackground
+                            .withOpacity(0.6),
+                      )),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SettingGroupScreen(settingGroup: appSettings)));
+                  },
+                  icon:
+                      const Icon(FluxIcons.settings, semanticLabel: "Settings"),
                   color: Theme.of(context)
                       .colorScheme
                       .onBackground
-                      .withOpacity(0.6),
-                )),
-        actions: [
-          IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          SettingGroupScreen(settingGroup: appSettings)));
-            },
-            icon: const Icon(FluxIcons.settings, semanticLabel: "Settings"),
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
-          ),
-        ],
-      ),
-      extendBody: false,
-      body: Center(
-        child: PageView(
-            controller: _controller,
-            onPageChanged: _handlePageViewChanged,
-            physics:swipeActionSetting.value == SwipeAction.cardActions ? const NeverScrollableScrollPhysics() : null,
-            children: tabs.map((tab) => tab.widget).toList()),
-      ),
-      bottomNavigationBar: useMaterialNavBarSetting.value
-          ? NavigationBar(
-              labelBehavior:
-                  NavigationDestinationLabelBehavior.onlyShowSelected,
-              selectedIndex: _selectedTabIndex,
-              onDestinationSelected: _onTabSelected,
-              destinations: <Widget>[
-                for (final tab in tabs)
-                  NavigationDestination(
-                    icon: Icon(tab.icon),
-                    label: tab.title,
-                  )
+                      .withOpacity(0.8),
+                ),
               ],
             )
-          : AppNavigationBar(
-              selectedTabIndex: _selectedTabIndex,
-              onTabSelected: _onTabSelected,
+          : null,
+      extendBody: false,
+      body: SafeArea(
+        child: Row(
+          children: [
+            if (orientation == Orientation.landscape)
+              NavigationRail(
+                destinations: [
+                  for (final tab in tabs)
+                    NavigationRailDestination(
+                      icon: Icon(tab.icon),
+                      label: Text(tab.title),
+                    )
+                ],
+                leading: Text(tabs[_selectedTabIndex].title,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.6),
+                        )),
+
+                trailing: IconButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SettingGroupScreen(settingGroup: appSettings)));
+                  },
+                  icon:
+                      const Icon(FluxIcons.settings, semanticLabel: "Settings"),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onBackground
+                      .withOpacity(0.8),
+                ),
+                selectedIndex: _selectedTabIndex,
+                onDestinationSelected: _onTabSelected,
+              ),
+            Expanded(
+              child: PageView(
+                  controller: _controller,
+                  onPageChanged: _handlePageViewChanged,
+                  physics: swipeActionSetting.value == SwipeAction.cardActions
+                      ? const NeverScrollableScrollPhysics()
+                      : null,
+                  children: tabs.map((tab) => tab.widget).toList()),
             ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: orientation == Orientation.portrait
+          ? useMaterialNavBarSetting.value
+              ? NavigationBar(
+                  labelBehavior:
+                      NavigationDestinationLabelBehavior.onlyShowSelected,
+                  selectedIndex: _selectedTabIndex,
+                  onDestinationSelected: _onTabSelected,
+                  destinations: <Widget>[
+                    for (final tab in tabs)
+                      NavigationDestination(
+                        icon: Icon(tab.icon),
+                        label: tab.title,
+                      )
+                  ],
+                )
+              : AppNavigationBar(
+                  selectedTabIndex: _selectedTabIndex,
+                  onTabSelected: _onTabSelected,
+                )
+          : null,
     );
   }
 }

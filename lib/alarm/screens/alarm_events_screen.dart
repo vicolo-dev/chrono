@@ -63,7 +63,6 @@ class _AlarmEventsScreenState extends State<AlarmEventsScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
     return Scaffold(

@@ -1,10 +1,9 @@
 import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:clock_app/theme/text.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
-
-double bandWidth = 90;
 
 class DialDurationPicker extends StatefulWidget {
   const DialDurationPicker({
@@ -26,7 +25,10 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
   @override
   Widget build(BuildContext context) {
     double originalWidth = MediaQuery.of(context).size.width;
-    double width = originalWidth - 64;
+    double originalHeight = MediaQuery.of(context).size.height - 20;
+    double width = min(originalWidth, originalHeight) - 64;
+    double bandWidth = 86 * width / 256;
+    print(width);
 
     double leftPadding = 0;
 
@@ -50,6 +52,7 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
             handleLabelOffset: 5,
             divisions: 12,
             snapDivisions: 60,
+            bandWidth: bandWidth,
             fillColor:
                 Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
           ),
@@ -72,6 +75,7 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
             handleLabelOffset: 7,
             divisions: 12,
             snapDivisions: 60,
+            bandWidth: bandWidth,
             fillColor:
                 Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
           ),
@@ -95,6 +99,7 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
               handleLabelOffset: 6,
               divisions: 8,
               snapDivisions: 24,
+              bandWidth: bandWidth,
               fillColor:
                   Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
             ),
@@ -115,6 +120,7 @@ class TimerKnob extends StatefulWidget {
   final double divisions;
   final double snapDivisions;
   final Color fillColor;
+  final double bandWidth;
 
   const TimerKnob({
     super.key,
@@ -128,6 +134,7 @@ class TimerKnob extends StatefulWidget {
     required this.divisions,
     required this.snapDivisions,
     required this.fillColor,
+    required this.bandWidth,
   });
 
   @override
@@ -160,6 +167,7 @@ class _TimerKnobState extends State<TimerKnob> {
         painter: _TimerKnobPainter(
           angle: _angle,
           radius: radius,
+          bandWidth: widget.bandWidth,
           handleLabel: widget.handleLabel,
           handleLabelOffset: widget.handleLabelOffset,
           divisions: widget.divisions,
@@ -238,6 +246,7 @@ class _TimerKnobPainter extends CustomPainter {
   final Color knobTextColor;
   final Color textColor;
   final double maxValue;
+  final double bandWidth;
 
   _TimerKnobPainter({
     required this.angle,
@@ -250,6 +259,7 @@ class _TimerKnobPainter extends CustomPainter {
     required this.knobColor,
     required this.knobTextColor,
     required this.textColor,
+    required this.bandWidth,
   });
 
   @override

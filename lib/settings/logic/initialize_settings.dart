@@ -78,6 +78,8 @@ Future<void> initializeStorage([bool clearSettingsOnDebug = true]) async {
   await initList<TimerPreset>("timer_presets", defaultTimerPresets);
   await initList<FileItem>("ringtones", await getSystemRingtones());
   await initTextFile("time_format_string", "h:mm a");
+  // await initTextFile("alarms-sort-index", "0");
+  // await initTextFile("timers-sort-index", "0");
 }
 
 Future<void> initializeSettings() async {

@@ -10,6 +10,23 @@ TonalPalette toTonalPalette(int value) {
   return TonalPalette.of(color.hue, color.chroma);
 }
 
+Color getCardColor(BuildContext context, [Color? color]){
+  ColorScheme colorScheme = Theme.of(context).colorScheme;
+  bool useMaterialYou = appSettings
+      .getGroup("Appearance")
+      .getGroup("Colors")
+      .getSetting("Use Material You")
+      .value;
+
+  TonalPalette tonalPalette = toTonalPalette(colorScheme.surface.value);
+
+  return color ??
+        (useMaterialYou
+            ? Color(tonalPalette.get(
+                Theme.of(context).brightness == Brightness.light ? 96 : 15))
+            : colorScheme.surface);
+}
+
 BoxDecoration getCardDecoration(BuildContext context,
     {Color? color,
     bool showLightBorder = false,
@@ -20,14 +37,7 @@ BoxDecoration getCardDecoration(BuildContext context,
   ColorScheme colorScheme = theme.colorScheme;
   ThemeStyleExtension? themeStyle = theme.extension<ThemeStyleExtension>();
 
-  bool useMaterialYou = appSettings
-      .getGroup("Appearance")
-      .getGroup("Colors")
-      .getSetting("Use Material You")
-      .value;
-
-  TonalPalette tonalPalette = toTonalPalette(colorScheme.surface.value);
-
+  
   return BoxDecoration(
     border: showLightBorder
         ? Border.all(
@@ -42,11 +52,7 @@ BoxDecoration getCardDecoration(BuildContext context,
                 strokeAlign: BorderSide.strokeAlignInside,
               )
             : null,
-    color: color ??
-        (useMaterialYou
-            ? Color(tonalPalette.get(
-                Theme.of(context).brightness == Brightness.light ? 96 : 15))
-            : colorScheme.surface),
+    color: getCardColor(context, color),
     borderRadius: theme.cardTheme.shape != null
         ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
         : const BorderRadius.all(Radius.circular(8.0)),

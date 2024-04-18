@@ -3,9 +3,9 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 
 class Lap extends ListItem {
-  late final int number;
-  late final TimeDuration lapTime;
-  late final TimeDuration elapsedTime;
+  late int number;
+  late TimeDuration lapTime;
+  late TimeDuration elapsedTime;
 
   @override
   int get id => number;
@@ -36,5 +36,12 @@ class Lap extends ListItem {
   @override
   copy() {
     return Lap(elapsedTime: elapsedTime, number: number, lapTime: lapTime);
+  }
+
+  @override
+  void copyFrom(other) {
+    number = other.number;
+    lapTime = TimeDuration.from(other.lapTime);
+    elapsedTime = TimeDuration.from(other.elapsedTime);
   }
 }

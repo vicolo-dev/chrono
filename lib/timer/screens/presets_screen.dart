@@ -44,9 +44,8 @@ class _PresetsScreenState extends State<PresetsScreen> {
                         context,
                         initialTimerPreset: preset);
                     if (newPreset == null) return;
-                    _listController.changeItems((presets) {
-                      presets[index] = newPreset;
-                    });
+                    preset.copyFrom(newPreset);
+                    _listController.changeItems((presets) {});
                   },
                   // onDeleteItem: _handleDeleteTimer,
                   placeholderText: "No timers created",

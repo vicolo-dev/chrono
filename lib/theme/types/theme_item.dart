@@ -4,8 +4,8 @@ import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
 abstract class ThemeItem extends CustomizableListItem {
-  late final int _id;
-  final SettingGroup _settings;
+  late int _id;
+  SettingGroup _settings;
   bool _isDefault = false;
 
   ThemeItem(SettingGroup defaultSettings, bool isDefault, [int? id])
@@ -34,6 +34,13 @@ abstract class ThemeItem extends CustomizableListItem {
       'isDefault': isDefault,
       'settings': settings.valueToJson(),
     };
+  }
+
+  @override
+  void copyFrom(dynamic other){
+    _id = other._id;
+    _isDefault = other._isDefault;
+    _settings = other._settings.copy();
   }
 
   ThemeItem.fromJson(Json json, SettingGroup settings) : _settings = settings {

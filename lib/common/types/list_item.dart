@@ -8,6 +8,8 @@ abstract class ListItem extends JsonSerializable {
   bool get isDeletable;
 
   dynamic copy();
+
+  void copyFrom(dynamic other);
 }
 
 abstract class CustomizableListItem extends ListItem {

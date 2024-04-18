@@ -49,8 +49,8 @@ class AlarmTaskSchema extends JsonSerializable {
 }
 
 class AlarmTask extends CustomizableListItem {
-  late final AlarmTaskType type;
-  late final AlarmTaskSchema _schema;
+  late  AlarmTaskType type;
+  late  AlarmTaskSchema _schema;
 
   AlarmTask(this.type) : _schema = alarmTaskSchemasMap[type]!.copy();
 
@@ -72,6 +72,12 @@ class AlarmTask extends CustomizableListItem {
   @override
   copy() {
     return AlarmTask.from(this);
+  }
+
+  @override 
+  void copyFrom(dynamic other) {
+      type = other.type;
+      _schema = other._schema.copy();
   }
 
   @override
