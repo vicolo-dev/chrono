@@ -114,7 +114,7 @@ class Alarm extends CustomizableListItem {
   bool get canBeDisabled =>
       !(isSnoozed && !canBeDisabledWhenSnoozed) && !isFinished;
   bool get shouldDeleteAfterFinish =>
-      _settings.getSetting("Delete After Finish").value;
+      _settings.getSetting("Delete After Finishing").value;
   bool get shouldDeleteAfterRinging =>
       _settings.getSetting("Delete After Ringing").value;
 

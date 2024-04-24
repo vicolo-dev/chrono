@@ -46,15 +46,6 @@ SettingGroup alarmSettingsSchema = SettingGroup(
                 description: "Will repeat during the specified date range"),
           ],
         ),
-        SwitchSetting("Delete After Ringing", false, enableConditions: [
-          ValueCondition(["Type"], (value) => value == OnceAlarmSchedule)
-        ]),
-        SwitchSetting("Delete After Finishing", false, enableConditions: [
-          ValueCondition(
-            ["Type"],
-            (value) => [RangeAlarmSchedule, DatesAlarmSchedule].contains(value),
-          )
-        ]),
         ToggleSetting(
           "Week Days",
           [
@@ -95,6 +86,15 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             ValueCondition(["Type"], (value) => value == RangeAlarmSchedule)
           ],
         ),
+        SwitchSetting("Delete After Ringing", false, enableConditions: [
+          ValueCondition(["Type"], (value) => value == OnceAlarmSchedule)
+        ]),
+        SwitchSetting("Delete After Finishing", false, enableConditions: [
+          ValueCondition(
+            ["Type"],
+            (value) => [RangeAlarmSchedule, DatesAlarmSchedule].contains(value),
+          )
+        ]),
       ],
       icon: Icons.timer,
     ),
