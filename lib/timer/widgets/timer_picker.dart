@@ -2,11 +2,12 @@ import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/modal.dart';
+import 'package:clock_app/timer/logic/edit_duration_picker_mode.dart';
+import 'package:clock_app/timer/logic/get_duration_picker.dart';
 import 'package:clock_app/timer/screens/presets_screen.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
-import 'package:clock_app/timer/widgets/dial_duration_picker.dart';
 import 'package:flutter/material.dart';
 
 Future<PickerResult<ClockTimer>?> showTimerPicker(
@@ -29,82 +30,6 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
       return OrientationBuilder(
         builder: (context, orientation) => StatefulBuilder(
           builder: (context, StateSetter setState) {
-            Widget presetChips(double width) =>
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text("Presets", style: textTheme.labelMedium),
-                      const Spacer(),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.all(0),
-                          minimumSize: const Size(48, 24),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        onPressed: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const PresetsScreen(),
-                            ),
-                          );
-
-                          List<TimerPreset> newPresets =
-                              loadListSync<TimerPreset>("timer_presets");
-
-                          setState(() {
-                            presets = newPresets;
-                          });
-                        },
-                        child: Text(
-                          "Edit",
-                          style: textTheme.labelSmall
-                              ?.copyWith(color: colorScheme.primary),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: width - 64,
-                    height: 48,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: presets.length,
-                      itemBuilder: (context, index) {
-                        return PresetChip(
-                          isSelected: presets[index] == selectedPreset,
-                          preset: presets[index],
-                          onTap: () {
-                            setState(() {
-                              timer = ClockTimer(presets[index].duration);
-                              selectedPreset = presets[index];
-                              timer.setSetting(
-                                  context, "Label", presets[index].name);
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ]);
-
-            Widget durationPicker(double width) => SizedBox(
-                  height: width - 64,
-                  width: width - 64,
-                  child: DialDurationPicker(
-                    duration: timer.duration,
-                    onChange: (TimeDuration newDuration) {
-                      setState(() {
-                        timer = ClockTimer(newDuration);
-                      });
-                    },
-                  ),
-                );
-
-            Widget label() =>
-                Text(timer.duration.toString(), style: textTheme.displayMedium);
-
             return Modal(
               onSave: () {
                 Navigator.of(context).pop(PickerResult(timer, false));
@@ -121,15 +46,115 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                 builder: (context) {
                   var width = MediaQuery.of(context).size.width;
 
+                  Widget presetChips(double width) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text("Presets", style: textTheme.labelMedium),
+                                const Spacer(),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.all(0),
+                                    minimumSize: const Size(48, 24),
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PresetsScreen(),
+                                      ),
+                                    );
+
+                                    List<TimerPreset> newPresets =
+                                        loadListSync<TimerPreset>(
+                                            "timer_presets");
+
+                                    setState(() {
+                                      presets = newPresets;
+                                    });
+                                  },
+                                  child: Text(
+                                    "Edit",
+                                    style: textTheme.labelSmall
+                                        ?.copyWith(color: colorScheme.primary),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: width - 64,
+                              height: 48,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: presets.length,
+                                itemBuilder: (context, index) {
+                                  return PresetChip(
+                                    isSelected:
+                                        presets[index] == selectedPreset,
+                                    preset: presets[index],
+                                    onTap: () {
+                                      setState(() {
+                                        timer =
+                                            ClockTimer(presets[index].duration);
+                                        selectedPreset = presets[index];
+                                        timer.setSetting(context, "Label",
+                                            presets[index].name);
+                                      });
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ]);
+
+                  Widget durationPicker(double width) => getDurationPicker(
+                        context,
+                        timer.duration,
+                        (TimeDuration newDuration) {
+                          setState(() {
+                            timer = ClockTimer(newDuration);
+                          });
+                        },
+                      );
+
+                  Widget label() => Text(timer.duration.toString(),
+                      style: textTheme.displayMedium);
+
+                  Widget title() => Row(
+                        children: [
+                          Text(
+                            "Choose Duration",
+                            style: TimePickerTheme.of(context).helpTextStyle ??
+                                Theme.of(context).textTheme.labelSmall,
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () => editDurationPickerMode(
+                                context, () => setState(() {})),
+                            child: Text(
+                              "Mode",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                            ),
+                          )
+                        ],
+                      );
+
                   return orientation == Orientation.portrait
                       ? Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const SizedBox(height: 16),
-                            Text("Choose Duration",
-                                style: textTheme.titleMedium?.copyWith(
-                                    color: colorScheme.onSurface
-                                        .withOpacity(0.6))),
+                            title(),
                             const SizedBox(height: 16),
                             label(),
                             const SizedBox(height: 16),
@@ -146,10 +171,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 16),
-                                Text("Choose Duration",
-                                    style: textTheme.titleMedium?.copyWith(
-                                        color: colorScheme.onSurface
-                                            .withOpacity(0.6))),
+                                title(),
                                 const SizedBox(height: 16),
                                 label(),
                                 const SizedBox(height: 16),

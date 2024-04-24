@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 extension DateTimeUtils on DateTime {
   double toHours() => hour + minute / 60.0 + second / 3600.0;
   TimeOfDay toTimeOfDay() => TimeOfDay(hour: hour, minute: minute);
+  TimeDuration toTimeDuration() =>
+      TimeDuration(hours: hour, minutes: minute, seconds: second);
   Time getTime() => Time(hour: hour, minute: minute, second: second);
   DateTime addTimeDuration(TimeDuration duration) =>
       add(Duration(seconds: duration.inSeconds));

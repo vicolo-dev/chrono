@@ -95,6 +95,10 @@ class TimeDuration extends JsonSerializable {
     return "$hoursString$minutesString$secondsString$millisecondsString";
   }
 
+  DateTime toDateTime() {
+    return DateTime(0).add(toDuration);
+  }
+
   @override
   Json toJson() => {
         'hours': hours,

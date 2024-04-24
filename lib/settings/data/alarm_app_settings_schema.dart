@@ -9,6 +9,7 @@ import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
+
 SettingGroup alarmAppSettingsSchema = SettingGroup(
   "Alarm",
   [
@@ -18,7 +19,7 @@ SettingGroup alarmAppSettingsSchema = SettingGroup(
       description: "Set default settings for new alarms",
       icon: Icons.settings,
     ),
-    SelectSetting<NotificationAction>("Dismiss Action Type", searchTags: [
+       SelectSetting<NotificationAction>("Dismiss Action Type", searchTags: [
       "action",
       "buttons",
       "slider",

@@ -256,7 +256,7 @@ class Alarm extends CustomizableListItem {
   }
 
   Future<void> createReminderNotification() async {
-    if (!isSnoozed && currentScheduleDateTime != null) {
+    if (!isSnoozed && currentScheduleDateTime != null && !shouldSkipNextAlarm) {
       await createAlarmReminderNotification(
           id, currentScheduleDateTime!, tasks.isNotEmpty);
     }

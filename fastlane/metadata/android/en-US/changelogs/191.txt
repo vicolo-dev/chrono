@@ -2,8 +2,12 @@
 
 * Added option to automatically delete one time alarm after ringing
 * Added option to automatically delete dates and range alarm after finishing
+* Added spinner UI to select time
 
 ✨ Enhancements
+
+* Added count setting to math tasks
+* Added option to select default UI for selecting time
 
 
 🐛 Fixes

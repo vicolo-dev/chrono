@@ -19,6 +19,7 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:great_list_view/great_list_view.dart';
 
+
 typedef AlarmCardBuilder = Widget Function(
   BuildContext context,
   int index,
@@ -179,6 +180,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
         initialTime: TimeOfDay.now(),
         title: "Select Time",
         cancelText: "Cancel",
+// initialEntryMode: TimePickerEntryMode.dial,
         confirmText: "Save",
         useSimple: false,
       );
