@@ -67,10 +67,10 @@ class MathTaskDifficultyLevel {
 
 class MathTask extends StatefulWidget {
   const MathTask({
-    Key? key,
+    super.key,
     required this.onSolve,
     required this.settings,
-  }) : super(key: key);
+  });
 
   final VoidCallback onSolve;
   final SettingGroup settings;
@@ -83,15 +83,24 @@ class _MathTaskState extends State<MathTask> {
   final TextEditingController _textController = TextEditingController();
   late final MathTaskDifficultyLevel _difficultyLevel =
       widget.settings.getSetting("Difficulty").value;
-  bool _isSolved = false;
+  late final _problemCount =
+      widget.settings.getSetting("Number of problems").value;
+  int _problemsSolved = 0;
 
   @override
   void initState() {
     super.initState();
     _textController.addListener(() {
-      if (_textController.text == _difficultyLevel._answer && !_isSolved) {
-        _isSolved = true;
-        widget.onSolve.call();
+      if (_textController.text == _difficultyLevel._answer &&
+          _problemsSolved < _problemCount) {
+        _problemsSolved += 1;
+        setState(() {
+          _difficultyLevel.generateProblem();
+          _textController.clear();
+        });
+      }
+      if (_problemsSolved >= _problemCount) {
+        widget.onSolve();
       }
     });
     _difficultyLevel.generateProblem();
@@ -106,6 +115,7 @@ class _MathTaskState extends State<MathTask> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
     Size textSize = calcTextSize('0000', textTheme.displayMedium!);
 
@@ -116,6 +126,20 @@ class _MathTaskState extends State<MathTask> {
           Text(
             "Solve the equation",
             style: textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int i = 0; i < _problemCount; i++)
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(
+                    _problemsSolved > i ? Icons.circle : Icons.circle_outlined,
+                    color: colorScheme.primary,
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 16.0),
           CardContainer(

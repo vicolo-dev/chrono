@@ -1,11 +1,12 @@
 🚀 Features
 
-* Add option to delete one time alarm after ringing
-* Add option to delete dates and range alarm after finishing
+* Added option to automatically delete one time alarm after ringing
+* Added option to automatically delete dates and range alarm after finishing
 
 ✨ Enhancements
 
 
 🐛 Fixes
 
-* Fix numbers appearing after melody name
+* Fixed numbers appearing after melody name
+* Fixed alarm screen not updating after adding alarm through external app

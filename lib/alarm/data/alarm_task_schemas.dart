@@ -22,6 +22,7 @@ Map<AlarmTaskType, AlarmTaskSchema> alarmTaskSchemasMap = {
               MathTaskDifficultyLevel([Operator.multiply, Operator.multiply])),
         ],
       ),
+      SliderSetting("Number of problems", 1, 10, 1, snapLength: 1),
     ]),
     (onSolve, settings) {
       return MathTask(
