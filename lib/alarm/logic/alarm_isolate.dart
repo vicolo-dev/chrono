@@ -6,7 +6,6 @@ import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -19,7 +18,6 @@ import 'package:clock_app/alarm/types/ringing_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
-import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
@@ -86,6 +84,7 @@ void triggerAlarm(int scheduleId, Json params) async {
   }
 
   Alarm? alarm = getAlarmById(scheduleId);
+  await updateAlarmById(scheduleId, (alarm) async => alarm.handleTrigger());
   DateTime now = DateTime.now();
 
   // if alarm is triggered more than 10 minutes after the scheduled time, ignore
@@ -96,7 +95,7 @@ void triggerAlarm(int scheduleId, Json params) async {
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
       now.millisecondsSinceEpoch >
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
-              1000 * 60 * 10) {
+              1000 * 60 * 60) {
     await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
     return;
   }

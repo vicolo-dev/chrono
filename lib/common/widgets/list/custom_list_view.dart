@@ -159,11 +159,37 @@ class _CustomListViewState<Item extends ListItem>
 
   void _handleChangeItems(
       ItemChangerCallback<Item> callback, bool callOnModifyList) {
+    final initialList = List.from(currentList);
+
     callback(widget.items);
 
     setState(() {
       updateCurrentList();
     });
+
+    final deletedItems = List.from(initialList
+        .where((element) => currentList.where((e) => e.id == element.id).isEmpty)
+        .toList());
+    final addedItems = List.from(currentList
+        .where((element) => initialList.where((e) => e.id == element.id).isEmpty)
+        .toList());
+
+    for (var deletedItem in deletedItems) {
+      _controller.notifyRemovedRange(
+        initialList.indexWhere((element) => element.id == deletedItem.id),
+        1,
+        _getChangeWidgetBuilder(deletedItem),
+      );
+    }
+
+    print("--------- $addedItems");
+    for (var addedItem in addedItems) {
+      _controller.notifyInsertedRange(
+        currentList.indexWhere((element) => element.id == addedItem.id),
+        1,
+      );
+    }
+
     _notifyChangeList();
 
     if (callOnModifyList) widget.onModifyList?.call();

@@ -86,11 +86,13 @@ SettingGroup generalSettingsSchema = SettingGroup(
       "Melodies",
       const RingtonesScreen(),
       searchTags: ["ringtones", "music", "audio", "tones", "custom"],
+      icon: Icons.music_note_outlined,
     ),
     SettingPageLink(
       "Tags",
       const TagsScreen(),
       searchTags: ["tags", "groups", "filter"],
+      icon: Icons.label_outline_rounded,
     ),
     SettingGroup("Reliability", [
       SettingAction(

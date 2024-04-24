@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class SettingPageLinkCard extends StatefulWidget {
   const SettingPageLinkCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = true,
-  }) : super(key: key);
+  });
 
   final SettingPageLink setting;
   final bool showAsCard;
@@ -36,6 +36,12 @@ class _SettingPageLinkCardState<T> extends State<SettingPageLinkCard> {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
+              if (widget.setting.icon != null)
+                Icon(
+                  widget.setting.icon,
+                  color: colorScheme.onBackground,
+                ),
+              if (widget.setting.icon != null) const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

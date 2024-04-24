@@ -39,6 +39,7 @@ List<AlarmSchedule> createSchedules(SettingGroup settings) {
 class Alarm extends CustomizableListItem {
   late Time _time;
   bool _isEnabled = true;
+  bool _markedForDeletion = false;
   // bool _isFinished = false;
   DateTime? _snoozeTime;
   int _snoozeCount = 0;
@@ -59,6 +60,8 @@ class Alarm extends CustomizableListItem {
   @override
   bool get isDeletable => !(isSnoozed && !canBeDeletedWhenSnoozed);
   Time get time => _time;
+
+  bool get isMarkedForDeletion => _markedForDeletion;
 
   /// If an alarm is enabled, it has an active schedule.
   bool get isEnabled => _isEnabled;
@@ -110,6 +113,10 @@ class Alarm extends CustomizableListItem {
   bool get canBeSkipped => !isSnoozed && !isFinished && isEnabled;
   bool get canBeDisabled =>
       !(isSnoozed && !canBeDisabledWhenSnoozed) && !isFinished;
+  bool get shouldDeleteAfterFinish =>
+      _settings.getSetting("Delete After Finish").value;
+  bool get shouldDeleteAfterRinging =>
+      _settings.getSetting("Delete After Ringing").value;
 
   Alarm(this._time) {
     _schedules = createSchedules(_settings);
@@ -131,6 +138,7 @@ class Alarm extends CustomizableListItem {
         _time = alarm._time,
         _snoozeCount = alarm._snoozeCount,
         _snoozeTime = alarm._snoozeTime,
+        _markedForDeletion = alarm._markedForDeletion,
         _skippedTime = alarm._skippedTime,
         _settings = alarm._settings.copy() {
     _schedules = createSchedules(_settings);
@@ -146,6 +154,7 @@ class Alarm extends CustomizableListItem {
     _skippedTime = other._skippedTime;
     _settings = other._settings.copy();
     _schedules = other._schedules;
+    _markedForDeletion = other._markedForDeletion;
   }
 
   T getSchedule<T extends AlarmSchedule>() {
@@ -280,7 +289,16 @@ class Alarm extends CustomizableListItem {
 
   Future<void> finish() async {
     await disable();
+    if (shouldDeleteAfterFinish) {
+      _delete();
+    }
     // _isFinished = true;
+  }
+
+  void handleTrigger() {
+    if (scheduleType == OnceAlarmSchedule && shouldDeleteAfterRinging) {
+      _markedForDeletion = true;
+    }
   }
 
   Future<void> handleEdit(String description) async {
@@ -315,6 +333,10 @@ class Alarm extends CustomizableListItem {
         await finish();
       }
     }
+  }
+
+  void _delete() {
+    _markedForDeletion = true;
   }
 
   void setTime(Time time) {
@@ -358,6 +380,7 @@ class Alarm extends CustomizableListItem {
         ? Time.fromJson(json['timeOfDay'])
         : Time.now();
     _isEnabled = json['enabled'] ?? false;
+    _markedForDeletion = json['markedForDeletion'] ?? false;
     // _isFinished = json['finished'] ?? false;
     _skippedTime = json['skippedTime'] != null
         ? DateTime.fromMillisecondsSinceEpoch(json['skippedTime'])
@@ -398,6 +421,7 @@ class Alarm extends CustomizableListItem {
   Json toJson() => {
         'timeOfDay': _time.toJson(),
         'enabled': _isEnabled,
+        'markedForDeletion': _markedForDeletion,
         // 'finished': _isFinished,
         'snoozeTime': snoozeTime?.millisecondsSinceEpoch,
         'snoozeCount': _snoozeCount,

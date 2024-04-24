@@ -1,6 +1,8 @@
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
+import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
+import 'package:clock_app/common/utils/file_item.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -99,6 +101,7 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
               const Spacer(),
               IconButton(
                   onPressed: () async {
+                    if(widget.choice.value.type != FileItemType.audio) return;
                     if (RingtoneManager.lastPlayedRingtoneUri ==
                         widget.choice.value.uri) {
                       await RingtonePlayer.stop();
@@ -110,7 +113,7 @@ class _SelectAudioOptionCardState extends State<SelectAudioOptionCard> {
                     }
                   },
                   icon: Icon(
-                    isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                    getFileItemIcon(widget.choice.value, isPlaying),
                     color: colorScheme.primary,
                   ))
             ],

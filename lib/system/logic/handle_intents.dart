@@ -80,7 +80,7 @@ void handleIntent(Intent? receivedIntent, BuildContext context, Function(Alarm) 
             onSetAlarm(alarm);
 
             // Update the frontend UI if app is open
-            ListenerManager.notifyListeners("alarms-reload");
+            ListenerManager.notifyListeners("alarms");
             // setState(() {});
           }
           break;

@@ -8,6 +8,7 @@ import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:pick_or_save/pick_or_save.dart';
 
 class RingtonesScreen extends StatefulWidget {
@@ -82,7 +83,7 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
               List<String>? result = await PickOrSave().filePicker(
                 params: FilePickerParams(
                   mimeTypesFilter: ['audio/*'],
-                  getCachedFilePath: true,
+                  getCachedFilePath: false,
                   enableMultipleSelection: true,
                 ),
               );
@@ -90,12 +91,12 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
                 for (String uri in result) {
                   final metadata = await PickOrSave()
                       .fileMetaData(params: FileMetadataParams(filePath: uri));
-                  final fileItem =
-                      FileItem(metadata.displayName ?? "File", uri);
+                  final fileItem = FileItem(
+                      metadata.displayName ?? "File", uri, FileItemType.audio);
+                  print("---------- ${metadata.displayName}");
                   fileItem.uri =
                       await saveRingtone(fileItem.id.toString(), uri);
-                  _listController
-                      .addItem(FileItem(metadata.displayName ?? "File", uri));
+                  _listController.addItem(fileItem);
                 }
               }
 
@@ -111,17 +112,42 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
           ),
           // FAB(
           //   index: 1,
-          //   icon: Icons.folder_rounded,
+          //   icon: Icons.create_new_folder_rounded,
           //   bottomPadding: 8,
           //   onPressed: () async {
-          //     // Item? themeItem = widget.createThemeItem();
-          //     // await _openCustomizeItemScreen(
-          //     //   themeItem,
-          //     //   onSave: (newThemeItem) {
-          //     //     _listController.addItem(newThemeItem);
-          //     //   },
-          //     //   isNewItem: true,
-          //     // );
+          //     RingtonePlayer.stop();
+          //     String? result = await PickOrSave()
+          //         .directoryPicker(params: const DirectoryPickerParams());
+          //
+          //     if (result != null && result.isNotEmpty) {
+          //       List<DocumentFile>? documentFiles =
+          //           await PickOrSave().directoryDocumentsPicker(
+          //         params: DirectoryDocumentsPickerParams(
+          //           directoryUri: result,
+          //           recurseDirectories: true,
+          //           // allowedExtensions: [".pdf"],
+          //           mimeTypesFilter: ["audio/*"],
+          //         ),
+          //       );
+          //       if (documentFiles != null) {
+          //         DocumentFile documentFile = documentFiles[0];
+          //         for (var document in documentFiles) {
+          //           print("${document.name} ${document.uri}");
+          //         }
+          //       }
+          //
+          //       // final directory = Directory(result);
+          //       // String name = result.split("/").last;
+          //       String name = basename(
+          //           result.replaceAll("%3A", ":").replaceAll("%2F", "/"));
+          //       // final metadata = await PickOrSave()
+          //       //     .fileMetaData(params: FileMetadataParams(filePath: result));
+          //       print("================ ${name}");
+          //       final fileItem = FileItem(name, result, FileItemType.directory);
+          //       // fileItem.uri =
+          //       //     await saveRingtone(fileItem.id.toString(), result);
+          //       _listController.addItem(fileItem);
+          //     }
           //   },
           // )
         ],

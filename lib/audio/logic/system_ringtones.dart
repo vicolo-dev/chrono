@@ -9,7 +9,7 @@ import 'package:path/path.dart';
 Future<List<FileItem>> getSystemRingtones() async {
   final ringtones = (await FlutterSystemRingtones.getAlarmSounds())
       .map((ringtone) =>
-          FileItem(ringtone.title, ringtone.uri, isDeletable: false))
+          FileItem(ringtone.title, ringtone.uri, FileItemType.audio, isDeletable: false))
       .toList();
 
   // If no ringtones are found, add a default one
@@ -21,7 +21,7 @@ Future<List<FileItem>> getSystemRingtones() async {
     String path = join(getRingtonesDirectoryPathSync(), "default.mp3");
     await File(path).writeAsBytes(bytes);
 
-    ringtones.add(FileItem("Default", path, isDeletable: false));
+    ringtones.add(FileItem("Default", path, FileItemType.audio, isDeletable: false));
   }
   return ringtones;
 }
