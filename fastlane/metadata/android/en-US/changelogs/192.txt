@@ -9,6 +9,7 @@
 * Added count setting to math tasks
 * Added option to select default UI for selecting time
 
+
 🐛 Fixes
 
 * Fixed numbers appearing after melody name
