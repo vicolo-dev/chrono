@@ -1,12 +1,14 @@
-// Copyright 2021, iceman.bsi@gmail.com
-//
-// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-//
-// * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-// * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-// * Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+/*
+Adapated from here: https://github.com/icemanbsi/flutter_time_picker_spinner
+Copyright 2021, iceman.bsi@gmail.com
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+* Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -273,24 +275,6 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
                 (isLoop(_getSecondCount()) ? _getSecondCount() : 1);
         currentSelectedAPIndex = currentTime.hour >= 12 ? 2 : 1;
 
-        print("set state ${currentSelectedMinuteIndex}");
-
-        // hourController = ScrollController(
-        //     initialScrollOffset:
-        //         (currentSelectedHourIndex - 1) * _getItemHeight()!);
-        //
-        // minuteController = ScrollController(
-        //     keepScrollOffset: false,
-        //     initialScrollOffset:
-        //         (currentSelectedMinuteIndex - 1) * _getItemHeight()!);
-        //
-        // secondController = ScrollController(
-        //     initialScrollOffset:
-        //         (currentSelectedSecondIndex - 1) * _getItemHeight()!);
-
-        // isHourScrolling = true;
-        // isMinuteScrolling = true;
-        // isSecondsScrolling = true;
         hourController.animateTo(
             (currentSelectedHourIndex - 1) * _getItemHeight()!,
             // );
@@ -325,13 +309,6 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
 
   @override
   Widget build(BuildContext context) {
-    // if (currentTime.millisecondsSinceEpoch != getCurrentTime().millisecondsSinceEpoch) {
-    //        // if (!widget.is24HourMode) {
-    //   //   apController.jumpTo((currentSelectedAPIndex - 1) * _getItemHeight()!);
-    //   // }
-    // }
-
-    // print(minuteController.offset);
     List<Widget> contents = [
       SizedBox(
         width: _getItemWidth(),
@@ -430,15 +407,6 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
           // print("*******************888 $selectedIndex");
           if (scrollNotification.direction.toString() ==
               "ScrollDirection.idle") {
-            //   isScrollIdle = true;
-            // Future.delayed(Duration.zero,() {
-            //   if (isScrollIdle == false) return;
-            //   scrollController.animateTo(
-            //     300,
-            //     curve: Curves.ease,
-            //     duration: Duration(milliseconds: 300),
-            //   );
-            // });
             if (isLoop(max)) {
               int segment = (selectedIndex / max).floor();
               if (segment == 0) {
@@ -453,23 +421,16 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
             }
             setState(() {
               onScrollEnd();
-              // onUpdateSelectedIndex(
-              //   (controller.offset / _getItemHeight()!).round() + 1);
-              // print("^^^^^^^^^^^^^^^^^^^^^^^^");
               if (widget.onTimeChange != null) {
                 widget.onTimeChange!(getDateTime());
               }
             });
           }
         } else if (scrollNotification is ScrollUpdateNotification) {
-          // if (!isScrolling) {
-          // print(
-          //     "######################### ${(controller.offset / _getItemHeight()!).round() + 1}");
           setState(() {
             onUpdateSelectedIndex(
                 (controller.offset / _getItemHeight()!).round() + 1);
           });
-          // }
         }
         return true;
       },
@@ -507,6 +468,7 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
       ),
     );
 
+    // isScrolling is used as a workaround for this flutter bug: https://github.com/flutter/flutter/issues/14452
     return Stack(
       children: <Widget>[
         Positioned.fill(child: spinner),
