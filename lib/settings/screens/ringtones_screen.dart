@@ -83,7 +83,7 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
               List<String>? result = await PickOrSave().filePicker(
                 params: FilePickerParams(
                   mimeTypesFilter: ['audio/*'],
-                  getCachedFilePath: false,
+                  getCachedFilePath: true,
                   enableMultipleSelection: true,
                 ),
               );

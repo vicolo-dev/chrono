@@ -65,6 +65,7 @@ dependencies:
   watcher: ^1.1.0
   dynamic_color: ^1.7.0
   material_color_utilities: ^0.8.0
+  flutter_oss_licenses: ^3.0.2
   
 
 dev_dependencies:
@@ -81,6 +82,7 @@ flutter:
     - assets/timezones.db
     - assets/images/
     - assets/ringtones/
+    - assets/contributors.json
   fonts:
     - family: Montserrat
       fonts:

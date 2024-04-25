@@ -35,15 +35,18 @@ SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false}) {
       .getSetting("Use Material Style")
       .value;
 
-  if(useMaterialStyle){
+  if (useMaterialStyle) {
     bottom += 20;
   }
 
   return SnackBar(
-    content: Container(
-      alignment: Alignment.centerLeft,
-      height: 28,
-      child: Text(text),
+    content: ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 28),
+      child: Container(
+        alignment: Alignment.centerLeft,
+        // height: 28,
+        child: Text(text),
+      ),
     ),
     margin: EdgeInsets.only(
       left: left,
