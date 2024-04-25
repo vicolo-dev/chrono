@@ -260,61 +260,63 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
     Future.delayed(Duration.zero, () async {
       if (currentTime.millisecondsSinceEpoch !=
           getCurrentTime().millisecondsSinceEpoch) {
-        setState(() {
-          currentTime = getCurrentTime();
-          currentSelectedHourIndex =
-              (currentTime.hour % (widget.is24HourMode ? 24 : 12)) +
-                  _getHourCount();
-          currentSelectedMinuteIndex =
-              (currentTime.minute / widget.minutesInterval).floor() +
-                  (isLoop(_getMinuteCount()) ? _getMinuteCount() : 1);
-          currentSelectedSecondIndex =
-              (currentTime.second / widget.secondsInterval).floor() +
-                  (isLoop(_getSecondCount()) ? _getSecondCount() : 1);
-          currentSelectedAPIndex = currentTime.hour >= 12 ? 2 : 1;
+        // setState(() {
+        currentTime = getCurrentTime();
+        currentSelectedHourIndex =
+            (currentTime.hour % (widget.is24HourMode ? 24 : 12)) +
+                _getHourCount();
+        currentSelectedMinuteIndex =
+            (currentTime.minute / widget.minutesInterval).floor() +
+                (isLoop(_getMinuteCount()) ? _getMinuteCount() : 1);
+        currentSelectedSecondIndex =
+            (currentTime.second / widget.secondsInterval).floor() +
+                (isLoop(_getSecondCount()) ? _getSecondCount() : 1);
+        currentSelectedAPIndex = currentTime.hour >= 12 ? 2 : 1;
 
-          print("set state ${currentSelectedMinuteIndex}");
+        print("set state ${currentSelectedMinuteIndex}");
 
-          // hourController = ScrollController(
-          //     initialScrollOffset:
-          //         (currentSelectedHourIndex - 1) * _getItemHeight()!);
-          //
-          // minuteController = ScrollController(
-          //     keepScrollOffset: false,
-          //     initialScrollOffset:
-          //         (currentSelectedMinuteIndex - 1) * _getItemHeight()!);
-          //
-          // secondController = ScrollController(
-          //     initialScrollOffset:
-          //         (currentSelectedSecondIndex - 1) * _getItemHeight()!);
+        // hourController = ScrollController(
+        //     initialScrollOffset:
+        //         (currentSelectedHourIndex - 1) * _getItemHeight()!);
+        //
+        // minuteController = ScrollController(
+        //     keepScrollOffset: false,
+        //     initialScrollOffset:
+        //         (currentSelectedMinuteIndex - 1) * _getItemHeight()!);
+        //
+        // secondController = ScrollController(
+        //     initialScrollOffset:
+        //         (currentSelectedSecondIndex - 1) * _getItemHeight()!);
 
-          // isHourScrolling = true;
-          // isMinuteScrolling = true;
-          // isSecondsScrolling = true;
-          hourController.animateTo(
-              (currentSelectedHourIndex - 1) * _getItemHeight()!,
+        // isHourScrolling = true;
+        // isMinuteScrolling = true;
+        // isSecondsScrolling = true;
+        hourController.animateTo(
+            (currentSelectedHourIndex - 1) * _getItemHeight()!,
+            // );
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut);
+        minuteController.animateTo(
+            (currentSelectedMinuteIndex - 1) * _getItemHeight()!,
+            // );
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut);
+        if (widget.isShowSeconds) {
+          secondController.animateTo(
+              (currentSelectedSecondIndex - 1) * _getItemHeight()!,
               // );
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut);
-          minuteController.animateTo(
-              (currentSelectedMinuteIndex - 1) * _getItemHeight()!,
-              // );
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut);
-          if (widget.isShowSeconds) {
-            secondController.animateTo(
-                (currentSelectedSecondIndex - 1) * _getItemHeight()!,
-                // );
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut);
-          }
-        });
+        }
+        // });
       }
-      // Future.delayed(const Duration(milliseconds: 320), () {
-      //   isHourScrolling = false;
-      //   isMinuteScrolling = false;
-      //   isSecondsScrolling = false;
-      // });
+      Future.delayed(const Duration(milliseconds: 320), () {
+        setState(() {
+          isHourScrolling = false;
+          isMinuteScrolling = false;
+          isSecondsScrolling = false;
+        });
+      });
     });
 
     // TODO: implement didUpdateWidget
@@ -428,6 +430,15 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
           // print("*******************888 $selectedIndex");
           if (scrollNotification.direction.toString() ==
               "ScrollDirection.idle") {
+            //   isScrollIdle = true;
+            // Future.delayed(Duration.zero,() {
+            //   if (isScrollIdle == false) return;
+            //   scrollController.animateTo(
+            //     300,
+            //     curve: Curves.ease,
+            //     duration: Duration(milliseconds: 300),
+            //   );
+            // });
             if (isLoop(max)) {
               int segment = (selectedIndex / max).floor();
               if (segment == 0) {
