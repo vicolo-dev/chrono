@@ -182,7 +182,6 @@ class _CustomListViewState<Item extends ListItem>
       );
     }
 
-    print("--------- $addedItems");
     for (var addedItem in addedItems) {
       _controller.notifyInsertedRange(
         currentList.indexWhere((element) => element.id == addedItem.id),

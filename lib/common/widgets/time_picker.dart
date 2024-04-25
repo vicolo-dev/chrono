@@ -2586,7 +2586,6 @@ class _TimePickerDialogState extends State<TimePickerDialog>
 
                   isForce2Digits: true,
                   onTimeChange: (time) {
-                    print(time.toTimeOfDay());
                     _handleTimeChanged(time.toTimeOfDay());
                   },
                 ),
