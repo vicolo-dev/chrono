@@ -37,6 +37,8 @@ Map<AlarmTaskType, AlarmTaskSchema> alarmTaskSchemasMap = {
       SliderSetting("Number of characters", 5, 20, 5, snapLength: 1),
       SwitchSetting("Include numbers", false),
       SwitchSetting("Include lowercase", false),
+      SliderSetting("Number of problems", 1, 10, 1, snapLength: 1),
+
     ]),
     (onSolve, settings) {
       return RetypeTask(onSolve: onSolve, settings: settings);

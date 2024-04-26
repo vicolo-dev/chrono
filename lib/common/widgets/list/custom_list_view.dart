@@ -2,6 +2,7 @@ import 'package:clock_app/common/logic/get_list_filter_chips.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/list/delete_alert_dialogue.dart';
 import 'package:clock_app/common/widgets/list/list_filter_chip.dart';
@@ -197,6 +198,8 @@ class _CustomListViewState<Item extends ListItem>
   Future<void> _handleDeleteItem(Item deletedItem,
       [bool callOnModifyList = true]) async {
     int index = _getItemIndex(deletedItem);
+
+    // print(listToString(widget.items));
 
     setState(() {
       widget.items.removeWhere((element) => element.id == deletedItem.id);

@@ -51,6 +51,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
         _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
       }
       _currentIndex++;
+      print("######################## $_currentIndex");
     });
   }
 
