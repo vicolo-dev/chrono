@@ -42,8 +42,10 @@ class FileItem extends ListItem {
             ? json['id'] ?? UniqueKey().hashCode
             : UniqueKey().hashCode,
         _type = json != null
-            ? FileItemType.values
-                .firstWhere((e) => e.toString() == json['type'])
+            ? json['type'] != null
+                ? FileItemType.values
+                    .firstWhere((e) => e.toString() == json['type'])
+                : FileItemType.audio
             : FileItemType.audio,
         name = json != null ? json['title'] ?? 'Unknown' : 'Unknown',
         _uri = json != null ? json['uri'] ?? '' : '',
