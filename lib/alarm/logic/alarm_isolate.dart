@@ -1,8 +1,6 @@
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
@@ -84,7 +82,6 @@ void triggerAlarm(int scheduleId, Json params) async {
   }
 
   Alarm? alarm = getAlarmById(scheduleId);
-  await updateAlarmById(scheduleId, (alarm) async => alarm.handleTrigger());
   DateTime now = DateTime.now();
 
   // if alarm is triggered more than 10 minutes after the scheduled time, ignore
@@ -158,6 +155,7 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
     }
   }
   RingingManager.stopAlarm();
+  await updateAlarmById(scheduleId, (alarm) async => alarm.handleDismiss());
 }
 
 void triggerTimer(int scheduleId, Json params) async {
