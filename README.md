@@ -34,7 +34,7 @@ Its usable, but still WIP, so you might encounter some bugs. Make sure to test i
 - Modern and easy to use interface
 ### Alarms
 - Customizable schedules (Daily, Weekly, Specific week days, Specific dates, Date range)
-- Configure Melody, rising volume and vibrations
+- Configure melody/ringtone, rising volume and vibrations
 - Configure Snooze length, max snoozes and other snooze behaviour
 - Option to auto delete dismissed alarms and skip alarms
 - Alarm tasks (Math problems, Retype text, Sequence, more to come)
@@ -47,7 +47,7 @@ Its usable, but still WIP, so you might encounter some bugs. Make sure to test i
 - Search and add cities
 ### Timer
 - Support for multiple timers
-- Configure Melody, rising volume and vibrations
+- Configure melody/ringtone, rising volume and vibrations
 - Timer presets
 - Option to fullscreen a timer
 - Dial and spinner duration pickers
@@ -97,7 +97,6 @@ Stuff I would like to do soon™. In no particular order:
   - Alternative time picker interfaces
   - Array alarms (alarm that will ring after set interval (10 minutes etc.)
   - More tasks
-  - Custom ringtones
 - Color schemes
   - More prebuilt themes  
   - Filter
@@ -116,9 +115,6 @@ Stuff I would like to do soon™. In no particular order:
   - Timers
   - Stopwatch
   - Customization
-- Online?
-  - Sync?
-  - Community themes?
  
 ## Screenshots
 <p float="left">
