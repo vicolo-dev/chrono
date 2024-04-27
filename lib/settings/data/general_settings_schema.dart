@@ -17,6 +17,10 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+enum TimePickerType { dial, input, spinner }
+
+enum DurationPickerType { rings, spinner }
+
 SelectSettingOption<String> _getDateSettingOption(String format) {
   return SelectSettingOption(
       "${DateFormat(format).format(DateTime.now())} ($format)", format);
@@ -66,6 +70,44 @@ SettingGroup generalSettingsSchema = SettingGroup(
             getTimeFormatString(context, timeFormatOptions[index].value));
       }),
       SwitchSetting("Show Seconds", true),
+      SelectSetting("Time Picker", [
+        SelectSettingOption(
+          "Dial",
+          TimePickerType.dial,
+        ),
+        SelectSettingOption(
+          "Input",
+          TimePickerType.input,
+        ),
+        SelectSettingOption(
+          "Spinner",
+          TimePickerType.spinner,
+        ),
+      ], searchTags: [
+        "time",
+        "picker",
+        "dial",
+        "input",
+        "spinner",
+      ]),
+      SelectSetting("Duration Picker", [
+        SelectSettingOption(
+          "Rings",
+          DurationPickerType.rings,
+        ),
+        SelectSettingOption(
+          "Spinner",
+          DurationPickerType.spinner,
+        ),
+      ], searchTags: [
+        "duration",
+        "rings",
+        "time",
+        "picker",
+        "dial",
+        "input",
+        "spinner",
+      ]),
     ]),
     SelectSetting(
       "Swipe Action",
@@ -86,11 +128,13 @@ SettingGroup generalSettingsSchema = SettingGroup(
       "Melodies",
       const RingtonesScreen(),
       searchTags: ["ringtones", "music", "audio", "tones", "custom"],
+      icon: Icons.music_note_outlined,
     ),
     SettingPageLink(
       "Tags",
       const TagsScreen(),
       searchTags: ["tags", "groups", "filter"],
+      icon: Icons.label_outline_rounded,
     ),
     SettingGroup("Reliability", [
       SettingAction(

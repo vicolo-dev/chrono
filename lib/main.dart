@@ -3,7 +3,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
@@ -25,7 +25,6 @@ import 'package:timezone/data/latest_all.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-// ...
 
   initializeTimeZones();
   await initializePackageInfo();

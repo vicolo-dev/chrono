@@ -1,4 +1,5 @@
 import 'package:clock_app/common/widgets/modal.dart';
+import 'package:clock_app/timer/logic/get_duration_picker.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:clock_app/timer/widgets/dial_duration_picker.dart';
@@ -52,19 +53,12 @@ Future<TimerPreset?> showTimerPresetPicker(BuildContext context,
                       Text(timerPreset.duration.toString(),
                           style: textTheme.displayMedium),
                       const SizedBox(height: 16),
-                      SizedBox(
-                        height: width - 64,
-                        width: width - 64,
-                        child: DialDurationPicker(
-                          duration: timerPreset.duration,
-                          onChange: (TimeDuration newDuration) {
-                            setState(() {
-                              timerPreset.duration = newDuration;
-                            });
-                          },
-                          showHours: true,
-                        ),
-                      ),
+                      getDurationPicker(context, timerPreset.duration,
+                          (TimeDuration newDuration) {
+                        setState(() {
+                          timerPreset.duration = newDuration;
+                        });
+                      }),
                     ],
                   ),
                 );

@@ -15,7 +15,6 @@ import 'package:clock_app/common/logic/tags.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -87,6 +86,15 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             ValueCondition(["Type"], (value) => value == RangeAlarmSchedule)
           ],
         ),
+        SwitchSetting("Delete After Ringing", false, enableConditions: [
+          ValueCondition(["Type"], (value) => value == OnceAlarmSchedule)
+        ]),
+        SwitchSetting("Delete After Finishing", false, enableConditions: [
+          ValueCondition(
+            ["Type"],
+            (value) => [RangeAlarmSchedule, DatesAlarmSchedule].contains(value),
+          )
+        ]),
       ],
       icon: Icons.timer,
     ),
@@ -102,6 +110,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },
+
               // shouldCloseOnSelect: false,
             ),
             SelectSetting<AndroidAudioUsage>(

@@ -2,6 +2,7 @@ import 'package:clock_app/common/logic/get_list_filter_chips.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/list/delete_alert_dialogue.dart';
 import 'package:clock_app/common/widgets/list/list_filter_chip.dart';
@@ -159,11 +160,36 @@ class _CustomListViewState<Item extends ListItem>
 
   void _handleChangeItems(
       ItemChangerCallback<Item> callback, bool callOnModifyList) {
+    final initialList = List.from(currentList);
+
     callback(widget.items);
 
     setState(() {
       updateCurrentList();
     });
+
+    final deletedItems = List.from(initialList
+        .where((element) => currentList.where((e) => e.id == element.id).isEmpty)
+        .toList());
+    final addedItems = List.from(currentList
+        .where((element) => initialList.where((e) => e.id == element.id).isEmpty)
+        .toList());
+
+    for (var deletedItem in deletedItems) {
+      _controller.notifyRemovedRange(
+        initialList.indexWhere((element) => element.id == deletedItem.id),
+        1,
+        _getChangeWidgetBuilder(deletedItem),
+      );
+    }
+
+    for (var addedItem in addedItems) {
+      _controller.notifyInsertedRange(
+        currentList.indexWhere((element) => element.id == addedItem.id),
+        1,
+      );
+    }
+
     _notifyChangeList();
 
     if (callOnModifyList) widget.onModifyList?.call();
@@ -172,6 +198,8 @@ class _CustomListViewState<Item extends ListItem>
   Future<void> _handleDeleteItem(Item deletedItem,
       [bool callOnModifyList = true]) async {
     int index = _getItemIndex(deletedItem);
+
+    // print(listToString(widget.items));
 
     setState(() {
       widget.items.removeWhere((element) => element.id == deletedItem.id);

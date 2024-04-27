@@ -9,7 +9,6 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:flutter/foundation.dart';
 
 Future<void> cancelAlarmReminderNotification(int id) async {
   await AwesomeNotifications().cancel(id);

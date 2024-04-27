@@ -136,15 +136,15 @@ class _PersistentListViewState<Item extends ListItem>
   void dispose() {
     ListenerManager.removeOnChangeListener(widget.saveTag, _loadItems);
     // ListenerManager.removeOnChangeListener(
-    //     "${widget.saveTag}-reload", loadItems);
+    //     "${widget.saveTag}-reload", reloadItems);
     // unwatchList(widget.saveTag);
     super.dispose();
   }
-  //
-  // void reloadItems() {
-  //   List<Item> newList = loadListSync<Item>(widget.saveTag);
-  //   widget.listController.reloadItems(newList);
-  // }
+
+  void reloadItems() {
+    List<Item> newList = loadListSync<Item>(widget.saveTag);
+    widget.listController.reloadItems(newList);
+  }
 
   void _loadItems() {
     if (widget.saveTag.isNotEmpty) {

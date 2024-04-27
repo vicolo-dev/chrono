@@ -1,14 +1,12 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/types/schedule_id.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-
-import 'alarm_controls.dart';
 
 Future<void> cancelAllAlarms() async {
   List<ScheduleId> scheduleIds =
@@ -28,7 +26,12 @@ Future<void> updateAlarm(int scheduleId, String description) async {
 
   await alarm.update(description);
 
-  alarms[alarmIndex] = alarm;
+  if (alarm.isMarkedForDeletion) {
+    await alarm.disable();
+    alarms.removeAt(alarmIndex);
+  } else {
+    alarms[alarmIndex] = alarm;
+  }
   await saveList("alarms", alarms);
 }
 
@@ -42,7 +45,12 @@ Future<void> updateAlarms(String description) async {
 
   for (Alarm alarm in alarms) {
     await alarm.update(description);
+    if (alarm.isMarkedForDeletion) {
+      await alarm.disable();
+    }
   }
+
+  alarms.removeWhere((alarm) => alarm.isMarkedForDeletion);
 
   await saveList("alarms", alarms);
 
@@ -61,7 +69,12 @@ Future<void> updateAlarmById(
   }
   Alarm alarm = alarms[alarmIndex];
   await callback(alarm);
-  alarms[alarmIndex] = alarm;
+  if (alarm.isMarkedForDeletion) {
+    await alarm.disable();
+    alarms.removeAt(alarmIndex);
+  } else {
+    alarms[alarmIndex] = alarm;
+  }
   await saveList("alarms", alarms);
 
   SendPort? sendPort = IsolateNameServer.lookupPortByName(updatePortName);
