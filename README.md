@@ -35,24 +35,32 @@ Its usable, but still WIP, so you might encounter some bugs. Make sure to test i
 ### Alarms
 - Customizable schedules (Daily, Weekly, Specific week days, Specific dates, Date range)
 - Configure Melody, rising volume and vibrations
-- Configure Snooze length and max snoozes
+- Configure Snooze length, max snoozes and other snooze behaviour
+- Option to auto delete dismissed alarms and skip alarms
 - Alarm tasks (Math problems, Retype text, Sequence, more to come)
-- Filter alarms (all, today, tomorrow, snoozed, disabled, completed)
+- Dial, spinner and text time pickers
+- Filter and sort alarms
+- Add tags
 ### Clock
 - Customizable clock display
 - World clocks with relative time difference
 - Search and add cities
 ### Timer
+- Support for multiple timers
 - Configure Melody, rising volume and vibrations
 - Timer presets
-- Filter timers (all, running, paused, stopped)
+- Option to fullscreen a timer
+- Dial and spinner duration pickers
+- Filter and sort timers
+- Add tags
 ### Stopwatch
 - Lap history with lap times and elapsed times
-- Lap comparisons
+- Lap comparisons (fastest, slowest, average, previous)
 ### Appearance
 - Material You icons and themes
 - Highly customizable color themes
 - Highly customizable style themes
+- Other options like animations, nav bar styles, time picker styles
 
 ## Platforms
 Currently, the app is only available for android. I don't have an apple device to develop for iOS, but feel free
