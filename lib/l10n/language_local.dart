@@ -125,7 +125,7 @@
     "mn": {"name": "Mongolian", "nativeName": "монгол"},
     "na": {"name": "Nauru", "nativeName": "Ekakairũ Naoero"},
     "nv": {"name": "Navajo, Navaho", "nativeName": "Diné bizaad, Dinékʼehǰí"},
-    "nb": {"name": "Norwegian Bokmål", "nativeName": "Norsk bokmål"},
+    "nb_NO": {"name": "Norwegian Bokmål", "nativeName": "Norsk bokmål"},
     "nd": {"name": "North Ndebele", "nativeName": "isiNdebele"},
     "ne": {"name": "Nepali", "nativeName": "नेपाली"},
     "ng": {"name": "Ndonga", "nativeName": "Owambo"},

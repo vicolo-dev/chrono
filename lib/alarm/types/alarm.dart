@@ -46,6 +46,7 @@ class Alarm extends CustomizableListItem {
   DateTime? _skippedTime;
   SettingGroup _settings = SettingGroup(
     "Alarm Settings",
+    (context) => "Alarm Settings",
     appSettings
         .getGroup("Alarm")
         .getGroup("Default Settings")
@@ -388,6 +389,7 @@ class Alarm extends CustomizableListItem {
     _snoozeCount = json['snoozeCount'] ?? 0;
     _settings = SettingGroup(
       "Alarm Settings",
+      (context) => "Alarm Settings",
       appSettings
           .getGroup("Alarm")
           .getGroup("Default Settings")

@@ -24,7 +24,7 @@ class _StringSettingCardState extends State<StringSettingCard> {
   Widget build(BuildContext context) {
     Widget input = InputField(
       title: widget.setting.displayName(context),
-      description: widget.setting.description,
+      description: widget.setting.displayDescription(context),
       value: widget.setting.value,
       onChanged: (value) {
         setState(() {

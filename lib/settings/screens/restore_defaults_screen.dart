@@ -7,11 +7,10 @@ import 'package:flutter/material.dart';
 
 class SettingCheckBox extends StatelessWidget {
   const SettingCheckBox(
-      {Key? key,
+      {super.key,
       required this.settingItem,
       required this.isChecked,
-      required this.onChanged})
-      : super(key: key);
+      required this.onChanged});
 
   final SettingItem settingItem;
 
@@ -29,7 +28,7 @@ class SettingCheckBox extends StatelessWidget {
           onChanged: onChanged,
         ),
         Text(
-          settingItem.name,
+          settingItem.displayName(context),
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ],
@@ -114,7 +113,7 @@ class _RestoreDefaultScreenState extends State<RestoreDefaultScreen> {
                       },
                     ),
                   )
-                  .toList(),
+                  ,
               const SizedBox(height: 16),
             ],
           ),

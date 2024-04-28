@@ -169,7 +169,7 @@
   "@stopwatchFastest": {},
   "alarmDescriptionDays": "Le {days}",
   "@alarmDescriptionDays": {},
-  "alarmDescriptionRange": "{interval, select, daily{Tous les jours} weekly{Toutes les semaines}} du {startDate} au {endDate}",
+  "alarmDescriptionRange": "{interval, select, daily{Tous les jours} weekly{Toutes les semaines} other{Other}} du {startDate} au {endDate}",
   "@alarmDescriptionRange": {},
   "stopwatchSlowest": "Le plus lent",
   "@stopwatchSlowest": {},

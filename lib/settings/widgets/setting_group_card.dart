@@ -77,6 +77,7 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
       ),
     );
 
+    String description = widget.settingGroup.displayDescription(context);
     CardContainer cardView = CardContainer(
       onTap: openSettingGroupScreen,
       child: Padding(
@@ -94,10 +95,10 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
                     widget.settingGroup.displayName(context),
                     style: textTheme.displaySmall,
                   ),
-                  if (widget.settingGroup.description.isNotEmpty) ...[
+                  if (description.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
-                      widget.settingGroup.displayDescription(context),
+                      description,
                       style: textTheme.bodyMedium,
                     )
                   ]

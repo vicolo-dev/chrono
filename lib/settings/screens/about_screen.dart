@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -30,7 +31,12 @@ class AboutScreen extends StatelessWidget {
           child: Column(
             children: [
               const AboutInfo(),
-              SettingPageLinkCard(setting: SettingPageLink("Credits", const LicensesScreen())),
+              SettingPageLinkCard(
+                  setting: SettingPageLink(
+                      "Credits",
+                      (context) =>
+                          AppLocalizations.of(context)!.creditsSettingGroup,
+                      const LicensesScreen())),
               //              CardContainer(
               //   child: Padding(
               //       padding: const EdgeInsets.all(16.0),

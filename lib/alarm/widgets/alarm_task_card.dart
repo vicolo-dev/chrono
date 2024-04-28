@@ -38,7 +38,7 @@ class AlarmTaskCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(task.name, style: textTheme.displaySmall),
+                    Text(task.getLocalizedName(context), style: textTheme.displaySmall),
                   ],
                 ),
               ),

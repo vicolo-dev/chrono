@@ -22,6 +22,8 @@ class _SettingPageLinkCardState<T> extends State<SettingPageLinkCard> {
     ThemeData theme = Theme.of(context);
     TextTheme textTheme = theme.textTheme;
     ColorScheme colorScheme = theme.colorScheme;
+
+    String displayName = widget.setting.displayName(context);
     Widget inner = Material(
       color: Colors.transparent,
       child: InkWell(
@@ -50,10 +52,10 @@ class _SettingPageLinkCardState<T> extends State<SettingPageLinkCard> {
                       widget.setting.displayName(context),
                       style: textTheme.displaySmall,
                     ),
-                    if (widget.setting.description.isNotEmpty) ...[
+                    if (displayName.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        widget.setting.displayDescription(context),
+                        displayName,
                         style: textTheme.bodyMedium,
                       )
                     ]

@@ -16,14 +16,14 @@ typedef AlarmTaskBuilder = Widget Function(
     Function() onSolve, SettingGroup settings);
 
 class AlarmTaskSchema extends JsonSerializable {
-  final String name;
+  final String Function(BuildContext) getLocalizedName;
   final SettingGroup settings;
   final AlarmTaskBuilder _builder;
 
-  const AlarmTaskSchema(this.name, this.settings, this._builder);
+  const AlarmTaskSchema(this.getLocalizedName, this.settings, this._builder);
 
   AlarmTaskSchema.from(AlarmTaskSchema schema)
-      : name = schema.name,
+      : getLocalizedName = schema.getLocalizedName,
         settings = schema.settings.copy(),
         _builder = schema._builder;
 
@@ -91,7 +91,7 @@ class AlarmTask extends CustomizableListItem {
   @override
   bool get isDeletable => true;
   AlarmTaskSchema get schema => _schema;
-  String get name => _schema.name;
+  String Function(BuildContext) get getLocalizedName => _schema.getLocalizedName;
   @override
   SettingGroup get settings => _schema.settings;
   Widget Function(Function() onSolve) get builder => _schema.getBuilder;

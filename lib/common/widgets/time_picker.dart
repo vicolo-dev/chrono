@@ -304,12 +304,12 @@ class _TitleBar extends StatelessWidget {
                   onPickerModeChanged();
                 },
                 title: setting.name,
-                description: setting.description,
+                description: setting.displayDescription(context),
                 choices: setting.options
                     .map((option) => SelectChoice(
-                        name: option.name,
+                        name: option.getLocalizedName(context),
                         value: option.value,
-                        description: option.description))
+                        description: option.getDescription(context)))
                     .toList(),
                 initialSelectedIndices: [setting.selectedIndex],
                 multiSelect: false,

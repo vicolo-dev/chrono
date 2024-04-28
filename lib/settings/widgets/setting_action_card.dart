@@ -23,6 +23,8 @@ class _SettingActionCardState<T> extends State<SettingActionCard> {
     TextTheme textTheme = theme.textTheme;
     ColorScheme colorScheme = theme.colorScheme;
 
+    String description = widget.setting.getDescription(context);
+
     Widget inner = Material(
       color: Colors.transparent,
       child: InkWell(
@@ -39,10 +41,10 @@ class _SettingActionCardState<T> extends State<SettingActionCard> {
                       widget.setting.displayName(context),
                       style: textTheme.displaySmall,
                     ),
-                    if (widget.setting.description.isNotEmpty) ...[
+                    if (description.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        widget.setting.description,
+                        description,
                         style: textTheme.bodyMedium,
                       )
                     ]
