@@ -115,6 +115,7 @@ class _NavScaffoldState extends State<NavScaffold> {
   @override
   Widget build(BuildContext context) {
     Orientation orientation = MediaQuery.of(context).orientation;
+    final tabs = getTabs(context);
     return Scaffold(
       appBar: orientation == Orientation.portrait
           ? AppTopBar(
@@ -165,7 +166,6 @@ class _NavScaffoldState extends State<NavScaffold> {
                               .onBackground
                               .withOpacity(0.6),
                         )),
-
                 trailing: IconButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).removeCurrentSnackBar();
