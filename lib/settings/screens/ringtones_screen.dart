@@ -83,7 +83,7 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
               List<String>? result = await PickOrSave().filePicker(
                 params: FilePickerParams(
                   mimeTypesFilter: ['audio/*'],
-                  getCachedFilePath: false,
+                  getCachedFilePath: true,
                   enableMultipleSelection: true,
                 ),
               );
@@ -91,9 +91,12 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
                 for (String uri in result) {
                   final metadata = await PickOrSave()
                       .fileMetaData(params: FileMetadataParams(filePath: uri));
-                  final fileItem = FileItem(
-                      metadata.displayName ?? "File", uri, FileItemType.audio);
                   print("---------- ${metadata.displayName}");
+                  var name = metadata.displayName ?? "File";
+                  name = basenameWithoutExtension(name)
+                      .replaceAll(RegExp(r"[0-9]+"), "")
+                      .replaceAll(".", "");
+                  final fileItem = FileItem(name, uri, FileItemType.audio);
                   fileItem.uri =
                       await saveRingtone(fileItem.id.toString(), uri);
                   _listController.addItem(fileItem);

@@ -2585,8 +2585,9 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                       : dialogSize.height / 6,
 
                   isForce2Digits: true,
-                  onTimeChange: (time) =>
-                      _handleTimeChanged(time.toTimeOfDay()),
+                  onTimeChange: (time) {
+                    _handleTimeChanged(time.toTimeOfDay());
+                  },
                 ),
               ),
             ],

@@ -197,13 +197,16 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
 
   DateTime getDateTime() {
     // currentTime = getCurrentTime();
+    //
 
-    currentSelectedHourIndex =
-        (hourController.offset / _getItemHeight()!).round() + 1;
-    currentSelectedMinuteIndex =
-        (minuteController.offset / _getItemHeight()!).round() + 1;
-    currentSelectedSecondIndex =
-        (secondController.offset / _getItemHeight()!).round() + 1;
+    // currentSelectedHourIndex =
+    //     (hourController.offset / _getItemHeight()!).round() + 1;
+    // currentSelectedMinuteIndex =
+    //     (minuteController.offset / _getItemHeight()!).round() + 1;
+    //      if (widget.isShowSeconds) {
+    //
+    // currentSelectedSecondIndex =
+    //     (secondController.offset / _getItemHeight()!).round() + 1;
 
     int hour = currentSelectedHourIndex - _getHourCount();
     if (!widget.is24HourMode && currentSelectedAPIndex == 2) hour += 12;
@@ -421,9 +424,7 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
             }
             setState(() {
               onScrollEnd();
-              if (widget.onTimeChange != null) {
-                widget.onTimeChange!(getDateTime());
-              }
+              widget.onTimeChange?.call(getDateTime());
             });
           }
         } else if (scrollNotification is ScrollUpdateNotification) {

@@ -1,7 +1,7 @@
 🚀 Features
 
 * Added option to automatically delete one time alarm after ringing
-* Added option to automatically delete dates and range alarm after finishing
+* Added option to automatically delete dates and range alarm after finishing (no more dates are scheduled)
 * Added spinner UI to select time
 
 ✨ Enhancements

@@ -81,11 +81,24 @@ class MathTask extends StatefulWidget {
 
 class _MathTaskState extends State<MathTask> {
   final TextEditingController _textController = TextEditingController();
-  late final MathTaskDifficultyLevel _difficultyLevel =
-      widget.settings.getSetting("Difficulty").value;
-  late final _problemCount =
-      widget.settings.getSetting("Number of problems").value;
+  late MathTaskDifficultyLevel _difficultyLevel;
+  late double _problemCount;
   int _problemsSolved = 0;
+
+  void initialize() {
+    _difficultyLevel = widget.settings.getSetting("Difficulty").value;
+    _problemCount = widget.settings.getSetting("Number of problems").value;
+    _problemsSolved = 0;
+    _difficultyLevel.generateProblem();
+    _textController.clear();
+      
+  }
+
+  @override
+  void didUpdateWidget(covariant MathTask oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    initialize();
+  }
 
   @override
   void initState() {
@@ -94,16 +107,17 @@ class _MathTaskState extends State<MathTask> {
       if (_textController.text == _difficultyLevel._answer &&
           _problemsSolved < _problemCount) {
         _problemsSolved += 1;
-        setState(() {
-          _difficultyLevel.generateProblem();
-          _textController.clear();
-        });
-      }
-      if (_problemsSolved >= _problemCount) {
-        widget.onSolve();
+        if (_problemsSolved >= _problemCount) {
+          widget.onSolve();
+        } else {
+          setState(() {
+            _difficultyLevel.generateProblem();
+            _textController.clear();
+          });
+        }
       }
     });
-    _difficultyLevel.generateProblem();
+    initialize();
   }
 
   @override

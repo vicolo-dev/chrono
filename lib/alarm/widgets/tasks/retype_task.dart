@@ -24,27 +24,51 @@ class _RetypeTaskState extends State<RetypeTask> {
   final TextEditingController _textController = TextEditingController();
   final Random _random = Random();
 
-  late final int characterCount =
-      widget.settings.getSetting("Number of characters").value.toInt();
-  late final bool includeNumbers =
-      widget.settings.getSetting("Include numbers").value;
-  late final bool includeLowercase =
-      widget.settings.getSetting("Include lowercase").value;
-  late final String _chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ${includeLowercase ? "abcdefghijklmnopqrstuvwxyz" : ""}${includeNumbers ? "0123456789" : ""}";
+  late int characterCount;
+  late bool includeNumbers;
+  late bool includeLowercase;
+  late String _chars;
+  late double _problemCount;
+  int _problemsSolved = 0;
 
-  late final String string = _generateRandomString(characterCount);
-  bool _isSolved = false;
+  late String string;
+
+  void initialize() {
+    characterCount =
+        widget.settings.getSetting("Number of characters").value.toInt();
+    includeNumbers = widget.settings.getSetting("Include numbers").value;
+    includeLowercase = widget.settings.getSetting("Include lowercase").value;
+    _chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ${includeLowercase ? "abcdefghijklmnopqrstuvwxyz" : ""}${includeNumbers ? "0123456789" : ""}";
+    _problemCount = widget.settings.getSetting("Number of problems").value;
+    _problemsSolved = 0;
+    string = _generateRandomString(characterCount);
+    _textController.clear();
+  }
+
+  @override
+  void didUpdateWidget(covariant RetypeTask oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    initialize();
+  }
 
   @override
   void initState() {
     super.initState();
     _textController.addListener(() {
-      if (_textController.text == string && !_isSolved) {
-        _isSolved = true;
-        widget.onSolve.call();
+      if (_textController.text == string && _problemsSolved < _problemCount) {
+        _problemsSolved += 1;
+        if (_problemsSolved >= _problemCount) {
+          widget.onSolve();
+        } else {
+          setState(() {
+            string = _generateRandomString(characterCount);
+            _textController.clear();
+          });
+        }
       }
     });
+    initialize();
   }
 
   @override
@@ -68,6 +92,7 @@ class _RetypeTaskState extends State<RetypeTask> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     TextTheme textTheme = theme.textTheme;
+    ColorScheme colorScheme = theme.colorScheme;
     Size textSize =
         calcTextSizeFromLength(characterCount + 5, textTheme.displaySmall!);
 
@@ -78,6 +103,20 @@ class _RetypeTaskState extends State<RetypeTask> {
           Text(
             "Retype the characters below",
             style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int i = 0; i < _problemCount; i++)
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(
+                    _problemsSolved > i ? Icons.circle : Icons.circle_outlined,
+                    color: colorScheme.primary,
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 16.0),
           CardContainer(

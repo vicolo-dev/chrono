@@ -30,6 +30,7 @@ Future<TimeDuration?> showDurationPicker(
 
                 Widget title() => Row(
                       children: [
+                        // const SizedBox(width: 8),
                         Text(
                           "Choose Duration",
                           style: TimePickerTheme.of(context).helpTextStyle ??
@@ -71,6 +72,7 @@ Future<TimeDuration?> showDurationPicker(
                     ? Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          const SizedBox(height: 8),
                           title(),
                           const SizedBox(height: 16),
                           label(),

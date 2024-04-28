@@ -87,7 +87,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
             onPressed: () async {
               Item? item = await _openAddBottomSheet();
               if (item == null) return;
-              _listController.addItem(item);
+              _listController.addItem(item.copy());
             },
           )
         ],

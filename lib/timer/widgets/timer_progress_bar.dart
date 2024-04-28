@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class TimerProgressBar extends StatefulWidget {
-  const TimerProgressBar({super.key, required this.timer, required this.size, this.centerWidget});
+  const TimerProgressBar({super.key, required this.timer, required this.size, this.centerWidget, this.textScale = 1.0});
 
   final ClockTimer timer;
   final double size;
+  final double textScale;
   final Widget? centerWidget;
 
   @override
@@ -64,7 +65,7 @@ class _TimerProgressBarState extends State<TimerProgressBar> {
                 return Text(
                   TimeDuration.fromSeconds(remainingSeconds).toTimeString(),
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontSize: remainingSeconds > 3600 ? 48 : 64,
+                        fontSize: (remainingSeconds > 3600 ? 48 : 64) * widget.textScale,
                       ),
                 );
               },

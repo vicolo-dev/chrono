@@ -289,14 +289,11 @@ class Alarm extends CustomizableListItem {
 
   Future<void> finish() async {
     await disable();
-    if (shouldDeleteAfterFinish) {
-      _delete();
-    }
-    // _isFinished = true;
+        // _isFinished = true;
   }
 
-  void handleTrigger() {
-    if (scheduleType == OnceAlarmSchedule && shouldDeleteAfterRinging) {
+  void handleDismiss() {
+    if (scheduleType == OnceAlarmSchedule && shouldDeleteAfterRinging || shouldDeleteAfterFinish && isFinished) {
       _markedForDeletion = true;
     }
   }
@@ -335,9 +332,9 @@ class Alarm extends CustomizableListItem {
     }
   }
 
-  void _delete() {
-    _markedForDeletion = true;
-  }
+  // void _delete() {
+  //   _markedForDeletion = true;
+  // }
 
   void setTime(Time time) {
     _time = time;
