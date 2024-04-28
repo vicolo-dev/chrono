@@ -22,6 +22,7 @@ import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/widgets/timer_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef TimerCardBuilder = Widget Function(
   BuildContext context,
@@ -242,7 +243,7 @@ class _TimerScreenState extends State<TimerScreen> {
                 // _listController.changeItems((item) {});
               },
               onDeleteItem: _onDeleteTimer,
-              placeholderText: "No timers created",
+              placeholderText: AppLocalizations.of(context)!.noTimerMessage,
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],
               sortOptions: _showSort.value ? timerSortOptions : [],

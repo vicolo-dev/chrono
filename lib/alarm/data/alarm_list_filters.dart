@@ -6,7 +6,6 @@ import 'package:clock_app/common/utils/list_storage.dart';
 
 final List<ListFilterItem<Alarm>> alarmListFilters = [
   ListFilterSelect("Date", [
-
     ListFilter(
       'Today',
       (alarm) {

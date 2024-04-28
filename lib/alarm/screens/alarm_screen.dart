@@ -18,6 +18,8 @@ import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:great_list_view/great_list_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 
 typedef AlarmCardBuilder = Widget Function(
@@ -124,7 +126,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   Future<void> _handleEnableChangeAlarm(Alarm alarm, bool value) async {
     if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
-      showSnackBar(context, "Cannot disable alarm while it is snoozed",
+      showSnackBar(context, AppLocalizations.of(context)!.cannotDisableAlarmWhileSnoozedSnackbar,
           fab: true, navBar: true);
     } else {
       await alarm.setIsEnabled(value,
@@ -138,7 +140,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
       List<Alarm> alarms, bool value) async {
     for (var alarm in alarms) {
       if (!alarm.canBeDisabledWhenSnoozed && !value && alarm.isSnoozed) {
-        showSnackBar(context, "Cannot disable alarm while it is snoozed",
+        showSnackBar(context, AppLocalizations.of(context)!.cannotDisableAlarmWhileSnoozedSnackbar,
             fab: true, navBar: true);
       } else {
         await alarm.setIsEnabled(value,
@@ -178,10 +180,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
           await showTimePickerDialog(
         context: context,
         initialTime: TimeOfDay.now(),
-        title: "Select Time",
-        cancelText: "Cancel",
-// initialEntryMode: TimePickerEntryMode.dial,
-        confirmText: "Save",
+        title: AppLocalizations.of(context)!.selectTime,
+        cancelText: AppLocalizations.of(context)!.cancelButton,
+        confirmText: AppLocalizations.of(context)!.saveButton,
         useSimple: false,
       );
 
@@ -218,31 +219,31 @@ class _AlarmScreenState extends State<AlarmScreen> {
           onDeleteItem: (alarm) async {
             await alarm.disable();
           },
-          placeholderText: "No alarms created",
+          placeholderText: AppLocalizations.of(context)!.noAlarmMessage,
           reloadOnPop: true,
           listFilters: _showFilters.value ? alarmListFilters : [],
           customActions: _showFilters.value
               ? [
                   ListFilterCustomAction(
-                      name: "Enable all filtered alarms",
+                      name: AppLocalizations.of(context)!.enableAllFilteredAlarmsAction,
                       icon: Icons.alarm_on_rounded,
                       action: (alarms) {
                         _handleEnableChangeMultiple(alarms, true);
                       }),
                   ListFilterCustomAction(
-                      name: "Disable all filtered alarms",
+                      name: AppLocalizations.of(context)!.disableAllFilteredAlarmsAction,
                       icon: Icons.alarm_off_rounded,
                       action: (alarms) {
                         _handleEnableChangeMultiple(alarms, false);
                       }),
                   ListFilterCustomAction(
-                      name: "Skip all filtered alarms",
+                      name: AppLocalizations.of(context)!.skipAllFilteredAlarmsAction,
                       icon: Icons.skip_next_rounded,
                       action: (alarms) {
                         _handleSkipChangeMultiple(alarms, true);
                       }),
                   ListFilterCustomAction(
-                      name: "Cancel skip all filtered alarms",
+                      name: AppLocalizations.of(context)!.cancelSkipAllFilteredAlarmsAction,
                       icon: Icons.skip_next_rounded,
                       action: (alarms) {
                         _handleSkipChangeMultiple(alarms, false);
