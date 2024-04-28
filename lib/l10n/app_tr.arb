@@ -133,8 +133,6 @@
   "@saveReminderAlert": {},
   "yesButton": "Evet",
   "@yesButton": {},
-  "noItemCreatedMessage": "{items} oluşturulmadı",
-  "@noItemCreatedMessage": {},
   "deleteButton": "Sil",
   "@deleteButton": {},
   "alarmDescriptionNotScheduled": "Planlanmadı",

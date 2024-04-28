@@ -139,8 +139,6 @@
   "@retypeLowercaseSetting": {},
   "noButton": "Không",
   "@noButton": {},
-  "noItemCreatedMessage": "Chưa tạo {items} nào",
-  "@noItemCreatedMessage": {},
   "deleteButton": "Xóa",
   "@deleteButton": {},
   "duplicateButton": "Nhân đôi",

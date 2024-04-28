@@ -145,8 +145,6 @@
   "@yesButton": {},
   "noButton": "No",
   "@noButton": {},
-  "noItemCreatedMessage": "No se han creado {items}",
-  "@noItemCreatedMessage": {},
   "deleteButton": "Borrar",
   "@deleteButton": {},
   "duplicateButton": "Duplicar",

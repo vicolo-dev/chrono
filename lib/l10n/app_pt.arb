@@ -175,8 +175,6 @@
   "@scheduleTypeRangeDescription": {},
   "noItemMessage": "Ainda não adicionou {items}",
   "@noItemMessage": {},
-  "noItemCreatedMessage": "{items} não criadas",
-  "@noItemCreatedMessage": {},
   "skippingDescriptionSuffix": "(ignorar próxima ocorrência)",
   "@skippingDescriptionSuffix": {},
   "alarmDescriptionSnooze": "Silenciado até {date}",
