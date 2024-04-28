@@ -1,0 +1,40 @@
+Changes since 0.3.4
+
+🚀 Features
+
+* Notifications
+  * Upcoming alarm notification with support for adjusting lead time
+  * Notification to show if an alarm is snoozed
+  * Timer progress notification
+  * Stopwatch notification
+* Advanced filtering and tags support for alarms and timers
+* Added filter actions to timers and alarms to change a bunch of them at once
+* Added option to sort alarms and filters
+
+✨ Enhancements
+
+* Added support for swiping between tabs
+* Added alarm logs in developer options
+* Added action drop down to city cards
+* Made stopwatch smoother and more accurate
+* Made timer progress bar smoother
+* Added option to change app animations speed (Settings > General > Animations)
+* Added option to turn on extra animations (off by default, might decrease performance)
+* Optimized alarm scheduling and cancelling
+
+🐛 Fixes
+
+* Fixed random and disabled alarms ringing
+* Fixed alarm ringing on booting up
+* Fixed timers not editing and running correctly
+* Fixed settings not synchronizing between isolates
+* Fixed app appearing over lock screen
+* Fixed calendar range colors
+* Fixed tasks in default settings not getting saved
+* Fixed volume setting not working in alarms and timers
+* Fixed alarm not stopping on dismissing notification by swiping
+* Fixed timer getting stuck if it got triggered when device was off
+* Fixed task cards having no edit menu
+* Fixed alarms not appearing on lock screen on Android 8 and below
+* Fixed Kotlin version mismatch
+

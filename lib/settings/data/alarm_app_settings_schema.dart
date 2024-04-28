@@ -5,8 +5,10 @@ import 'package:clock_app/notifications/widgets/notification_actions/area_notifi
 import 'package:clock_app/notifications/widgets/notification_actions/buttons_notification_action.dart';
 import 'package:clock_app/notifications/widgets/notification_actions/slide_notification_action.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
+
 
 SettingGroup alarmAppSettingsSchema = SettingGroup(
   "Alarm",
@@ -17,7 +19,7 @@ SettingGroup alarmAppSettingsSchema = SettingGroup(
       description: "Set default settings for new alarms",
       icon: Icons.settings,
     ),
-    SelectSetting<NotificationAction>("Dismiss Action Type", searchTags: [
+       SelectSetting<NotificationAction>("Dismiss Action Type", searchTags: [
       "action",
       "buttons",
       "slider",
@@ -61,7 +63,29 @@ SettingGroup alarmAppSettingsSchema = SettingGroup(
         ),
       )
     ]),
-    SwitchSetting("Show Filters", true),
+    SettingGroup("Filters", [
+      SwitchSetting("Show Filters", true),
+      SwitchSetting("Show Sort", true),
+    ]),
+    SettingGroup(
+      "Notifications",
+      [
+        SwitchSetting("Show Upcoming Alarm Notifications", true),
+        SliderSetting(
+          "Upcoming Lead Time",
+          5,
+          120,
+          10,
+          unit: 'm',
+          snapLength: 5,
+          enableConditions: [
+            ValueCondition(
+                ["Show Upcoming Alarm Notifications"], (value) => value),
+          ],
+        ),
+        SwitchSetting("Show Snooze Notifications", true),
+      ],
+    )
   ],
   icon: FluxIcons.alarm,
 );

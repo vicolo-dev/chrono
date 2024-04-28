@@ -14,9 +14,11 @@ class ListSettingScreen<Item extends CustomizableListItem>
   const ListSettingScreen({
     super.key,
     required this.setting,
+    required this.onChanged,
   });
 
   final ListSetting<Item> setting;
+  final void Function(BuildContext context) onChanged;
 
   @override
   State<ListSettingScreen> createState() => _ListSettingScreenState<Item>();
@@ -36,7 +38,6 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
   }
 
   _handleCustomizeItem(Item itemToCustomize) async {
-    int index = _listController.getItemIndex(itemToCustomize);
     openCustomizeScreen<Item>(
       context,
       CustomizeListItemScreen<Item>(
@@ -44,8 +45,9 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
         isNewItem: false,
         itemPreviewBuilder: (item) => widget.setting.getPreviewCard(item),
       ),
-      onSave: (newItem) {
-        _listController.changeItems((items) => items[index] = newItem);
+      onSave: (newItem) async {
+        itemToCustomize.copyFrom(newItem);
+        _listController.changeItems((items) {});
       },
     );
   }
@@ -64,11 +66,16 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
                 child: CustomListView<Item>(
                   listController: _listController,
                   items: widget.setting.value,
-                  itemBuilder: (item) => widget.setting.getItemCard(item),
+                  itemBuilder: (item) =>
+                      widget.setting.getItemCard(item, onDelete: () {
+                    _listController.deleteItem(item);
+                  }, onDuplicate: () {
+                    _listController.duplicateItem(item);
+                  }),
                   onTapItem: (task, index) {
                     _handleCustomizeItem(task);
                   },
-                  onModifyList: () {},
+                  onModifyList: () => widget.onChanged(context),
                   placeholderText:
                       "No ${widget.setting.displayName(context).toLowerCase()} added yet",
                 ),
@@ -80,7 +87,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
             onPressed: () async {
               Item? item = await _openAddBottomSheet();
               if (item == null) return;
-              _listController.addItem(item);
+              _listController.addItem(item.copy());
             },
           )
         ],

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:path/path.dart';
@@ -46,7 +47,12 @@ void unwatchList(String key) {
 }
 
 List<T> loadListSync<T extends JsonSerializable>(String key) {
+  try{
   return listFromString<T>(loadTextFileSync(key));
+  }catch(e){
+    debugPrint("Error loading list ($key): $e");
+    return [];
+  }
 }
 
 Future<List<T>> loadList<T extends JsonSerializable>(String key) async {
@@ -66,10 +72,8 @@ Future<void> initList<T extends JsonSerializable>(
 Future<void> initTextFile(String key, String value) async {
   if (GetStorage().read('init_$key') == null) {
     GetStorage().write('init_$key', true);
-    try {
-      loadTextFileSync(key);
-    } catch (e) {
-      print("Initializing $key");
+    if(!textFileExistsSync(key)){
+      debugPrint("Initializing $key");
       await saveTextFile(key, value);
     }
   }
@@ -105,6 +109,11 @@ String loadTextFileSync<T extends JsonSerializable>(String key) {
   }
 }
 
+bool textFileExistsSync(String key) {
+  File file = File(path.join(getAppDataDirectoryPathSync(), '$key.txt'));
+  return file.existsSync();
+}
+
 Future<String> loadTextFile(String key) async {
   final String content = await queue.add(() async {
     String appDataDirectory = getAppDataDirectoryPathSync();
@@ -114,6 +123,7 @@ Future<String> loadTextFile(String key) async {
       return file.readAsString();
     } else {
       return '[]';
+
     }
   });
   return content;

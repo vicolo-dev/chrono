@@ -49,21 +49,27 @@ class AlarmTaskSchema extends JsonSerializable {
 }
 
 class AlarmTask extends CustomizableListItem {
-  late final AlarmTaskType type;
-  late final AlarmTaskSchema _schema;
+  late int _id;
+  late AlarmTaskType type;
+  late AlarmTaskSchema _schema;
 
-  AlarmTask(this.type) : _schema = alarmTaskSchemasMap[type]!.copy();
+  AlarmTask(this.type)
+      : _schema = alarmTaskSchemasMap[type]!.copy(),
+        _id = UniqueKey().hashCode;
 
   AlarmTask.from(AlarmTask task)
       : type = task.type,
+        _id = UniqueKey().hashCode,
         _schema = task._schema.copy();
 
   AlarmTask.fromJson(Json json) {
     if (json == null) {
+      _id = UniqueKey().hashCode;
       type = AlarmTaskType.math;
       _schema = alarmTaskSchemasMap[type]!.copy();
       return;
     }
+    _id = json['id'] ?? UniqueKey().hashCode;
     type = AlarmTaskType.values.byName(json['type']);
     _schema = alarmTaskSchemasMap[type]!.copy();
     _schema.loadFromJson(json['schema']);
@@ -75,7 +81,13 @@ class AlarmTask extends CustomizableListItem {
   }
 
   @override
-  int get id => _schema.name.hashCode;
+  void copyFrom(dynamic other) {
+    type = other.type;
+    _schema = other._schema.copy();
+  }
+
+  @override
+  int get id => _id;
   @override
   bool get isDeletable => true;
   AlarmTaskSchema get schema => _schema;
@@ -87,6 +99,7 @@ class AlarmTask extends CustomizableListItem {
   @override
   Json toJson() {
     return {
+      'id': _id,
       'schema': _schema.toJson(),
       'type': type.name,
     };

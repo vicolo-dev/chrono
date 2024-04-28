@@ -1,4 +1,5 @@
 import 'package:audio_session/audio_session.dart';
+import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/types/alarm_runner.dart';
 import 'package:clock_app/alarm/types/alarm_task.dart';
@@ -10,6 +11,8 @@ import 'package:clock_app/alarm/types/schedules/once_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/types/notification_type.dart';
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/weekday.dart';
@@ -36,7 +39,8 @@ List<AlarmSchedule> createSchedules(SettingGroup settings) {
 class Alarm extends CustomizableListItem {
   late Time _time;
   bool _isEnabled = true;
-  bool _isFinished = false;
+  bool _markedForDeletion = false;
+  // bool _isFinished = false;
   DateTime? _snoozeTime;
   int _snoozeCount = 0;
   DateTime? _skippedTime;
@@ -57,11 +61,13 @@ class Alarm extends CustomizableListItem {
   bool get isDeletable => !(isSnoozed && !canBeDeletedWhenSnoozed);
   Time get time => _time;
 
+  bool get isMarkedForDeletion => _markedForDeletion;
+
   /// If an alarm is enabled, it has an active schedule.
   bool get isEnabled => _isEnabled;
 
   /// If an alarm is finished, it has no further schedules remaining. Hence, it cannot be enabled again.
-  bool get isFinished => _isFinished;
+  bool get isFinished => activeSchedule.isFinished;
   bool get isSnoozed => _snoozeTime != null;
 
   /// The date and time when the snoozed alarm will ring again.
@@ -73,8 +79,10 @@ class Alarm extends CustomizableListItem {
   Type get scheduleType => _settings.getSetting("Type").value;
   FileItem get ringtone => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
+  double get volume => _settings.getSetting("Volume").value;
   double get snoozeLength => _settings.getSetting("Length").value;
   List<AlarmTask> get tasks => _settings.getSetting("Tasks").value;
+  List<Tag> get tags => _settings.getSetting("Tags").value;
   int get maxSnoozes => _settings.getSetting("Max Snoozes").value.toInt();
   bool get canBeDisabledWhenSnoozed =>
       !_settings.getSetting("Prevent Disabling").value;
@@ -92,7 +100,7 @@ class Alarm extends CustomizableListItem {
   bool get isRepeating =>
       [DailyAlarmSchedule, WeeklyAlarmSchedule].contains(scheduleType);
   DateTime? get currentScheduleDateTime =>
-      activeSchedule.currentScheduleDateTime;
+      _snoozeTime ?? activeSchedule.currentScheduleDateTime;
   int get currentScheduleId => activeSchedule.currentAlarmRunnerId;
   int get snoozeCount => _snoozeCount;
   bool get maxSnoozeIsReached => _snoozeCount >= maxSnoozes;
@@ -105,6 +113,10 @@ class Alarm extends CustomizableListItem {
   bool get canBeSkipped => !isSnoozed && !isFinished && isEnabled;
   bool get canBeDisabled =>
       !(isSnoozed && !canBeDisabledWhenSnoozed) && !isFinished;
+  bool get shouldDeleteAfterFinish =>
+      _settings.getSetting("Delete After Finishing").value;
+  bool get shouldDeleteAfterRinging =>
+      _settings.getSetting("Delete After Ringing").value;
 
   Alarm(this._time) {
     _schedules = createSchedules(_settings);
@@ -122,13 +134,27 @@ class Alarm extends CustomizableListItem {
 
   Alarm.fromAlarm(Alarm alarm)
       : _isEnabled = alarm._isEnabled,
-        _isFinished = alarm._isFinished,
+        // _isFinished = alarm._isFinished,
         _time = alarm._time,
         _snoozeCount = alarm._snoozeCount,
         _snoozeTime = alarm._snoozeTime,
+        _markedForDeletion = alarm._markedForDeletion,
         _skippedTime = alarm._skippedTime,
         _settings = alarm._settings.copy() {
     _schedules = createSchedules(_settings);
+  }
+
+  @override
+  void copyFrom(dynamic other) {
+    _isEnabled = other._isEnabled;
+    // _isFinished = other._isFinished;
+    _time = other._time;
+    _snoozeCount = other._snoozeCount;
+    _snoozeTime = other._snoozeTime;
+    _skippedTime = other._skippedTime;
+    _settings = other._settings.copy();
+    _schedules = other._schedules;
+    _markedForDeletion = other._markedForDeletion;
   }
 
   T getSchedule<T extends AlarmSchedule>() {
@@ -150,17 +176,19 @@ class Alarm extends CustomizableListItem {
 
   void skip() {
     _skippedTime = currentScheduleDateTime;
+    cancelReminderNotification();
   }
 
   void cancelSkip() {
     _skippedTime = null;
+    createReminderNotification();
   }
 
-  void toggle() {
+  Future<void> toggle(String description) async {
     if (_isEnabled) {
-      disable();
+      await disable();
     } else {
-      enable();
+      await enable(description);
     }
   }
 
@@ -172,15 +200,15 @@ class Alarm extends CustomizableListItem {
     }
   }
 
-  void setIsEnabled(bool enabled) {
+  Future<void> setIsEnabled(bool enabled, String description) async {
     if (enabled) {
-      enable();
+      await enable(description);
     } else {
-      disable();
+      await disable();
     }
   }
 
-  void snooze() {
+  Future<void> snooze() async {
     // The alarm can only be snoozed the number of times specified in the settings
     _snoozeCount++;
     // When the alarm rang, it was disabled, so we need to enable it again if the user presses snooze
@@ -188,21 +216,22 @@ class Alarm extends CustomizableListItem {
     // Snoozing should cancel any skip
     _skippedTime = null;
     _snoozeTime = DateTime.now().add(
-      Duration(minutes: snoozeLength.toInt()),
+      Duration(minutes: snoozeLength.floor()),
     );
-    _scheduleSnooze();
+    await _scheduleSnooze();
   }
 
-  void _scheduleSnooze() {
-    scheduleSnoozeAlarm(
+  Future<void> _scheduleSnooze() async {
+    await scheduleSnoozeAlarm(
       id,
       Duration(minutes: snoozeLength.floor()),
       ScheduledNotificationType.alarm,
+      "_scheduleSnooze(): Alarm snoozed for $snoozeLength minutes",
     );
   }
 
-  void cancelSnooze() {
-    cancelAlarm(id);
+  Future<void> cancelSnooze() async {
+    await cancelAlarm(id, ScheduledNotificationType.alarm);
     _unSnooze();
   }
 
@@ -210,52 +239,80 @@ class Alarm extends CustomizableListItem {
     _snoozeTime = null;
   }
 
-  void schedule() {
+  Future<void> schedule(String description) async {
     _isEnabled = true;
 
     // Only one of the schedules can be active at a time
     // So we cancel all others and schedule the active one
     for (var schedule in _schedules) {
       if (schedule.runtimeType == scheduleType) {
-        schedule.schedule(_time);
+        await schedule.schedule(_time, description);
       } else {
-        schedule.cancel();
+        await schedule.cancel();
       }
     }
+
+    createReminderNotification();
   }
 
-  void cancel() {
-    cancelSkip();
-    for (var schedule in _schedules) {
-      schedule.cancel();
+  Future<void> createReminderNotification() async {
+    if (!isSnoozed && currentScheduleDateTime != null && !shouldSkipNextAlarm) {
+      await createAlarmReminderNotification(
+          id, currentScheduleDateTime!, tasks.isNotEmpty);
     }
   }
 
-  void enable() {
-    _unSnooze();
-    schedule();
+  Future<void> cancelReminderNotification() async {
+    await cancelAlarmReminderNotification(id);
   }
 
-  void disable() {
+  Future<void> cancelAllSchedules() async {}
+
+  Future<void> cancel() async {
+    cancelReminderNotification();
+    cancelSkip();
+    for (var schedule in _schedules) {
+      await schedule.cancel();
+    }
+  }
+
+  Future<void> enable(String description) async {
+    _unSnooze();
+    await schedule(description);
+  }
+
+  Future<void> disable() async {
     _isEnabled = false;
     _unSnooze();
-    cancel();
+    await cancel();
   }
 
-  void finish() {
-    disable();
-    _isFinished = true;
+  Future<void> finish() async {
+    await disable();
+        // _isFinished = true;
   }
 
-  void update() {
+  void handleDismiss() {
+    if (scheduleType == OnceAlarmSchedule && shouldDeleteAfterRinging || shouldDeleteAfterFinish && isFinished) {
+      _markedForDeletion = true;
+    }
+  }
+
+  Future<void> handleEdit(String description) async {
+    _isEnabled = true;
+    _unSnooze();
+    await update(description);
+  }
+
+  Future<void> update(String description) async {
     if (isEnabled) {
-      schedule();
+      await schedule(description);
 
       if (isSnoozed) {
         if (DateTime.now().isAfter(_snoozeTime!)) {
           _unSnooze();
         } else {
-          _scheduleSnooze();
+          await _scheduleSnooze();
         }
       }
 
@@ -267,13 +324,17 @@ class Alarm extends CustomizableListItem {
       // Disabling it if it is snoozed will cancel the snooze. This should only be
       // done by the user.
       if (activeSchedule.isDisabled && !isSnoozed) {
-        disable();
+        await disable();
       }
-      if (activeSchedule.isFinished) {
-        finish();
+      if (isFinished) {
+        await finish();
       }
     }
   }
+
+  // void _delete() {
+  //   _markedForDeletion = true;
+  // }
 
   void setTime(Time time) {
     _time = time;
@@ -316,7 +377,8 @@ class Alarm extends CustomizableListItem {
         ? Time.fromJson(json['timeOfDay'])
         : Time.now();
     _isEnabled = json['enabled'] ?? false;
-    _isFinished = json['finished'] ?? false;
+    _markedForDeletion = json['markedForDeletion'] ?? false;
+    // _isFinished = json['finished'] ?? false;
     _skippedTime = json['skippedTime'] != null
         ? DateTime.fromMillisecondsSinceEpoch(json['skippedTime'])
         : null;
@@ -356,7 +418,8 @@ class Alarm extends CustomizableListItem {
   Json toJson() => {
         'timeOfDay': _time.toJson(),
         'enabled': _isEnabled,
-        'finished': _isFinished,
+        'markedForDeletion': _markedForDeletion,
+        // 'finished': _isFinished,
         'snoozeTime': snoozeTime?.millisecondsSinceEpoch,
         'snoozeCount': _snoozeCount,
         'schedules':

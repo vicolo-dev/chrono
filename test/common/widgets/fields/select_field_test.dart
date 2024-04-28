@@ -33,7 +33,7 @@ void main() {
           int selectedIndex = 1;
           await _renderWidget(tester,
               selectedIndex: selectedIndex,
-              onChanged: (index) => selectedIndex = index);
+              onChanged: (indices) => selectedIndex = indices[0]);
           await tester.tap(find.byType(SelectField));
           await tester.pumpAndSettle();
           final valueFinder = find.byType(SelectTextOptionCard);
@@ -42,7 +42,7 @@ void main() {
           await tester.pumpAndSettle();
           await _renderWidget(tester,
               selectedIndex: selectedIndex,
-              onChanged: (index) => selectedIndex = index);
+              onChanged: (indices) => selectedIndex = indices[0]);
           final newValueFinder = find.text(choices[2].name);
           expect(newValueFinder, findsOneWidget);
         });
@@ -137,12 +137,12 @@ void main() {
 }
 
 Future<void> _renderWidget(WidgetTester tester,
-    {int selectedIndex = 0, void Function(int)? onChanged}) async {
+    {int selectedIndex = 0, void Function(List<int>)? onChanged}) async {
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(
         body: SelectField(
-          selectedIndex: selectedIndex,
+          selectedIndices: [selectedIndex],
           title: title,
           choices: choices,
           onChanged: onChanged ?? (_) {},

@@ -7,11 +7,13 @@ class ListSettingCard extends StatefulWidget {
   const ListSettingCard({
     super.key,
     required this.setting,
+    required this.onChanged,
     this.showAsCard = true,
   });
 
   final ListSetting setting;
   final bool showAsCard;
+  final void Function(BuildContext context) onChanged;
 
   @override
   State<ListSettingCard> createState() => _ListSettingCardState();
@@ -26,7 +28,8 @@ class _ListSettingCardState extends State<ListSettingCard> {
         onTap: () async {
           await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ListSettingScreen(setting: widget.setting),
+              builder: (context) => ListSettingScreen(
+                  setting: widget.setting, onChanged: widget.onChanged),
             ),
           );
           setState(() {});

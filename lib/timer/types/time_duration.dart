@@ -48,6 +48,18 @@ class TimeDuration extends JsonSerializable {
     return TimeDuration.fromMilliseconds(inMilliseconds + other.inMilliseconds);
   }
 
+  int compareTo(TimeDuration other) {
+    if (hours != other.hours) {
+      return hours.compareTo(other.hours);
+    } else if (minutes != other.minutes) {
+      return minutes.compareTo(other.minutes);
+    } else if (seconds != other.seconds) {
+      return seconds.compareTo(other.seconds);
+    } else {
+      return milliseconds.compareTo(other.milliseconds);
+    }
+  }
+
   @override
   String toString() {
     if (inMilliseconds == 0) return "0s";
@@ -81,6 +93,10 @@ class TimeDuration extends JsonSerializable {
     String millisecondsString =
         showMilliseconds ? '.${twoDigits(milliseconds)}' : '';
     return "$hoursString$minutesString$secondsString$millisecondsString";
+  }
+
+  DateTime toDateTime() {
+    return DateTime(0).add(toDuration);
   }
 
   @override

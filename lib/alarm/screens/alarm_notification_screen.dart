@@ -1,10 +1,12 @@
-import 'package:clock_app/alarm/logic/schedule_alarm.dart';
+import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/common/types/notification_type.dart';
+import 'package:clock_app/common/widgets/clock/clock.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
-import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
+import 'package:clock_app/notifications/widgets/notification_actions/slide_notification_action.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:flutter/material.dart';
 
@@ -12,13 +14,15 @@ class AlarmNotificationScreen extends StatefulWidget {
   const AlarmNotificationScreen({
     super.key,
     required this.scheduleId,
-    this.onDismiss,
+    this.onPop,
     this.initialIndex = -1,
+    this.dismissType = AlarmDismissType.dismiss,
   });
 
   final int scheduleId;
   final int initialIndex;
-  final Function? onDismiss;
+  final Function? onPop;
+  final AlarmDismissType dismissType;
 
   @override
   State<AlarmNotificationScreen> createState() =>
@@ -29,41 +33,62 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   late Alarm alarm;
   late Widget _currentWidget;
   late int _currentIndex = widget.initialIndex;
-  late Widget actionWidget = appSettings
-      .getGroup("Alarm")
-      .getSetting("Dismiss Action Type")
-      .value
-      .builder(_setNextWidget, alarm.canBeSnoozed ? _snoozeAlarm : null,
-          "Dismiss", "Snooze");
-
+  late Widget actionWidget;
   void _setNextWidget() {
     setState(() {
-      if (_currentIndex == -1) {
+      if (_currentIndex < 0) {
         _currentWidget = actionWidget;
       } else if (_currentIndex >= alarm.tasks.length) {
-        if (widget.onDismiss != null) {
-          widget.onDismiss!();
+        if (widget.onPop != null) {
+          widget.onPop!();
           Navigator.of(context).pop(true);
         } else {
-          AlarmNotificationManager.dismissAlarm(
-              widget.scheduleId, ScheduledNotificationType.alarm);
+          AlarmNotificationManager.dismissNotification(widget.scheduleId,
+              widget.dismissType, ScheduledNotificationType.alarm);
         }
       } else {
+        // RingtonePlayer.setVolume(0);
         _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
       }
       _currentIndex++;
+      print("######################## $_currentIndex");
     });
   }
 
   @override
   void initState() {
     super.initState();
-    alarm = getAlarmByScheduleId(widget.scheduleId);
+
+    Alarm? currentAlarm = getAlarmById(widget.scheduleId);
+    if (currentAlarm == null) {
+      AlarmNotificationManager.dismissNotification(widget.scheduleId,
+          widget.dismissType, ScheduledNotificationType.alarm);
+      return;
+    }
+    alarm = currentAlarm;
+
+    try {
+      actionWidget = appSettings
+          .getGroup("Alarm")
+          .getSetting("Dismiss Action Type")
+          .value
+          .builder(_setNextWidget, alarm.canBeSnoozed ? _snoozeAlarm : null,
+              "Dismiss", "Snooze");
+    } catch (e) {
+      actionWidget = SlideNotificationAction(
+        onDismiss: _setNextWidget,
+        onSnooze: alarm.canBeSnoozed ? _snoozeAlarm : null,
+        dismissLabel: "Dismiss",
+        snoozeLabel: "Snooze",
+      );
+
+      debugPrint(e.toString());
+    }
+
     _setNextWidget();
   }
 
   void _snoozeAlarm() {
-    print("Alarm ssssssssssssssssssssss");
     AlarmNotificationManager.snoozeAlarm(
         widget.scheduleId, ScheduledNotificationType.alarm);
   }
@@ -89,9 +114,16 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
                     child: Column(
                       children: [
                         const Spacer(),
-                        ClockDisplay(
-                          dateTime: alarm.time.toDateTime(),
+                        const Clock(
+                          // dateTime: Date,
                           horizontalAlignment: ElementAlignment.center,
+                          shouldShowDate: false,
+                          shouldShowSeconds: false,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Alarm",
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ],
                     ),

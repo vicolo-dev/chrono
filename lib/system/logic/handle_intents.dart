@@ -1,15 +1,33 @@
- import 'package:clock_app/alarm/types/alarm.dart';
+ import 'dart:convert';
+
+import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:receive_intent/receive_intent.dart';
 
-void handleIntent(Intent? receivedIntent, BuildContext context, Function(Alarm) onSetAlarm) async {
+
+// void navigateToTab(BuildContext context, int tab) {
+//   Navigator.of(context)
+//                       .pushNamedAndRemoveUntil(Routes.rootRoute, (Route<dynamic> route) => false, arguments: {'tabIndex': tab});}
+
+void handleIntent(Intent? receivedIntent, BuildContext context, Function(Alarm) onSetAlarm, Function(int) setTab) async {
     if (receivedIntent != null) {
       print(
           "Intent received ${receivedIntent.action} ${receivedIntent.data} ${receivedIntent.extra}");
       switch (receivedIntent.action) {
+        case "android.intent.action.MAIN":
+          final params = receivedIntent.extra?["params"];
+          if(params != null){
+              ScheduledNotificationType notificationType =
+      ScheduledNotificationType.values.byName(jsonDecode(params)['type']);
+            if(notificationType == ScheduledNotificationType.alarm){
+               setTab(0);
+              }
+          }
+          break;
         case "android.intent.action.SET_ALARM":
           int? hour = receivedIntent.extra?["android.intent.extra.alarm.HOUR"];
           int? minute =
@@ -25,7 +43,8 @@ void handleIntent(Intent? receivedIntent, BuildContext context, Function(Alarm) 
           List<int>? days =
               receivedIntent.extra?["android.intent.extra.alarm.DAYS"];
           if (hour == null || minute == null || !skipUi) {
-            print("Navigate to alarm screen");
+            // print("Navigate to alarm screen");
+           setTab(0);
             // navigate to alarm screen and open ui
           } else {
             Alarm alarm =
@@ -54,14 +73,14 @@ void handleIntent(Intent? receivedIntent, BuildContext context, Function(Alarm) 
               alarm.setSetting(context, "Label", message);
             }
 
-            alarm.update();
+            alarm.update("handleIntent(): Alarm set by external app");
             List<Alarm> alarms = await loadList<Alarm>("alarms");
             alarms.add(alarm);
             await saveList("alarms", alarms);
             onSetAlarm(alarm);
 
             // Update the frontend UI if app is open
-            ListenerManager.notifyListeners("alarms-reload");
+            ListenerManager.notifyListeners("alarms");
             // setState(() {});
           }
           break;

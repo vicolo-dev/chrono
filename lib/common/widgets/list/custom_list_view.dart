@@ -1,11 +1,13 @@
+import 'package:clock_app/common/logic/get_list_filter_chips.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
+import 'package:clock_app/common/widgets/list/delete_alert_dialogue.dart';
 import 'package:clock_app/common/widgets/list/list_filter_chip.dart';
 import 'package:clock_app/common/widgets/list/list_item_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:great_list_view/great_list_view.dart';
 
@@ -33,14 +35,18 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
     this.isDuplicateEnabled = true,
     this.shouldInsertOnTop = true,
     this.listFilters = const [],
+    this.customActions = const [],
+    this.sortOptions = const [],
+    this.initialSortIndex = 0,
+    this.onChangeSortIndex,
   });
 
   final List<Item> items;
   final Widget Function(Item item) itemBuilder;
   final void Function(Item item, int index)? onTapItem;
-  final void Function(Item item)? onReorderItem;
-  final void Function(Item item)? onDeleteItem;
-  final void Function(Item item)? onAddItem;
+  final Function(Item item)? onReorderItem;
+  final Function(Item item)? onDeleteItem;
+  final Function(Item item)? onAddItem;
   // Called whenever an item is added, deleted or reordered
   final void Function()? onModifyList;
   final String placeholderText;
@@ -48,8 +54,12 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final bool isReorderable;
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
+  final int initialSortIndex;
   final bool shouldInsertOnTop;
-  final List<ListFilter<Item>> listFilters;
+  final List<ListFilterItem<Item>> listFilters;
+  final List<ListFilterCustomAction<Item>> customActions;
+  final List<ListSortOption<Item>> sortOptions;
+  final Function(int index)? onChangeSortIndex;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -57,37 +67,56 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
 
 class _CustomListViewState<Item extends ListItem>
     extends State<CustomListView<Item>> {
+  late List<Item> currentList = List.from(widget.items);
   double _itemCardHeight = 0;
-  late int lastListLength = widget.items.length;
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
-  late ListFilter<Item> _selectedFilter = widget.listFilters.isEmpty
-      ? ListFilter("Default", (item) => true)
-      : widget.listFilters[0];
+  late int selectedSortIndex = widget.initialSortIndex;
 
   @override
   void initState() {
     super.initState();
-    widget.listController.setChangeItems(_changeItems);
+    widget.listController.setChangeItems(_handleChangeItems);
     widget.listController.setAddItem(_handleAddItem);
     widget.listController.setDeleteItem(_handleDeleteItem);
     widget.listController.setGetItemIndex(_getItemIndex);
     widget.listController.setDuplicateItem(_handleDuplicateItem);
-    widget.listController.setReloadItems(_reloadItems);
+    widget.listController.setReloadItems(_handleReloadItems);
+    widget.listController.setClearItems(_handleClear);
+    widget.listController.setGetItems(() => widget.items);
+    updateCurrentList();
+    // widget.listController.setChangeItemWithId(_handleChangeItemWithId);
   }
 
-  void _reloadItems(List<Item> items) {
-setState(() {
-  widget.items.clear();
-  widget.items.addAll(items);
-});
-// TODO: MAN THIS SUCKS, WHY YOU GOTTA DO THIS
-    _controller.notifyRemovedRange(0, widget.items.length - 1,  _getChangeListBuilder());
+  void _handleReloadItems(List<Item> items) {
+    setState(() {
+      widget.items.clear();
+      widget.items.addAll(items);
+
+      updateCurrentList();
+    });
+    // TODO: MAN THIS SUCKS, WHY YOU GOTTA DO THIS
+    _controller.notifyRemovedRange(
+        0, widget.items.length - 1, _getChangeListBuilder());
     _controller.notifyInsertedRange(0, widget.items.length);
   }
 
+  void updateCurrentList() {
+    if (selectedSortIndex > widget.sortOptions.length) {
+      selectedSortIndex = 0;
+    }
+    currentList.clear();
+    if (selectedSortIndex != 0) {
+      final temp = [...widget.items];
+      temp.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
+      currentList.addAll(temp);
+    } else {
+      currentList.addAll(widget.items);
+    }
+  }
+
   int _getItemIndex(Item item) =>
-      widget.items.indexWhere((element) => element.id == item.id);
+      currentList.indexWhere((element) => element.id == item.id);
 
   void _updateItemHeight() {
     if (_itemCardHeight == 0) {
@@ -95,20 +124,10 @@ setState(() {
     }
   }
 
-  void _changeItems(ItemChangerCallback<Item> callback, bool callOnModifyList) {
-    setState(() {
-      callback(widget.items);
-    });
-    _notifyChangeList();
-
-    if (callOnModifyList) widget.onModifyList?.call();
-  }
-
   void _notifyChangeList() {
-    print("============================= ${widget.items.length}");
     _controller.notifyChangedRange(
       0,
-      widget.items.length,
+      currentList.length,
       _getChangeListBuilder(),
     );
   }
@@ -130,19 +149,61 @@ setState(() {
       _getChangeWidgetBuilder(widget.items[index])(context, index, data);
 
   bool _handleReorderItems(int oldIndex, int newIndex, Object? slot) {
-    if (newIndex >= widget.items.length) return false;
+    if (newIndex >= widget.items.length || selectedSortIndex != 0) return false;
     widget.onReorderItem?.call(widget.items[oldIndex]);
     widget.items.insert(newIndex, widget.items.removeAt(oldIndex));
+    updateCurrentList();
     widget.onModifyList?.call();
 
     return true;
   }
 
-  _handleDeleteItem(Item deletedItem) {
-    widget.onDeleteItem?.call(deletedItem);
-    int index = _getItemIndex(deletedItem);
+  void _handleChangeItems(
+      ItemChangerCallback<Item> callback, bool callOnModifyList) {
+    final initialList = List.from(currentList);
+
+    callback(widget.items);
+
     setState(() {
-      widget.items.removeAt(index);
+      updateCurrentList();
+    });
+
+    final deletedItems = List.from(initialList
+        .where((element) => currentList.where((e) => e.id == element.id).isEmpty)
+        .toList());
+    final addedItems = List.from(currentList
+        .where((element) => initialList.where((e) => e.id == element.id).isEmpty)
+        .toList());
+
+    for (var deletedItem in deletedItems) {
+      _controller.notifyRemovedRange(
+        initialList.indexWhere((element) => element.id == deletedItem.id),
+        1,
+        _getChangeWidgetBuilder(deletedItem),
+      );
+    }
+
+    for (var addedItem in addedItems) {
+      _controller.notifyInsertedRange(
+        currentList.indexWhere((element) => element.id == addedItem.id),
+        1,
+      );
+    }
+
+    _notifyChangeList();
+
+    if (callOnModifyList) widget.onModifyList?.call();
+  }
+
+  Future<void> _handleDeleteItem(Item deletedItem,
+      [bool callOnModifyList = true]) async {
+    int index = _getItemIndex(deletedItem);
+
+    // print(listToString(widget.items));
+
+    setState(() {
+      widget.items.removeWhere((element) => element.id == deletedItem.id);
+      updateCurrentList();
     });
 
     _controller.notifyRemovedRange(
@@ -150,20 +211,52 @@ setState(() {
       1,
       _getChangeWidgetBuilder(deletedItem),
     );
-    widget.onModifyList?.call();
-    lastListLength = widget.items.length;
+    await widget.onDeleteItem?.call(deletedItem);
+    if (callOnModifyList) widget.onModifyList?.call();
   }
 
-  void _handleAddItem(Item item, {int index = -1}) {
+  Future<void> _handleDeleteItemList(List<Item> deletedItems) async {
+    for (var item in deletedItems) {
+      int index = _getItemIndex(item);
+
+      setState(() {
+        widget.items.removeWhere((element) => element.id == item.id);
+        updateCurrentList();
+      });
+
+      _controller.notifyRemovedRange(
+        index,
+        1,
+        _getChangeWidgetBuilder(deletedItems.first),
+      );
+    }
+    for (var item in deletedItems) {
+      await widget.onDeleteItem?.call(item);
+    }
+
+    widget.onModifyList?.call();
+  }
+
+  void _handleClear() {
+    _handleDeleteItemList(List<Item>.from(widget.items));
+  }
+
+  Future<void> _handleAddItem(Item item, {int index = -1}) async {
     if (index == -1) {
       index = widget.shouldInsertOnTop ? 0 : widget.items.length;
     }
-    setState(() => widget.items.insert(index, item));
-    widget.onAddItem?.call(item);
-    _controller.notifyInsertedRange(index, 1);
-    _scrollToIndex(index);
-    Future.delayed(const Duration(milliseconds: 250), () {
-      _scrollToIndex(index);
+    widget.items.insert(index, item);
+    await widget.onAddItem?.call(item);
+    setState(() {
+      updateCurrentList();
+    });
+
+    int currentListIndex = _getItemIndex(item);
+    _controller.notifyInsertedRange(currentListIndex, 1);
+    // _scrollToIndex(index);
+    // TODO: Remove this delay
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _scrollToIndex(currentListIndex);
     });
     _updateItemHeight();
     widget.onModifyList?.call();
@@ -182,9 +275,14 @@ setState(() {
         duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
   }
 
-  _getItemBuilder(ListFilter<Item> filter) {
+  _getItemBuilder() {
     return (BuildContext context, Item item, data) {
-      if (!filter.filterFunction(item)) return Container();
+      for (var filter in widget.listFilters) {
+        // print("${filter.displayName} ${filter.filterFunction}");
+        if (!filter.filterFunction(item)) {
+          return Container();
+        }
+      }
       return data.measuring
           ? SizedBox(height: _itemCardHeight)
           : ListItemCard<Item>(
@@ -202,10 +300,102 @@ setState(() {
     };
   }
 
+  void onFilterChange() {
+    setState(() {
+      _notifyChangeList();
+    });
+  }
+
+  List<Item> getCurrentList() {
+    final List<Item> items = List.from(widget.items);
+
+    if (selectedSortIndex != 0) {
+      items.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
+    }
+
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
-    timeDilation = 0.75;
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+
+    if (selectedSortIndex > widget.sortOptions.length) {
+      updateCurrentList();
+    }
+
+    List<Widget> getFilterChips() {
+      List<Widget> widgets = [];
+      int activeFilterCount =
+          widget.listFilters.where((filter) => filter.isActive).length;
+      if (activeFilterCount > 0) {
+        widgets.add(ListFilterActionChip(
+          actions: [
+            ListFilterAction(
+              name: "Clear all filters",
+              icon: Icons.clear_rounded,
+              action: () {
+                for (var filter in widget.listFilters) {
+                  filter.reset();
+                }
+                onFilterChange();
+              },
+            ),
+            ...widget.customActions.map((action) => ListFilterAction(
+                  name: action.name,
+                  icon: action.icon,
+                  action: () => action.action(widget.items
+                      .where((item) => widget.listFilters
+                          .every((filter) => filter.filterFunction(item)))
+                      .toList()),
+                )),
+            ListFilterAction(
+              name: "Delete all filtered items",
+              icon: Icons.delete_rounded,
+              color: colorScheme.error,
+              action: () async {
+                Navigator.pop(context);
+                final result = await showDeleteAlertDialogue(context);
+                if (result == null || result == false) return;
+
+                final toRemove = List<Item>.from(widget.items.where((item) =>
+                    widget.listFilters
+                        .every((filter) => filter.filterFunction(item))));
+                await _handleDeleteItemList(toRemove);
+
+                widget.onModifyList?.call();
+              },
+            )
+          ],
+          activeFilterCount: activeFilterCount,
+        ));
+      }
+      widgets.addAll(widget.listFilters
+          .map((filter) => getListFilterChip(filter, onFilterChange)));
+      if (widget.sortOptions.isNotEmpty) {
+        widgets.add(
+          ListSortChip(
+            selectedIndex: selectedSortIndex,
+            sortOptions: [
+              ListSortOption("Default", "", (a, b) => 0),
+              ...widget.sortOptions,
+            ],
+            onChange: (index) => setState(() {
+              selectedSortIndex = index;
+              widget.onChangeSortIndex?.call(index);
+              updateCurrentList();
+              _notifyChangeList();
+            }),
+          ),
+        );
+      }
+      return widgets;
+    }
+
+    // timeDilation = 1;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 0,
@@ -214,19 +404,9 @@ setState(() {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: widget.listFilters
-                      .map((filter) => ListFilterChip<Item>(
-                            listFilter: filter,
-                            onTap: () {
-                              setState(() {
-                                _selectedFilter = filter;
-                                _notifyChangeList();
-                              });
-                            },
-                            isSelected: _selectedFilter == filter,
-                          ))
-                      .toList()),
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: getFilterChips(),
+              ),
             ),
           ),
         ),
@@ -253,21 +433,19 @@ setState(() {
                 : Container(),
             SlidableAutoCloseBehavior(
               child: AutomaticAnimatedListView<Item>(
-                list: widget.items,
+                list: currentList,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 comparator: AnimatedListDiffListComparator<Item>(
                   sameItem: (a, b) => a.id == b.id,
                   sameContent: (a, b) => a.id == b.id,
                 ),
-                itemBuilder: _getItemBuilder(widget.listFilters.isEmpty
-                    ? ListFilter("Default", (item) => true)
-                    : _selectedFilter),
+                itemBuilder: _getItemBuilder(),
                 // animator: DefaultAnimatedListAnimator,
                 listController: _controller,
                 scrollController: _scrollController,
                 addLongPressReorderable: widget.isReorderable,
-                reorderModel: widget.isReorderable
+                reorderModel: widget.isReorderable && selectedSortIndex == 0
                     ? AnimatedListReorderModel(
                         onReorderStart: (index, dx, dy) => true,
                         onReorderFeedback: (int index, int dropIndex,

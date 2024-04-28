@@ -26,6 +26,7 @@ SettingGroup stopwatchSettingsSchema = SettingGroup(
       icon: Icons.settings,
       searchTags: ["fastest", "slowest", "average", "previous"],
     ),
+    SwitchSetting("Show Notification", true),
   ],
   icon: FluxIcons.stopwatch,
 );

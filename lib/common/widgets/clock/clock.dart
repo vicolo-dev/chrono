@@ -7,14 +7,14 @@ import 'clock_display.dart';
 
 class Clock extends StatelessWidget {
   const Clock({
-    Key? key,
+    super.key,
     this.scale = 1,
     this.shouldShowDate = false,
     this.shouldShowSeconds = false,
     this.color,
     this.timezoneLocation,
     this.horizontalAlignment = ElementAlignment.start,
-  }) : super(key: key);
+  });
 
   final ElementAlignment horizontalAlignment;
   final double scale;

@@ -96,7 +96,7 @@ class CircularProgressBar extends StatefulWidget {
   /// center of the progress bar, define the [onGetCenterWidget] method. In this method
   /// you should return the widget for the current progress bar value.
   const CircularProgressBar({
-    Key? key,
+    super.key,
     this.size = 100,
     this.maxValue = 100,
     this.startAngle = 0,
@@ -109,7 +109,7 @@ class CircularProgressBar extends StatefulWidget {
     this.mergeMode = false,
     this.valueNotifier,
     this.onGetCenterWidget,
-  }) : super(key: key);
+  });
 
   @override
   State<CircularProgressBar> createState() => _CircularProgressBarState();
@@ -120,7 +120,7 @@ class _CircularProgressBarState extends State<CircularProgressBar>
   final double minSweepAngle = 0.015;
 
   late double circleLength;
-  late double widgetSize;
+  // late double widgetSize;
 
   late double startAngle;
   late double correctAngle;
@@ -135,7 +135,7 @@ class _CircularProgressBarState extends State<CircularProgressBar>
 
   void updateState() {
     setState(() {
-      widgetSize = (widget.size <= 0) ? 100.0 : widget.size;
+      // widgetSize = (widget.size <= 0) ? 100.0 : widget.size;
 
       // Check value notifier
       if (widget.valueNotifier != null) {
@@ -149,7 +149,7 @@ class _CircularProgressBarState extends State<CircularProgressBar>
       // Calculate the real starting angle and correction angle.
       // Correction angle - the angle to which the main line should be
       // shifted in order for the SweepGradient to be displayed correctly.
-      circleLength = pi * widgetSize;
+      circleLength = pi * widget.size;
       final k = _doublePi / circleLength;
 
       correctAngle = widget.progressStrokeWidth * k;
@@ -255,7 +255,7 @@ class _CircularProgressBarState extends State<CircularProgressBar>
             Transform.rotate(
               angle: _degToRad(widget.startAngle - 90),
               child: CustomPaint(
-                size: Size(widgetSize, widgetSize),
+                size: Size(widget.size, widget.size),
                 painter: _SimpleCircularProgressBarPainter(
                   progressStrokeWidth: widget.progressStrokeWidth,
                   backStrokeWidth: widget.backStrokeWidth,

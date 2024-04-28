@@ -1,5 +1,5 @@
-import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 
 class FullScreenNotificationData {

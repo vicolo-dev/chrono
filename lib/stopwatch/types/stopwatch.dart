@@ -53,6 +53,15 @@ class ClockStopwatch extends JsonSerializable {
         _state = TimerState.stopped,
         _id = UniqueKey().hashCode;
 
+  copyFrom(ClockStopwatch stopwatch) {
+    _elapsedMillisecondsOnPause = stopwatch._elapsedMillisecondsOnPause;
+    _startTime = stopwatch._startTime;
+    _state = stopwatch._state;
+    _laps = stopwatch._laps;
+    _fastestLap = stopwatch._fastestLap;
+    _slowestLap = stopwatch._slowestLap;
+  }
+
   void start() {
     if (_state == TimerState.stopped) {
       _startTime = DateTime.now();
@@ -86,7 +95,6 @@ class ClockStopwatch extends JsonSerializable {
   }
 
   void updateFastestAndSlowestLap() {
-    // print("update");
     _fastestLap = _laps.reduce((value, element) =>
         value.lapTime.inMilliseconds < element.lapTime.inMilliseconds
             ? value
@@ -98,6 +106,7 @@ class ClockStopwatch extends JsonSerializable {
   }
 
   void addLap() {
+    if (currentLapTime.inMilliseconds == 0) return;
     _laps.insert(0, getLap());
     updateFastestAndSlowestLap();
   }

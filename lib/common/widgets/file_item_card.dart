@@ -1,6 +1,7 @@
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/utils/file_item.dart';
 import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,10 @@ import 'package:just_audio/just_audio.dart';
 
 class FileItemCard extends StatefulWidget {
   const FileItemCard({
-    Key? key,
+    super.key,
     required this.fileItem,
     required this.onPressDelete,
-  }) : super(key: key);
+  });
 
   final FileItem fileItem;
   final VoidCallback onPressDelete;
@@ -48,12 +49,14 @@ class _FileItemCardState extends State<FileItemCard> {
     ColorScheme colorScheme = theme.colorScheme;
     return InkWell(
       onTap: () async {
-        if (RingtoneManager.lastPlayedRingtoneUri == widget.fileItem.uri) {
-          await RingtonePlayer.stop();
-          _updateIsPlaying();
-        } else {
-          RingtonePlayer.playUri(widget.fileItem.uri, loopMode: LoopMode.all);
-          _updateIsPlaying();
+        if (widget.fileItem.type == FileItemType.audio) {
+          if (RingtoneManager.lastPlayedRingtoneUri == widget.fileItem.uri) {
+            await RingtonePlayer.stop();
+            _updateIsPlaying();
+          } else {
+            RingtonePlayer.playUri(widget.fileItem.uri, loopMode: LoopMode.all);
+            _updateIsPlaying();
+          }
         }
       },
       child: Padding(
@@ -61,8 +64,7 @@ class _FileItemCardState extends State<FileItemCard> {
               const EdgeInsets.only(left: 16.0, right: 4, top: 8, bottom: 8),
           child: Row(
             children: [
-              Icon(isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                  color: colorScheme.primary),
+              Icon(getFileItemIcon(widget.fileItem, isPlaying), color: colorScheme.primary),
               const SizedBox(width: 4),
               Expanded(
                 flex: 999,

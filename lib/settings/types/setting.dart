@@ -65,7 +65,7 @@ abstract class Setting<T> extends SettingItem {
 
 class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
   List<T> possibleItems;
-  Widget Function(T item) cardBuilder;
+  Widget Function(T item, [VoidCallback?,VoidCallback?]) cardBuilder;
   Widget Function(T item) addCardBuilder;
   Widget Function(T item)? itemPreviewBuilder;
   // The widget that will be used to display the value of this setting.
@@ -122,8 +122,8 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
     return addCardBuilder(item);
   }
 
-  Widget getItemCard(T item) {
-    return cardBuilder(item);
+  Widget getItemCard(T item, {VoidCallback? onDelete, VoidCallback? onDuplicate}) {
+    return cardBuilder(item,onDelete,onDuplicate);
   }
 
   Widget? getPreviewCard(T item) {
@@ -429,7 +429,6 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
     String description = "",
     int defaultValue = -1,
     bool isVisual = true,
-    bool shouldCloseOnSelect = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, description, defaultValue, onChange, enableConditions,
@@ -441,13 +440,16 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
 
   @override
   DynamicSelectSetting<T> copy() {
-    return DynamicSelectSetting(name, optionsGetter,
-        onChange: onChange,
-        defaultValue: _value,
-        description: description,
-        enableConditions: enableConditions,
-        isVisual: isVisual,
-        searchTags: searchTags);
+    return DynamicSelectSetting(
+      name,
+      optionsGetter,
+      onChange: onChange,
+      defaultValue: _value,
+      description: description,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
   }
 
   void setIndex(BuildContext context, int index) {
@@ -487,6 +489,151 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
     // If options is empty, set id to -1
     if (getIndexOfId(value) == -1) value = getIdAtIndex(0);
     _value = value;
+  }
+}
+
+class MultiSelectSetting<T> extends Setting<List<int>> {
+  final List<SelectSettingOption<T>> _options;
+
+  List<SelectSettingOption<T>> get options => _options;
+  List<int> get selectedIndices => _value;
+  @override
+  dynamic get value => options
+      .where((option) => _value.contains(options.indexOf(option)))
+      .map((option) => option.value)
+      .toList();
+  // bool get isColor => T == Color;
+
+  int getIndexOfValue(T value) {
+    int index = options.indexWhere((element) => element.value == value);
+    return index == -1 ? 0 : index;
+  }
+
+  T getValueOfIndex(int index) {
+    if (index < 0 || index >= options.length) index = 0;
+    return options[index].value;
+  }
+
+  @override
+  void restoreDefault(BuildContext context) {
+    setValue(context, _defaultValue);
+  }
+
+  MultiSelectSetting(
+    String name,
+    this._options, {
+    void Function(BuildContext, List<int>)? onChange,
+    List<int> defaultValue = const [0],
+    String description = "",
+    bool isVisual = true,
+    List<EnableConditionParameter> enableConditions = const [],
+    List<String> searchTags = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            searchTags, isVisual);
+
+  @override
+  MultiSelectSetting<T> copy() {
+    return MultiSelectSetting(
+      name,
+      _options,
+      defaultValue: _value,
+      onChange: onChange,
+      description: description,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
+  }
+
+    @override
+  dynamic valueToJson() {
+    return _value;
+  }
+
+  @override
+  void loadValueFromJson(dynamic value) {
+    if (value == null) return;
+    _value = (value as List).map((index) => index as int).toList();
+  }
+}
+
+// DynamicSelectSetting uses item id as its _value, instead of the index.
+// This is so that if the options changes, the value remains the same;
+class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
+  List<SelectSettingOption<T>> Function() optionsGetter;
+  List<SelectSettingOption<T>> get options => optionsGetter();
+  @override
+  dynamic get value {
+    return selectedIndices.map((index) => options[index].value).toList();
+}
+  List<int> get selectedIndices =>
+      _value.map((id) => getIndexOfId(id)).where((index)=>index>=0).toList();
+
+  DynamicMultiSelectSetting(
+    String name,
+    this.optionsGetter, {
+    void Function(BuildContext, List<int>)? onChange,
+    String description = "",
+    List<int> defaultValue = const [-1],
+    bool isVisual = true,
+    List<EnableConditionParameter> enableConditions = const [],
+    List<String> searchTags = const [],
+  }) : super(name, description, defaultValue, onChange, enableConditions,
+            searchTags, isVisual) {
+    if (!defaultValue.contains(-1)) {
+      _value = defaultValue;
+    }
+  }
+
+  @override
+  DynamicMultiSelectSetting<T> copy() {
+    return DynamicMultiSelectSetting(name, optionsGetter,
+        onChange: onChange,
+        defaultValue: _value,
+        description: description,
+        enableConditions: enableConditions,
+        isVisual: isVisual,
+        searchTags: searchTags);
+  }
+
+  void setIndex(BuildContext context, List<int> indices) {
+    setValue(context, indices.map((index) => getIdAtIndex(index)).toList());
+  }
+
+  @override
+  void restoreDefault(BuildContext context) {
+    setIndex(context, []);
+  }
+
+  int getIndexOfValue(T value) {
+    return getIndexOfId(value.id);
+  }
+
+  int getIndexOfId(int id) {
+    int index = options.indexWhere((element) => element.value.id == id);
+    return index;
+  }
+
+  int getIdAtIndex(int index) {
+    final settingsOptions = optionsGetter();
+    if (settingsOptions.isEmpty) return -1;
+    if (index < 0 || index >= settingsOptions.length) index = 0;
+    return settingsOptions[index].value.id;
+  }
+
+  @override
+  dynamic valueToJson() {
+    return _value;
+      
+  }
+
+  @override
+  void loadValueFromJson(dynamic value) {
+    if (value == null) return;
+    // If the value is no longer in the options, return the first option
+    // If options is empty, set id to -1
+    (value as List).removeWhere((id) => getIndexOfId(id) == -1);
+    _value = value.map((id) => id as int).toList();
   }
 }
 

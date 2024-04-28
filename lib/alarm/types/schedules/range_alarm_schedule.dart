@@ -10,7 +10,7 @@ class RangeAlarmSchedule extends AlarmSchedule {
   late final AlarmRunner _alarmRunner;
   late final DateTimeSetting _datesRangeSetting;
   late final SelectSetting<RangeInterval> _intervalSetting;
-  bool _isFinished = false;
+  bool _isFinished = true;
 
   RangeInterval get interval => _intervalSetting.value;
   DateTime get startDate => _datesRangeSetting.value.first;
@@ -42,22 +42,22 @@ class RangeAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  Future<bool> schedule(Time time) async {
+  Future<void> schedule(Time time,String description) async {
     // All the dates are not scheduled at once
     // Instead we schedule the next date after the current one is finished
 
     DateTime alarmDate = getDailyAlarmDate(time, scheduledDate: startDate);
     if (alarmDate.day <= endDate.day) {
-      return _alarmRunner.schedule(alarmDate);
+      await _alarmRunner.schedule(alarmDate,description);
+      _isFinished = false;
     } else {
       _isFinished = true;
-      return false;
     }
   }
 
   @override
-  void cancel() {
-    _alarmRunner.cancel();
+  Future<void> cancel()async {
+    await _alarmRunner.cancel();
   }
 
   @override
