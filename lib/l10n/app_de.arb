@@ -113,8 +113,6 @@
   "@scheduleTypeWeek": {},
   "scheduleTypeWeekDescription": "Wird an den bestimmten Wochentagen wiederholt",
   "@scheduleTypeWeekDescription": {},
-  "scheduleTypeData": "An bestimmten Tagen",
-  "@scheduleTypeData": {},
   "scheduleTypeRange": "Datumsbereich",
   "@scheduleTypeRange": {},
   "settingGroupMore": "Mehr",
@@ -174,7 +172,5 @@
   "styleThemeSetting": "Designauswahl",
   "@styleThemeSetting": {},
   "snoozePreventDisablingSetting": "Deaktivierung verhindern",
-  "@snoozePreventDisablingSetting": {},
-  "snoozePreventDeletion": "Löschung verhindern",
-  "@snoozePreventDeletion": {}
+  "@snoozePreventDisablingSetting": {}
 }
