@@ -91,13 +91,13 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.settingGroup.name,
+                    widget.settingGroup.displayName(context),
                     style: textTheme.displaySmall,
                   ),
                   if (widget.settingGroup.description.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
-                      widget.settingGroup.description,
+                      widget.settingGroup.displayDescription(context),
                       style: textTheme.bodyMedium,
                     )
                   ]
@@ -145,7 +145,7 @@ class SettingGroupHeader extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                settingGroup.name,
+                settingGroup.displayName(context),
                 style: textTheme.headlineMedium?.copyWith(
                   color: colorScheme.primary,
                 ),

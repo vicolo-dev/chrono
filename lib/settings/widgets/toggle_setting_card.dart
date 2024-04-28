@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 
 class ToggleSettingCard<T> extends StatefulWidget {
   const ToggleSettingCard(
-      {Key? key,
+      {super.key,
       required this.setting,
       this.showAsCard = false,
-      this.onChanged})
-      : super(key: key);
+      this.onChanged});
 
   final ToggleSetting setting;
   final bool showAsCard;
@@ -23,8 +22,8 @@ class _ToggleSettingCardState<T> extends State<ToggleSettingCard<T>> {
   @override
   Widget build(BuildContext context) {
     ToggleField<T> toggleCard = ToggleField<T>(
-      name: widget.setting.name,
-      description: widget.setting.description,
+      name: widget.setting.displayName(context),
+      description: widget.setting.displayDescription(context),
       selectedItems: widget.setting.value,
       options: widget.setting.options
           .map((option) => ToggleOption<T>(option.name, option.value))

@@ -9,11 +9,11 @@ class StringSettingCard extends StatefulWidget {
   final void Function(String)? onChanged;
 
   const StringSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = false,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<StringSettingCard> createState() => _StringSettingCardState();
@@ -23,7 +23,7 @@ class _StringSettingCardState extends State<StringSettingCard> {
   @override
   Widget build(BuildContext context) {
     Widget input = InputField(
-      title: widget.setting.name,
+      title: widget.setting.displayName(context),
       description: widget.setting.description,
       value: widget.setting.value,
       onChanged: (value) {

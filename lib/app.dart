@@ -22,6 +22,9 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:receive_intent/receive_intent.dart' as intent_handler;
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -51,6 +54,7 @@ class _AppState extends State<App> {
   late SettingGroup _colorSettings;
   late SettingGroup _styleSettings;
   late Setting _animationSpeedSetting;
+  late SettingGroup _generalSettings;
 
   @override
   void initState() {
@@ -61,8 +65,8 @@ class _AppState extends State<App> {
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
-    _animationSpeedSetting = appSettings
-        .getGroup("General")
+    _generalSettings = appSettings.getGroup("General");
+    _animationSpeedSetting = _generalSettings
         .getGroup("Animations")
         .getSetting("Animation Speed");
     _animationSpeedSetting.addListener(setAnimationSpeed);
@@ -157,6 +161,7 @@ class _AppState extends State<App> {
       final AppTheme appTheme = getAppTheme(lightDynamic, darkDynamic);
       ThemeBrightness themeBrightness =
           _colorSettings.getSetting("Brightness").value;
+      Locale locale = _generalSettings.getSetting("Language").value;
 
       return MaterialApp(
         scaffoldMessengerKey: _messangerKey,
@@ -172,6 +177,9 @@ class _AppState extends State<App> {
                 : ThemeMode.dark,
         initialRoute: Routes.rootRoute,
         navigatorObservers: [routeObserver],
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         onGenerateRoute: (settings) {
           Routes.push(settings.name ?? Routes.rootRoute);
           switch (settings.name) {

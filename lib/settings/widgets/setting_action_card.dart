@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class SettingActionCard extends StatefulWidget {
   const SettingActionCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = true,
-  }) : super(key: key);
+  });
 
   final SettingAction setting;
   final bool showAsCard;
@@ -36,7 +36,7 @@ class _SettingActionCardState<T> extends State<SettingActionCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.setting.name,
+                      widget.setting.displayName(context),
                       style: textTheme.displaySmall,
                     ),
                     if (widget.setting.description.isNotEmpty) ...[

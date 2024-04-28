@@ -12,9 +12,11 @@ dependencies:
     sdk: flutter
 
   flutter_boot_receiver: ^1.1.0
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   # flutter_boot_receiver:
   #   path: "../flutter_boot_receiver"
-  intl: ^0.19.0
   timezone: ^0.9.1
   timer_builder: ^2.0.0
   path_provider: ^2.0.11
@@ -65,8 +67,8 @@ dependencies:
   watcher: ^1.1.0
   dynamic_color: ^1.7.0
   material_color_utilities: ^0.8.0
-  flutter_oss_licenses: ^3.0.2
-  
+  flutter_oss_licenses: ^3.0.2  
+  locale_names: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -76,7 +78,11 @@ dev_dependencies:
   change_app_package_name: ^1.1.0
   dependency_validator: ^3.2.3
 
+dependency_overrides:
+  intl: any
+
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/timezones.db
@@ -84,9 +90,6 @@ flutter:
     - assets/ringtones/
     - assets/contributors.json
   fonts:
-    - family: Montserrat
-      fonts:
-        - asset: fonts/Montserrat/Montserrat-VariableFont.ttf
     - family: Rubik
       fonts:
         - asset: fonts/Rubik/Rubik-VariableFont.ttf

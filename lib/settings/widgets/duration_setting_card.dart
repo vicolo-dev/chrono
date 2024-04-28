@@ -10,11 +10,11 @@ class DurationSettingCard extends StatefulWidget {
   final void Function(TimeDuration)? onChanged;
 
   const DurationSettingCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = false,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<DurationSettingCard> createState() => _DurationSettingCardState();
@@ -24,8 +24,8 @@ class _DurationSettingCardState extends State<DurationSettingCard> {
   @override
   Widget build(BuildContext context) {
     Widget input = DurationPickerField(
-      title: widget.setting.name,
-      description: widget.setting.description,
+      title: widget.setting.displayName(context),
+      description: widget.setting.displayDescription(context),
       value: widget.setting.value,
       onChange: (value) {
         setState(() {

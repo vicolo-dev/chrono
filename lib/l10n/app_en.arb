@@ -1,0 +1,20 @@
+{
+  "clockTitle": "Clock",
+  "@clockTitle": {
+    "description": "Title of the clock screen"
+  },
+  "alarmTitle": "Alarm",
+  "@alarmTitle": {
+    "description": "Title of the alarm screen"
+  },
+  "timerTitle": "Timer",
+  "@timerTitle": {
+    "description": "Title of the timer screen"
+  },
+  "stopwatchTitle": "Stopwatch",
+  "@stopwatchTitle": {
+    "description": "Title of the stopwatch screen"
+  },
+  "generalSettingGroup": "General",
+  "appearanceSettingGroup": "Appearance"
+}

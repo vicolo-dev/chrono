@@ -47,13 +47,13 @@ class _SettingPageLinkCardState<T> extends State<SettingPageLinkCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.setting.name,
+                      widget.setting.displayName(context),
                       style: textTheme.displaySmall,
                     ),
                     if (widget.setting.description.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        widget.setting.description,
+                        widget.setting.displayDescription(context),
                         style: textTheme.bodyMedium,
                       )
                     ]
