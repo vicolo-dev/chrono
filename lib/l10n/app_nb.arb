@@ -57,8 +57,6 @@
   "@selectTime": {},
   "cancelButton": "Avbryt",
   "@cancelButton": {},
-  "snoozePreventDeletion": "Forhindre sletting",
-  "@snoozePreventDeletion": {},
   "customizeButton": "Tilpass",
   "@customizeButton": {},
   "labelField": "Etikett",
