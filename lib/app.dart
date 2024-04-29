@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/common/data/app_info.dart';
+import 'package:clock_app/l10n/language_local.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
@@ -160,6 +161,12 @@ class _AppState extends State<App> {
       ThemeBrightness themeBrightness =
           _colorSettings.getSetting("Brightness").value;
       Locale locale = _generalSettings.getSetting("Language").value;
+      // if(!AppLocalizations.supportedLocales.contains(locale)){
+      //
+      // }
+      //
+      // print("locaaaaaaaale $locale");
+      // print(getLocaleOptions().map((e) => e.value).toList());
 
       return MaterialApp(
         scaffoldMessengerKey: _messangerKey,

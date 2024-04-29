@@ -8,6 +8,7 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
+import 'package:clock_app/l10n/language_local.dart';
 import 'package:clock_app/settings/screens/ringtones_screen.dart';
 import 'package:clock_app/settings/screens/tags_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -56,16 +57,8 @@ SettingGroup generalSettingsSchema = SettingGroup(
       (context) => AppLocalizations.of(context)!.languageSetting,
       [
         SelectSettingOption((context) => AppLocalizations.of(context)!.system,
-            Locale(Platform.localeName)),
-        ...AppLocalizations.supportedLocales.map((locale) {
-          return SelectSettingOption(
-              (context) => Locale.fromSubtags(
-                      languageCode: locale.languageCode,
-                      scriptCode: locale.scriptCode,
-                      countryCode: locale.countryCode)
-                  .nativeDisplayLanguage,
-              locale);
-        })
+            Locale(Platform.localeName.split("_").first)),
+        ...getLocaleOptions()
       ],
       onChange: (context, index) {
         App.refreshTheme(context);
