@@ -161,7 +161,7 @@
   "@stopwatchFastest": {},
   "alarmDescriptionDays": "An {days}",
   "@alarmDescriptionDays": {},
-  "alarmDescriptionRange": "{interval, select, daily{Täglich} weekly{Wöchentlich}} von {startDate} bis {endDate}",
+  "alarmDescriptionRange": "{interval, select, daily{Täglich} weekly{Wöchentlich} other{Other}} von {startDate} bis {endDate}",
   "@alarmDescriptionRange": {},
   "stopwatchSlowest": "Langsamste",
   "@stopwatchSlowest": {},
