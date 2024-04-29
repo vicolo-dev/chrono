@@ -145,7 +145,7 @@
   "@alarmDescriptionEveryDay": {},
   "alarmDescriptionDays": "{days} tarihinde",
   "@alarmDescriptionDays": {},
-  "alarmDescriptionDates": "{date}{count, plural, =0{} =1{ ve 1 başka tarih} diğer{ ve {count} diğer tarih}}",
+  "alarmDescriptionDates": "{date}{count, plural, =0{} =1{ ve 1 başka tarih} other{ ve {count} diğer tarih}}",
   "@alarmDescriptionDates": {},
   "stopwatchAverage": "Ortalama",
   "@stopwatchAverage": {},
