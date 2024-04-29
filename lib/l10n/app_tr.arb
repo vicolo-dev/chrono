@@ -191,7 +191,7 @@
   "@alarmDescriptionSnooze": {},
   "alarmDescriptionFinished": "Sonraki tarih yok",
   "@alarmDescriptionFinished": {},
-  "alarmDescriptionRange": "{interval, select, daily{Günlük} weekly{Haftalık}} - {startDate} - {endDate} arası",
+  "alarmDescriptionRange": "{interval, select, daily{Günlük} weekly{Haftalık} other{Other}} - {startDate} - {endDate} arası",
   "@alarmDescriptionRange": {},
   "alarmDescriptionWeekend": "Her hafta sonu",
   "@alarmDescriptionWeekend": {},
