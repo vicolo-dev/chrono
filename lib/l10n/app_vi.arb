@@ -187,7 +187,7 @@
   "@alarmDescriptionWeekday": {},
   "alarmDescriptionDays": "Vào {days}",
   "@alarmDescriptionDays": {},
-  "alarmDescriptionRange": "{interval, select, daily{Daily} weekly{Weekly}} từ {startDate} tới {endDate}",
+  "alarmDescriptionRange": "{interval, select, daily{Daily} weekly{Weekly} other{Other}} từ {startDate} tới {endDate}",
   "@alarmDescriptionRange": {},
   "alarmDescriptionDates": "Vào {date}{count, plural, =0{} =1{ and 1 other date} other{ and {count} other dates}}",
   "@alarmDescriptionDates": {},
