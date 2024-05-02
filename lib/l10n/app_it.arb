@@ -1,1 +1,38 @@
-{}
+{
+  "languageSetting": "Lingua",
+  "@languageSetting": {},
+  "dateFormatSetting": "Formato data",
+  "@dateFormatSetting": {},
+  "timeFormatSetting": "Formato ora",
+  "@timeFormatSetting": {},
+  "timeFormat12": "12 ore",
+  "@timeFormat12": {},
+  "timeFormat24": "24 ore",
+  "@timeFormat24": {},
+  "timeFormatDevice": "Impostazioni dispositivo",
+  "@timeFormatDevice": {},
+  "showSecondsSetting": "Mostra secondi",
+  "@showSecondsSetting": {},
+  "clockTitle": "Orologio",
+  "@clockTitle": {
+    "description": "Title of the clock screen"
+  },
+  "alarmTitle": "Sveglia",
+  "@alarmTitle": {
+    "description": "Title of the alarm screen"
+  },
+  "timerTitle": "Timer",
+  "@timerTitle": {
+    "description": "Title of the timer screen"
+  },
+  "stopwatchTitle": "Cronometro",
+  "@stopwatchTitle": {
+    "description": "Title of the stopwatch screen"
+  },
+  "generalSettingGroup": "Generali",
+  "@generalSettingGroup": {},
+  "system": "Sistema",
+  "@system": {},
+  "melodiesSetting": "Melodie",
+  "@melodiesSetting": {}
+}
