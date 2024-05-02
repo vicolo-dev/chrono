@@ -160,5 +160,7 @@
   "styleThemeOpacitySetting": "Прозрачность",
   "@styleThemeOpacitySetting": {},
   "colorSchemeNamePlaceholder": "Цветовая схема",
-  "@colorSchemeNamePlaceholder": {}
+  "@colorSchemeNamePlaceholder": {},
+  "vendorSetting": "Настройки производителя",
+  "@vendorSetting": {}
 }
