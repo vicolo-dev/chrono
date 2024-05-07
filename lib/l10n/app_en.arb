@@ -531,8 +531,6 @@
   "@emailLabel": {},
   "viewOnGithubLabel": "View on GitHub",
   "@viewOnGithubLabel": {},
-  "creditsSettingGroup": "Open Source Licenses",
-  "@creditsSettingGroup": {},
   "addLengthSetting": "Add Length",
   "@addLengthSetting": {},
   "relativeTime": "{hours}h {relative, select, ahead{ahead} behind{behind} other{Other}}",
