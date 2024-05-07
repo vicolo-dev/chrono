@@ -547,6 +547,8 @@
   "@sameTime": {},
   "searchCityPlaceholder": "Search for a city",
   "@searchCityPlaceholder": {},
+  "cityAlreadyInFavorites": "This city is already in your favorites",
+  "@cityAlreadyInFavorites": {},
   "durationPickerTitle": "Choose Duration",
   "@durationPickerTitle": {},
   "editButton": "Edit",
