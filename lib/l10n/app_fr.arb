@@ -525,8 +525,6 @@
   "@importSettingsSetting": {},
   "importSettingsSettingDescription": "Importer les paramètres à partir d'un fichier local",
   "@importSettingsSettingDescription": {},
-  "creditsSettingGroup": "Crédits",
-  "@creditsSettingGroup": {},
   "addLengthSetting": "Ajouter du temps supplémentaire",
   "@addLengthSetting": {},
   "audioChannelMedia": "Média",
