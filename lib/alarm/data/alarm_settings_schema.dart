@@ -11,6 +11,7 @@ import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
 import 'package:clock_app/alarm/widgets/try_alarm_task_button.dart';
 import 'package:clock_app/audio/audio_channels.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
+import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/common/logic/tags.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/tag.dart';
@@ -74,22 +75,10 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         ToggleSetting(
           "Week Days",
           (context) => AppLocalizations.of(context)!.alarmWeekdaysSetting,
-          [
-            ToggleSettingOption(
-                (context) => AppLocalizations.of(context)!.mondayLetter, 1),
-            ToggleSettingOption(
-                (context) => AppLocalizations.of(context)!.tuesdayLetter, 2),
-            ToggleSettingOption(
-                (context) => AppLocalizations.of(context)!.wednesdayLetter, 3),
-            ToggleSettingOption(
-                (context) => AppLocalizations.of(context)!.thursdayLetter, 4),
-            ToggleSettingOption(
-                (context) => AppLocalizations.of(context)!.fridayLetter, 5),
-            ToggleSettingOption(
-                (context) => AppLocalizations.of(context)!.saturdayLetter, 6),
-            ToggleSettingOption(
-                (context) => AppLocalizations.of(context)!.sundayLetter, 7),
-          ],
+          weekdays
+              .map((weekday) => ToggleSettingOption(
+                  (context) => weekday.getAbbreviation(context), weekday.id))
+              .toList(),
           enableConditions: [
             ValueCondition(["Type"], (value) => value == WeeklyAlarmSchedule)
           ],

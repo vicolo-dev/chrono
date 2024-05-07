@@ -48,7 +48,7 @@ class AlarmTaskCard extends StatelessWidget {
                   if (onPressDelete != null)
                     getDeletePopupAction(context, onPressDelete!),
                   if (onPressDuplicate != null)
-                    getDuplicatePopupAction(onPressDuplicate!),
+                    getDuplicatePopupAction(context, onPressDuplicate!),
                 ]),
               if (!isAddCard)
                 Icon(FluxIcons.settings, color: colorScheme.onSurface),

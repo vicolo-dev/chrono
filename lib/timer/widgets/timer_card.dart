@@ -138,7 +138,7 @@ class _TimerCardState extends State<TimerCard> {
             const Spacer(),
             CardEditMenu(actions: [
               getDeletePopupAction(context, widget.onPressDelete),
-              getDuplicatePopupAction(widget.onPressDuplicate),
+              getDuplicatePopupAction(context, widget.onPressDuplicate),
               if (!widget.timer.isStopped)
                 PopupAction(
                   "Reset",

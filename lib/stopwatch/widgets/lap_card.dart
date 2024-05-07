@@ -1,5 +1,7 @@
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class LapCard extends StatefulWidget {
   const LapCard({super.key, required this.lap, this.onInit});
@@ -32,7 +34,7 @@ class _LapCardState extends State<LapCard> {
               Text(widget.lap.lapTime.toTimeString(showMilliseconds: true),
                   style: Theme.of(context).textTheme.displaySmall),
               Text(
-                  'Elapsed Time: ${widget.lap.elapsedTime.toTimeString(showMilliseconds: true)}'),
+                  '${AppLocalizations.of(context)!.elapsedTime}: ${widget.lap.elapsedTime.toTimeString(showMilliseconds: true)}'),
             ],
           ),
         ],
