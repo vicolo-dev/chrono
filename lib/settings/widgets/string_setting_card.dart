@@ -2,6 +2,8 @@ import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/fields/input_field.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class StringSettingCard extends StatefulWidget {
   final StringSetting setting;
@@ -32,7 +34,7 @@ class _StringSettingCardState extends State<StringSettingCard> {
         });
         widget.onChanged?.call(widget.setting.value);
       },
-      hintText: "Add a label",
+      hintText: AppLocalizations.of(context)!.labelFieldPlaceholder,
     );
 
     return widget.showAsCard ? CardContainer(child: input) : input;

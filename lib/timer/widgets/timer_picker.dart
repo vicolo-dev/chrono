@@ -9,6 +9,8 @@ import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 Future<PickerResult<ClockTimer>?> showTimerPicker(
   BuildContext context, {
@@ -37,7 +39,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
               isSaveEnabled: timer.duration.inSeconds > 0,
               // title: "Choose Duration",
               additionalAction: ModalAction(
-                title: "Customize",
+                title: AppLocalizations.of(context)!.customizeButton,
                 onPressed: () async {
                   Navigator.of(context).pop(PickerResult(timer, true));
                 },
@@ -52,7 +54,9 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text("Presets", style: textTheme.labelMedium),
+                                Text(AppLocalizations.of(context)!.presetsSetting,
+                                    
+                                style: textTheme.labelMedium),
                                 const Spacer(),
                                 TextButton(
                                   style: TextButton.styleFrom(
@@ -79,7 +83,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                                     });
                                   },
                                   child: Text(
-                                    "Edit",
+                                    AppLocalizations.of(context)!.editButton,
                                     style: textTheme.labelSmall
                                         ?.copyWith(color: colorScheme.primary),
                                   ),
@@ -128,7 +132,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                   Widget title() => Row(
                         children: [
                           Text(
-                            "Choose Duration",
+                            AppLocalizations.of(context)!.durationPickerTitle,
                             style: TimePickerTheme.of(context).helpTextStyle ??
                                 Theme.of(context).textTheme.labelSmall,
                           ),
@@ -137,7 +141,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                             onPressed: () => editDurationPickerMode(
                                 context, () => setState(() {})),
                             child: Text(
-                              "Mode",
+                              AppLocalizations.of(context)!.timePickerModeButton,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall

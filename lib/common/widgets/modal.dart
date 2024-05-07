@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ModalAction {
   final String title;
@@ -53,7 +55,7 @@ class Modal extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             TextButton(
-              child: Text('Cancel',
+              child: Text(AppLocalizations.of(context)!.cancelButton,
                   style: textTheme.labelMedium?.copyWith(
                       color: colorScheme.onBackground.withOpacity(0.6))),
               onPressed: () {
@@ -74,7 +76,7 @@ class Modal extends StatelessWidget {
             ],
             TextButton(
               child: Text(
-                'Save',
+                AppLocalizations.of(context)!.saveButton,
                 style: textTheme.labelMedium?.copyWith(
                   color: isSaveEnabled
                       ? colorScheme.primary
