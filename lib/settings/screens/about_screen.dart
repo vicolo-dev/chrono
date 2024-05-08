@@ -1,13 +1,18 @@
 import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
+import 'package:clock_app/settings/screens/contributors.dart';
+import 'package:clock_app/settings/screens/donors.dart';
 import 'package:clock_app/settings/screens/licenses.dart';
+import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
+import 'package:clock_app/settings/widgets/setting_action_card.dart';
 import 'package:clock_app/settings/widgets/setting_page_link_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -19,7 +24,7 @@ class AboutScreen extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppTopBar(
-        title: Text("About",
+        title: Text(AppLocalizations.of(context)!.aboutSettingGroup,
             style: textTheme.titleMedium?.copyWith(
               color: colorScheme.onBackground.withOpacity(0.6),
             )),
@@ -30,23 +35,36 @@ class AboutScreen extends StatelessWidget {
           child: Column(
             children: [
               const AboutInfo(),
-              SettingPageLinkCard(setting: SettingPageLink("Credits", const LicensesScreen())),
-              //              CardContainer(
-              //   child: Padding(
-              //       padding: const EdgeInsets.all(16.0),
-              //       child: Column(
-              //         children: [
-              //           Text(
-              //             "Contributors",
-              //             style: textTheme.headlineMedium?.copyWith(
-              //               color: colorScheme.primary,
-              //             ),
-              //           ),
-              //           // Image.network(
-              //           //     "https://avatars.githubusercontent.com/u/41967492?v=4"),
-              //         ],
-              //       )),
-              // )
+              SettingActionCard(
+                setting: SettingAction(
+                    "Donate",
+                    getDescription: (context) =>
+                        AppLocalizations.of(context)!.donateDescription,
+                    (context) => AppLocalizations.of(context)!.donateButton,
+                    (context) =>
+                        launchUrl(Uri.parse("https://www.patreon.com/vicolo"))),
+              ),
+              SettingPageLinkCard(
+                  setting: SettingPageLink(
+                      "Donors",
+                      getDescription: (context) =>
+                          AppLocalizations.of(context)!.donorsDescription,
+                      (context) => AppLocalizations.of(context)!.donorsSetting,
+                      DonorsScreen())),
+              SettingPageLinkCard(
+                  setting: SettingPageLink(
+                      "Contributors",
+                      getDescription: (context) =>
+                          AppLocalizations.of(context)!.contributorsDescription,
+                      (context) =>
+                          AppLocalizations.of(context)!.contributorsSetting,
+                      ContributorsScreen())),
+              SettingPageLinkCard(
+                  setting: SettingPageLink(
+                      "Open Source Licenses",
+                      (context) => AppLocalizations.of(context)!
+                          .openSourceLicensesSetting,
+                      const LicensesScreen())),
             ],
           ),
         ),
@@ -103,7 +121,7 @@ class AboutInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Version",
+                      AppLocalizations.of(context)!.versionLabel,
                       style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface,
                       ),
@@ -133,7 +151,7 @@ class AboutInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Package name",
+                      AppLocalizations.of(context)!.packageNameLabel,
                       style: textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface,
                       ),
@@ -168,7 +186,7 @@ class AboutInfo extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "License",
+                        AppLocalizations.of(context)!.licenseLabel,
                         style: textTheme.bodyMedium?.copyWith(
                           color: colorScheme.onSurface,
                         ),
@@ -214,7 +232,7 @@ class AboutInfo extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Email",
+                          AppLocalizations.of(context)!.emailLabel,
                           style: textTheme.bodyMedium?.copyWith(
                             color: colorScheme.onSurface,
                           ),
@@ -250,7 +268,7 @@ class AboutInfo extends StatelessWidget {
                   ),
                   const SizedBox(width: 16.0),
                   Text(
-                    "View on Github",
+                    AppLocalizations.of(context)!.viewOnGithubLabel,
                     style: textTheme.bodyMedium?.copyWith(
                       color: colorScheme.onBackground,
                     ),

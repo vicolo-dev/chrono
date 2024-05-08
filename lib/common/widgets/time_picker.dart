@@ -18,6 +18,8 @@ import 'package:clock_app/theme/border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 // Examples can assume:
 // late BuildContext context;
@@ -304,12 +306,12 @@ class _TitleBar extends StatelessWidget {
                   onPickerModeChanged();
                 },
                 title: setting.name,
-                description: setting.description,
+                description: setting.displayDescription(context),
                 choices: setting.options
                     .map((option) => SelectChoice(
-                        name: option.name,
+                        name: option.getLocalizedName(context),
                         value: option.value,
-                        description: option.description))
+                        description: option.getDescription(context)))
                     .toList(),
                 initialSelectedIndices: [setting.selectedIndex],
                 multiSelect: false,
@@ -318,7 +320,7 @@ class _TitleBar extends StatelessWidget {
               appSettings.save();
             },
             child: Text(
-              "Mode",
+              AppLocalizations.of(context)!.timePickerModeButton,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -2401,7 +2403,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
           ),
           onPressed: _handleCancel,
           child: Text(
-            "Cancel",
+            AppLocalizations.of(context)!.cancelButton,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
                 color: Theme.of(context)
                     .colorScheme
@@ -2422,7 +2424,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                   TextButton(
                     onPressed: () => _handleOk(type, isCustomize: true),
                     child: Text(
-                      "Customize",
+                      AppLocalizations.of(context)!.customizeButton,
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
                           color: Theme.of(context).colorScheme.primary),
                     ),

@@ -21,16 +21,15 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:locale_names/locale_names.dart';
 
 enum TimePickerType { dial, input, spinner }
 
 enum DurationPickerType { rings, spinner }
 
-
 SelectSettingOption<String> _getDateSettingOption(String format) {
   return SelectSettingOption(
-      "${DateFormat(format).format(DateTime.now())} ($format)", format);
+      (context) => "${DateFormat(format).format(DateTime.now())} ($format)",
+      format);
 }
 
 enum SwipeAction {
@@ -39,140 +38,180 @@ enum SwipeAction {
 }
 
 final timeFormatOptions = [
-  SelectSettingOption("12 Hours", TimeFormat.h12),
-  SelectSettingOption("24 Hours", TimeFormat.h24),
-  SelectSettingOption("Device Settings", TimeFormat.device),
+  SelectSettingOption(
+      (context) => AppLocalizations.of(context)!.timeFormat12, TimeFormat.h12),
+  SelectSettingOption(
+      (context) => AppLocalizations.of(context)!.timeFormat24, TimeFormat.h24),
+  SelectSettingOption(
+      (context) => AppLocalizations.of(context)!.timeFormatDevice,
+      TimeFormat.device),
 ];
 
 SettingGroup generalSettingsSchema = SettingGroup(
   "General",
+  (context) => AppLocalizations.of(context)!.generalSettingGroup,
   [
-    SelectSetting("Language",[SelectSettingOption("System", Locale(Platform.localeName)), ...AppLocalizations.supportedLocales.map((locale) {
-      return SelectSettingOption(Locale.fromSubtags(
-        languageCode: locale.languageCode, scriptCode: locale.scriptCode, countryCode: locale.countryCode).nativeDisplayLanguage, locale);
-    })], onChange: (context, index) {
-      App.refreshTheme(context);
-    }),
-    SettingGroup("Display", [
-      SelectSetting<String>(
-        "Date Format",
-        [
-          _getDateSettingOption("dd/MM/yyyy"),
-          _getDateSettingOption("dd-MM-yyyy"),
-          _getDateSettingOption("d/M/yyyy"),
-          _getDateSettingOption("d-M-yyyy"),
-          _getDateSettingOption("MM/dd/yyyy"),
-          _getDateSettingOption("MM-dd-yyyy"),
-          _getDateSettingOption("M/d/yy"),
-          _getDateSettingOption("M-d-yy"),
-          _getDateSettingOption("M/d/yyyy"),
-          _getDateSettingOption("M-d-yyyy"),
-          _getDateSettingOption("yyyy/dd/MM"),
-          _getDateSettingOption("yyyy-dd-MM"),
-          _getDateSettingOption("yyyy/MM/dd"),
-          _getDateSettingOption("yyyy-MM-dd"),
-          // SelectSettingOption(DateTime.now().toIso8601Date(), "YYYY-MM-DD"),
-          _getDateSettingOption("d MMM yyyy"),
-          _getDateSettingOption("d MMMM yyyy"),
+    SelectSetting(
+      "Language",
+      (context) => AppLocalizations.of(context)!.languageSetting,
+      [
+        SelectSettingOption((context) => AppLocalizations.of(context)!.system,
+            Locale(Platform.localeName.split("_").first)),
+        ...getLocaleOptions()
+      ],
+      onChange: (context, index) {
+        App.refreshTheme(context);
+      },
+    ),
+    SettingGroup(
+      "Display",
+      (context) => AppLocalizations.of(context)!.displaySettingGroup,
+      [
+        SelectSetting<String>(
+          "Date Format",
+          (context) => AppLocalizations.of(context)!.dateFormatSetting,
+          [
+            _getDateSettingOption("dd/MM/yyyy"),
+            _getDateSettingOption("dd-MM-yyyy"),
+            _getDateSettingOption("d/M/yyyy"),
+            _getDateSettingOption("d-M-yyyy"),
+            _getDateSettingOption("MM/dd/yyyy"),
+            _getDateSettingOption("MM-dd-yyyy"),
+            _getDateSettingOption("M/d/yy"),
+            _getDateSettingOption("M-d-yy"),
+            _getDateSettingOption("M/d/yyyy"),
+            _getDateSettingOption("M-d-yyyy"),
+            _getDateSettingOption("yyyy/dd/MM"),
+            _getDateSettingOption("yyyy-dd-MM"),
+            _getDateSettingOption("yyyy/MM/dd"),
+            _getDateSettingOption("yyyy-MM-dd"),
+            // SelectSettingOption(DateTime.now().toIso8601Date(), "YYYY-MM-DD"),
+            _getDateSettingOption("d MMM yyyy"),
+            _getDateSettingOption("d MMMM yyyy"),
+          ],
+          getDescription: (context) => "How to display the dates",
+        ),
+        SelectSetting<TimeFormat>(
+          "Time Format",
+          (context) => AppLocalizations.of(context)!.timeFormatSetting,
+          timeFormatOptions,
+          getDescription: (context) => "12 or 24 hour time",
+          onChange: (context, index) {
+            saveTextFile("time_format_string",
+                getTimeFormatString(context, timeFormatOptions[index].value));
+          },
+        ),
+        SwitchSetting(
+            "Show Seconds",
+            (context) => AppLocalizations.of(context)!.showSecondsSetting,
+            true),
+        SelectSetting("Time Picker",
+            (context) => AppLocalizations.of(context)!.timePickerSetting, [
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.pickerDial,
+            TimePickerType.dial,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.pickerInput,
+            TimePickerType.input,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.pickerSpinner,
+            TimePickerType.spinner,
+          ),
         ],
-        description: "How to display the dates",
-      ),
-      SelectSetting<TimeFormat>("Time Format", timeFormatOptions,
-          description: "12 or 24 hour time", onChange: (context, index) {
-        saveTextFile("time_format_string",
-            getTimeFormatString(context, timeFormatOptions[index].value));
-      }),
-      SwitchSetting("Show Seconds", true),
-      SelectSetting("Time Picker", [
-        SelectSettingOption(
-          "Dial",
-          TimePickerType.dial,
-        ),
-        SelectSettingOption(
-          "Input",
-          TimePickerType.input,
-        ),
-        SelectSettingOption(
-          "Spinner",
-          TimePickerType.spinner,
-        ),
-      ], searchTags: [
-        "time",
-        "picker",
-        "dial",
-        "input",
-        "spinner",
-      ]),
-      SelectSetting("Duration Picker", [
-        SelectSettingOption(
-          "Rings",
-          DurationPickerType.rings,
-        ),
-        SelectSettingOption(
-          "Spinner",
-          DurationPickerType.spinner,
-        ),
-      ], searchTags: [
-        "duration",
-        "rings",
-        "time",
-        "picker",
-        "dial",
-        "input",
-        "spinner",
-      ]),
-    ]),
+            searchTags: [
+              "time",
+              "picker",
+              "dial",
+              "input",
+              "spinner",
+            ]),
+        SelectSetting("Duration Picker",
+            (context) => AppLocalizations.of(context)!.durationPickerSetting, [
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.pickerRings,
+            DurationPickerType.rings,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.pickerSpinner,
+            DurationPickerType.spinner,
+          ),
+        ],
+            searchTags: [
+              "duration",
+              "rings",
+              "time",
+              "picker",
+              "dial",
+              "input",
+              "spinner",
+            ]),
+      ],
+    ),
     SelectSetting(
       "Swipe Action",
+      (context) => AppLocalizations.of(context)!.swipeActionSetting,
       [
         SelectSettingOption(
-          "Card Actions",
+          (context) => AppLocalizations.of(context)!.swipActionCardAction,
           SwipeAction.cardActions,
-          description: "Swipe cards to delete or duplicate them",
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.swipeActionCardActionDescription,
         ),
         SelectSettingOption(
-          "Switch Tabs",
+          (context) => AppLocalizations.of(context)!.swipActionSwitchTabs,
           SwipeAction.switchTabs,
-          description: "Swipe from one tab to the next",
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.swipeActionSwitchTabsDescription,
         )
       ],
     ),
     SettingPageLink(
       "Melodies",
+      (context) => AppLocalizations.of(context)!.melodiesSetting,
       const RingtonesScreen(),
       searchTags: ["ringtones", "music", "audio", "tones", "custom"],
       icon: Icons.music_note_outlined,
     ),
     SettingPageLink(
       "Tags",
+      (context) => AppLocalizations.of(context)!.tagsSetting,
       const TagsScreen(),
       searchTags: ["tags", "groups", "filter"],
       icon: Icons.label_outline_rounded,
     ),
-    SettingGroup("Reliability", [
+    SettingGroup("Reliability",
+        (context) => AppLocalizations.of(context)!.reliabilitySettingGroup, [
       SettingAction(
         "Vendor Specific",
+        (context) => AppLocalizations.of(context)!.vendorSetting,
         (context) => launchUrl(Uri.parse("https://dontkillmyapp.com")),
-        description: "Manually disable vendor-specific optimizations",
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.vendorSettingDescription,
       ),
       SettingAction(
         "Disable Battery Optimization",
+        (context) => AppLocalizations.of(context)!.batteryOptimizationSetting,
         (context) async {
           AppSettings.openAppSettings(
               type: AppSettingsType.batteryOptimization);
         },
-        description:
-            "Disable battery optimization for this app to prevent alarms from being delayed",
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.batteryOptimizationSettingDescription,
       ),
       SettingAction(
         "Allow Notifications",
+        (context) => AppLocalizations.of(context)!.allowNotificationSetting,
         (context) async {
           AppSettings.openAppSettings(type: AppSettingsType.notification);
         },
-        description: "Allow lock screen notifications for alarms and timers",
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.allowNotificationSettingDescription,
       ),
       SettingAction(
         "Auto Start",
+        (context) => AppLocalizations.of(context)!.autoStartSetting,
         (context) async {
           try {
             //check auto-start availability.
@@ -191,13 +230,15 @@ SettingGroup generalSettingsSchema = SettingGroup(
             if (kDebugMode) print(e.message);
           }
         },
-        description:
-            "Some devices require Auto Start to be enabled for alarms to ring while app is closed.",
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.autoStartSettingDescription,
       ),
     ]),
-    SettingGroup("Animations", [
+    SettingGroup("Animations",
+        (context) => AppLocalizations.of(context)!.animationSettingGroup, [
       SliderSetting(
         "Animation Speed",
+        (context) => AppLocalizations.of(context)!.animationSpeedSetting,
         0.5,
         2,
         1,
@@ -208,9 +249,13 @@ SettingGroup generalSettingsSchema = SettingGroup(
         //       ["Show Upcoming Alarm Notifications"], (value) => value),
         // ],
       ),
-      SwitchSetting("Extra Animations", false),
+      SwitchSetting(
+          "Extra Animations",
+          (context) => AppLocalizations.of(context)!.extraAnimationSetting,
+          false),
     ])
   ],
   icon: FluxIcons.settings,
-  description: "Set app wide settings like time format",
+  getDescription: (context) =>
+      AppLocalizations.of(context)!.generalSettingGroupDescription,
 );

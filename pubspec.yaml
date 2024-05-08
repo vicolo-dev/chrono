@@ -87,8 +87,10 @@ flutter:
   assets:
     - assets/timezones.db
     - assets/images/
+    - assets/contributors/
+    - assets/contributors/avatars/
+    - assets/patreons/
     - assets/ringtones/
-    - assets/contributors.json
   fonts:
     - family: Rubik
       fonts:

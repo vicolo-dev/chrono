@@ -50,7 +50,7 @@ class _TimerPresetCardState extends State<TimerPresetCard> {
             ),
             CardEditMenu(actions: [
               getDeletePopupAction(context, widget.onPressDelete),
-              getDuplicatePopupAction(widget.onPressDuplicate),
+              getDuplicatePopupAction(context, widget.onPressDuplicate),
             ]),
           ],
         ));

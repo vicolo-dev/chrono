@@ -4,6 +4,8 @@ import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SettingGroupCard extends StatefulWidget {
   final SettingGroup settingGroup;
@@ -77,6 +79,7 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
       ),
     );
 
+    String description = widget.settingGroup.displayDescription(context);
     CardContainer cardView = CardContainer(
       onTap: openSettingGroupScreen,
       child: Padding(
@@ -94,10 +97,10 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
                     widget.settingGroup.displayName(context),
                     style: textTheme.displaySmall,
                   ),
-                  if (widget.settingGroup.description.isNotEmpty) ...[
+                  if (description.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
-                      widget.settingGroup.displayDescription(context),
+                      description,
                       style: textTheme.bodyMedium,
                     )
                   ]
@@ -157,7 +160,7 @@ class SettingGroupHeader extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 6.0),
                       child: Text(
-                        "More",
+                        AppLocalizations.of(context)!.settingGroupMore,
                         style: textTheme.titleSmall?.copyWith(
                           color: colorScheme.primary,
                         ),

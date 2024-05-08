@@ -74,7 +74,7 @@ class ThemeCard<Item extends ThemeItem> extends StatelessWidget {
               CardEditMenu(actions: [
                 if (themeItem.isDeletable)
                   getDeletePopupAction(context, onPressDelete),
-                getDuplicatePopupAction(onPressDuplicate),
+                getDuplicatePopupAction(context,onPressDuplicate),
               ]),
             ],
           ),

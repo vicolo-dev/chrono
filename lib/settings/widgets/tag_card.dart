@@ -43,7 +43,7 @@ class _TagCardState extends State<TagCard> {
             ),
             CardEditMenu(actions: [
               getDeletePopupAction(context, widget.onPressDelete),
-              getDuplicatePopupAction(widget.onPressDuplicate),
+              getDuplicatePopupAction(context, widget.onPressDuplicate),
             ]),
           ],
         ));

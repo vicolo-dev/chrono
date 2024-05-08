@@ -24,6 +24,7 @@ class ClockTimer extends CustomizableListItem {
   late int _id;
   SettingGroup _settings = SettingGroup(
     "Timer Settings",
+    (context) => "Timer Settings",
     appSettings
         .getGroup("Timer")
         .getGroup("Default Settings")
@@ -225,6 +226,7 @@ class ClockTimer extends CustomizableListItem {
     _id = json['id'] ?? UniqueKey().hashCode;
     _settings = SettingGroup(
       "Timer Settings",
+      (context) => "Timer Settings",
       appSettings
           .getGroup("Timer")
           .getGroup("Default Settings")

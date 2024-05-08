@@ -2,7 +2,6 @@ import 'package:clock_app/common/logic/get_list_filter_chips.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/list/delete_alert_dialogue.dart';
 import 'package:clock_app/common/widgets/list/list_filter_chip.dart';
@@ -10,6 +9,7 @@ import 'package:clock_app/common/widgets/list/list_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:great_list_view/great_list_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef ItemCardBuilder = Widget Function(
   BuildContext context,
@@ -169,10 +169,12 @@ class _CustomListViewState<Item extends ListItem>
     });
 
     final deletedItems = List.from(initialList
-        .where((element) => currentList.where((e) => e.id == element.id).isEmpty)
+        .where(
+            (element) => currentList.where((e) => e.id == element.id).isEmpty)
         .toList());
     final addedItems = List.from(currentList
-        .where((element) => initialList.where((e) => e.id == element.id).isEmpty)
+        .where(
+            (element) => initialList.where((e) => e.id == element.id).isEmpty)
         .toList());
 
     for (var deletedItem in deletedItems) {
@@ -333,7 +335,7 @@ class _CustomListViewState<Item extends ListItem>
         widgets.add(ListFilterActionChip(
           actions: [
             ListFilterAction(
-              name: "Clear all filters",
+              name: AppLocalizations.of(context)!.clearFiltersAction,
               icon: Icons.clear_rounded,
               action: () {
                 for (var filter in widget.listFilters) {
@@ -351,7 +353,7 @@ class _CustomListViewState<Item extends ListItem>
                       .toList()),
                 )),
             ListFilterAction(
-              name: "Delete all filtered items",
+              name: AppLocalizations.of(context)!.deleteAllFilteredAction,
               icon: Icons.delete_rounded,
               color: colorScheme.error,
               action: () async {
@@ -378,7 +380,9 @@ class _CustomListViewState<Item extends ListItem>
           ListSortChip(
             selectedIndex: selectedSortIndex,
             sortOptions: [
-              ListSortOption("Default", "", (a, b) => 0),
+              ListSortOption(
+                  (context) => AppLocalizations.of(context)!.defaultLabel,
+                  (a, b) => 0),
               ...widget.sortOptions,
             ],
             onChange: (index) => setState(() {

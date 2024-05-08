@@ -3,6 +3,8 @@ import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SettingsTopBar extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -61,7 +63,7 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
             focusedBorder:
                 const OutlineInputBorder(borderSide: BorderSide.none),
             fillColor: Colors.transparent,
-            hintText: 'Search for a setting',
+            hintText: AppLocalizations.of(context)!.searchSettingPlaceholder,
             hintStyle: Theme.of(context).textTheme.bodyLarge,
           ),
           textAlignVertical: TextAlignVertical.center,

@@ -11,6 +11,7 @@ import 'package:clock_app/common/widgets/clock/clock_display.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlarmCard extends StatefulWidget {
   const AlarmCard({
@@ -109,7 +110,7 @@ class _AlarmCardState extends State<AlarmCard> {
         );
       }
       return TextButton(
-        child: Text("Dismiss",
+        child: Text(AppLocalizations.of(context)!.dismissAlarmButton,
             maxLines: 1,
             style: textTheme.labelLarge?.copyWith(color: colorScheme.primary)),
         onPressed: () async {
@@ -204,12 +205,12 @@ class _AlarmCardState extends State<AlarmCard> {
               CardEditMenu(actions: [
                 if (widget.alarm.isDeletable)
                   getDeletePopupAction(context, widget.onPressDelete),
-                getDuplicatePopupAction(widget.onPressDuplicate),
+                getDuplicatePopupAction(context, widget.onPressDuplicate),
                 if (widget.alarm.canBeSkipped)
                   PopupAction(
                     widget.alarm.shouldSkipNextAlarm
-                        ? "Cancel Skip"
-                        : "Skip Next Alarm",
+                        ? AppLocalizations.of(context)!.cancelSkipAlarmButton
+                        : AppLocalizations.of(context)!.skipAlarmButton,
                     () {
                       if (widget.alarm.shouldSkipNextAlarm) {
                         widget.onSkipChange(false);

@@ -1,6 +1,7 @@
 import 'package:clock_app/common/logic/card_decoration.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ThemePreviewCard extends StatelessWidget {
   const ThemePreviewCard({
@@ -25,7 +26,7 @@ class ThemePreviewCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
-                "Preview",
+                AppLocalizations.of(context)!.previewLabel,
                 style: textTheme.headlineMedium?.copyWith(
                   color: colorScheme.onBackground,
                 ),
@@ -42,7 +43,7 @@ class ThemePreviewCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        "Card",
+                        AppLocalizations.of(context)!.cardLabel,
                         style: textTheme.headlineSmall?.copyWith(
                           color: colorScheme.onSurface,
                         ),
@@ -55,7 +56,7 @@ class ThemePreviewCard extends StatelessWidget {
                   color: colorScheme.primary,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text("Accent",
+                    child: Text(AppLocalizations.of(context)!.accentLabel,
                         style: textTheme.bodyMedium
                             ?.copyWith(color: colorScheme.onPrimary)),
                   ),
@@ -65,7 +66,7 @@ class ThemePreviewCard extends StatelessWidget {
                   color: colorScheme.error,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text("Error",
+                    child: Text(AppLocalizations.of(context)!.errorLabel,
                         style: textTheme.bodyMedium
                             ?.copyWith(color: colorScheme.onError)),
                   ),

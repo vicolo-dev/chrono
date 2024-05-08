@@ -1,6 +1,7 @@
 import 'package:clock_app/common/widgets/fields/switch_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const name = 'Test Switch';
 
@@ -67,6 +68,9 @@ Future<void> _renderWidget(WidgetTester tester,
     {value = false, void Function(bool) onChanged = _defaultOnChanged}) async {
   await tester.pumpWidget(
     MaterialApp(
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: SwitchField(
           name: name,

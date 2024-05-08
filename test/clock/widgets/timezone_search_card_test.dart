@@ -4,6 +4,7 @@ import 'package:clock_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest_all.dart' as timezone_db;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 var sampleCity = City("Tokyo", "Japan", "Asia/Tokyo");
 
@@ -35,6 +36,9 @@ void main() {
 Future<void> _renderWidget(WidgetTester tester) async {
   await tester.pumpWidget(
     MaterialApp(
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: defaultTheme,
       home: TimeZoneSearchCard(
         city: sampleCity,

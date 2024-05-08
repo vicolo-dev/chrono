@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
 import 'package:clock_app/common/data/app_info.dart';
+import 'package:clock_app/l10n/language_local.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
@@ -22,8 +23,6 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:receive_intent/receive_intent.dart' as intent_handler;
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class App extends StatefulWidget {
@@ -162,6 +161,12 @@ class _AppState extends State<App> {
       ThemeBrightness themeBrightness =
           _colorSettings.getSetting("Brightness").value;
       Locale locale = _generalSettings.getSetting("Language").value;
+      // if(!AppLocalizations.supportedLocales.contains(locale)){
+      //
+      // }
+      //
+      // print("locaaaaaaaale $locale");
+      // print(getLocaleOptions().map((e) => e.value).toList());
 
       return MaterialApp(
         scaffoldMessengerKey: _messangerKey,

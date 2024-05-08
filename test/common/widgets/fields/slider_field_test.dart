@@ -1,6 +1,7 @@
 import 'package:clock_app/common/widgets/fields/slider_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const name = 'Test Slider';
 const unit = 'unit';
@@ -37,6 +38,9 @@ Future<void> _renderWidget(WidgetTester tester,
     {double value = 0, void Function(double)? onChanged}) async {
   await tester.pumpWidget(
     MaterialApp(
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: SliderField(
           value: value,

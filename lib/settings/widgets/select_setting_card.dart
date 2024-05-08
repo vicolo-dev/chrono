@@ -27,9 +27,9 @@ class _SelectSettingCardState<T> extends State<SelectSettingCard<T>> {
       title: widget.setting.displayName(context),
       choices: widget.setting.options
           .map((option) => SelectChoice(
-              name: option.name,
+              name: option.getLocalizedName(context),
               value: option.value,
-              description: option.description))
+              description: option.getDescription(context)))
           .toList(),
       onChanged: (value) {
         setState(() {

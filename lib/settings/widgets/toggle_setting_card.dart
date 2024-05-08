@@ -26,7 +26,8 @@ class _ToggleSettingCardState<T> extends State<ToggleSettingCard<T>> {
       description: widget.setting.displayDescription(context),
       selectedItems: widget.setting.value,
       options: widget.setting.options
-          .map((option) => ToggleOption<T>(option.name, option.value))
+          .map((option) =>
+              ToggleOption<T>(option.getLocalizedName(context), option.value))
           .toList(),
       onChange: (value) {
         setState(() {

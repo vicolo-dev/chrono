@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 ActionPane getDeleteActionPane(VoidCallback onDelete, BuildContext context) {
   final theme = Theme.of(context);
@@ -18,7 +20,7 @@ ActionPane getDeleteActionPane(VoidCallback onDelete, BuildContext context) {
           children: [
             Icon(Icons.delete, color: colorScheme.onError),
             const SizedBox(height: 4),
-            Text('Delete',
+            Text(AppLocalizations.of(context)!.deleteButton,
                 style: textTheme.titleSmall?.copyWith(
                   color: colorScheme.onError,
                 )),
@@ -49,7 +51,7 @@ ActionPane getDuplicateActionPane(
           children: [
             Icon(Icons.copy_rounded, color: colorScheme.onPrimary),
             const SizedBox(height: 4),
-            Text('Duplicate',
+            Text(AppLocalizations.of(context)!.duplicateButton,
                 style: textTheme.titleSmall?.copyWith(
                   color: colorScheme.onPrimary,
                 )),

@@ -3,6 +3,8 @@ import 'package:clock_app/timer/logic/edit_duration_picker_mode.dart';
 import 'package:clock_app/timer/logic/get_duration_picker.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 Future<TimeDuration?> showDurationPicker(
   BuildContext context, {
@@ -32,7 +34,7 @@ Future<TimeDuration?> showDurationPicker(
                       children: [
                         // const SizedBox(width: 8),
                         Text(
-                          "Choose Duration",
+                          AppLocalizations.of(context)!.durationPickerTitle,
                           style: TimePickerTheme.of(context).helpTextStyle ??
                               Theme.of(context).textTheme.labelSmall,
                         ),
@@ -41,7 +43,7 @@ Future<TimeDuration?> showDurationPicker(
                           onPressed: () => editDurationPickerMode(
                               context, () => setState(() {})),
                           child: Text(
-                            "Mode",
+                            AppLocalizations.of(context)!.timePickerModeButton,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall
