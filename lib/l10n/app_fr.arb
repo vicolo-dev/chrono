@@ -103,7 +103,7 @@
   "@alarmScheduleSettingGroup": {},
   "soundSettingGroup": "Son",
   "@soundSettingGroup": {},
-  "settingGroupMore": "Paramètres supplémentaires",
+  "settingGroupMore": "Plus",
   "@settingGroupMore": {},
   "melodySetting": "Mélodie",
   "@melodySetting": {},
@@ -592,5 +592,13 @@
   "styleThemeElevationSetting": "Élévation",
   "@styleThemeElevationSetting": {},
   "searchSettingPlaceholder": "Rechercher",
-  "@searchSettingPlaceholder": {}
+  "@searchSettingPlaceholder": {},
+  "openSourceLicensesSetting": "Licence open source",
+  "@openSourceLicensesSetting": {},
+  "contributorsSetting": "Contributeurs",
+  "@contributorsSetting": {},
+  "donorsSetting": "Donateurs",
+  "@donorsSetting": {},
+  "donateButton": "Donner",
+  "@donateButton": {}
 }
