@@ -4,6 +4,7 @@ import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/widgets/setting_action_card.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LicensesScreen extends StatelessWidget {
   const LicensesScreen({super.key});
@@ -15,7 +16,7 @@ class LicensesScreen extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppTopBar(
-        title: Text("Credits",
+        title: Text(AppLocalizations.of(context)!.openSourceLicensesSetting,
             style: textTheme.titleMedium?.copyWith(
               color: colorScheme.onBackground.withOpacity(0.6),
             )),
