@@ -543,7 +543,7 @@
   "@searchCityPlaceholder": {},
   "durationPickerTitle": "Elige la duración",
   "@durationPickerTitle": {},
-  "relativeTime": "{hours}h {relativo, seleccionar, adelante{ahead} detrás{behind} otros{Other}}",
+  "relativeTime": "{hours}h {relative, select, ahead{adelante} behind{detrás} other{Other}}",
   "@relativeTime": {},
   "thursdayFull": "Jueves",
   "@thursdayFull": {},
