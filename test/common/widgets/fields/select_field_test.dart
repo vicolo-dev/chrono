@@ -3,6 +3,7 @@ import 'package:clock_app/common/widgets/fields/select_field/option_cards/text_o
 import 'package:clock_app/common/widgets/fields/select_field/select_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const title = 'Test';
 final choices = [
@@ -140,6 +141,9 @@ Future<void> _renderWidget(WidgetTester tester,
     {int selectedIndex = 0, void Function(List<int>)? onChanged}) async {
   await tester.pumpWidget(
     MaterialApp(
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: SelectField(
           selectedIndices: [selectedIndex],

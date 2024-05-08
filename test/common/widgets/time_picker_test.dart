@@ -2,6 +2,7 @@ import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
 import 'package:flutter/material.dart' hide TimePickerDialog;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 TimeOfDay selectedTime = const TimeOfDay(hour: 12, minute: 30);
 
@@ -126,6 +127,9 @@ void main() {
 Future<void> _renderWidget(WidgetTester tester) async {
   return await tester.pumpWidget(
     MaterialApp(
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: Builder(
           builder: (BuildContext context) {

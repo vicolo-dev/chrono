@@ -4,6 +4,7 @@ import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const testKey = Key('key');
 var sampleAlarm = Alarm(const Time(hour: 2, minute: 30));
@@ -88,6 +89,9 @@ void main() {
 Future<void> _renderWidget(WidgetTester tester, [Alarm? alarm]) async {
   await tester.pumpWidget(
     MaterialApp(
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: defaultTheme,
       home: Scaffold(
         body: AlarmCard(

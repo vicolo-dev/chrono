@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:clock_app/common/widgets/fields/toggle_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const List<ToggleOption<int>> testOptions = [
   ToggleOption('Option 1', 1),
@@ -56,6 +57,9 @@ Future<void> _renderWidget(WidgetTester tester,
     void Function(int)? onChange}) async {
   await tester.pumpWidget(
     MaterialApp(
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: ToggleField<int>(
           name: name ?? 'Test Field',
