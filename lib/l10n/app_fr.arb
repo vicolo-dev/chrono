@@ -543,7 +543,7 @@
   "@sameTime": {},
   "searchCityPlaceholder": "Rechercher une ville",
   "@searchCityPlaceholder": {},
-  "relativeTime": "{hours}h {relative, select, ahead{ahead} behind{behind} other{Other}}",
+  "relativeTime": "{hours}h {relative, select, ahead{d’avance} behind{de retard} other{Other}}",
   "@relativeTime": {},
   "cityAlreadyInFavorites": "Cette ville est déjà dans vos favoris",
   "@cityAlreadyInFavorites": {},
@@ -600,5 +600,11 @@
   "donorsSetting": "Donateurs",
   "@donorsSetting": {},
   "donateButton": "Donner",
-  "@donateButton": {}
+  "@donateButton": {},
+  "donorsDescription": "Nos généreux patreons",
+  "@donorsDescription": {},
+  "contributorsDescription": "Personnes qui ont rendu cette app possible",
+  "@contributorsDescription": {},
+  "donateDescription": "Donner pour supporter le développement de l’application",
+  "@donateDescription": {}
 }
