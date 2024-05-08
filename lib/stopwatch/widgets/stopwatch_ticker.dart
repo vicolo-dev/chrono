@@ -6,6 +6,8 @@ import 'package:clock_app/stopwatch/widgets/lap_comparer.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class StopwatchTicker extends StatefulWidget {
   const StopwatchTicker({super.key, required this.stopwatch});
@@ -106,7 +108,7 @@ class _StopwatchTickerState extends State<StopwatchTicker> {
               LapComparer(
                 stopwatch: widget.stopwatch,
                 comparisonLap: widget.stopwatch.previousLap,
-                label: "Previous",
+                label: AppLocalizations.of(context)!.stopwatchPrevious,
                 color: Colors.blue,
               ),
             ],
@@ -115,7 +117,7 @@ class _StopwatchTickerState extends State<StopwatchTicker> {
               LapComparer(
                 stopwatch: widget.stopwatch,
                 comparisonLap: widget.stopwatch.fastestLap,
-                label: "Fastest",
+                label: AppLocalizations.of(context)!.stopwatchFastest,
                 color: Colors.red,
               ),
             ],
@@ -124,7 +126,7 @@ class _StopwatchTickerState extends State<StopwatchTicker> {
               LapComparer(
                 stopwatch: widget.stopwatch,
                 comparisonLap: widget.stopwatch.slowestLap,
-                label: "Slowest",
+                label: AppLocalizations.of(context)!.stopwatchSlowest,
                 color: Colors.orange,
               ),
             ],
@@ -133,7 +135,7 @@ class _StopwatchTickerState extends State<StopwatchTicker> {
               LapComparer(
                 stopwatch: widget.stopwatch,
                 comparisonLap: widget.stopwatch.averageLap,
-                label: "Average",
+                label: AppLocalizations.of(context)!.stopwatchAverage,
                 color: Colors.green,
                 showLapNumber: false,
               ),

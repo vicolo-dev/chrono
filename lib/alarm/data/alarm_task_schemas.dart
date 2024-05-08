@@ -4,24 +4,38 @@ import 'package:clock_app/alarm/widgets/tasks/retype_task.dart';
 import 'package:clock_app/alarm/widgets/tasks/sequence_task.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Map<AlarmTaskType, AlarmTaskSchema> alarmTaskSchemasMap = {
   AlarmTaskType.math: AlarmTaskSchema(
-    "Math Problems",
-    SettingGroup("Math Problems Settings", [
+    (context) => AppLocalizations.of(context)!.mathTask,
+    SettingGroup("Math Problems Settings",
+        (context) => AppLocalizations.of(context)!.mathTask, [
       SelectSetting(
         "Difficulty",
+        (context) => AppLocalizations.of(context)!.mathTaskDifficultySetting,
         [
           SelectSettingOption(
-              "Easy (X + Y)", MathTaskDifficultyLevel([Operator.add])),
+              (context) => AppLocalizations.of(context)!.mathEasyDifficulty,
+              MathTaskDifficultyLevel([Operator.add])),
           SelectSettingOption(
-              "Medium (X × Y)", MathTaskDifficultyLevel([Operator.multiply])),
-          SelectSettingOption("Hard (X × Y + Z)",
+              (context) => AppLocalizations.of(context)!.mathMediumDifficulty,
+              MathTaskDifficultyLevel([Operator.multiply])),
+          SelectSettingOption(
+              (context) => AppLocalizations.of(context)!.mathHardDifficulty,
               MathTaskDifficultyLevel([Operator.multiply, Operator.add])),
-          SelectSettingOption("Very Hard (X × Y × Z)",
+          SelectSettingOption(
+              (context) => AppLocalizations.of(context)!.mathVeryHardDifficulty,
               MathTaskDifficultyLevel([Operator.multiply, Operator.multiply])),
         ],
       ),
+      SliderSetting(
+          "Number of problems",
+          (context) => AppLocalizations.of(context)!.numberOfProblemsSetting,
+          1,
+          10,
+          1,
+          snapLength: 1),
     ]),
     (onSolve, settings) {
       return MathTask(
@@ -31,21 +45,54 @@ Map<AlarmTaskType, AlarmTaskSchema> alarmTaskSchemasMap = {
     },
   ),
   AlarmTaskType.retype: AlarmTaskSchema(
-    "Retype Text",
-    SettingGroup("Retype Text Settings", [
-      SliderSetting("Number of characters", 5, 20, 5, snapLength: 1),
-      SwitchSetting("Include numbers", false),
-      SwitchSetting("Include lowercase", false),
+    (context) => AppLocalizations.of(context)!.retypeTask,
+    SettingGroup("Retype Text Settings",
+        (context) => AppLocalizations.of(context)!.retypeTask, [
+      SliderSetting(
+          "Number of characters",
+          (context) => AppLocalizations.of(context)!.retypeNumberChars,
+          5,
+          20,
+          5,
+          snapLength: 1),
+      SwitchSetting(
+          "Include numbers",
+          (context) => AppLocalizations.of(context)!.retypeIncludeNumSetting,
+          false),
+      SwitchSetting(
+          "Include lowercase",
+          (context) => AppLocalizations.of(context)!.retypeLowercaseSetting,
+          true),
+      SliderSetting(
+          "Number of problems",
+          (context) => AppLocalizations.of(context)!.numberOfProblemsSetting,
+          1,
+          10,
+          1,
+          snapLength: 1),
     ]),
     (onSolve, settings) {
       return RetypeTask(onSolve: onSolve, settings: settings);
     },
   ),
   AlarmTaskType.sequence: AlarmTaskSchema(
-    "Sequence",
-    SettingGroup("Sequence Settings", [
-      SliderSetting("Sequence length", 3, 10, 3, snapLength: 1),
-      SliderSetting("Grid size", 2, 5, 3, snapLength: 1),
+    (context) => AppLocalizations.of(context)!.sequenceTask,
+    SettingGroup("Sequence Settings",
+        (context) => AppLocalizations.of(context)!.sequenceTask, [
+      SliderSetting(
+          "Sequence length",
+          (context) => AppLocalizations.of(context)!.sequenceLengthSetting,
+          3,
+          10,
+          3,
+          snapLength: 1),
+      SliderSetting(
+          "Grid size",
+          (context) => AppLocalizations.of(context)!.sequenceGridSizeSetting,
+          2,
+          5,
+          3,
+          snapLength: 1),
     ]),
     (onSolve, settings) {
       return SequenceTask(onSolve: onSolve, settings: settings);

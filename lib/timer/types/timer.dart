@@ -21,9 +21,10 @@ class ClockTimer extends CustomizableListItem {
   int _milliSecondsRemainingOnPause = 5000;
   DateTime _startTime = DateTime(0);
   TimerState _state = TimerState.stopped;
-  late final int _id;
+  late int _id;
   SettingGroup _settings = SettingGroup(
     "Timer Settings",
+    (context) => "Timer Settings",
     appSettings
         .getGroup("Timer")
         .getGroup("Default Settings")
@@ -225,6 +226,7 @@ class ClockTimer extends CustomizableListItem {
     _id = json['id'] ?? UniqueKey().hashCode;
     _settings = SettingGroup(
       "Timer Settings",
+      (context) => "Timer Settings",
       appSettings
           .getGroup("Timer")
           .getGroup("Default Settings")
@@ -232,6 +234,18 @@ class ClockTimer extends CustomizableListItem {
           .settingItems,
     );
     _settings.loadValueFromJson(json['settings']);
+  }
+
+  @override
+  void copyFrom(dynamic other) {
+    _duration = TimeDuration.from(other._duration);
+    _currentDuration = TimeDuration.from(other._currentDuration);
+    _milliSecondsRemainingOnPause = other._milliSecondsRemainingOnPause;
+    _startTime = other._startTime;
+    _state = other._state;
+    _settings = other._settings.copy();
+    _id = other._id;
+      
   }
 
   @override

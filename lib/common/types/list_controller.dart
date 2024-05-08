@@ -1,5 +1,8 @@
-typedef ItemChangerCallback<T> = Function(List<T> item);
+typedef ItemChangerCallback<T> = Function(List<T> items);
+typedef SingleItemChangerCallback<T> = Function(T item);
 typedef ItemChanger<T> = Function(ItemChangerCallback<T>, bool);
+typedef SingleItemChanger<T> = Function(
+    int, SingleItemChangerCallback<T>, bool);
 
 class ListController<T> {
   ItemChanger<T>? _changeItems;
@@ -7,6 +10,7 @@ class ListController<T> {
   void Function(T item)? _deleteItem;
   void Function(T item)? _duplicateItem;
   int Function(T item)? _getItemIndex;
+  List<T> Function()? _getItems;
   void Function()? _clearItems;
   void Function(List<T>)? _reloadItems;
 
@@ -14,6 +18,10 @@ class ListController<T> {
 
   void setChangeItems(ItemChanger<T> changeItems) {
     _changeItems = changeItems;
+  }
+
+  void setGetItems(List<T> Function() callback) {
+    _getItems = callback;
   }
 
   void setGetItemIndex(int Function(T item) callback) {
@@ -61,11 +69,13 @@ class ListController<T> {
     _clearItems?.call();
   }
 
-  void reload(List<T> items){
+  void reload(List<T> items) {
     _reloadItems?.call(items);
   }
 
   int getItemIndex(T item) {
     return _getItemIndex?.call(item) ?? 0;
   }
+
+  List<T> getItems () => _getItems?.call() ?? [];
 }

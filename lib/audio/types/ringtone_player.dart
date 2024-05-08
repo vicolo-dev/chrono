@@ -33,8 +33,38 @@ class RingtonePlayer {
       {LoopMode loopMode = LoopMode.one}) async {
     await initializeAudioSession(alarm.audioChannel);
     activePlayer = _alarmPlayer;
+    String uri = alarm.ringtone.uri;
+    // if (alarm.ringtone.type == FileItemType.directory) {
+    //   print(alarm.ringtone.uri);
+    //   List<String>? persistentPermUris =
+    //       await PickOrSave().urisWithPersistedPermission();
+    //   print(persistentPermUris);
+    // print(await Directory(alarm.ringtone.uri).list(recursive: true).toList());
+    // List<DocumentFile>? documentFiles =
+    //     await PickOrSave().directoryDocumentsPicker(
+    //   params: DirectoryDocumentsPickerParams(
+    //     directoryUri: alarm.ringtone.uri,
+    //     // recurseDirectories: true,
+    //     mimeTypesFilter: ["audio/*"],
+    //   ),
+    // );
+    // if (documentFiles != null && documentFiles.isNotEmpty) {
+    //   Random random = Random();
+    //   int index = random.nextInt(documentFiles.length);
+    //   DocumentFile documentFile = documentFiles[index];
+    //   print("${documentFile.name} ${documentFile.uri}");
+    //   uri = documentFile.uri;
+    // } else {
+    //   // Choose a default ringtone if directory doesn't have any audio
+    //   uri = (await loadList<FileItem>("ringtones"))
+    //       .where((ringtone) => ringtone.type == FileItemType.audio)
+    //       .toList()
+    //       .first
+    //       .uri;
+    // }
+    // }
     await _play(
-      alarm.ringtone.uri,
+      uri,
       vibrate: alarm.vibrate,
       loopMode: LoopMode.one,
       volume: alarm.volume / 100,
@@ -65,6 +95,7 @@ class RingtonePlayer {
     LoopMode loopMode = LoopMode.one,
     double volume = 1.0,
     int secondsToMaxVolume = 0,
+    // double duration = double.infinity,
   }) async {
     RingtoneManager.lastPlayedRingtoneUri = ringtoneUri;
     if (_vibratorIsAvailable && vibrate) {
@@ -86,6 +117,13 @@ class RingtonePlayer {
         );
       }
     }
+    // Future.delayed(
+    //   Duration(seconds: duration.toInt()),
+    //   () async {
+    //     await stop();
+    //   },
+    // );
+
     activePlayer?.play();
   }
 

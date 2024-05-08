@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/common/types/notification_type.dart';
@@ -36,10 +36,10 @@ Future<void> scheduleAlarm(
         : 'timer_schedule_ids';
     List<ScheduleId> scheduleIds = await loadList<ScheduleId>(name);
     scheduleIds.removeWhere((id) => id.id == scheduleId);
-
-    if (type == ScheduledNotificationType.alarm) {
-      await cancelAlarmReminderNotification(scheduleId);
-    }
+    //
+    // if (type == ScheduledNotificationType.alarm) {
+    //   await cancelAlarmReminderNotification(scheduleId);
+    // }
 
     AndroidAlarmManager.cancel(scheduleId);
 
@@ -68,10 +68,10 @@ Future<void> scheduleAlarm(
     scheduleIds.add(ScheduleId(id: scheduleId));
     await saveList<ScheduleId>(name, scheduleIds);
 
-    if (type == ScheduledNotificationType.alarm && !snooze) {
-      await createAlarmReminderNotification(scheduleId, startDate);
-    }
-
+    // 
+    // if (type == ScheduledNotificationType.alarm && !snooze) {
+    // }
+    //
     // Scheduling the actual alarm
     AndroidAlarmManager.oneShotAt(
       startDate,

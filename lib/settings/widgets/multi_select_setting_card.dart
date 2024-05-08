@@ -28,9 +28,9 @@ class _MultiSelectSettingCardState<T> extends State<MultiSelectSettingCard<T>> {
       multiSelect: true,
       choices: widget.setting.options
           .map((option) => SelectChoice(
-              name: option.name,
+              name: option.getLocalizedName(context),
               value: option.value,
-              description: option.description))
+              description: option.getDescription(context)))
           .toList(),
       onChanged: (value) {
         setState(() {

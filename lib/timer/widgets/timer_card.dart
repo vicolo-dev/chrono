@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
-import 'package:clock_app/common/widgets/circular_progress_bar.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/widgets/timer_progress_bar.dart';
@@ -15,12 +15,15 @@ class TimerCard extends StatefulWidget {
     required this.onToggleState,
     required this.onPressDelete,
     required this.onPressDuplicate,
+    required this.onPressReset, required this.onPressAddTime,
   });
 
   final ClockTimer timer;
   final VoidCallback onToggleState;
   final VoidCallback onPressDelete;
   final VoidCallback onPressDuplicate;
+  final VoidCallback onPressReset;
+  final VoidCallback onPressAddTime;
 
   @override
   State<TimerCard> createState() => _TimerCardState();
@@ -44,11 +47,9 @@ class _TimerCardState extends State<TimerCard> {
         });
       }
       valueNotifier.value = widget.timer.remainingSeconds.toDouble();
-      // remainingSeconds = widget.timer.remainingSeconds;
     });
   }
 
-  // update value notifier every second
   @override
   void initState() {
     super.initState();
@@ -59,7 +60,6 @@ class _TimerCardState extends State<TimerCard> {
     valueNotifier = ValueNotifier(widget.timer.remainingSeconds.toDouble());
     remainingSeconds = widget.timer.remainingSeconds;
     valueNotifier.addListener(() {
-      // print("valueNotifier: ${valueNotifier.value}");
       setState(() {
         remainingSeconds = valueNotifier.value.toInt();
       });
@@ -91,10 +91,12 @@ class _TimerCardState extends State<TimerCard> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-          TimerProgressBar(timer: widget.timer, size: 50,centerWidget:GestureDetector(
+            TimerProgressBar(
+                timer: widget.timer,
+                size: 50,
+                centerWidget: GestureDetector(
                   onTap: () {
                     widget.onToggleState();
-                    // print("================toglle");
                     updateTimer();
                   },
                   child: widget.timer.isRunning
@@ -108,22 +110,7 @@ class _TimerCardState extends State<TimerCard> {
                           color: colorScheme.onSurface.withOpacity(0.6),
                           size: 32,
                         ),
-                )
-),
-
-            // CircularProgressBar(
-            //   size: 50,
-            //   valueNotifier: valueNotifier,
-            //   progressStrokeWidth: 8,
-            //   backStrokeWidth: 8,
-            //   maxValue: widget.timer.currentDuration.inSeconds.toDouble(),
-            //   mergeMode: true,
-            //   animationDuration: 0,
-            //   onGetCenterWidget: (value) {
-            //     return               },
-            //   progressColors: [colorScheme.primary],
-            //   backColor: Colors.black.withOpacity(0.15),
-            // ),
+                )),
             const SizedBox(width: 16),
             Expanded(
               flex: 999,
@@ -151,7 +138,19 @@ class _TimerCardState extends State<TimerCard> {
             const Spacer(),
             CardEditMenu(actions: [
               getDeletePopupAction(context, widget.onPressDelete),
-              getDuplicatePopupAction(widget.onPressDuplicate),
+              getDuplicatePopupAction(context, widget.onPressDuplicate),
+              if (!widget.timer.isStopped)
+                PopupAction(
+                  "Reset",
+                  widget.onPressReset,
+                  Icons.replay_rounded,
+                ),
+              if (!widget.timer.isStopped)
+                PopupAction(
+                  '+${widget.timer.addLength.floor()}:00',
+                  widget.onPressAddTime,
+                  Icons.add_rounded,
+                )
             ]),
           ],
         ));

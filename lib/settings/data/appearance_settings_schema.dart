@@ -9,6 +9,7 @@ import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum ThemeBrightness { light, dark, system }
 
@@ -16,22 +17,36 @@ enum DarkMode { user, system, nightDay }
 
 SettingGroup appearanceSettingsSchema = SettingGroup(
   "Appearance",
+  (context) => AppLocalizations.of(context)!.appearanceSettingGroup,
   [
     SettingGroup(
       "Colors",
+      (context) => AppLocalizations.of(context)!.colorsSettingGroup,
       [
         SwitchSetting(
           "Use Material You",
+          (context) => AppLocalizations.of(context)!.useMaterialYouColorSetting,
           false,
           onChange: (context, value) => App.refreshTheme(context),
           searchTags: ["primary", "color", "material"],
         ),
         SelectSetting(
             "Brightness",
+            (context) =>
+                AppLocalizations.of(context)!.materialBrightnessSetting,
             [
-              SelectSettingOption("System", ThemeBrightness.system),
-              SelectSettingOption("Light", ThemeBrightness.light),
-              SelectSettingOption("Dark", ThemeBrightness.dark),
+              SelectSettingOption(
+                  (context) =>
+                      AppLocalizations.of(context)!.materialBrightnessSystem,
+                  ThemeBrightness.system),
+              SelectSettingOption(
+                  (context) =>
+                      AppLocalizations.of(context)!.materialBrightnessLight,
+                  ThemeBrightness.light),
+              SelectSettingOption(
+                  (context) =>
+                      AppLocalizations.of(context)!.materialBrightnessDark,
+                  ThemeBrightness.dark),
             ],
             enableConditions: [
               ValueCondition(["Use Material You"], (value) => value == true)
@@ -39,6 +54,7 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
             onChange: (context, index) => {App.refreshTheme(context)}),
         SwitchSetting(
             "System Dark Mode",
+            (context) => AppLocalizations.of(context)!.systemDarkModeSetting,
             false,
             enableConditions: [
               ValueCondition(["Use Material You"], (value) => value == false)
@@ -46,8 +62,10 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
             onChange: (context, value) => {App.refreshTheme(context)}),
         CustomSetting(
           "Color Scheme",
-          description:
-              "Select from predefined color schemes or create your own",
+          (context) => AppLocalizations.of(context)!.colorSchemeSetting,
+
+          // description:
+          //     "Select from predefined color schemes or create your own",
           defaultColorScheme,
           (context, setting) => ThemesScreen(
             saveTag: 'color_schemes',
@@ -71,8 +89,9 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
         ),
         CustomSetting(
           "Dark Color Scheme",
-          description:
-              "Select from predefined color schemes or create your own",
+          (context) => AppLocalizations.of(context)!.darkColorSchemeSetting,
+          // description:
+          //     "Select from predefined color schemes or create your own",
           defaultDarkColorScheme,
           (context, setting) => ThemesScreen(
             saveTag: 'color_schemes',
@@ -92,11 +111,12 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
           searchTags: ["theme", "style", "visual", "dark mode", "night mode"],
           enableConditions: [
             ValueCondition(["Use Material You"], (value) => value == false),
-            ValueCondition(["System Dark Mode"],(value) => value==true)
+            ValueCondition(["System Dark Mode"], (value) => value == true)
           ],
         ),
         SwitchSetting(
           "Override Accent Color",
+          (context) => AppLocalizations.of(context)!.overrideAccentSetting,
           false,
           onChange: (context, value) {
             App.refreshTheme(context);
@@ -106,23 +126,28 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
             // ValueCondition(["Use Material You"], (value) => value == false)
           ],
         ),
-        ColorSetting("Accent Color", Colors.cyan, onChange: (context, color) {
-          App.refreshTheme(context);
-        }, enableConditions: [
-          ValueCondition(["Override Accent Color"], (value) => value == true),
-          // ValueCondition(["Use Material You"], (value) => value == false)
-        ], searchTags: [
-          "primary",
-          "color",
-          "material you"
-        ]),
+        ColorSetting(
+          "Accent Color",
+          (context) => AppLocalizations.of(context)!.accentColorSetting,
+          Colors.cyan,
+          onChange: (context, color) {
+            App.refreshTheme(context);
+          },
+          enableConditions: [
+            ValueCondition(["Override Accent Color"], (value) => value == true),
+            // ValueCondition(["Use Material You"], (value) => value == false)
+          ],
+          searchTags: ["primary", "color", "material you"],
+        ),
       ],
     ),
     SettingGroup(
       "Style",
+      (context) => AppLocalizations.of(context)!.styleSettingGroup,
       [
         SwitchSetting(
           "Use Material Style",
+          (context) => AppLocalizations.of(context)!.useMaterialStyleSetting,
           false,
           onChange: (context, value) => App.refreshTheme(context),
           searchTags: [
@@ -141,7 +166,8 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
         ),
         CustomSetting<StyleTheme>(
           "Style Theme",
-          description: "Change styles like shadows, outlines and opacities",
+          (context) => AppLocalizations.of(context)!.styleThemeSetting,
+          // description: "Change styles like shadows, outlines and opacities",
           defaultStyleTheme,
           (context, setting) => ThemesScreen(
             saveTag: 'style_themes',
@@ -174,5 +200,6 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
     ),
   ],
   icon: Icons.palette_outlined,
-  description: "Set themes, colors and change layout",
+  getDescription: (context) =>
+      AppLocalizations.of(context)!.appearanceSettingGroupDescription,
 );

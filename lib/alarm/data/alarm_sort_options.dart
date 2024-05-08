@@ -1,17 +1,17 @@
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/types/list_filter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-const List<ListSortOption<Alarm>> alarmSortOptions = [
-  ListSortOption(
-      "Remaining Time Descending", "9-1", sortRemainingTimeDescending),
-  ListSortOption("Remaining Time Ascending", "1-9", sortRemainingTimeAscending),
-  ListSortOption("Date Descending", "30-1", sortDateDescending),
-  ListSortOption("Date Ascending", "1-30", sortDateAscending),
-  ListSortOption("Name Ascending", "A-Z", sortNameAscending),
-  ListSortOption("Name Descending", "Z-A", sortNameDescending),
-  ListSortOption("Time of Day Ascending", "0:00-12:00", sortTimeOfDayAscending),
-  ListSortOption(
-      "Time of Day Descending", "12:00-0:00", sortTimeOfDayDescending),
+
+final List<ListSortOption<Alarm>> alarmSortOptions = [
+  ListSortOption((context) => AppLocalizations.of(context)!.remainingTimeDesc, sortRemainingTimeDescending),
+  ListSortOption((context) => AppLocalizations.of(context)!.remainingTimeAsc, sortRemainingTimeAscending),
+  // ListSortOption("Date Descending", "30-1", sortDateDescending),
+  // ListSortOption("Date Ascending", "1-30", sortDateAscending),
+  ListSortOption((context) => AppLocalizations.of(context)!.nameAsc, sortNameAscending),
+  ListSortOption((context) => AppLocalizations.of(context)!.nameDesc, sortNameDescending),
+  ListSortOption((context) => AppLocalizations.of(context)!.timeOfDayAsc, sortTimeOfDayAscending),
+  ListSortOption((context) => AppLocalizations.of(context)!.timeOfDayDesc, sortTimeOfDayDescending),
 ];
 
 int sortRemainingTimeDescending(Alarm a, Alarm b) {

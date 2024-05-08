@@ -7,6 +7,7 @@ import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
+import 'package:clock_app/settings/utils/description.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -36,12 +37,13 @@ class SettingGroup extends SettingItem {
 
   SettingGroup(
     String name,
+    String Function(BuildContext) getLocalizedName,
     this._settingItems, {
     int? version,
     IconData? icon,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> summarySettings = const [],
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool? showExpandedView,
     bool isSearchable = false,
     List<String> searchTags = const [],
@@ -54,7 +56,8 @@ class SettingGroup extends SettingItem {
         _settingPageLinks = [],
         _settingActions = [],
         _version = version,
-        super(name, description, searchTags, enableConditions) {
+        super(
+            name, getLocalizedName, getDescription, searchTags, enableConditions) {
     for (SettingItem item in _settingItems) {
       item.parent = this;
       if (item is Setting) {
@@ -82,6 +85,7 @@ class SettingGroup extends SettingItem {
   SettingGroup copy() {
     return SettingGroup(
       name,
+      getLocalizedName,
       _settingItems.map((setting) => setting.copy()).toList(),
       icon: icon,
       searchTags: searchTags,
@@ -90,7 +94,7 @@ class SettingGroup extends SettingItem {
       isSearchable: isSearchable,
       showExpandedView: showExpandedView,
       summarySettings: _summarySettings,
-      description: description,
+      getDescription: getDescription,
     );
   }
 

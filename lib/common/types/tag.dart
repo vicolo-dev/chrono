@@ -3,7 +3,7 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:flutter/material.dart';
 
 class Tag extends ListItem {
-  final int _id;
+  int _id;
   String name;
   String description;
   Color color;
@@ -40,4 +40,12 @@ class Tag extends ListItem {
 
   @override
   bool get isDeletable => true;
+
+  @override
+  void copyFrom(other) {
+    _id = other.id;
+    name = other.name;
+    description = other.description;
+    color = other.color;
+  }
 }

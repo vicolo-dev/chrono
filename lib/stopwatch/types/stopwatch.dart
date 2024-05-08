@@ -95,7 +95,6 @@ class ClockStopwatch extends JsonSerializable {
   }
 
   void updateFastestAndSlowestLap() {
-    // print("update");
     _fastestLap = _laps.reduce((value, element) =>
         value.lapTime.inMilliseconds < element.lapTime.inMilliseconds
             ? value

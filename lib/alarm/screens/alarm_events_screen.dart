@@ -2,11 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:clock_app/alarm/data/alarm_events_list_filters.dart';
 import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/alarm/widgets/alarm_event_card.dart';
-import 'package:clock_app/common/types/list_filter.dart';
-import 'package:clock_app/common/types/notification_type.dart';
-import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/fab.dart';
@@ -25,26 +23,7 @@ class AlarmEventsScreen extends StatefulWidget {
   State<AlarmEventsScreen> createState() => _AlarmEventsScreenState();
 }
 
-final List<ListFilterItem<AlarmEvent>> alarmEventsListFilters = [
-  ListFilterSelect("State", [
-    ListFilter('Active', (event) => event.isActive),
-    ListFilter('Inactive', (event) => !event.isActive),
-  ]),
-  ListFilterSelect("Schedule Date", [
-    ListFilter('Today', (event) => event.startDate.isToday()),
-    ListFilter('Tomorrow', (event) => event.startDate.isTomorrow()),
-  ]),
-  ListFilterSelect("Type", [
-    ListFilter('Alarm', (event) => event.notificationType == ScheduledNotificationType.alarm),
-    ListFilter('Timer', (event) => event.notificationType == ScheduledNotificationType.timer),
-  ]),
-   ListFilterSelect("Created Date", [
-    ListFilter('Today', (event) => event.eventTime.isToday()),
-    ListFilter('Tomorrow', (event) => event.eventTime.isTomorrow()),
-  ]),
 
-
-];
 
 class _AlarmEventsScreenState extends State<AlarmEventsScreen> {
   final _listController = PersistentListController<AlarmEvent>();
@@ -63,7 +42,6 @@ class _AlarmEventsScreenState extends State<AlarmEventsScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
     return Scaffold(

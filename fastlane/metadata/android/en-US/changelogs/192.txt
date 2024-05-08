@@ -1,0 +1,22 @@
+🚀 Features
+
+* Added option to automatically delete one time alarm after ringing
+* Added option to automatically delete dates and range alarm after finishing
+* Added spinner UI to select time
+
+✨ Enhancements
+
+* Added count setting to math and retype tasks
+* Added option to select default UI for selecting time
+* Added credits to about page
+* Improved timer fullscreen button UI on smaller devices
+* Improved timer fullscreen layout in landscape mode
+
+🐛 Fixes
+
+* Fixed numbers appearing after melody name
+* Fixed alarm screen not updating after adding alarm through external app
+* Fixed snackbar text clipping
+* Fixed time picker stretching over the entire screen
+* Fixed alarm tasks not getting deleted properly
+* Fixed alarm tasks not working properly when same task is added multiple times

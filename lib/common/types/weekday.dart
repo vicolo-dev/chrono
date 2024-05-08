@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+
 class Weekday {
   final int id;
-  final String abbreviation;
-  final String displayName;
+  final String Function(BuildContext) getAbbreviation;
+  final String Function(BuildContext) getDisplayName;
 
-  const Weekday(this.id, this.abbreviation, this.displayName);
+  const Weekday(this.id, this.getAbbreviation, this.getDisplayName);
 }

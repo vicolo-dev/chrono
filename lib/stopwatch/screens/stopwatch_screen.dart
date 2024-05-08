@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/common/widgets/linear_progress_bar.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
@@ -10,16 +9,14 @@ import 'package:clock_app/notifications/data/update_notification_intervals.dart'
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/stopwatch/logic/stopwatch_notification.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/stopwatch/widgets/lap_card.dart';
 import 'package:clock_app/stopwatch/widgets/stopwatch_ticker.dart';
-import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:timer_builder/timer_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 
 class StopwatchScreen extends StatefulWidget {
@@ -132,10 +129,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    // ColorScheme colorScheme = theme.colorScheme;
-    TextTheme textTheme = theme.textTheme;
-    timeDilation = 0.5;
+    // timeDilation = 0.5;
     return Stack(
       alignment: Alignment.center,
       fit: StackFit.expand,
@@ -144,13 +138,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
           StopwatchTicker(stopwatch:_stopwatch),
-            // TimerBuilder.periodic(const Duration(milliseconds: 33),
-            //     builder: (context) {
-            //   // print(_stopwatch.fastestLap?.lapTime.toTimeString());
-            //   // print(_stopwatch.slowestLap?.lapTime.toTimeString());
-            //   return ;
-            // }),
-            const SizedBox(height: 8),
+                      const SizedBox(height: 8),
             Expanded(
               child: CustomListView<Lap>(
                 items: _stopwatch.laps,
@@ -159,7 +147,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                   key: ValueKey(lap),
                   lap: lap,
                 ),
-                placeholderText: "No laps yet",
+                placeholderText: AppLocalizations.of(context)!.noLapsMessage,
                 isDeleteEnabled: false,
                 isDuplicateEnabled: false,
                 isReorderable: false,

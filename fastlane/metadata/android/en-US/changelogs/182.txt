@@ -1,0 +1,5 @@
+Quick smol update :) 
+
+🐛 Fixes
+
+* Fixes all one time alarms getting disabled after alarm ringing or opening app

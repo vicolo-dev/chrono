@@ -38,7 +38,6 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
   }
 
   _handleCustomizeItem(Item itemToCustomize) async {
-    int index = _listController.getItemIndex(itemToCustomize);
     openCustomizeScreen<Item>(
       context,
       CustomizeListItemScreen<Item>(
@@ -47,7 +46,8 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
         itemPreviewBuilder: (item) => widget.setting.getPreviewCard(item),
       ),
       onSave: (newItem) async {
-        _listController.changeItems((items) async => items[index] = newItem);
+        itemToCustomize.copyFrom(newItem);
+        _listController.changeItems((items) {});
       },
     );
   }
@@ -56,7 +56,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppTopBar(
-        title: Text(widget.setting.name),
+        title: Text(widget.setting.displayName(context)),
       ),
       body: Stack(
         children: [
@@ -77,7 +77,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
                   },
                   onModifyList: () => widget.onChanged(context),
                   placeholderText:
-                      "No ${widget.setting.name.toLowerCase()} added yet",
+                      "No ${widget.setting.displayName(context).toLowerCase()} added yet",
                 ),
               ),
             ],
@@ -87,7 +87,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
             onPressed: () async {
               Item? item = await _openAddBottomSheet();
               if (item == null) return;
-              _listController.addItem(item);
+              _listController.addItem(item.copy());
             },
           )
         ],

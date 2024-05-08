@@ -5,6 +5,7 @@ import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
+import 'package:clock_app/navigation/types/tab.dart';
 import 'package:clock_app/navigation/widgets/app_navigation_bar.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/general_settings_schema.dart';
@@ -114,6 +115,7 @@ class _NavScaffoldState extends State<NavScaffold> {
   @override
   Widget build(BuildContext context) {
     Orientation orientation = MediaQuery.of(context).orientation;
+    final tabs = getTabs(context);
     return Scaffold(
       appBar: orientation == Orientation.portrait
           ? AppTopBar(
@@ -164,7 +166,6 @@ class _NavScaffoldState extends State<NavScaffold> {
                               .onBackground
                               .withOpacity(0.6),
                         )),
-
                 trailing: IconButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).removeCurrentSnackBar();

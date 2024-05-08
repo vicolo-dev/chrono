@@ -1,7 +1,7 @@
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:clock_app/alarm/logic/alarm_controls.dart';
+import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 

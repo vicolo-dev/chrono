@@ -42,4 +42,12 @@ class City extends ListItem {
         'timezone': timezone,
         'id': id,
       };
+
+  @override
+  void copyFrom(other) {
+        _name = other.name;
+        _country = other.country;
+        _timezone = other.timezone;
+        _id = other.id;
+  }
 }

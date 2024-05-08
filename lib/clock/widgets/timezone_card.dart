@@ -1,11 +1,11 @@
 import 'package:clock_app/clock/types/city.dart';
-import 'package:clock_app/clock/widgets/timezone_card_content.dart';
 import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TimeZoneCard extends StatelessWidget {
   TimeZoneCard({
@@ -28,15 +28,18 @@ class TimeZoneCard extends StatelessWidget {
     return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 1);
   }
 
-  String _getOffsetDescription() {
+  String _getOffsetDescription(BuildContext context) {
     DateTime currentTime = DateTime.now();
     DateTime cityTime = timezone.TZDateTime.now(_timezoneLocation);
 
     String hourDifference = _formatTimeOffset(_offset.abs());
-    String hourLabel = _offset == 1 ? 'h' : 'h';
     String relativeLabel = _offset < 0 ? 'behind' : 'ahead';
-    String differentOffsetLabel = '$hourDifference$hourLabel $relativeLabel';
-    String offsetLabel = _offset != 0 ? differentOffsetLabel : 'Same time';
+    String differentOffsetLabel = AppLocalizations.of(context)!
+        .relativeTime(hourDifference, relativeLabel);
+    // '$hourDifference$hourLabel $relativeLabel';
+    String offsetLabel = _offset != 0
+        ? differentOffsetLabel
+        : AppLocalizations.of(context)!.sameTime;
 
     String differentDayLabel = currentTime.day < cityTime.day
         ? ' (next day)'
@@ -89,7 +92,7 @@ class TimeZoneCard extends StatelessWidget {
                 const Duration(seconds: 1),
                 builder: (context) {
                   return Text(
-                    _getOffsetDescription(),
+                    _getOffsetDescription(context),
                     style: textTheme.bodyMedium?.copyWith(
                         height: 0.5,
                         color: colorScheme.onSurface.withOpacity(0.8)),

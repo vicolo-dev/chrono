@@ -47,7 +47,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
   DatesAlarmSchedule(Setting datesSetting)
       : _datesSetting = datesSetting as DateTimeSetting,
         _alarmRunner = AlarmRunner(),
-        _isFinished = false,
+        _isFinished = true,
         super() {
     if (_datesSetting.value.isEmpty) {
       _datesSetting.setValueWithoutNotify([DateTime.now()]);
@@ -55,7 +55,7 @@ class DatesAlarmSchedule extends AlarmSchedule {
   }
 
   @override
-  Future<void> schedule(Time time,String description) async {
+  Future<void> schedule(Time time, String description) async {
     List<DateTime> dates = _datesSetting.value;
 
     for (int i = 0; i < dates.length; i++) {
@@ -71,7 +71,9 @@ class DatesAlarmSchedule extends AlarmSchedule {
       // We also schedule just the next upcoming date
       // When that schedule is finished, we will schedule the next one and so on
       if (date.isAfter(DateTime.now())) {
-       await _alarmRunner.schedule(date,description);
+        await _alarmRunner.schedule(date, description);
+        _isFinished = false;
+        return;
       }
     }
 
@@ -94,11 +96,11 @@ class DatesAlarmSchedule extends AlarmSchedule {
     _datesSetting = datesSetting as DateTimeSetting;
     if (json == null) {
       _alarmRunner = AlarmRunner();
-      _isFinished = false;
+      _isFinished = true;
       return;
     }
     _alarmRunner = AlarmRunner.fromJson(json['alarmRunner']);
-    _isFinished = json['isFinished'] ?? false;
+    _isFinished = json['isFinished'] ?? true;
   }
 
   @override

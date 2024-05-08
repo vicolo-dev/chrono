@@ -29,9 +29,11 @@ class OnceAlarmSchedule extends AlarmSchedule {
     // If the alarm has already been scheduled in the past, disable it.
     if (currentScheduleDateTime?.isBefore(DateTime.now()) ?? false) {
       _isDisabled = true;
+    } else {
+      DateTime alarmDate = getDailyAlarmDate(time);
+      await _alarmRunner.schedule(alarmDate, description);
+      _isDisabled = false;
     }
-    DateTime alarmDate = getDailyAlarmDate(time);
-    await _alarmRunner.schedule(alarmDate, description);
   }
 
   @override

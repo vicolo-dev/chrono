@@ -1,7 +1,10 @@
 import 'package:clock_app/common/widgets/modal.dart';
+import 'package:clock_app/timer/logic/edit_duration_picker_mode.dart';
+import 'package:clock_app/timer/logic/get_duration_picker.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
-import 'package:clock_app/timer/widgets/dial_duration_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 Future<TimeDuration?> showDurationPicker(
   BuildContext context, {
@@ -16,38 +19,95 @@ Future<TimeDuration?> showDurationPicker(
     context: context,
     builder: (BuildContext context) {
       TimeDuration timeDuration = initialTimeDuration;
+
       return StatefulBuilder(
         builder: (context, StateSetter setState) {
           return Modal(
             onSave: () => Navigator.of(context).pop(timeDuration),
-            title: "Choose Duration",
+            // title: "Choose Duration",
             child: Builder(
               builder: (context) {
                 // Get available height and width of the build area of this widget. Make a choice depending on the size.
-                var width = MediaQuery.of(context).size.width;
+                Orientation orientation = MediaQuery.of(context).orientation;
 
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 16),
-                    Text(timeDuration.toString(),
-                        style: textTheme.displayMedium),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: width - 64,
-                      width: width - 64,
-                      child: DialDurationPicker(
-                        duration: timeDuration,
-                        onChange: (TimeDuration newDuration) {
-                          setState(() {
-                            timeDuration = newDuration;
-                          });
-                        },
-                        showHours: showHours,
-                      ),
-                    ),
-                  ],
-                );
+                Widget title() => Row(
+                      children: [
+                        // const SizedBox(width: 8),
+                        Text(
+                          AppLocalizations.of(context)!.durationPickerTitle,
+                          style: TimePickerTheme.of(context).helpTextStyle ??
+                              Theme.of(context).textTheme.labelSmall,
+                        ),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () => editDurationPickerMode(
+                              context, () => setState(() {})),
+                          child: Text(
+                            AppLocalizations.of(context)!.timePickerModeButton,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                        )
+                      ],
+                    );
+
+                Widget label() => Text(
+                      timeDuration.toString(),
+                      style: textTheme.displayMedium,
+                    );
+
+                Widget durationPicker() => getDurationPicker(
+                      context,
+                      timeDuration,
+                      (TimeDuration newDuration) {
+                        setState(() {
+                          timeDuration = newDuration;
+                        });
+                      },
+                    );
+
+                return orientation == Orientation.portrait
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 8),
+                          title(),
+                          const SizedBox(height: 16),
+                          label(),
+                          const SizedBox(height: 16),
+                          durationPicker(),
+                        ],
+                      )
+                    : Row(children: [
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            // mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 16),
+                              title(),
+                              const SizedBox(height: 16),
+                              label(),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            // mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(height: 16),
+                              durationPicker(),
+                            ],
+                          ),
+                        ),
+                      ]);
               },
             ),
           );

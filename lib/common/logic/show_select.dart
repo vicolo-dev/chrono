@@ -2,7 +2,7 @@ import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/fields/select_field/select_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-void showSelectBottomSheet(
+Future<void> showSelectBottomSheet(
     BuildContext context, void Function(List<int>? indices) onChanged,
     {required bool multiSelect,
     required String title,

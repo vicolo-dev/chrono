@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class SettingPageLinkCard extends StatefulWidget {
   const SettingPageLinkCard({
-    Key? key,
+    super.key,
     required this.setting,
     this.showAsCard = true,
-  }) : super(key: key);
+  });
 
   final SettingPageLink setting;
   final bool showAsCard;
@@ -22,6 +22,8 @@ class _SettingPageLinkCardState<T> extends State<SettingPageLinkCard> {
     ThemeData theme = Theme.of(context);
     TextTheme textTheme = theme.textTheme;
     ColorScheme colorScheme = theme.colorScheme;
+
+    String description = widget.setting.getDescription(context);
     Widget inner = Material(
       color: Colors.transparent,
       child: InkWell(
@@ -36,18 +38,24 @@ class _SettingPageLinkCardState<T> extends State<SettingPageLinkCard> {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
+              if (widget.setting.icon != null)
+                Icon(
+                  widget.setting.icon,
+                  color: colorScheme.onBackground,
+                ),
+              if (widget.setting.icon != null) const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.setting.name,
+                      widget.setting.displayName(context),
                       style: textTheme.displaySmall,
                     ),
-                    if (widget.setting.description.isNotEmpty) ...[
+                    if (description.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        widget.setting.description,
+                        description,
                         style: textTheme.bodyMedium,
                       )
                     ]

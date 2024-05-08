@@ -186,6 +186,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
+  dart_pubspec_licenses:
+    dependency: transitive
+    description:
+      name: dart_pubspec_licenses
+      sha256: a488baa010044452b208bc35c6dd62ac072a1ea918f796e4381d5aa1b21cfa41
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   dart_style:
     dependency: transitive
     description:
@@ -373,6 +381,19 @@ packages:
     description:
       name: flutter_lints
       sha256: "9e8c3858111da373efc5aa341de011d9bd23e2c5c5e0c62bccf32438e192d7b1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  flutter_oss_licenses:
+    dependency: "direct main"
+    description:
+      name: flutter_oss_licenses
+      sha256: "1219e0e03faac80e68a554b79447d4936c79081d698abca912cc123fb77094aa"
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
@@ -571,6 +592,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  locale_names:
+    dependency: "direct main"
+    description:
+      name: locale_names
+      sha256: "7a89ca54072f4f13d0f5df5a9ba69337554bf2fd057d1dd2a238898f3f159374"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   logging:
     dependency: transitive
     description:

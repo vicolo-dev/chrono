@@ -1,6 +1,7 @@
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomizeState {
   bool isSaved = false;
@@ -47,7 +48,7 @@ class _CustomizeScreenState<Item extends CustomizableListItem>
             Navigator.pop(context);
           },
           child: Text(
-            "Cancel",
+            AppLocalizations.of(context)!.cancelButton,
             style: TextStyle(
               color: colorScheme.onSurface.withOpacity(0.6),
             ),
@@ -61,7 +62,7 @@ class _CustomizeScreenState<Item extends CustomizableListItem>
               _isSaved = true;
               Navigator.pop(context, _item);
             },
-            child: const Text("Save"),
+            child: Text(AppLocalizations.of(context)!.saveButton),
           ),
         )
       ]),
@@ -76,21 +77,21 @@ class _CustomizeScreenState<Item extends CustomizableListItem>
             builder: (buildContext) {
               return AlertDialog(
                 actionsPadding: const EdgeInsets.only(bottom: 6, right: 10),
-                content: const Text("Do you want to leave without saving?"),
+                content: Text(AppLocalizations.of(context)!.saveReminderAlert),
                 actions: [
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context, false);
                     },
-                    child: Text("No",
+                    child: Text(AppLocalizations.of(context)!.noButton,
                         style: TextStyle(color: colorScheme.primary)),
                   ),
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context, true);
                     },
-                    child:
-                        Text("Yes", style: TextStyle(color: colorScheme.error)),
+                    child: Text(AppLocalizations.of(context)!.yesButton,
+                        style: TextStyle(color: colorScheme.error)),
                   ),
                 ],
               );

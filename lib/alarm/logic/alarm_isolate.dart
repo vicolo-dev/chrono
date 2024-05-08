@@ -1,12 +1,9 @@
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -19,7 +16,6 @@ import 'package:clock_app/alarm/types/ringing_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
-import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
@@ -96,7 +92,7 @@ void triggerAlarm(int scheduleId, Json params) async {
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
       now.millisecondsSinceEpoch >
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
-              1000 * 60 * 10) {
+              1000 * 60 * 60) {
     await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
     return;
   }
@@ -159,6 +155,7 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
     }
   }
   RingingManager.stopAlarm();
+  await updateAlarmById(scheduleId, (alarm) async => alarm.handleDismiss());
 }
 
 void triggerTimer(int scheduleId, Json params) async {

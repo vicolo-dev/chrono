@@ -4,7 +4,7 @@ import 'package:clock_app/settings/screens/restore_defaults_screen.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:clock_app/settings/widgets/search_setting_card.dart';
 import 'package:clock_app/settings/widgets/setting_page_link_card.dart';
 import 'package:clock_app/settings/widgets/settings_top_bar.dart';
@@ -66,6 +66,7 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
                       SettingPageLinkCard(
                           setting: SettingPageLink(
                               'Restore default values',
+                              (context) =>AppLocalizations.of(context)!.restoreSettingGroup,
                               RestoreDefaultScreen(
                                 settingGroup: widget.settingGroup,
                                 onRestore: () async {

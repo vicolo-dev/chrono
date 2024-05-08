@@ -28,7 +28,6 @@ class _DialDurationPickerState extends State<DialDurationPicker> {
     double originalHeight = MediaQuery.of(context).size.height - 20;
     double width = min(originalWidth, originalHeight) - 64;
     double bandWidth = 86 * width / 256;
-    print(width);
 
     double leftPadding = 0;
 
