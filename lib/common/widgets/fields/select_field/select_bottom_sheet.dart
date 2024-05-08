@@ -111,6 +111,7 @@ class SelectBottomSheet extends StatelessWidget {
                     title,
                     style: textTheme.titleMedium?.copyWith(
                         color: colorScheme.onSurface.withOpacity(0.6)),
+                        textAlign: TextAlign.center,
                   ),
                   if (description != null) const SizedBox(height: 8.0),
                   if (description != null)

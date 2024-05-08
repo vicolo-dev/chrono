@@ -531,8 +531,14 @@
   "@emailLabel": {},
   "viewOnGithubLabel": "View on GitHub",
   "@viewOnGithubLabel": {},
-  "creditsSettingGroup": "Credits",
-  "@creditsSettingGroup": {},
+  "openSourceLicensesSetting": "Open Source Licenses",
+  "@openSourceLicensesSetting": {},
+  "contributorsSetting": "Contributors",
+  "@contributorsSetting": {},
+  "donorsSetting": "Donors",
+  "@donorsSetting": {},
+  "donateButton": "Donate",
+  "@donateButton": {},
   "addLengthSetting": "Add Length",
   "@addLengthSetting": {},
   "relativeTime": "{hours}h {relative, select, ahead{ahead} behind{behind} other{Other}}",
@@ -594,5 +600,12 @@
   "saturdayLetter": "S",
   "@saturdayLetter": {},
   "sundayLetter": "S",
-  "@sundayLetter": {}
+  "@sundayLetter": {},
+  "donateDescription": "Donate to support the development of the app",
+  "@donateDescription": {},
+  "donorsDescription": "Our generous patreons",
+  "@donorsDescription" : {},
+  "contributorsDescription" : "People who make this app possible",
+  "@contributorsDescription" : {}
+
 }
