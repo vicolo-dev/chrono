@@ -590,5 +590,7 @@
   "maxLogsSetting": "Nombres de journaux",
   "@maxLogsSetting": {},
   "styleThemeElevationSetting": "Élévation",
-  "@styleThemeElevationSetting": {}
+  "@styleThemeElevationSetting": {},
+  "searchSettingPlaceholder": "Rechercher",
+  "@searchSettingPlaceholder": {}
 }
