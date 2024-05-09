@@ -28,6 +28,7 @@ class _DynamicSelectSettingCardState<T extends ListItem>
     SelectField selectWidget = SelectField(
       selectedIndices: [widget.setting.selectedIndex],
       title: widget.setting.displayName(context),
+      actions: widget.setting.actions,
       choices: widget.setting.options
           .map((option) => SelectChoice(
               name: option.getLocalizedName(context),

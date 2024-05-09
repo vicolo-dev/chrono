@@ -1,11 +1,12 @@
 import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/fields/select_field/option_cards/audio_option_card.dart';
 import 'package:clock_app/common/widgets/fields/select_field/option_cards/color_option_card.dart';
 import 'package:clock_app/common/widgets/fields/select_field/option_cards/text_option_card.dart';
+import 'package:clock_app/icons/flux_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class SelectBottomSheet extends StatelessWidget {
   const SelectBottomSheet({
@@ -15,6 +16,7 @@ class SelectBottomSheet extends StatelessWidget {
     required this.choices,
     required this.currentSelectedIndices,
     required this.onSelect,
+    this.actions = const [],
     this.multiSelect = false,
   });
 
@@ -24,6 +26,7 @@ class SelectBottomSheet extends StatelessWidget {
   final List<int> currentSelectedIndices;
   final bool multiSelect;
   final void Function(List<int>) onSelect;
+  final List<MenuAction> actions;
 
   Widget _getOptionCard() {
     if (choices[0].value is Color) {
@@ -103,15 +106,29 @@ class SelectBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12.0),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: textTheme.titleMedium?.copyWith(
-                        color: colorScheme.onSurface.withOpacity(0.6)),
-                        textAlign: TextAlign.center,
+                  Row(
+                    children: [
+                      // Expanded(child: Container()),
+                      if (actions.isNotEmpty) const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: textTheme.titleMedium?.copyWith(
+                              color: colorScheme.onSurface.withOpacity(0.6)),
+                          textAlign: actions.isEmpty ? TextAlign.center : null,
+                        ),
+                      ),
+                      for (var action in actions)
+                        IconButton(
+                          icon: Icon(action.icon,
+                              color: action.color ?? colorScheme.primary),
+                          onPressed: () => action.action(context),
+                        ),
+                    ],
                   ),
                   if (description != null) const SizedBox(height: 8.0),
                   if (description != null)
@@ -123,37 +140,55 @@ class SelectBottomSheet extends StatelessWidget {
                 ],
               ),
             ),
-            // const SizedBox(height: 16.0),
+            // Row(
+            //   children: [
+            //     Icon(FluxIcons.add),
+            //     Text(AppLocalizations.of(context)!.addButton,
+            //         style: textTheme.labelMedium
+            //             ?.copyWith(color: colorScheme.primary)),
+            //
+            //   ],
+            // ),
+            const SizedBox(height: 12.0),
             Flexible(
               child: _getOptionCard(),
             ),
             // if (multiSelect) const SizedBox(height: 8.0),
             if (multiSelect)
               Padding(
-                padding: const EdgeInsets.only(left: 16.0, right:16.0, bottom: 4.0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Row(
+                padding:
+                    const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 4.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          onSelect([]);
-                        },
-                        icon: Icon(Icons.clear_rounded, color: colorScheme.primary),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              onSelect([]);
+                            },
+                            icon: Icon(Icons.clear_rounded,
+                                color: colorScheme.primary),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              onSelect([
+                                for (var i = 0; i < choices.length; i += 1) i
+                              ]);
+                            },
+                            icon: Icon(Icons.select_all_rounded,
+                                color: colorScheme.primary),
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        onPressed: () {
-                          onSelect([for (var i = 0; i < choices.length; i += 1) i]);
-                        },
-                        icon: Icon(Icons.select_all_rounded, color: colorScheme.primary),
-                      ),
-                    ],
-                  ),
-                  TextButton(onPressed: (){
-                    Navigator.of(context).pop();
-                    }, child: Text(AppLocalizations.of(context)!.saveButton,
-                              style: textTheme.labelMedium?.copyWith(
-                                  color:colorScheme.primary))),
-                ]),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(AppLocalizations.of(context)!.saveButton,
+                              style: textTheme.labelMedium
+                                  ?.copyWith(color: colorScheme.primary))),
+                    ]),
               )
           ],
         ),

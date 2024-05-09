@@ -1,14 +1,18 @@
+import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/fields/select_field/select_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showSelectBottomSheet(
-    BuildContext context, void Function(List<int>? indices) onChanged,
-    {required bool multiSelect,
-    required String title,
-    required String? description,
-    required List<SelectChoice> choices,
-    required List<int> initialSelectedIndices}) async {
+  BuildContext context,
+  void Function(List<int>? indices) onChanged, {
+  required bool multiSelect,
+  required String title,
+  required String? description,
+  required List<SelectChoice> choices,
+  required List<int> initialSelectedIndices,
+  List<MenuAction> actions = const [],
+}) async {
   List<int>? selectedIndices;
 
   await showModalBottomSheet<List<int>>(
@@ -34,8 +38,7 @@ Future<void> showSelectBottomSheet(
               } else {
                 if (indices.length == 1) {
                   currentSelectedIndices = [indices[0]];
-                }
-                else{
+                } else {
                   debugPrint("Too many indices");
                 }
               }
@@ -53,6 +56,7 @@ Future<void> showSelectBottomSheet(
             currentSelectedIndices: currentSelectedIndices,
             onSelect: handleSelect,
             multiSelect: multiSelect,
+            actions: actions,
           );
         },
       );

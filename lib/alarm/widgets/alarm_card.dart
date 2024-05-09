@@ -207,11 +207,11 @@ class _AlarmCardState extends State<AlarmCard> {
                   getDeletePopupAction(context, widget.onPressDelete),
                 getDuplicatePopupAction(context, widget.onPressDuplicate),
                 if (widget.alarm.canBeSkipped)
-                  PopupAction(
+                  MenuAction(
                     widget.alarm.shouldSkipNextAlarm
                         ? AppLocalizations.of(context)!.cancelSkipAlarmButton
                         : AppLocalizations.of(context)!.skipAlarmButton,
-                    () {
+                    (context) {
                       if (widget.alarm.shouldSkipNextAlarm) {
                         widget.onSkipChange(false);
                       } else {

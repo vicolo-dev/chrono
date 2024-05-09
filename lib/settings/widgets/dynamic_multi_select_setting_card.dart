@@ -29,6 +29,7 @@ class _DynamicMultiSelectSettingCardState<T extends ListItem>
       selectedIndices: widget.setting.selectedIndices,
       title: widget.setting.name,
       multiSelect: true,
+      actions: widget.setting.actions,
       choices: widget.setting.options
           .map((option) => SelectChoice(
               name: option.getLocalizedName(context),

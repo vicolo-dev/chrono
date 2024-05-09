@@ -1,5 +1,6 @@
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_item.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
@@ -383,6 +384,7 @@ class SliderSetting extends Setting<double> {
 
 class SelectSetting<T> extends Setting<int> {
   final List<SelectSettingOption<T>> _options;
+  final List<MenuAction> actions;
 
   List<SelectSettingOption<T>> get options => _options;
   int get selectedIndex => _value;
@@ -415,6 +417,7 @@ class SelectSetting<T> extends Setting<int> {
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
+    this.actions = const [],
   }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
             enableConditions, searchTags, isVisual);
 
@@ -430,6 +433,7 @@ class SelectSetting<T> extends Setting<int> {
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
+      actions: actions,
     );
   }
 }
@@ -438,6 +442,7 @@ class SelectSetting<T> extends Setting<int> {
 // This is so that if the options changes, the value remains the same;
 class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
   List<SelectSettingOption<T>> Function() optionsGetter;
+  final List<MenuAction> actions;
   List<SelectSettingOption<T>> get options => optionsGetter();
   @override
   dynamic get value => options[selectedIndex].value;
@@ -453,6 +458,7 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
+    this.actions = const [],
   }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
             enableConditions, searchTags, isVisual) {
     if (defaultValue != -1) {
@@ -472,6 +478,7 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
+      actions: actions,
     );
   }
 
@@ -517,6 +524,7 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
 
 class MultiSelectSetting<T> extends Setting<List<int>> {
   final List<SelectSettingOption<T>> _options;
+  final List<MenuAction> actions;
 
   List<SelectSettingOption<T>> get options => _options;
   List<int> get selectedIndices => _value;
@@ -552,6 +560,7 @@ class MultiSelectSetting<T> extends Setting<List<int>> {
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
+    this.actions = const [],
   }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
             enableConditions, searchTags, isVisual);
 
@@ -567,6 +576,7 @@ class MultiSelectSetting<T> extends Setting<List<int>> {
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
+      actions: actions,
     );
   }
 
@@ -586,6 +596,7 @@ class MultiSelectSetting<T> extends Setting<List<int>> {
 // This is so that if the options changes, the value remains the same;
 class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
   List<SelectSettingOption<T>> Function() optionsGetter;
+  final List<MenuAction> actions;
   List<SelectSettingOption<T>> get options => optionsGetter();
   @override
   dynamic get value {
@@ -607,6 +618,7 @@ class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
+    this.actions = const [],
   }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
             enableConditions, searchTags, isVisual) {
     if (!defaultValue.contains(-1)) {
@@ -626,6 +638,7 @@ class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
+      actions: actions,
     );
   }
 

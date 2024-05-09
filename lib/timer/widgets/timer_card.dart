@@ -15,7 +15,8 @@ class TimerCard extends StatefulWidget {
     required this.onToggleState,
     required this.onPressDelete,
     required this.onPressDuplicate,
-    required this.onPressReset, required this.onPressAddTime,
+    required this.onPressReset,
+    required this.onPressAddTime,
   });
 
   final ClockTimer timer;
@@ -140,15 +141,15 @@ class _TimerCardState extends State<TimerCard> {
               getDeletePopupAction(context, widget.onPressDelete),
               getDuplicatePopupAction(context, widget.onPressDuplicate),
               if (!widget.timer.isStopped)
-                PopupAction(
+                MenuAction(
                   "Reset",
-                  widget.onPressReset,
+                  (context) => widget.onPressReset(),
                   Icons.replay_rounded,
                 ),
               if (!widget.timer.isStopped)
-                PopupAction(
+                MenuAction(
                   '+${widget.timer.addLength.floor()}:00',
-                  widget.onPressAddTime,
+                  (context) => widget.onPressAddTime(),
                   Icons.add_rounded,
                 )
             ]),

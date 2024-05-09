@@ -1,5 +1,6 @@
 import 'package:clock_app/common/logic/show_select.dart';
 import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/widgets/fields/select_field/field_cards/audio_field_card.dart';
@@ -17,6 +18,7 @@ class SelectField extends StatefulWidget {
     required this.choices,
     required this.onChanged,
     this.multiSelect = false,
+    this.actions = const [],
   });
 
   final List<int> selectedIndices;
@@ -25,6 +27,7 @@ class SelectField extends StatefulWidget {
   final bool multiSelect;
   final List<SelectChoice> choices;
   final void Function(List<int> indices) onChanged;
+  final List<MenuAction> actions;
 
   @override
   State<SelectField> createState() => _SelectFieldState();
@@ -85,12 +88,16 @@ class _SelectFieldState<T> extends State<SelectField> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => showSelectBottomSheet(context, showSelect,
-            title: widget.title,
-            description: widget.description,
-            choices: widget.choices,
-            initialSelectedIndices: widget.selectedIndices,
-            multiSelect: widget.multiSelect),
+        onTap: () => showSelectBottomSheet(
+          context,
+          showSelect,
+          title: widget.title,
+          description: widget.description,
+          choices: widget.choices,
+          initialSelectedIndices: widget.selectedIndices,
+          multiSelect: widget.multiSelect,
+          actions: widget.actions,
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: _getFieldCard(),

@@ -12,9 +12,8 @@ import es.antonborri.home_widget.HomeWidgetLaunchIntent
 import es.antonborri.home_widget.HomeWidgetProvider
 import es.antonborri.home_widget.HomeWidgetPlugin
 import android.util.Log
-import android.view.View
 
-class DigitalClockWidgetProvider : HomeWidgetProvider() {
+class DigitalClockDateWidgetProvider : HomeWidgetProvider() {
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -28,7 +27,7 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
             // Create an Intent to launch ExampleActivity.
             // Open App on Widget Click
             val views =
-                RemoteViews(context.packageName, R.layout.digital_clock_widget).apply {
+                RemoteViews(context.packageName, R.layout.digital_clock_date_widget).apply {
                     // Open App on Widget Click
                     val pendingIntent: PendingIntent =
                         PendingIntent.getActivity(
@@ -47,7 +46,6 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
                     setCharSequence (R.id.widget_text_clock, "setFormat12Hour", timeFormat)
                     setCharSequence (R.id.widget_date, "setFormat24Hour", dateFormat)
                     setCharSequence (R.id.widget_date, "setFormat12Hour", dateFormat)
-                    // setViewVisibility(R.id.widget_date, View.GONE)
                     // Swap Title Text by calling Dart Code in the Background
                     // setTextViewText(R.id.widget_title, widgetData.getString("title", null)
                     //         ?: "No Title Set")

@@ -14,8 +14,11 @@ import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/common/logic/tags.dart';
 import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
+import 'package:clock_app/settings/screens/ringtones_screen.dart';
+import 'package:clock_app/settings/screens/tags_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -153,7 +156,18 @@ SettingGroup alarmSettingsSchema = SettingGroup(
               onChange: (context, index) {
                 RingtonePlayer.stop();
               },
-
+              actions: [
+                MenuAction(
+                  "Add",
+                  (context) async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const RingtonesScreen()),
+                    );
+                  },
+                  Icons.add,
+                ),
+              ],
               // shouldCloseOnSelect: false,
             ),
             SelectSetting<AndroidAudioUsage>(
@@ -278,6 +292,17 @@ SettingGroup alarmSettingsSchema = SettingGroup(
       (context) => AppLocalizations.of(context)!.tagsSetting,
       getTagOptions,
       defaultValue: [],
+      actions: [
+        MenuAction(
+          "Add",
+          (context) async {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const TagsScreen()),
+            );
+          },
+          Icons.add,
+        ),
+      ],
     ),
 
     // ListSetting<Tag>()
