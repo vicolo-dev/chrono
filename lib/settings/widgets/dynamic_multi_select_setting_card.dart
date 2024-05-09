@@ -26,11 +26,11 @@ class _DynamicMultiSelectSettingCardState<T extends ListItem>
   @override
   Widget build(BuildContext context) {
     SelectField selectWidget = SelectField(
-      selectedIndices: widget.setting.selectedIndices,
+      getSelectedIndices: () => widget.setting.selectedIndices,
       title: widget.setting.name,
       multiSelect: true,
       actions: widget.setting.actions,
-      choices: widget.setting.options
+      getChoices: () => widget.setting.options
           .map((option) => SelectChoice(
               name: option.getLocalizedName(context),
               value: option.value,

@@ -160,7 +160,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
                 MenuAction(
                   "Add",
                   (context) async {
-                    Navigator.of(context).push(
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) => const RingtonesScreen()),
                     );
@@ -296,7 +296,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         MenuAction(
           "Add",
           (context) async {
-            Navigator.of(context).push(
+            await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const TagsScreen()),
             );
           },

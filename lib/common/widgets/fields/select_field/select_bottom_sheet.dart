@@ -18,6 +18,7 @@ class SelectBottomSheet extends StatelessWidget {
     required this.onSelect,
     this.actions = const [],
     this.multiSelect = false,
+    this.reload,
   });
 
   final String title;
@@ -27,6 +28,7 @@ class SelectBottomSheet extends StatelessWidget {
   final bool multiSelect;
   final void Function(List<int>) onSelect;
   final List<MenuAction> actions;
+  final Function? reload;
 
   Widget _getOptionCard() {
     if (choices[0].value is Color) {
@@ -126,7 +128,11 @@ class SelectBottomSheet extends StatelessWidget {
                         IconButton(
                           icon: Icon(action.icon,
                               color: action.color ?? colorScheme.primary),
-                          onPressed: () => action.action(context),
+                          onPressed: () async {
+                            // Navigator.pop(context, currentSelectedIndices);
+                            await action.action(context);
+                            reload?.call();
+                          },
                         ),
                     ],
                   ),

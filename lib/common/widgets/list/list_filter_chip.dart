@@ -7,7 +7,6 @@ import 'package:clock_app/common/widgets/list/action_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class ListFilterChip<Item extends ListItem> extends StatelessWidget {
   const ListFilterChip({
     super.key,
@@ -86,7 +85,8 @@ class ListFilterActionChip<Item extends ListItem> extends StatelessWidget {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 6.0, top:6.0, bottom: 6.0),
+            padding: const EdgeInsets.only(
+                left: 8.0, right: 6.0, top: 6.0, bottom: 6.0),
             child: Icon(
               Icons.filter_list_rounded,
               color: colorScheme.onPrimary,
@@ -133,10 +133,11 @@ class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
       },
           title: listFilter.displayName(context),
           description: "",
-          choices: listFilter.filters
-              .map((e) => SelectChoice(name: e.displayName(context), value: e.id))
+          getChoices: () => listFilter.filters
+              .map((e) =>
+                  SelectChoice(name: e.displayName(context), value: e.id))
               .toList(),
-          initialSelectedIndices: [listFilter.selectedIndex],
+          getCurrentSelectedIndices: () => [listFilter.selectedIndex],
           multiSelect: false);
     }
 
@@ -199,10 +200,11 @@ class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
       },
           title: listFilter.displayName(context),
           description: "",
-          choices: listFilter.filters
-              .map((e) => SelectChoice(name: e.displayName(context), value: e.id))
+          getChoices: () => listFilter.filters
+              .map((e) =>
+                  SelectChoice(name: e.displayName(context), value: e.id))
               .toList(),
-          initialSelectedIndices: selectedIndices,
+          getCurrentSelectedIndices: () => selectedIndices,
           multiSelect: true);
     }
 
@@ -249,7 +251,8 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
   const ListSortChip({
     super.key,
     required this.sortOptions,
-    required this.onChange, required this.selectedIndex,
+    required this.onChange,
+    required this.selectedIndex,
   });
 
   @override
@@ -265,10 +268,11 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
       },
           title: AppLocalizations.of(context)!.sortGroup,
           description: "",
-          choices: sortOptions
-              .map((e) => SelectChoice(name: e.displayName(context), value: e.getLocalizedName))
+          getChoices: () => sortOptions
+              .map((e) => SelectChoice(
+                  name: e.displayName(context), value: e.getLocalizedName))
               .toList(),
-          initialSelectedIndices: [selectedIndex],
+          getCurrentSelectedIndices: () => [selectedIndex],
           multiSelect: false);
     }
 
@@ -282,17 +286,14 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
                 top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
             child: Text(
               "${AppLocalizations.of(context)!.sortGroup}${isFirstSelected ? "" : ": ${sortOptions[selectedIndex].displayName(context)}"}",
-              style: textTheme.headlineSmall?.copyWith(
-                  color: colorScheme.onSurface
-                      ),
+              style: textTheme.headlineSmall
+                  ?.copyWith(color: colorScheme.onSurface),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 2.0, right: 8.0),
-            child: Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color:colorScheme.onSurface.withOpacity(0.6)
-            ),
+            child: Icon(Icons.keyboard_arrow_down_rounded,
+                color: colorScheme.onSurface.withOpacity(0.6)),
           ),
         ],
       ),

@@ -43,7 +43,7 @@ SettingGroup timerSettingsSchema = SettingGroup(
                 MenuAction(
                   "Add",
                   (context) async {
-                    Navigator.of(context).push(
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) => const RingtonesScreen()),
                     );
@@ -101,18 +101,16 @@ SettingGroup timerSettingsSchema = SettingGroup(
       getTagOptions,
       defaultValue: [],
       actions: [
-                MenuAction(
-                  "Add",
-                  (context) async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const TagsScreen()),
-                    );
-                  },
-                  Icons.add,
-                ),
-              ],
-
+        MenuAction(
+          "Add",
+          (context) async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const TagsScreen()),
+            );
+          },
+          Icons.add,
+        ),
+      ],
     ),
   ],
 );

@@ -9,8 +9,8 @@ Future<void> showSelectBottomSheet(
   required bool multiSelect,
   required String title,
   required String? description,
-  required List<SelectChoice> choices,
-  required List<int> initialSelectedIndices,
+  required List<SelectChoice> Function() getChoices,
+  required List<int> Function() getCurrentSelectedIndices,
   List<MenuAction> actions = const [],
 }) async {
   List<int>? selectedIndices;
@@ -20,7 +20,8 @@ Future<void> showSelectBottomSheet(
     isScrollControlled: true,
     enableDrag: true,
     builder: (BuildContext context) {
-      List<int> currentSelectedIndices = initialSelectedIndices;
+      List<int> currentSelectedIndices = getCurrentSelectedIndices();
+      List<SelectChoice> choices = getChoices();
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           void handleSelect(List<int> indices) {
@@ -57,6 +58,10 @@ Future<void> showSelectBottomSheet(
             onSelect: handleSelect,
             multiSelect: multiSelect,
             actions: actions,
+            reload: () => setState(() {
+              choices = getChoices();
+              currentSelectedIndices = getCurrentSelectedIndices();
+            }),
           );
         },
       );
