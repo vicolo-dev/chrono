@@ -1,6 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
+import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/data/app_info.dart';
+import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/l10n/language_local.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
@@ -19,11 +21,13 @@ import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
+import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:home_widget/home_widget.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -54,10 +58,27 @@ class _AppState extends State<App> {
   late SettingGroup _styleSettings;
   late Setting _animationSpeedSetting;
   late SettingGroup _generalSettings;
+  late Setting _timeFormatSetting;
+  late Setting _dateFormatSetting;
+
+  void updateDateFormat(dynamic value) async {
+    await HomeWidget.saveWidgetData("dateFormat", value);
+    updateWidgets();
+  }
+
+  void updateTimeFormat(dynamic value) async {
+    await HomeWidget.saveWidgetData(
+        "timeFormat", getTimeFormatString(context, value));
+    updateWidgets();
+  }
 
   @override
   void initState() {
     super.initState();
+
+    // HomeWidget.updateWidget(
+    //   androidName: 'DigitalClockWidgetProvider',
+    // );
 
     NotificationController.setListeners();
 
@@ -65,16 +86,24 @@ class _AppState extends State<App> {
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
     _generalSettings = appSettings.getGroup("General");
-    _animationSpeedSetting = _generalSettings
-        .getGroup("Animations")
-        .getSetting("Animation Speed");
+    _animationSpeedSetting =
+        _generalSettings.getGroup("Animations").getSetting("Animation Speed");
     _animationSpeedSetting.addListener(setAnimationSpeed);
+    _timeFormatSetting =
+        _generalSettings.getGroup("Display").getSetting("Time Format");
+    _dateFormatSetting =
+        _generalSettings.getGroup("Display").getSetting("Date Format");
+    _timeFormatSetting.addListener(updateTimeFormat);
+    _dateFormatSetting.addListener(updateDateFormat);
+    updateDateFormat(_dateFormatSetting.value);
+    updateTimeFormat(_timeFormatSetting.value);
+
     setAnimationSpeed(_animationSpeedSetting.value);
   }
 
   void setAnimationSpeed(dynamic speed) {
     // setState(() {
-      timeDilation = 1 / speed;
+    timeDilation = 1 / speed;
     // });
   }
 

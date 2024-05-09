@@ -472,6 +472,13 @@ packages:
       url: "https://github.com/AhsanSarwar45/great_list_view"
     source: git
     version: "0.2.3"
+  home_widget:
+    dependency: "direct main"
+    description:
+      path: "../home_widget"
+      relative: true
+    source: path
+    version: "0.5.0"
   html:
     dependency: transitive
     description:
