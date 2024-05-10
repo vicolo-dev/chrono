@@ -86,5 +86,7 @@
   "pickerDial": "Dial",
   "@pickerDial": {},
   "appearanceSettingGroupDescription": "设置主题，颜色和布局",
-  "@appearanceSettingGroupDescription": {}
+  "@appearanceSettingGroupDescription": {},
+  "nameField": "姓名",
+  "@nameField": {}
 }
