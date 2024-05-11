@@ -146,9 +146,9 @@ Future<void> _renderWidget(WidgetTester tester,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: SelectField(
-          selectedIndices: [selectedIndex],
+          getSelectedIndices: () => [selectedIndex],
           title: title,
-          choices: choices,
+          getChoices: () => choices,
           onChanged: onChanged ?? (_) {},
         ),
       ),
