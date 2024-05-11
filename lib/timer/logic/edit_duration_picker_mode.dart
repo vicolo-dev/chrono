@@ -5,7 +5,8 @@ import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
-Future<void> editDurationPickerMode(BuildContext context, VoidCallback onChange) async {
+Future<void> editDurationPickerMode(
+    BuildContext context, VoidCallback onChange) async {
   SelectSetting<DurationPickerType> setting = appSettings
       .getGroup("General")
       .getGroup("Display")
@@ -19,14 +20,14 @@ Future<void> editDurationPickerMode(BuildContext context, VoidCallback onChange)
       // setState(() {});
     },
     title: setting.name,
-    description: setting.description,
-    choices: setting.options
+    description: setting.getDescription(context),
+    getChoices: () => setting.options
         .map((option) => SelectChoice(
-            name: option.name,
+            name: option.getLocalizedName(context),
             value: option.value,
-            description: option.description))
+            description: option.getDescription(context)))
         .toList(),
-    initialSelectedIndices: [setting.selectedIndex],
+    getCurrentSelectedIndices: () => [setting.selectedIndex],
     multiSelect: false,
   );
 

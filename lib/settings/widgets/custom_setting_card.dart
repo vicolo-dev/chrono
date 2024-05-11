@@ -38,7 +38,7 @@ class _CustomSettingCardState<T> extends State<CustomSettingCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.setting.name,
+                    widget.setting.displayName(context),
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 4.0),

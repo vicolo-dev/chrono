@@ -6,14 +6,18 @@ import 'package:clock_app/settings/data/developer_settings_schema.dart';
 import 'package:clock_app/settings/data/general_settings_schema.dart';
 import 'package:clock_app/settings/data/stopwatch_settings_schema.dart';
 import 'package:clock_app/settings/data/timer_app_settings_schema.dart';
+import 'package:clock_app/settings/data/widget_settings_schema.dart';
 import 'package:clock_app/settings/screens/about_screen.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-const int settingsSchemaVersion = 3;
+const int settingsSchemaVersion = 4;
 
 SettingGroup appSettings = SettingGroup(
   "Settings",
+  (context) => AppLocalizations.of(context)!.settings,
   version: settingsSchemaVersion,
   isSearchable: true,
   [
@@ -22,12 +26,15 @@ SettingGroup appSettings = SettingGroup(
     alarmAppSettingsSchema,
     timerAppSettingsSchema,
     stopwatchSettingsSchema,
+    widgetSettingSchema,
     accessibilitySettingsSchema,
     backupSettingsSchema,
     developerSettingsSchema,
     SettingPageLink(
       "About",
+      (context) => AppLocalizations.of(context)!.aboutSettingGroup,
       const AboutScreen(),
+      icon: Icons.info_outline_rounded,
     ),
   ],
 );

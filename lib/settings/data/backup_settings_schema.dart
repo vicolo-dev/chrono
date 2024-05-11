@@ -6,39 +6,49 @@ import 'package:clock_app/app.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:pick_or_save/pick_or_save.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 SettingGroup backupSettingsSchema = SettingGroup(
   "Backup",
-  description: "Export or Import your settings locally",
+  (context) => AppLocalizations.of(context)!.backupSettingGroup,
+  getDescription: (context) =>
+      AppLocalizations.of(context)!.backupSettingGroupDescription,
   icon: Icons.restore_rounded,
   [
     SettingGroup(
       "Settings",
+      (context) => AppLocalizations.of(context)!.backupSettingGroup,
       [
         SettingAction(
           "Export",
+          (context) => AppLocalizations.of(context)!.exportSettingsSetting,
           (context) async {
             saveBackupFile(json.encode(appSettings.valueToJson()), "settings");
           },
           searchTags: ["settings", "export", "backup", "save"],
-          description: "Export settings to a local file",
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.exportSettingsSettingDescription,
         ),
         SettingAction(
           "Import",
+          (context) => AppLocalizations.of(context)!.importSettingsSetting,
           (context) async {
             loadBackupFile(
-              (data) {
+              (data) async {
                 appSettings.loadValueFromJson(json.decode(data));
                 appSettings.callAllListeners();
                 App.refreshTheme(context);
-                appSettings.save();
+                await appSettings.save();
+                if (context.mounted) setDigitalClockWidgetData(context);
               },
             );
           },
           searchTags: ["settings", "import", "backup", "load"],
-          description: "Import settings from a local file",
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.importSettingsSettingDescription,
         ),
       ],
     ),

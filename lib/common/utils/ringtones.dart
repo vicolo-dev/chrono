@@ -4,6 +4,6 @@ import 'package:clock_app/settings/types/setting.dart';
 
 List<SelectSettingOption<FileItem>> getRingtoneOptions() {
   return loadListSync<FileItem>("ringtones")
-      .map((ringtone) => SelectSettingOption<FileItem>(ringtone.name, ringtone))
+      .map((ringtone) => SelectSettingOption<FileItem>((context)=>ringtone.name, ringtone))
       .toList();
 }

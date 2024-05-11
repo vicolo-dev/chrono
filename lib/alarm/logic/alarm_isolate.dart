@@ -8,7 +8,6 @@ import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
@@ -19,6 +18,8 @@ import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
+import 'package:flutter/services.dart';
+import 'package:receive_intent/receive_intent.dart';
 
 const String stopAlarmPortName = "stopAlarmPort";
 const String updatePortName = "updatePort";
@@ -50,6 +51,16 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
   receivePort.listen((message) {
     stopScheduledNotification(message);
   });
+
+  try {
+      final receivedIntent = await ReceiveIntent.getInitialIntent();
+      print("reeeeeeeeeeeeeeeeeeeeeeeeeee ${receivedIntent}");
+      // Validate receivedIntent and warn the user, if it is not correct,
+      // but keep in mind it could be `null` or "empty"(`receivedIntent.isNull`).
+    } on PlatformException {
+      // Handle exception
+    }
+
 
   if (notificationType == ScheduledNotificationType.alarm) {
     triggerAlarm(scheduleId, params);
@@ -103,8 +114,6 @@ void triggerAlarm(int scheduleId, Json params) async {
     alarm.cancelSkip();
     return;
   }
-
-  GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
   // Pause any currently ringing timers. We will continue them after the alarm
   // is dismissed
@@ -167,9 +176,6 @@ void triggerTimer(int scheduleId, Json params) async {
   }
 
   await updateTimers("triggerTimer(): Updating all timers on trigger");
-
-  // Notify the front-end to update the timers
-  GetStorage().write("fullScreenNotificationRecentlyShown", true);
 
   // Pause any currently ringing alarms. We will continue them after the timer
   // is dismissed

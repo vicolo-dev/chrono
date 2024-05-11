@@ -6,6 +6,7 @@ import 'package:clock_app/theme/utils/style_theme.dart';
 import 'package:clock_app/theme/widgets/theme_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const testKey = Key('key');
 var sampleStyleTheme = StyleTheme();
@@ -74,6 +75,9 @@ Future<void> _renderStyleThemeCard(WidgetTester tester,
   await tester.pumpWidget(
     MaterialApp(
       theme: defaultTheme,
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: ThemeCard(
           themeItem: sampleStyleTheme,
@@ -81,7 +85,8 @@ Future<void> _renderStyleThemeCard(WidgetTester tester,
           onPressDelete: () {},
           onPressDuplicate: () {},
           onPressEdit: () {},
-          getThemeFromItem: (theme, item) => getTheme(colorScheme:theme.colorScheme, styleTheme: item),
+          getThemeFromItem: (theme, item) =>
+              getTheme(colorScheme: theme.colorScheme, styleTheme: item),
           key: testKey,
         ),
       ),

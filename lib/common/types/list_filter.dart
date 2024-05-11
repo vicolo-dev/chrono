@@ -1,25 +1,29 @@
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/debug.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ListSortOption<Item extends ListItem> {
-  final String name;
-  final String abbreviation;
+  final String Function(BuildContext) getLocalizedName;
+  // final String abbreviation;
   final int Function(Item, Item) sortFunction;
 
-  const ListSortOption(this.name, this.abbreviation, this.sortFunction);
+  String Function(BuildContext) get displayName => getLocalizedName;
+
+  const ListSortOption(
+      this.getLocalizedName,  this.sortFunction);
 }
 
 abstract class ListFilterItem<Item extends ListItem> {
   bool Function(Item) get filterFunction;
-  String get displayName;
+  String Function(BuildContext) get displayName;
   bool get isActive;
   void reset();
 }
 
 ListFilter<Item> defaultFilter<Item extends ListItem>() {
   return ListFilter<Item>(
-    'All',
+    (context) => AppLocalizations.of(context)!.allFilter,
     (item) => true,
     id: -1,
   );
@@ -27,11 +31,12 @@ ListFilter<Item> defaultFilter<Item extends ListItem>() {
 
 class ListFilter<Item extends ListItem> extends ListFilterItem<Item> {
   final int _id;
-  final String name;
+  final String Function(BuildContext) getLocalizedName;
   bool isSelected = false;
   final bool Function(Item) _filterFunction;
 
-  ListFilter(this.name, bool Function(Item) filterFunction, {int? id})
+  ListFilter(this.getLocalizedName, bool Function(Item) filterFunction,
+      {int? id})
       : _id = id ?? UniqueKey().hashCode,
         _filterFunction = filterFunction;
 
@@ -44,7 +49,7 @@ class ListFilter<Item extends ListItem> extends ListFilterItem<Item> {
   }
 
   @override
-  String get displayName => name;
+  String Function(BuildContext) get displayName => getLocalizedName;
 
   @override
   bool get isActive => isSelected;
@@ -56,7 +61,7 @@ class ListFilter<Item extends ListItem> extends ListFilterItem<Item> {
 }
 
 class ListFilterSearch<Item extends ListItem> extends ListFilterItem<Item> {
-  final String name;
+  final String Function(BuildContext) getLocalizedName;
   String searchText = '';
   @override
   bool Function(Item) get filterFunction {
@@ -66,9 +71,9 @@ class ListFilterSearch<Item extends ListItem> extends ListFilterItem<Item> {
     // return (Item item) => item.searchText.contains(searchText);
   }
 
-  ListFilterSearch(this.name);
+  ListFilterSearch(this.getLocalizedName);
   @override
-  String get displayName => name;
+  String Function(BuildContext) get displayName => getLocalizedName;
 
   @override
   bool get isActive => false;
@@ -98,10 +103,10 @@ abstract class FilterMultiSelect<Item extends ListItem>
 
 class ListFilterMultiSelect<Item extends ListItem>
     extends FilterMultiSelect<Item> {
-  final String name;
+  final String Function(BuildContext) getLocalizedName;
   @override
   final List<ListFilter<Item>> filters;
-  ListFilterMultiSelect(this.name, this.filters);
+  ListFilterMultiSelect(this.getLocalizedName, this.filters);
 
   @override
   List<int> get selectedIndices => filters
@@ -121,7 +126,7 @@ class ListFilterMultiSelect<Item extends ListItem>
   }
 
   @override
-  String get displayName => name;
+  String Function(BuildContext) get displayName => getLocalizedName;
 
   @override
   bool get isActive => filters.any((filter) => filter.isSelected);
@@ -136,13 +141,14 @@ class ListFilterMultiSelect<Item extends ListItem>
 
 class DynamicListFilterMultiSelect<Item extends ListItem>
     extends FilterMultiSelect<Item> {
-  final String name;
+  final String Function(BuildContext) getLocalizedName;
   final List<ListFilter<Item>> Function() getFilters;
   List<int> selectedIds;
-  DynamicListFilterMultiSelect(this.name, this.getFilters) : selectedIds = [];
+  DynamicListFilterMultiSelect(this.getLocalizedName, this.getFilters)
+      : selectedIds = [];
   @override
   @override
-  String get displayName => name;
+  String Function(BuildContext) get displayName => getLocalizedName;
 
   @override
   List<ListFilter<Item>> get selectedFilters =>
@@ -199,10 +205,10 @@ abstract class FilterSelect<Item extends ListItem>
 }
 
 class ListFilterSelect<Item extends ListItem> extends FilterSelect<Item> {
-  final String name;
+  final String Function(BuildContext) getLocalizedName;
   @override
   final List<ListFilter<Item>> filters;
-  ListFilterSelect(this.name, this.filters) {
+  ListFilterSelect(this.getLocalizedName, this.filters) {
     filters.insert(0, defaultFilter<Item>());
     if (filters.isNotEmpty) {
       filters[0].isSelected = true;
@@ -227,7 +233,7 @@ class ListFilterSelect<Item extends ListItem> extends FilterSelect<Item> {
   }
 
   @override
-  String get displayName => name;
+  String Function(BuildContext) get displayName => getLocalizedName;
 
   @override
   bool get isActive => !filters[0].isSelected;
@@ -240,10 +246,11 @@ class ListFilterSelect<Item extends ListItem> extends FilterSelect<Item> {
 
 class DynamicListFilterSelect<Item extends ListItem>
     extends FilterSelect<Item> {
-  final String name;
+  final String Function(BuildContext) getLocalizedName;
   final List<ListFilter<Item>> Function() getFilters;
   int selectedId;
-  DynamicListFilterSelect(this.name, this.getFilters) : selectedId = -1;
+  DynamicListFilterSelect(this.getLocalizedName, this.getFilters)
+      : selectedId = -1;
 
   @override
   List<ListFilter<Item>> get filters {
@@ -281,7 +288,7 @@ class DynamicListFilterSelect<Item extends ListItem>
   }
 
   @override
-  String get displayName => name;
+  String Function(BuildContext) get displayName => getLocalizedName;
 
   @override
   bool get isActive => selectedIndex != 0;

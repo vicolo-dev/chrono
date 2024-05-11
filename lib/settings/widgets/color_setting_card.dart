@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 
 class ColorSettingCard extends StatefulWidget {
   const ColorSettingCard(
-      {Key? key,
+      {super.key,
       required this.setting,
       this.showAsCard = false,
-      this.onChanged})
-      : super(key: key);
+      this.onChanged});
 
   final ColorSetting setting;
   final bool showAsCard;
@@ -23,8 +22,9 @@ class _ColorSettingCardState<T> extends State<ColorSettingCard> {
   @override
   Widget build(BuildContext context) {
     ColorField toggleCard = ColorField(
-      name: widget.setting.name,
+      name: widget.setting.displayName(context),
       value: widget.setting.value,
+      enableOpacity: widget.setting.enableOpacity,
       onChange: (value) {
         setState(() {
           widget.setting.setValue(context, value);

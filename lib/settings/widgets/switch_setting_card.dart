@@ -22,7 +22,7 @@ class _SwitchSettingCardState extends State<SwitchSettingCard> {
   @override
   Widget build(BuildContext context) {
     SwitchField switchCard = SwitchField(
-      name: widget.setting.name,
+      name: widget.setting.displayName(context),
       value: widget.setting.value,
       onChanged: (value) {
         setState(() {

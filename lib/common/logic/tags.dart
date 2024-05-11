@@ -4,6 +4,6 @@ import 'package:clock_app/settings/types/setting.dart';
 
 List<SelectSettingOption<Tag>> getTagOptions() {
   return loadListSync<Tag>("tags")
-      .map((tag) => SelectSettingOption<Tag>(tag.name, tag))
+      .map((tag) => SelectSettingOption<Tag>((context)=>tag.name, tag))
       .toList();
 }

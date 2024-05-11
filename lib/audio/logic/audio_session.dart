@@ -7,6 +7,7 @@ Future<void> initializeAudioSession(
     androidAudioAttributes: AndroidAudioAttributes(
       usage: usage,
       contentType: AndroidAudioContentType.music,
+
     ),
   ));
 }

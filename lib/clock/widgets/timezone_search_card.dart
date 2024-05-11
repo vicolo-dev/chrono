@@ -6,6 +6,7 @@ import 'package:clock_app/common/widgets/clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TimeZoneSearchCard extends StatelessWidget {
   TimeZoneSearchCard(
@@ -23,6 +24,9 @@ class TimeZoneSearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gmtOffset = timezoneLocation.currentTimeZone.offset;
+    final gmtOffsetHour = gmtOffset / 3600000;
+    final gmtOffsetMinutes = (gmtOffset % 3600000) / 60000;
     Color? textColor = disabled
         ? Theme.of(context).colorScheme.onBackground.withOpacity(0.6)
         : null;
@@ -34,7 +38,8 @@ class TimeZoneSearchCard extends StatelessWidget {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
           if (disabled) {
-            showSnackBar(context, 'This city is already in your favorites.');
+            showSnackBar(
+                context, AppLocalizations.of(context)!.cityAlreadyInFavorites);
           } else {
             onTap();
           }
@@ -82,6 +87,13 @@ class TimeZoneSearchCard extends StatelessWidget {
                     timezoneLocation: timezoneLocation,
                     scale: 0.3,
                     color: textColor,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'GMT ${gmtOffset > 0 ? '+' : '-'}${gmtOffsetHour.abs().toStringAsFixed(0).padLeft(2, '0')}:${gmtOffsetMinutes.toStringAsFixed(0).padLeft(2, '0')}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: textColor,
+                        ),
                   ),
                 ],
               ),

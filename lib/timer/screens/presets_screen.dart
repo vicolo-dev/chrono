@@ -48,7 +48,7 @@ class _PresetsScreenState extends State<PresetsScreen> {
                     _listController.changeItems((presets) {});
                   },
                   // onDeleteItem: _handleDeleteTimer,
-                  placeholderText: "No timers created",
+                  placeholderText: "No presets created",
                   reloadOnPop: true,
                 ),
               ),

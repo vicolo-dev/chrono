@@ -56,7 +56,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppTopBar(
-        title: Text(widget.setting.name),
+        title: Text(widget.setting.displayName(context)),
       ),
       body: Stack(
         children: [
@@ -77,7 +77,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
                   },
                   onModifyList: () => widget.onChanged(context),
                   placeholderText:
-                      "No ${widget.setting.name.toLowerCase()} added yet",
+                      "No ${widget.setting.displayName(context).toLowerCase()} added yet",
                 ),
               ),
             ],

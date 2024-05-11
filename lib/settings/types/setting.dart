@@ -1,9 +1,11 @@
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_item.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
+import 'package:clock_app/settings/utils/description.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +23,8 @@ abstract class Setting<T> extends SettingItem {
 
   Setting(
     String name,
-    String description,
+    String Function(BuildContext) getLocalizedName,
+    String Function(BuildContext) description,
     T defaultValue,
     this.onChange,
     List<EnableConditionParameter> enableConditions,
@@ -32,7 +35,8 @@ abstract class Setting<T> extends SettingItem {
         _defaultValue = valueCopyGetter?.call(defaultValue) ?? defaultValue,
         changesEnableCondition = false,
         _valueCopyGetter = valueCopyGetter,
-        super(name, description, searchTags, enableConditions);
+        super(
+            name, getLocalizedName, description, searchTags, enableConditions);
 
   void setValue(BuildContext context, T value) {
     _value = _valueCopyGetter?.call(value) ?? value;
@@ -65,7 +69,7 @@ abstract class Setting<T> extends SettingItem {
 
 class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
   List<T> possibleItems;
-  Widget Function(T item, [VoidCallback?,VoidCallback?]) cardBuilder;
+  Widget Function(T item, [VoidCallback?, VoidCallback?]) cardBuilder;
   Widget Function(T item) addCardBuilder;
   Widget Function(T item)? itemPreviewBuilder;
   // The widget that will be used to display the value of this setting.
@@ -74,20 +78,22 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
 
   ListSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     List<T> defaultValue,
     this.possibleItems, {
     required this.cardBuilder,
     required this.valueDisplayBuilder,
     required this.addCardBuilder,
     this.itemPreviewBuilder,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     void Function(BuildContext, List<T>)? onChange,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(
           name,
-          description,
+          getLocalizedName,
+          getDescription,
           copyItemList(defaultValue),
           onChange,
           enableConditions,
@@ -100,12 +106,13 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
   ListSetting<T> copy() {
     return ListSetting<T>(
       name,
+      getLocalizedName,
       _value,
       possibleItems,
       valueDisplayBuilder: valueDisplayBuilder,
       cardBuilder: cardBuilder,
       addCardBuilder: addCardBuilder,
-      description: description,
+      getDescription: getDescription,
       onChange: onChange,
       enableConditions: enableConditions,
       isVisual: isVisual,
@@ -122,8 +129,9 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
     return addCardBuilder(item);
   }
 
-  Widget getItemCard(T item, {VoidCallback? onDelete, VoidCallback? onDuplicate}) {
-    return cardBuilder(item,onDelete,onDuplicate);
+  Widget getItemCard(T item,
+      {VoidCallback? onDelete, VoidCallback? onDuplicate}) {
+    return cardBuilder(item, onDelete, onDuplicate);
   }
 
   Widget? getPreviewCard(T item) {
@@ -151,17 +159,18 @@ class CustomSetting<T extends JsonSerializable> extends Setting<T> {
 
   CustomSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     T defaultValue,
     this.screenBuilder,
     this.valueDisplayBuilder, {
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     void Function(BuildContext, T)? onChange,
     this.copyValue,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual) {
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual) {
     copyValue ??= (T value) => value;
   }
 
@@ -177,10 +186,11 @@ class CustomSetting<T extends JsonSerializable> extends Setting<T> {
   CustomSetting<T> copy() {
     return CustomSetting<T>(
       name,
+      getLocalizedName,
       copyValue?.call(_value) ?? _value,
       screenBuilder,
       valueDisplayBuilder,
-      description: description,
+      getDescription: getDescription,
       onChange: onChange,
       enableConditions: enableConditions,
       isVisual: isVisual,
@@ -204,22 +214,24 @@ class CustomSetting<T extends JsonSerializable> extends Setting<T> {
 class SwitchSetting extends Setting<bool> {
   SwitchSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     bool defaultValue, {
     void Function(BuildContext, bool)? onChange,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual);
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual);
 
   @override
   SwitchSetting copy() {
     return SwitchSetting(
       name,
+      getLocalizedName,
       _value,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
@@ -230,22 +242,24 @@ class SwitchSetting extends Setting<bool> {
 class NumberSetting extends Setting<double> {
   NumberSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     double defaultValue, {
     void Function(BuildContext, double)? onChange,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual);
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual);
 
   @override
   NumberSetting copy() {
     return NumberSetting(
       name,
+      getLocalizedName,
       _value,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
@@ -254,16 +268,20 @@ class NumberSetting extends Setting<double> {
 }
 
 class ColorSetting extends Setting<Color> {
+  final bool enableOpacity;
+
   ColorSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     Color defaultValue, {
     void Function(BuildContext, Color)? onChange,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
+    this.enableOpacity = false,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual);
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual);
 
   @override
   dynamic valueToJson() {
@@ -280,12 +298,14 @@ class ColorSetting extends Setting<Color> {
   ColorSetting copy() {
     return ColorSetting(
       name,
+      getLocalizedName,
       _value,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
+      enableOpacity: enableOpacity,
     );
   }
 }
@@ -293,22 +313,24 @@ class ColorSetting extends Setting<Color> {
 class StringSetting extends Setting<String> {
   StringSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     String defaultValue, {
     void Function(BuildContext, String)? onChange,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual);
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual);
 
   @override
   StringSetting copy() {
     return StringSetting(
       name,
+      getLocalizedName,
       _value,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
@@ -325,19 +347,20 @@ class SliderSetting extends Setting<double> {
 
   SliderSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     this.min,
     this.max,
     double defaultValue, {
     void Function(BuildContext context, double)? onChange,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
     this.maxIsInfinity = false,
     this.snapLength,
     this.unit = "",
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual);
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual);
 
   // @override
   // dynamic get value =>
@@ -347,11 +370,12 @@ class SliderSetting extends Setting<double> {
   SliderSetting copy() {
     return SliderSetting(
       name,
+      getLocalizedName,
       min,
       max,
       _value,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       snapLength: snapLength,
       maxIsInfinity: maxIsInfinity,
       enableConditions: enableConditions,
@@ -364,6 +388,7 @@ class SliderSetting extends Setting<double> {
 
 class SelectSetting<T> extends Setting<int> {
   final List<SelectSettingOption<T>> _options;
+  final List<MenuAction> actions;
 
   List<SelectSettingOption<T>> get options => _options;
   int get selectedIndex => _value;
@@ -388,27 +413,31 @@ class SelectSetting<T> extends Setting<int> {
 
   SelectSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     this._options, {
     void Function(BuildContext, int)? onChange,
     int defaultValue = 0,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual);
+    this.actions = const [],
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual);
 
   @override
   SelectSetting<T> copy() {
     return SelectSetting(
       name,
+      getLocalizedName,
       _options,
       defaultValue: _value,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
+      actions: actions,
     );
   }
 }
@@ -417,6 +446,7 @@ class SelectSetting<T> extends Setting<int> {
 // This is so that if the options changes, the value remains the same;
 class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
   List<SelectSettingOption<T>> Function() optionsGetter;
+  final List<MenuAction> actions;
   List<SelectSettingOption<T>> get options => optionsGetter();
   @override
   dynamic get value => options[selectedIndex].value;
@@ -424,15 +454,17 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
 
   DynamicSelectSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     this.optionsGetter, {
     void Function(BuildContext, int)? onChange,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     int defaultValue = -1,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual) {
+    this.actions = const [],
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual) {
     if (defaultValue != -1) {
       _value = defaultValue;
     }
@@ -442,13 +474,15 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
   DynamicSelectSetting<T> copy() {
     return DynamicSelectSetting(
       name,
+      getLocalizedName,
       optionsGetter,
       onChange: onChange,
       defaultValue: _value,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
+      actions: actions,
     );
   }
 
@@ -494,6 +528,7 @@ class DynamicSelectSetting<T extends ListItem> extends Setting<int> {
 
 class MultiSelectSetting<T> extends Setting<List<int>> {
   final List<SelectSettingOption<T>> _options;
+  final List<MenuAction> actions;
 
   List<SelectSettingOption<T>> get options => _options;
   List<int> get selectedIndices => _value;
@@ -521,31 +556,35 @@ class MultiSelectSetting<T> extends Setting<List<int>> {
 
   MultiSelectSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     this._options, {
     void Function(BuildContext, List<int>)? onChange,
     List<int> defaultValue = const [0],
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual);
+    this.actions = const [],
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual);
 
   @override
   MultiSelectSetting<T> copy() {
     return MultiSelectSetting(
       name,
+      getLocalizedName,
       _options,
       defaultValue: _value,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
+      actions: actions,
     );
   }
 
-    @override
+  @override
   dynamic valueToJson() {
     return _value;
   }
@@ -561,25 +600,31 @@ class MultiSelectSetting<T> extends Setting<List<int>> {
 // This is so that if the options changes, the value remains the same;
 class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
   List<SelectSettingOption<T>> Function() optionsGetter;
+  final List<MenuAction> actions;
   List<SelectSettingOption<T>> get options => optionsGetter();
   @override
   dynamic get value {
     return selectedIndices.map((index) => options[index].value).toList();
-}
-  List<int> get selectedIndices =>
-      _value.map((id) => getIndexOfId(id)).where((index)=>index>=0).toList();
+  }
+
+  List<int> get selectedIndices => _value
+      .map((id) => getIndexOfId(id))
+      .where((index) => index >= 0)
+      .toList();
 
   DynamicMultiSelectSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     this.optionsGetter, {
     void Function(BuildContext, List<int>)? onChange,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     List<int> defaultValue = const [-1],
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual) {
+    this.actions = const [],
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual) {
     if (!defaultValue.contains(-1)) {
       _value = defaultValue;
     }
@@ -587,13 +632,18 @@ class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
 
   @override
   DynamicMultiSelectSetting<T> copy() {
-    return DynamicMultiSelectSetting(name, optionsGetter,
-        onChange: onChange,
-        defaultValue: _value,
-        description: description,
-        enableConditions: enableConditions,
-        isVisual: isVisual,
-        searchTags: searchTags);
+    return DynamicMultiSelectSetting(
+      name,
+      getLocalizedName,
+      optionsGetter,
+      onChange: onChange,
+      defaultValue: _value,
+      getDescription: getDescription,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+      actions: actions,
+    );
   }
 
   void setIndex(BuildContext context, List<int> indices) {
@@ -624,7 +674,6 @@ class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
   @override
   dynamic valueToJson() {
     return _value;
-      
   }
 
   @override
@@ -652,16 +701,18 @@ class ToggleSetting<T> extends Setting<List<bool>> {
 
   ToggleSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     this.options, {
     void Function(BuildContext, List<bool>)? onChange,
     List<bool> defaultValue = const [],
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(
           name,
-          description,
+          getLocalizedName,
+          getDescription,
           defaultValue.length == options.length
               ? List.from(defaultValue)
               : List.generate(options.length, (index) => index == 0),
@@ -676,10 +727,11 @@ class ToggleSetting<T> extends Setting<List<bool>> {
   ToggleSetting<T> copy() {
     return ToggleSetting(
       name,
+      getLocalizedName,
       options,
       defaultValue: _value,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
@@ -711,16 +763,18 @@ class DateTimeSetting extends Setting<List<DateTime>> {
 
   DateTimeSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     List<DateTime> defaultValue, {
     this.rangeOnly = false,
     void Function(BuildContext, List<DateTime>)? onChange,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(
           name,
-          description,
+          getLocalizedName,
+          getDescription,
           defaultValue,
           onChange,
           enableConditions,
@@ -733,10 +787,11 @@ class DateTimeSetting extends Setting<List<DateTime>> {
   DateTimeSetting copy() {
     return DateTimeSetting(
       name,
+      getLocalizedName,
       _value,
       rangeOnly: rangeOnly,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
@@ -770,22 +825,24 @@ class DateTimeSetting extends Setting<List<DateTime>> {
 class DurationSetting extends Setting<TimeDuration> {
   DurationSetting(
     String name,
+    String Function(BuildContext) getLocalizedName,
     TimeDuration defaultValue, {
     void Function(BuildContext, TimeDuration)? onChange,
-    String description = "",
+    String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
-  }) : super(name, description, defaultValue, onChange, enableConditions,
-            searchTags, isVisual);
+  }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
+            enableConditions, searchTags, isVisual);
 
   @override
   DurationSetting copy() {
     return DurationSetting(
       name,
+      getLocalizedName,
       _value,
       onChange: onChange,
-      description: description,
+      getDescription: getDescription,
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
@@ -805,16 +862,17 @@ class DurationSetting extends Setting<TimeDuration> {
 }
 
 class ToggleSettingOption<T> {
-  String name;
+  String Function(BuildContext) getLocalizedName;
   T value;
 
-  ToggleSettingOption(this.name, this.value);
+  ToggleSettingOption(this.getLocalizedName, this.value);
 }
 
 class SelectSettingOption<T> {
-  String name;
-  String description;
+  String Function(BuildContext) getDescription;
+  String Function(BuildContext) getLocalizedName;
   T value;
 
-  SelectSettingOption(this.name, this.value, {this.description = ""});
+  SelectSettingOption(this.getLocalizedName, this.value,
+      {this.getDescription = defaultDescription});
 }

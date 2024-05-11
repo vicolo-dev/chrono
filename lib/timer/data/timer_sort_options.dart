@@ -1,13 +1,14 @@
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/timer/types/timer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-const List<ListSortOption<ClockTimer>> timerSortOptions = [
-  ListSortOption("Remaining Time Descending", "9-1", sortRemainingTimeDescending),
-  ListSortOption("Remaining Time Ascending", "1-9", sortRemainingTimeAscending),
-  ListSortOption("Duration Descending", "5:00-1:00", sortTotalDurationDescending),
-  ListSortOption("Duration Ascending", "1:00-5:00", sortTotalDurationAscending),
-  ListSortOption("Name Ascending", "A-Z", sortNameAscending),
-  ListSortOption("Name Descending", "Z-A", sortNameDescending),
+final List<ListSortOption<ClockTimer>> timerSortOptions = [
+  ListSortOption((context) => AppLocalizations.of(context)!.remainingTimeDesc, sortRemainingTimeDescending),
+  ListSortOption((context) => AppLocalizations.of(context)!.remainingTimeAsc, sortRemainingTimeAscending),
+  ListSortOption((context) => AppLocalizations.of(context)!.durationAsc, sortTotalDurationAscending),
+  ListSortOption((context) => AppLocalizations.of(context)!.durationDesc, sortTotalDurationDescending),
+  ListSortOption((context) => AppLocalizations.of(context)!.nameAsc, sortNameAscending),
+  ListSortOption((context) => AppLocalizations.of(context)!.nameDesc, sortNameDescending),
 
 ];
 

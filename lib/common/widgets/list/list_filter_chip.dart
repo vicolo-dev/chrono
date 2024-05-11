@@ -3,9 +3,9 @@ import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/card_edit_menu.dart';
 import 'package:clock_app/common/widgets/list/action_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ListFilterChip<Item extends ListItem> extends StatelessWidget {
   const ListFilterChip({
@@ -32,7 +32,7 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Text(
-          listFilter.name,
+          listFilter.displayName(context),
           style: textTheme.headlineSmall?.copyWith(
             color: listFilter.isSelected
                 ? colorScheme.onPrimary
@@ -61,7 +61,7 @@ class ListFilterActionChip<Item extends ListItem> extends StatelessWidget {
       enableDrag: true,
       builder: (BuildContext context) {
         return ActionBottomSheet(
-          title: "Filter Actions",
+          title: AppLocalizations.of(context)!.filterActions,
           actions: actions,
           // description: description,
         );
@@ -85,7 +85,8 @@ class ListFilterActionChip<Item extends ListItem> extends StatelessWidget {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 6.0, top:6.0, bottom: 6.0),
+            padding: const EdgeInsets.only(
+                left: 8.0, right: 6.0, top: 6.0, bottom: 6.0),
             child: Icon(
               Icons.filter_list_rounded,
               color: colorScheme.onPrimary,
@@ -130,12 +131,13 @@ class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
             selectedIndices?[0] ?? listFilter.selectedIndex;
         onChange();
       },
-          title: listFilter.displayName,
+          title: listFilter.displayName(context),
           description: "",
-          choices: listFilter.filters
-              .map((e) => SelectChoice(name: e.name, value: e.id))
+          getChoices: () => listFilter.filters
+              .map((e) =>
+                  SelectChoice(name: e.displayName(context), value: e.id))
               .toList(),
-          initialSelectedIndices: [listFilter.selectedIndex],
+          getCurrentSelectedIndices: () => [listFilter.selectedIndex],
           multiSelect: false);
     }
 
@@ -149,8 +151,8 @@ class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
                 top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
             child: Text(
               isFirstSelected
-                  ? listFilter.displayName
-                  : listFilter.selectedFilter.name,
+                  ? listFilter.displayName(context)
+                  : listFilter.selectedFilter.displayName(context),
               style: textTheme.headlineSmall?.copyWith(
                   color: isFirstSelected
                       ? colorScheme.onSurface
@@ -196,12 +198,13 @@ class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
             newSelectedIndices ?? listFilter.selectedIndices;
         onChange();
       },
-          title: listFilter.displayName,
+          title: listFilter.displayName(context),
           description: "",
-          choices: listFilter.filters
-              .map((e) => SelectChoice(name: e.name, value: e.id))
+          getChoices: () => listFilter.filters
+              .map((e) =>
+                  SelectChoice(name: e.displayName(context), value: e.id))
               .toList(),
-          initialSelectedIndices: selectedIndices,
+          getCurrentSelectedIndices: () => selectedIndices,
           multiSelect: true);
     }
 
@@ -215,9 +218,9 @@ class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
                 top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
             child: Text(
               !isSelected
-                  ? listFilter.displayName
+                  ? listFilter.displayName(context)
                   : listFilter.selectedIndices.length == 1
-                      ? listFilter.selectedFilters[0].name
+                      ? listFilter.selectedFilters[0].displayName(context)
                       : "${listFilter.selectedIndices.length} selected",
               style: textTheme.headlineSmall?.copyWith(
                   color: isSelected
@@ -248,7 +251,8 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
   const ListSortChip({
     super.key,
     required this.sortOptions,
-    required this.onChange, required this.selectedIndex,
+    required this.onChange,
+    required this.selectedIndex,
   });
 
   @override
@@ -262,12 +266,13 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
       showSelectBottomSheet(context, (List<int>? selectedIndices) {
         onChange(selectedIndices?[0] ?? selectedIndex);
       },
-          title: "Sort by",
+          title: AppLocalizations.of(context)!.sortGroup,
           description: "",
-          choices: sortOptions
-              .map((e) => SelectChoice(name: e.name, value: e.name))
+          getChoices: () => sortOptions
+              .map((e) => SelectChoice(
+                  name: e.displayName(context), value: e.getLocalizedName))
               .toList(),
-          initialSelectedIndices: [selectedIndex],
+          getCurrentSelectedIndices: () => [selectedIndex],
           multiSelect: false);
     }
 
@@ -280,18 +285,15 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
             padding: const EdgeInsets.only(
                 top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
             child: Text(
-              "Sort${isFirstSelected ? "" : ": ${sortOptions[selectedIndex].abbreviation}"}",
-              style: textTheme.headlineSmall?.copyWith(
-                  color: colorScheme.onSurface
-                      ),
+              "${AppLocalizations.of(context)!.sortGroup}${isFirstSelected ? "" : ": ${sortOptions[selectedIndex].displayName(context)}"}",
+              style: textTheme.headlineSmall
+                  ?.copyWith(color: colorScheme.onSurface),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 2.0, right: 8.0),
-            child: Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color:colorScheme.onSurface.withOpacity(0.6)
-            ),
+            child: Icon(Icons.keyboard_arrow_down_rounded,
+                color: colorScheme.onSurface.withOpacity(0.6)),
           ),
         ],
       ),

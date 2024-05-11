@@ -26,13 +26,14 @@ class _DynamicSelectSettingCardState<T extends ListItem>
   @override
   Widget build(BuildContext context) {
     SelectField selectWidget = SelectField(
-      selectedIndices: [widget.setting.selectedIndex],
-      title: widget.setting.name,
-      choices: widget.setting.options
+      getSelectedIndices: () => [widget.setting.selectedIndex],
+      title: widget.setting.displayName(context),
+      actions: widget.setting.actions,
+      getChoices: () => widget.setting.options
           .map((option) => SelectChoice(
-              name: option.name,
+              name: option.getLocalizedName(context),
               value: option.value,
-              description: option.description))
+              description: option.getDescription(context)))
           .toList(),
       onChanged: (indices) {
         setState(() {
