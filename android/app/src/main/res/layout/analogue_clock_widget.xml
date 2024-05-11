@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/widget_date_time_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:ignore="UnusedAttribute">
+        <AnalogClock
+            android:id="@+id/widget_text_clock"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:autoSizeMaxTextSize="300sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="h:mm"
+            android:format24Hour="k:mm"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:shadowColor="@android:color/black"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            tools:text="00:00" />
+    </LinearLayout>
+</RelativeLayout>

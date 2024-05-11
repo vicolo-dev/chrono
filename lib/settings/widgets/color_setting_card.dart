@@ -24,6 +24,7 @@ class _ColorSettingCardState<T> extends State<ColorSettingCard> {
     ColorField toggleCard = ColorField(
       name: widget.setting.displayName(context),
       value: widget.setting.value,
+      enableOpacity: widget.setting.enableOpacity,
       onChange: (value) {
         setState(() {
           widget.setting.setValue(context, value);

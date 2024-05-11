@@ -126,5 +126,28 @@
         <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </receiver>
+    <receiver android:name="AnalogueClockWidgetProvider" android:exported="true" android:label="Analogue">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider"
+        android:resource="@xml/analogue_clock_widget" />
+    </receiver>
+    <receiver android:name="DigitalClockWidgetProvider" android:exported="true" android:label="Digital">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider"
+        android:resource="@xml/digital_clock_widget" />
+      </receiver>
+    <!--  <receiver android:name="DigitalClockDateWidgetProvider" android:exported="true" android:label="Digital with Date"> -->
+    <!--   <intent-filter> -->
+    <!--     <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
+    <!--   </intent-filter> -->
+    <!--   <meta-data android:name="android.appwidget.provider" -->
+    <!--     android:resource="@xml/digital_clock_date_widget" /> -->
+    <!-- </receiver> -->
+
+
   </application>
 </manifest>

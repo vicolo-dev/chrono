@@ -8,21 +8,25 @@ import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/common/types/notification_type.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/navigation/data/fullscreen_intent.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:move_to_background/move_to_background.dart';
+import 'package:receive_intent/receive_intent.dart';
 
 class AlarmNotificationManager {
   static const String _snoozeActionKey = "snooze";
   static const String _dismissActionKey = "dismiss";
 
-  static FGBGType _appVisibilityWhenCreated = FGBGType.foreground;
+  static FGBGType appVisibilityWhenCreated = FGBGType.foreground;
 
   static void showFullScreenNotification({
     required ScheduledNotificationType type,
@@ -98,22 +102,29 @@ class AlarmNotificationManager {
   static Future<void> closeNotification(ScheduledNotificationType type) async {
     await removeNotification(type);
 
-    await GetStorage.init();
-    // await LockScreenFlagManager.clearLockScreenFlags();
     await FlutterShowWhenLocked().hide();
+
+    // If notification was created while app was in background, move app back
+    // to background when we close the notification
+
+    if (appVisibilityWhenCreated == FGBGType.background &&
+        AppVisibility.state == FGBGType.foreground) {
+      MoveToBackground.moveTaskToBack();
+    }
+
+    // try {
+    //   final receivedIntent = await ReceiveIntent.getInitialIntent();
+    //   print("reeeeeeeeeeeeeeeeeeeeeeeeeee ${receivedIntent}");
+    //   // Validate receivedIntent and warn the user, if it is not correct,
+    //   // but keep in mind it could be `null` or "empty"(`receivedIntent.isNull`).
+    // } on PlatformException {
+    //   // Handle exception
+    // }
 
     // If we were on the alarm screen, pop it off the stack. Sometimes the system
     // decides to show a heads up notification instead of a full screen one, so
     // we can't always pop the top screen.
     Routes.popIf(alarmNotificationData[type]?.route);
-
-    // If notification was created while app was in background, move app back
-    // to background when we close the notification
-    if (_appVisibilityWhenCreated == FGBGType.background &&
-        AppVisibility.state == FGBGType.foreground) {
-      MoveToBackground.moveTaskToBack();
-    }
-    GetStorage().write("fullScreenNotificationRecentlyShown", false);
   }
 
   static Future<void> snoozeAlarm(
@@ -149,7 +160,6 @@ class AlarmNotificationManager {
         break;
     }
     await closeNotification(type);
-
   }
 
   static Future<void> stopAlarm(int scheduleId, ScheduledNotificationType type,
@@ -162,8 +172,7 @@ class AlarmNotificationManager {
   }
 
   static void handleNotificationCreated(ReceivedNotification notification) {
-    _appVisibilityWhenCreated = AppVisibility.state;
-    GetStorage().write("fullScreenNotificationRecentlyShown", false);
+    // _appVisibilityWhenCreated = AppVisibility.state;
   }
 
   static Future<void> openNotificationScreen(
@@ -197,7 +206,7 @@ class AlarmNotificationManager {
         (json.decode((payload['scheduleIds'])!) as List<dynamic>).cast<int>();
     if (scheduleIds.isEmpty) return;
 
-    if (tasksRequired && dismissType != AlarmDismissType.snooze){
+    if (tasksRequired && dismissType != AlarmDismissType.snooze) {
       await openNotificationScreen(data, scheduleIds,
           tasksOnly: true, dismissType: dismissType);
     } else {
@@ -223,7 +232,10 @@ class AlarmNotificationManager {
         break;
 
       default:
+        /*   print("ahsan is the besttttttttttttttttttttt ${AppVisibility.state}"); */
+
         await openNotificationScreen(data, scheduleIds);
+
         break;
     }
   }

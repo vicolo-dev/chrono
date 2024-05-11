@@ -9,7 +9,7 @@ class CardEditMenu extends StatelessWidget {
     required this.actions,
   });
 
-  final List<PopupAction> actions;
+  final List<MenuAction> actions;
   // final GlobalKey _buttonKey = GlobalKey();
 
   List<PopupMenuEntry<String>> getItems() {
@@ -24,10 +24,10 @@ class CardEditMenu extends StatelessWidget {
     return items;
   }
 
-  void onSelected(String action) {
+  void onSelected(BuildContext context, String action) {
     for (var item in actions) {
       if (item.name == action) {
-        item.action();
+        item.action(context);
       }
     }
   }
@@ -43,7 +43,7 @@ class CardEditMenu extends StatelessWidget {
         color: colorScheme.onSurface,
       ),
       padding: EdgeInsets.zero,
-      onSelected: onSelected,
+      onSelected: (action) => onSelected(context, action),
       itemBuilder: (BuildContext context) => getItems(),
     );
   }

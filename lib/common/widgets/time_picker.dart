@@ -20,7 +20,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 // Examples can assume:
 // late BuildContext context;
 
@@ -307,13 +306,13 @@ class _TitleBar extends StatelessWidget {
                 },
                 title: setting.name,
                 description: setting.displayDescription(context),
-                choices: setting.options
+                getChoices: () => setting.options
                     .map((option) => SelectChoice(
                         name: option.getLocalizedName(context),
                         value: option.value,
                         description: option.getDescription(context)))
                     .toList(),
-                initialSelectedIndices: [setting.selectedIndex],
+                getCurrentSelectedIndices: () => [setting.selectedIndex],
                 multiSelect: false,
               );
 

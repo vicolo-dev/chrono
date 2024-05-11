@@ -10,12 +10,14 @@ class ColorBottomSheet extends StatefulWidget {
     this.description,
     required this.value,
     required this.onChange,
+    this.enableOpacity = false,      
   });
 
   final String title;
   final String? description;
   final Color value;
   final void Function(Color)? onChange;
+  final bool enableOpacity;
 
   @override
   State<ColorBottomSheet> createState() => _ColorBottomSheetState();
@@ -79,7 +81,7 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                 ),
                 // const SizedBox(height: 16.0),
                 ColorPicker(
-                    wheelDiameter: MediaQuery.of(context).size.width - 8,
+                    wheelDiameter: MediaQuery.of(context).size.width - (widget.enableOpacity ? 64 : 32),
                     color: _color,
                     onColorChanged: (Color color) => setState(() {
                           _color = color;
@@ -103,6 +105,9 @@ class _ColorBottomSheetState extends State<ColorBottomSheet> {
                         style: textTheme.titleSmall
                             ?.copyWith(color: colorScheme.onSurface)),
                     showColorCode: true,
+                    enableOpacity: widget.enableOpacity,
+                    opacityTrackHeight: 20,
+                    opacityThumbRadius: 14,
                     copyPasteBehavior: const ColorPickerCopyPasteBehavior(
                         copyFormat: ColorPickerCopyFormat.hexRRGGBB),
                     customPickerSelectBuilder:

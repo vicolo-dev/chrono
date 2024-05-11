@@ -15,6 +15,7 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
+import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +32,25 @@ SelectSettingOption<String> _getDateSettingOption(String format) {
       (context) => "${DateFormat(format).format(DateTime.now())} ($format)",
       format);
 }
+
+final dateFormatOptions = [
+  _getDateSettingOption("dd/MM/yyyy"),
+  _getDateSettingOption("dd-MM-yyyy"),
+  _getDateSettingOption("d/M/yyyy"),
+  _getDateSettingOption("d-M-yyyy"),
+  _getDateSettingOption("MM/dd/yyyy"),
+  _getDateSettingOption("MM-dd-yyyy"),
+  _getDateSettingOption("M/d/yy"),
+  _getDateSettingOption("M-d-yy"),
+  _getDateSettingOption("M/d/yyyy"),
+  _getDateSettingOption("M-d-yyyy"),
+  _getDateSettingOption("yyyy/dd/MM"),
+  _getDateSettingOption("yyyy-dd-MM"),
+  _getDateSettingOption("yyyy/MM/dd"),
+  _getDateSettingOption("yyyy-MM-dd"),
+  _getDateSettingOption("d MMM yyyy"),
+  _getDateSettingOption("d MMMM yyyy"),
+];
 
 enum SwipeAction {
   cardActions,
@@ -70,35 +90,24 @@ SettingGroup generalSettingsSchema = SettingGroup(
         SelectSetting<String>(
           "Date Format",
           (context) => AppLocalizations.of(context)!.dateFormatSetting,
-          [
-            _getDateSettingOption("dd/MM/yyyy"),
-            _getDateSettingOption("dd-MM-yyyy"),
-            _getDateSettingOption("d/M/yyyy"),
-            _getDateSettingOption("d-M-yyyy"),
-            _getDateSettingOption("MM/dd/yyyy"),
-            _getDateSettingOption("MM-dd-yyyy"),
-            _getDateSettingOption("M/d/yy"),
-            _getDateSettingOption("M-d-yy"),
-            _getDateSettingOption("M/d/yyyy"),
-            _getDateSettingOption("M-d-yyyy"),
-            _getDateSettingOption("yyyy/dd/MM"),
-            _getDateSettingOption("yyyy-dd-MM"),
-            _getDateSettingOption("yyyy/MM/dd"),
-            _getDateSettingOption("yyyy-MM-dd"),
-            // SelectSettingOption(DateTime.now().toIso8601Date(), "YYYY-MM-DD"),
-            _getDateSettingOption("d MMM yyyy"),
-            _getDateSettingOption("d MMMM yyyy"),
-          ],
+          dateFormatOptions,
           getDescription: (context) => "How to display the dates",
+          onChange: (context, index) async {
+            // await HomeWidget.saveWidgetData(
+            //     "dateFormat", dateFormatOptions[index].value);
+            // updateDigitalClockWidget();
+          },
         ),
         SelectSetting<TimeFormat>(
           "Time Format",
           (context) => AppLocalizations.of(context)!.timeFormatSetting,
           timeFormatOptions,
           getDescription: (context) => "12 or 24 hour time",
-          onChange: (context, index) {
-            saveTextFile("time_format_string",
-                getTimeFormatString(context, timeFormatOptions[index].value));
+          onChange: (context, index) async {
+            String timeFormat =
+                getTimeFormatString(context, timeFormatOptions[index].value);
+            saveTextFile("time_format_string", timeFormat);
+            setDigitalClockWidgetData(context);
           },
         ),
         SwitchSetting(

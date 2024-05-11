@@ -3,15 +3,18 @@ import 'package:clock_app/common/widgets/fields/color_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 class ColorField extends StatefulWidget {
-  const ColorField(
-      {super.key,
-      required this.value,
-      required this.onChange,
-      required this.name});
+  const ColorField({
+    super.key,
+    required this.value,
+    required this.onChange,
+    required this.name,
+    this.enableOpacity = false,
+  });
 
   final String name;
   final Color value;
   final void Function(Color value)? onChange;
+  final bool enableOpacity;
 
   @override
   State<ColorField> createState() => _ColorFieldState();
@@ -31,6 +34,8 @@ class _ColorFieldState extends State<ColorField> {
               description: "",
               value: widget.value,
               onChange: widget.onChange,
+              enableOpacity: widget.enableOpacity,
+                          
             );
           },
         );
