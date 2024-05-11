@@ -15,10 +15,9 @@
         <TextClock
             android:id="@+id/widget_text_clock"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:autoSizeMaxTextSize="300sp"
-            android:autoSizeMinTextSize="2sp"
+      android:layout_height="100sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
             android:format12Hour="h:mm"
@@ -35,8 +34,7 @@
         <TextClock
             android:id="@+id/widget_date"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+      android:layout_height="20sp"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"

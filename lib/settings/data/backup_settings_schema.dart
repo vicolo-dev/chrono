@@ -6,6 +6,7 @@ import 'package:clock_app/app.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:pick_or_save/pick_or_save.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -36,11 +37,12 @@ SettingGroup backupSettingsSchema = SettingGroup(
           (context) => AppLocalizations.of(context)!.importSettingsSetting,
           (context) async {
             loadBackupFile(
-              (data) {
+              (data) async {
                 appSettings.loadValueFromJson(json.decode(data));
                 appSettings.callAllListeners();
                 App.refreshTheme(context);
-                appSettings.save();
+                await appSettings.save();
+                if (context.mounted) setDigitalClockWidgetData(context);
               },
             );
           },

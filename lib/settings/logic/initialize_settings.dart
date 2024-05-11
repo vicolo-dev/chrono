@@ -23,6 +23,7 @@ import 'package:clock_app/timer/data/default_timer_presets.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
+import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 

@@ -606,6 +606,21 @@
   "donorsDescription": "Our generous patreons",
   "@donorsDescription" : {},
   "contributorsDescription" : "People who make this app possible",
-  "@contributorsDescription" : {}
-
+  "@contributorsDescription" : {},
+  "widgetsSettingGroup": "Widgets",
+  "@widgetsSettingGroup": {},
+  "digitalClockSettingGroup": "Digital Clock",
+  "@digitalClockSettingGroup": {},
+  "layoutSettingGroup": "Layout",
+  "@layoutSettingGroup": {},
+  "timeSizeSetting": "Time Size",
+  "@timeSizeSetting": {},
+  "dateSizeSetting": "Date Size",
+  "@dateSizeSetting": {},
+  "textSettingGroup": "Text",
+  "@textSettingGroup": {},
+  "showDateSetting": "ShowDate",
+  "@showDateSetting": {},
+  "settingsTitle": "Settings",
+  "@settingsTitle": {}
 }

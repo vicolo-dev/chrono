@@ -268,6 +268,8 @@ class NumberSetting extends Setting<double> {
 }
 
 class ColorSetting extends Setting<Color> {
+  final bool enableOpacity;
+
   ColorSetting(
     String name,
     String Function(BuildContext) getLocalizedName,
@@ -275,6 +277,7 @@ class ColorSetting extends Setting<Color> {
     void Function(BuildContext, Color)? onChange,
     String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
+    this.enableOpacity = false,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(name, getLocalizedName, getDescription, defaultValue, onChange,
@@ -302,6 +305,7 @@ class ColorSetting extends Setting<Color> {
       enableConditions: enableConditions,
       isVisual: isVisual,
       searchTags: searchTags,
+      enableOpacity: enableOpacity,
     );
   }
 }

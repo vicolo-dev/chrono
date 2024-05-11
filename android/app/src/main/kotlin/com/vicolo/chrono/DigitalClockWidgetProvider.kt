@@ -2,17 +2,16 @@ package com.vicolo.chrono
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.widget.RemoteViews
 import android.content.SharedPreferences
-import es.antonborri.home_widget.HomeWidgetBackgroundIntent
-import es.antonborri.home_widget.HomeWidgetLaunchIntent
-import es.antonborri.home_widget.HomeWidgetProvider
-import es.antonborri.home_widget.HomeWidgetPlugin
 import android.util.Log
+import android.widget.RemoteViews
+import android.graphics.Color
+import es.antonborri.home_widget.HomeWidgetProvider
+import android.view.ViewGroup.LayoutParams
 import android.view.View
+import android.util.TypedValue
 
 class DigitalClockWidgetProvider : HomeWidgetProvider() {
     override fun onUpdate(
@@ -22,7 +21,7 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
         widgetData: SharedPreferences,
     ) { // Perform this loop procedure for each widget that belongs to this
         // provider.
-        Log.d("TAG", "======================================YOO")
+        Log.d("TAG", "Updating Digital Clock Widget");
 
         appWidgetIds.forEach { appWidgetId ->
             // Create an Intent to launch ExampleActivity.
@@ -43,11 +42,49 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
                         )
                     val dateFormat = widgetData.getString("dateFormat", "EEE, d MMM")
                     val timeFormat = widgetData.getString("timeFormat", "HH:mm")
-                    setCharSequence (R.id.widget_text_clock, "setFormat24Hour", timeFormat)
-                    setCharSequence (R.id.widget_text_clock, "setFormat12Hour", timeFormat)
-                    setCharSequence (R.id.widget_date, "setFormat24Hour", dateFormat)
-                    setCharSequence (R.id.widget_date, "setFormat12Hour", dateFormat)
-                    // setViewVisibility(R.id.widget_date, View.GONE)
+                    val dateSize = widgetData.getInt("dateSize", 25)
+                    val timeSize = widgetData.getInt("timeSize", 100)
+                    val textColor = widgetData.getString("textColor", "#FFFFFF")
+                    // val shadowColor = widgetData.getString("shadowColor", "#000000")
+                    // val shadowElevation = widgetData.getFloat("shadowElevation", 1.0f)
+                    // val shadowBlur = widgetData.getFloat("shadowBlur", 1.0f)
+                    val showDate = widgetData.getBoolean("showDate", true)
+
+                    setCharSequence(R.id.widget_text_clock, "setFormat24Hour", timeFormat)
+                    setCharSequence(R.id.widget_text_clock, "setFormat12Hour", timeFormat)
+                    setCharSequence(R.id.widget_date, "setFormat24Hour", "EEE, d MMM")
+                    setCharSequence(R.id.widget_date, "setFormat12Hour", "EEE, d MMM")
+                    setColorInt(R.id.widget_text_clock, "setTextColor", Color.parseColor(textColor), Color.parseColor(textColor))
+                    setColorInt(R.id.widget_date, "setTextColor", Color.parseColor(textColor), Color.parseColor(textColor))
+                    // setFloat(R.id.widget_text_clock, "setTextSize", timeSize.toFloat())
+                    // setFloat(R.id.widget_date, "setTextSize", dateSize.toFloat())
+                    setViewLayoutHeight(R.id.widget_text_clock, timeSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
+                    setViewLayoutHeight(R.id.widget_date, dateSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
+                    setViewVisibility(R.id.widget_date, if(showDate) View.VISIBLE else View.GONE)
+                    //
+                    // R.layout.digital_clock_widget.findViewById(R.id.widget_text_clock).apply {
+                    //     val param =
+                    //         LinearLayout.LayoutParams(
+                    //             LayoutParams.MATCH_PARENT,
+                    //             LayoutParams.MATCH_PARENT,
+                    //             timeSize,
+                    //         )
+                    //     setLayoutParams(param)
+                    //     setShadowLayer(shadowBlur, 0f, shadowElevation, shadowColor)
+                    // }
+                    //
+                    // R.layout.digital_clock_widget.findViewById(R.id.widget_date).apply {
+                    //     val param =
+                    //         LinearLayout.LayoutParams(
+                    //             LayoutParams.MATCH_PARENT,
+                    //             LayoutParams.MATCH_PARENT,
+                    //             dateSize,
+                    //         )
+                    //     setLayoutParams(param)
+                    //     setTextColor(textColor)
+                    //     setShadowLayer(shadowBlur, 0f, shadowElevation, shadowColor)
+                    // }
+
                     // Swap Title Text by calling Dart Code in the Background
                     // setTextViewText(R.id.widget_title, widgetData.getString("title", null)
                     //         ?: "No Title Set")

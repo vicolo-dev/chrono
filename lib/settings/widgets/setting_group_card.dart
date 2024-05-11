@@ -6,7 +6,6 @@ import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class SettingGroupCard extends StatefulWidget {
   final SettingGroup settingGroup;
   final VoidCallback? checkDependentEnableConditions;
@@ -87,8 +86,9 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(widget.settingGroup.icon, color: colorScheme.onBackground),
-            const SizedBox(width: 16),
+            if (widget.settingGroup.icon != null)
+              Icon(widget.settingGroup.icon, color: colorScheme.onBackground),
+            if (widget.settingGroup.icon != null) const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

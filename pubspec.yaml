@@ -71,7 +71,9 @@ dependencies:
   locale_names: ^1.1.1
   # home_widget: ^0.5.0
   home_widget:
-    path: "../home_widget/"
+     git:
+      url: https://github.com/AhsanSarwar45/home_widget
+      ref: main
 
 
 dev_dependencies:

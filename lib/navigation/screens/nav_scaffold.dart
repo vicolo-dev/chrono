@@ -121,13 +121,15 @@ class _NavScaffoldState extends State<NavScaffold> {
     return Scaffold(
       appBar: orientation == Orientation.portrait
           ? AppTopBar(
-              title: Text(tabs[_selectedTabIndex].title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onBackground
-                            .withOpacity(0.6),
-                      )),
+              title: Text(
+                tabs[_selectedTabIndex].title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.6),
+                    ),
+              ),
               actions: [
                 IconButton(
                   onPressed: () {

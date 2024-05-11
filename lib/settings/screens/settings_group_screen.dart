@@ -39,6 +39,7 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
 
     return Scaffold(
       appBar: SettingsTopBar(
+        title: widget.settingGroup.displayName(context),
         onSearch: (settingItems) {
           setState(() {
             searchedItems = settingItems;
@@ -66,7 +67,8 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
                       SettingPageLinkCard(
                           setting: SettingPageLink(
                               'Restore default values',
-                              (context) =>AppLocalizations.of(context)!.restoreSettingGroup,
+                              (context) => AppLocalizations.of(context)!
+                                  .restoreSettingGroup,
                               RestoreDefaultScreen(
                                 settingGroup: widget.settingGroup,
                                 onRestore: () async {

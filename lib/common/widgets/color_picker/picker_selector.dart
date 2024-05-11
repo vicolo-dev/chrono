@@ -51,7 +51,7 @@ class PickerSelector extends StatelessWidget {
           },
           options: options.where((option) => pickers[option.value]!).toList(),
           square: false,
-          innerPadding: 16,
+          innerPadding: 12,
         ),
       ),
     );

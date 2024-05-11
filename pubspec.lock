@@ -475,9 +475,11 @@ packages:
   home_widget:
     dependency: "direct main"
     description:
-      path: "../home_widget"
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "5788ac45f62bef72ff44c52cbd77dc1f9258f633"
+      url: "https://github.com/AhsanSarwar45/home_widget"
+    source: git
     version: "0.5.0"
   html:
     dependency: transitive

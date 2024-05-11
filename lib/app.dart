@@ -58,19 +58,6 @@ class _AppState extends State<App> {
   late SettingGroup _styleSettings;
   late Setting _animationSpeedSetting;
   late SettingGroup _generalSettings;
-  late Setting _timeFormatSetting;
-  late Setting _dateFormatSetting;
-
-  void updateDateFormat(dynamic value) async {
-    await HomeWidget.saveWidgetData("dateFormat", value);
-    updateWidgets();
-  }
-
-  void updateTimeFormat(dynamic value) async {
-    await HomeWidget.saveWidgetData(
-        "timeFormat", getTimeFormatString(context, value));
-    updateWidgets();
-  }
 
   @override
   void initState() {
@@ -79,6 +66,7 @@ class _AppState extends State<App> {
     // HomeWidget.updateWidget(
     //   androidName: 'DigitalClockWidgetProvider',
     // );
+    setDigitalClockWidgetData(context);
 
     NotificationController.setListeners();
 
@@ -89,14 +77,6 @@ class _AppState extends State<App> {
     _animationSpeedSetting =
         _generalSettings.getGroup("Animations").getSetting("Animation Speed");
     _animationSpeedSetting.addListener(setAnimationSpeed);
-    _timeFormatSetting =
-        _generalSettings.getGroup("Display").getSetting("Time Format");
-    _dateFormatSetting =
-        _generalSettings.getGroup("Display").getSetting("Date Format");
-    _timeFormatSetting.addListener(updateTimeFormat);
-    _dateFormatSetting.addListener(updateDateFormat);
-    updateDateFormat(_dateFormatSetting.value);
-    updateTimeFormat(_timeFormatSetting.value);
 
     setAnimationSpeed(_animationSpeedSetting.value);
   }
