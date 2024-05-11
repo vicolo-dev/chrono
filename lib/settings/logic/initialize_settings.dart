@@ -23,20 +23,12 @@ import 'package:clock_app/timer/data/default_timer_presets.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
-import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
-
 Future<void> _clearSettings() async {
-  // List<ClockTimer> timers = await loadList<ClockTimer>('timers');
-  // List<Alarm> alarms = await loadList<Alarm>('alarms');
   // We need to remove all scheduled alarms and timers before clearing the data
   // Otherwise, there would be no way to remove them in the future
-
-  // for (var timer in timers) {
-  //   timer.reset();
-  // }
   await cancelAllAlarms();
   await cancelAllTimers();
   await GetStorage().erase();
@@ -60,13 +52,10 @@ Future<void> initializeStorage([bool clearSettingsOnDebug = true]) async {
   // Comment this out after the preferences are cleared
   if (kDebugMode && clearSettingsOnDebug) await _clearSettings();
 
-  bool? firstLaunch = GetStorage().read('first_launch');
-  if (firstLaunch == null) {
-    // This is used to show alarm and timer edit animations
-    GetStorage().write('first_alarm_created', false);
-    GetStorage().write('first_timer_created', false);
-  }
-
+  // bool? firstLaunch = GetStorage().read('first_launch');
+  // if (firstLaunch == null) {
+  // }
+  //
   await initList<Alarm>("alarms", []);
   await initList<Tag>("tags", defaultTags);
   await initList<AlarmEvent>("alarm_events", []);

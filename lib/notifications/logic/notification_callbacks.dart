@@ -1,13 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:clock_app/alarm/logic/alarm_reminder_notifications.dart';
-import 'package:clock_app/alarm/logic/update_alarms.dart';
-import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/alarm/utils/alarm_id.dart';
-import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/stopwatch/logic/update_stopwatch.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
