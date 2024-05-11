@@ -16,17 +16,19 @@ class MultiSelectSettingCard<T> extends StatefulWidget {
   final bool showAsCard;
 
   @override
-  State<MultiSelectSettingCard<T>> createState() => _MultiSelectSettingCardState<T>();
+  State<MultiSelectSettingCard<T>> createState() =>
+      _MultiSelectSettingCardState<T>();
 }
 
 class _MultiSelectSettingCardState<T> extends State<MultiSelectSettingCard<T>> {
   @override
   Widget build(BuildContext context) {
     SelectField selectWidget = SelectField(
-      selectedIndices: widget.setting.selectedIndices,
+      getSelectedIndices: () => widget.setting.selectedIndices,
       title: widget.setting.name,
       multiSelect: true,
-      choices: widget.setting.options
+      actions: widget.setting.actions,
+      getChoices: () => widget.setting.options
           .map((option) => SelectChoice(
               name: option.getLocalizedName(context),
               value: option.value,

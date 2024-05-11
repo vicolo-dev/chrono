@@ -21,13 +21,13 @@ Future<void> editDurationPickerMode(
     },
     title: setting.name,
     description: setting.getDescription(context),
-    choices: setting.options
+    getChoices: () => setting.options
         .map((option) => SelectChoice(
             name: option.getLocalizedName(context),
             value: option.value,
             description: option.getDescription(context)))
         .toList(),
-    initialSelectedIndices: [setting.selectedIndex],
+    getCurrentSelectedIndices: () => [setting.selectedIndex],
     multiSelect: false,
   );
 

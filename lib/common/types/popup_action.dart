@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class PopupAction {
+class MenuAction {
   IconData icon;
   String name;
-  Function action;
+  Function(BuildContext context) action;
   Color? color;
 
-  PopupAction(this.name, this.action, this.icon, [this.color]);
+  MenuAction(this.name, this.action, this.icon, [this.color]);
 }
