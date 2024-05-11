@@ -341,7 +341,7 @@
   "@resetButton": {},
   "cardLabel": "Carte",
   "@cardLabel": {},
-  "accentLabel": "Couleur primaire & d’accent",
+  "accentLabel": "Accent",
   "@accentLabel": {},
   "errorLabel": "Erreur",
   "@errorLabel": {},
