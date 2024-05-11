@@ -162,5 +162,7 @@
   "colorSchemeNamePlaceholder": "Цветовая схема",
   "@colorSchemeNamePlaceholder": {},
   "vendorSetting": "Настройки производителя",
-  "@vendorSetting": {}
+  "@vendorSetting": {},
+  "timePickerSetting": "Выбор времени",
+  "@timePickerSetting": {}
 }

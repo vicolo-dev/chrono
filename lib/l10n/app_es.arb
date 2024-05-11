@@ -584,5 +584,19 @@
   "cityAlreadyInFavorites": "Esta ciudad ya está en tus favoritos",
   "@cityAlreadyInFavorites": {},
   "mondayFull": "Lunes",
-  "@mondayFull": {}
+  "@mondayFull": {},
+  "openSourceLicensesSetting": "Licencias de código abierto",
+  "@openSourceLicensesSetting": {},
+  "contributorsSetting": "Colaboradores",
+  "@contributorsSetting": {},
+  "donorsSetting": "Donantes",
+  "@donorsSetting": {},
+  "donateButton": "Donar",
+  "@donateButton": {},
+  "donateDescription": "Donar para apoyar el desarrollo de la aplicación",
+  "@donateDescription": {},
+  "donorsDescription": "Nuestros generosos mecenas",
+  "@donorsDescription": {},
+  "contributorsDescription": "Personas que hacen posible esta aplicación",
+  "@contributorsDescription": {}
 }
