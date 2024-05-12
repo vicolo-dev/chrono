@@ -10,7 +10,7 @@ void setDigitalClockWidgetData(BuildContext context) async {
   final dateSettingGroup = digitalClockSettingGroup.getGroup('Date');
   final timeSettingGroup = digitalClockSettingGroup.getGroup('Time');
   final int horizontalAlignment = layoutSettingGroup.getSetting('Horizontal Alignment').value;
-  final int verticalAlignment = layoutSettingGroup.getSetting('Vertical Alignment').value;
+  // final int verticalAlignment = layoutSettingGroup.getSetting('Vertical Alignment').value;
   final bool showDate = dateSettingGroup.getSetting('Show Date').value;
   final int timeSize = timeSettingGroup.getSetting('Size').value.round();
   final int dateSize = dateSettingGroup.getSetting('Size').value.round();
@@ -40,7 +40,7 @@ void setDigitalClockWidgetData(BuildContext context) async {
   await HomeWidget.saveWidgetData<String>('timeColor', timeColor);
   await HomeWidget.saveWidgetData<String>('dateColor', dateColor);
   await HomeWidget.saveWidgetData<int>('horizontalAlignment', horizontalAlignment);
-  await HomeWidget.saveWidgetData<int>('verticalAlignment', verticalAlignment);
+  // await HomeWidget.saveWidgetData<int>('verticalAlignment', verticalAlignment);
   await HomeWidget.saveWidgetData<int>('timeFontWeight', timeFontWeight);
   await HomeWidget.saveWidgetData<int>('dateFontWeight', dateFontWeight);
 

@@ -52,9 +52,9 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                     color: colorScheme.onBackground,
                   )),
               const SizedBox(height: 16),
-              const Text(
-                "Some devices have battery optimizations that prevent background app from functioning properly. This might cause alarms and timers to not go off reliably. Please click the button below and follow the guide to disable these optimizations for your device. You can also do so later by going to Settings > General > Reliability",
-              ),
+              Text(
+                  "Some devices have battery optimizations that prevent background app from functioning properly. This might cause alarms and timers to not go off reliably. Please click the button below and follow the guide to disable these optimizations for your device. You can also do so later by going to Settings > General > Reliability",
+                  style: textTheme.bodyLarge),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
@@ -73,7 +73,7 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                child:  Text(
+                child: Text(
                   'View Settings',
                   style: TextStyle(color: colorScheme.onPrimary),
                 ),

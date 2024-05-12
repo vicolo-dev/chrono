@@ -9,12 +9,14 @@ import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/l10n/language_local.dart';
+import 'package:clock_app/notifications/logic/notifications.dart';
 import 'package:clock_app/settings/screens/ringtones_screen.dart';
 import 'package:clock_app/settings/screens/tags_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
+import 'package:clock_app/system/logic/permissions.dart';
 import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -192,6 +194,34 @@ SettingGroup generalSettingsSchema = SettingGroup(
     ),
     SettingGroup("Reliability",
         (context) => AppLocalizations.of(context)!.reliabilitySettingGroup, [
+      SettingAction(
+        "Ignore Battery Optimizations",
+        (context) =>
+            AppLocalizations.of(context)!.ignoreBatteryOptimizationSetting,
+        (context) async {
+          requestBatteryOptimizationPermission(
+              onAlreadyGranted: () => {
+                    showSnackBar(
+                        context,
+                        AppLocalizations.of(context)!
+                            .ignoreBatteryOptimizationAlreadyGranted)
+                  });
+        },
+      ),
+      SettingAction(
+        "Notifications",
+        (context) =>
+            AppLocalizations.of(context)!.notificationPermissionSetting,
+        (context) async {
+          requestNotificationPermissions(
+              onAlreadyGranted: () => {
+                    showSnackBar(
+                        context,
+                        AppLocalizations.of(context)!
+                            .notificationPermissionAlreadyGranted)
+                  });
+        },
+      ),
       SettingAction(
         "Vendor Specific",
         (context) => AppLocalizations.of(context)!.vendorSetting,
