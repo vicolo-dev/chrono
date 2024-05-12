@@ -598,5 +598,21 @@
   "donorsDescription": "Nuestros generosos mecenas",
   "@donorsDescription": {},
   "contributorsDescription": "Personas que hacen posible esta aplicación",
-  "@contributorsDescription": {}
+  "@contributorsDescription": {},
+  "widgetsSettingGroup": "Widgets",
+  "@widgetsSettingGroup": {},
+  "digitalClockSettingGroup": "Reloj digital",
+  "@digitalClockSettingGroup": {},
+  "layoutSettingGroup": "Disposición",
+  "@layoutSettingGroup": {},
+  "timeSizeSetting": "Tamaño del tiempo",
+  "@timeSizeSetting": {},
+  "dateSizeSetting": "Tamaño de la fecha",
+  "@dateSizeSetting": {},
+  "textSettingGroup": "Texto",
+  "@textSettingGroup": {},
+  "showDateSetting": "Mostrar la fecha",
+  "@showDateSetting": {},
+  "settingsTitle": "Ajustes",
+  "@settingsTitle": {}
 }
