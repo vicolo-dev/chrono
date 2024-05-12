@@ -9,7 +9,8 @@ void setDigitalClockWidgetData(BuildContext context) async {
   final layoutSettingGroup = digitalClockSettingGroup.getGroup('Layout');
   final dateSettingGroup = digitalClockSettingGroup.getGroup('Date');
   final timeSettingGroup = digitalClockSettingGroup.getGroup('Time');
-  final int alignment = layoutSettingGroup.getSetting('Alignment').value;
+  final int horizontalAlignment = layoutSettingGroup.getSetting('Horizontal Alignment').value;
+  final int verticalAlignment = layoutSettingGroup.getSetting('Vertical Alignment').value;
   final bool showDate = dateSettingGroup.getSetting('Show Date').value;
   final int timeSize = timeSettingGroup.getSetting('Size').value.round();
   final int dateSize = dateSettingGroup.getSetting('Size').value.round();
@@ -21,13 +22,16 @@ void setDigitalClockWidgetData(BuildContext context) async {
       '#${timeSettingGroup.getSetting('Color').value.value.toRadixString(16)}';
   final String dateColor =
       '#${dateSettingGroup.getSetting('Color').value.value.toRadixString(16)}';
+  final bool showMeridiem = timeSettingGroup.getSetting('Show Meridiem').value;
   final String timeFormat = getTimeFormatString(
-      context,
-      appSettings
-          .getGroup('General')
-          .getGroup('Display')
-          .getSetting('Time Format')
-          .value);
+    context,
+    appSettings
+        .getGroup('General')
+        .getGroup('Display')
+        .getSetting('Time Format')
+        .value,
+    showMeridiem: showMeridiem,
+  );
 
   await HomeWidget.saveWidgetData("timeFormat", timeFormat);
   await HomeWidget.saveWidgetData<bool>('showDate', showDate);
@@ -35,7 +39,8 @@ void setDigitalClockWidgetData(BuildContext context) async {
   await HomeWidget.saveWidgetData<int>('dateSize', dateSize);
   await HomeWidget.saveWidgetData<String>('timeColor', timeColor);
   await HomeWidget.saveWidgetData<String>('dateColor', dateColor);
-  await HomeWidget.saveWidgetData<int>('alignment', alignment);
+  await HomeWidget.saveWidgetData<int>('horizontalAlignment', horizontalAlignment);
+  await HomeWidget.saveWidgetData<int>('verticalAlignment', verticalAlignment);
   await HomeWidget.saveWidgetData<int>('timeFontWeight', timeFontWeight);
   await HomeWidget.saveWidgetData<int>('dateFontWeight', dateFontWeight);
 

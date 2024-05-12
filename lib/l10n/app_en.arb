@@ -619,8 +619,14 @@
   "@showDateSetting": {},
   "settingsTitle": "Settings",
   "@settingsTitle": {},
-  "alignmentSetting" : "Alignment",
-  "@alignmentSetting" : {},
+  "horizontalAlignmentSetting" : "Horizontal Alignment",
+  "@horizontalAlignmentSetting" : {},
+  "verticalAlignmentSetting" : "Vertical Alignment",
+  "@verticalAlignmentSetting" : {},
+  "alignmentTop": "Top",
+  "@alignmentTop": {},
+  "alignmentBottom": "Bottom",
+  "@alignmentBottom": {},
   "alignmentLeft": "Left",
   "@alignmentLeft": {},
   "alignmentCenter": "Center",
@@ -638,7 +644,9 @@
   "sizeSetting": "Size",
   "@sizeSetting": {},
   "defaultPageSetting": "Default Tab",
-  "@defaultPageSetting": {}
+  "@defaultPageSetting": {},
+  "showMeridiemSetting": "Show AM/PM",
+  "@showMeridiemSetting": {}
 
   
 }
