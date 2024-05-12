@@ -5,8 +5,8 @@
     android:targetCellWidth="3"
     android:targetCellHeight="2"
     android:updatePeriodMillis="86400000"
-  android:initialLayout="@layout/analogue_clock_widget"
-      android:previewLayout="@layout/analogue_clock_widget"
+    android:initialLayout="@layout/analogue_clock_widget"
+    android:previewLayout="@layout/analogue_clock_widget"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen">
 </appwidget-provider>

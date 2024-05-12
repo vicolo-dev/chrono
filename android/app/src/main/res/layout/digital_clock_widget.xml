@@ -13,9 +13,9 @@
         tools:ignore="UnusedAttribute">
 
         <TextClock
-            android:id="@+id/widget_text_clock"
+            android:id="@+id/widget_clock_100"
             android:layout_width="match_parent"
-      android:layout_height="100sp"
+            android:layout_height="70sp"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -26,15 +26,198 @@
             android:includeFontPadding="false"
             android:maxLines="1"
             android:textColor="@android:color/white"
-            android:shadowColor="@android:color/black"
+            android:shadowColor="@color/shadow"
             android:shadowDy="1"
             android:shadowRadius="1"
+      android:textFontWeight="100"
+      android:visibility="gone"
+      tools:text="00:00" />
+
+      <TextClock
+            android:id="@+id/widget_clock_200"
+            android:layout_width="match_parent"
+            android:layout_height="70sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="h:mm"
+            android:format24Hour="k:mm"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+      android:textFontWeight="200"
+            android:visibility="gone"
+
+      tools:text="00:00" />
+
+      <TextClock
+            android:id="@+id/widget_clock_300"
+            android:layout_width="match_parent"
+            android:layout_height="70sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="h:mm"
+            android:format24Hour="k:mm"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+      android:textFontWeight="300"
+            android:visibility="gone"
+
+      tools:text="00:00" />
+
+      <TextClock
+            android:id="@+id/widget_clock_400"
+            android:layout_width="match_parent"
+            android:layout_height="70sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="h:mm"
+            android:format24Hour="k:mm"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:textFontWeight="400"
+            android:visibility="gone"
+
             tools:text="00:00" />
 
-        <TextClock
-            android:id="@+id/widget_date"
+      <TextClock
+            android:id="@+id/widget_clock_500"
             android:layout_width="match_parent"
-      android:layout_height="20sp"
+            android:layout_height="70sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="h:mm"
+            android:format24Hour="k:mm"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:textFontWeight="500"
+            android:visibility="visible"
+
+      tools:text="00:00" />
+
+      <TextClock
+            android:id="@+id/widget_clock_600"
+            android:layout_width="match_parent"
+            android:layout_height="70sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="h:mm"
+            android:format24Hour="k:mm"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+      android:textFontWeight="600"
+            android:visibility="gone"
+
+      tools:text="00:00" />
+
+      <TextClock
+            android:id="@+id/widget_clock_700"
+            android:layout_width="match_parent"
+            android:layout_height="70sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="h:mm"
+            android:format24Hour="k:mm"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+      android:textFontWeight="700"
+            android:visibility="gone"
+
+            tools:text="00:00" />
+
+       <TextClock
+            android:id="@+id/widget_clock_800"
+            android:layout_width="match_parent"
+            android:layout_height="70sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="h:mm"
+            android:format24Hour="k:mm"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+      android:textFontWeight="800"
+            android:visibility="gone"
+
+      tools:text="00:00" />
+
+        
+       <TextClock
+            android:id="@+id/widget_clock_900"
+            android:layout_width="match_parent"
+            android:layout_height="70sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="h:mm"
+            android:format24Hour="k:mm"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+      android:textFontWeight="900"
+            android:visibility="gone"
+
+      tools:text="00:00" />
+
+
+
+
+
+        <TextClock
+            android:id="@+id/widget_date_100"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
@@ -44,10 +227,278 @@
             android:includeFontPadding="false"
             android:maxLines="1"
             android:textColor="@android:color/white"
-            android:shadowColor="@android:color/black"
+            android:shadowColor="@color/shadow"
             android:shadowDy="1"
-            android:shadowRadius="1"
+      android:shadowRadius="1"
+      android:textFontWeight="100"
+      android:visibility="gone"
+      tools:text="Mon, 1 January" />
+
+        <TextClock
+            android:id="@+id/widget_date_200"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="EEE, d MMM"
+            android:format24Hour="EEE, d MMM"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textFontWeight="200"
+      android:visibility="gone"
             tools:text="Mon, 1 January" />
+
+
+        <TextClock
+            android:id="@+id/widget_date_300"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="EEE, d MMM"
+            android:format24Hour="EEE, d MMM"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textFontWeight="300"
+      android:visibility="gone"
+            tools:text="Mon, 1 January" />
+
+
+        <TextClock
+            android:id="@+id/widget_date_400"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="EEE, d MMM"
+            android:format24Hour="EEE, d MMM"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textFontWeight="400"
+      android:visibility="gone"
+            tools:text="Mon, 1 January" />
+
+
+        <TextClock
+            android:id="@+id/widget_date_500"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="EEE, d MMM"
+            android:format24Hour="EEE, d MMM"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textFontWeight="500"
+      android:visibility="visible"
+            tools:text="Mon, 1 January" />
+
+
+        <TextClock
+            android:id="@+id/widget_date_600"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="EEE, d MMM"
+            android:format24Hour="EEE, d MMM"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textFontWeight="600"
+      android:visibility="gone"
+            tools:text="Mon, 1 January" />
+
+
+        <TextClock
+            android:id="@+id/widget_date_700"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="EEE, d MMM"
+            android:format24Hour="EEE, d MMM"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textFontWeight="700"
+      android:visibility="gone"
+            tools:text="Mon, 1 January" />
+
+        <TextClock
+            android:id="@+id/widget_date_800"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="EEE, d MMM"
+            android:format24Hour="EEE, d MMM"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textFontWeight="800"
+      android:visibility="gone"
+            tools:text="Mon, 1 January" />
+
+        <TextClock
+            android:id="@+id/widget_date_900"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="EEE, d MMM"
+            android:format24Hour="EEE, d MMM"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@color/shadow"
+            android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textFontWeight="900"
+      android:visibility="gone"
+            tools:text="Mon, 1 January" />
+
+
+     
+ <!-- <include android:id="@+id/widget_clock_100" -->
+ <!--          android:textFontWeight="100" -->
+ <!--      android:visibility="gone" -->
+ <!--      layout="@layout/digital_clock"/> -->
+ <!---->
+ <!--        <include android:id="@+id/widget_clock_200" -->
+ <!--          android:textFontWeight="200" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_clock"/> -->
+ <!---->
+ <!--        <include android:id="@+id/widget_clock_300" -->
+ <!--          android:textFontWeight="300" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_clock"/> -->
+ <!---->
+ <!--        <include android:id="@+id/widget_clock_400" -->
+ <!--          android:textFontWeight="400" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_clock"/> -->
+ <!---->
+ <!--        <include android:id="@+id/widget_clock_500" -->
+ <!--          android:textFontWeight="500" -->
+ <!--      android:visibility="visible" -->
+ <!--         layout="@layout/digital_clock"/> -->
+ <!---->
+ <!--        <include android:id="@+id/widget_clock_600" -->
+ <!--          android:textFontWeight="600" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_clock"/> -->
+ <!---->
+ <!--        <include android:id="@+id/widget_clock_700" -->
+ <!--          android:textFontWeight="700" -->
+ <!--      android:visibility="gone" -->
+ <!--      layout="@layout/digital_clock"/> -->
+ <!---->
+ <!--       <include android:id="@+id/widget_clock_800" -->
+ <!--          android:textFontWeight="800" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_clock"/> -->
+ <!---->
+ <!---->
+ <!--       <include android:id="@+id/widget_clock_900" -->
+ <!--          android:textFontWeight="900" -->
+ <!--      android:visibility="gone" -->
+ <!--      layout="@layout/digital_clock"/> -->
+ <!---->
+ <!---->
+ <!--        <include android:id="@+id/widget_date_100" -->
+ <!--          android:textFontWeight="100" -->
+ <!--      android:visibility="gone" -->
+ <!--      layout="@layout/digital_date"/> -->
+ <!---->
+ <!--       <include android:id="@+id/widget_date_200" -->
+ <!--          android:textFontWeight="200" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_date"/> -->
+ <!---->
+ <!---->
+ <!--       <include android:id="@+id/widget_date_300" -->
+ <!--          android:textFontWeight="300" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_date"/> -->
+ <!---->
+ <!---->
+ <!--       <include android:id="@+id/widget_date_400" -->
+ <!--          android:textFontWeight="400" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_clock"/> -->
+ <!---->
+ <!---->
+ <!--       <include android:id="@+id/widget_date_500" -->
+ <!--          android:textFontWeight="500" -->
+ <!--      android:visibility="visible" -->
+ <!--         layout="@layout/digital_date"/> -->
+ <!---->
+ <!--       <include android:id="@+id/widget_date_600" -->
+ <!--          android:textFontWeight="600" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_date"/> -->
+ <!---->
+ <!---->
+ <!--       <include android:id="@+id/widget_date_700" -->
+ <!--          android:textFontWeight="700" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_date"/> -->
+ <!---->
+ <!---->
+ <!--       <include android:id="@+id/widget_date_800" -->
+ <!--          android:textFontWeight="800" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_date"/> -->
+ <!---->
+ <!---->
+ <!--       <include android:id="@+id/widget_date_900" -->
+ <!--          android:textFontWeight="900" -->
+ <!--      android:visibility="gone" -->
+ <!--         layout="@layout/digital_date"/> -->
+
 
         <!-- <RelativeLayout -->
         <!--     android:id="@+id/widget_alarm_holder" -->
@@ -73,7 +524,7 @@
             <!--     android:includeFontPadding="false" -->
             <!--     android:maxLines="1" -->
             <!--     android:paddingStart="@dimen/small_margin" -->
-            <!--     android:shadowColor="@android:color/black" -->
+            <!--     android:shadowColor="@color/shadow" -->
             <!--     android:shadowDy="1" -->
             <!--     android:shadowRadius="1" -->
             <!--     android:textSize="@dimen/normal_text_size" -->
