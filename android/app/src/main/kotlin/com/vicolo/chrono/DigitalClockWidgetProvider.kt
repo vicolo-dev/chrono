@@ -47,7 +47,8 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
                     val timeSize = widgetData.getInt("timeSize", 70)
                     val timeColor = widgetData.getString("timeColor", "#FFFFFF")
                     val dateColor = widgetData.getString("dateColor", "#FFFFFF")
-                    val alignment = widgetData.getInt("alignment", 11)
+                    val horizontalAlignment = widgetData.getInt("horizontalAlignment", 11)
+                    val verticalAlignment = widgetData.getInt("verticalAlignment", 10)
                     val timeFontWeight = widgetData.getInt("timeFontWeight", 500)
                     val dateFontWeight = widgetData.getInt("dateFontWeight", 500)
                     // val shadowColor = widgetData.getString("shadowColor", "#000000")
@@ -103,15 +104,17 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
                     setCharSequence(textClock, "setFormat12Hour", timeFormat)
                     setCharSequence(textDate, "setFormat24Hour", "EEE, d MMM")
                     setCharSequence(textDate, "setFormat12Hour", "EEE, d MMM")
-                    if (alignment == 7) {
+                    if (horizontalAlignment == 7) {
                         setInt(textClock, "setGravity", 1)
                         setInt(textDate, "setGravity", 1)
                         setInt(textClock, "setJustificationMode", 2)
                         setInt(textDate, "setJustificationMode", 2)
                     } else {
-                        setInt(textClock, "setGravity", alignment)
-                        setInt(textDate, "setGravity", alignment)
+                        setInt(textClock, "setGravity", horizontalAlignment)
+                        setInt(textDate, "setGravity", horizontalAlignment)
                     }
+                    // setInt(R.id.digital_clock_holder, "setVerticalGravity", 10)
+
                     setColorInt(textClock, "setTextColor", Color.parseColor(timeColor), Color.parseColor(timeColor))
                     setColorInt(textDate, "setTextColor", Color.parseColor(dateColor), Color.parseColor(dateColor))
                     setViewLayoutHeight(textClock, timeSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)

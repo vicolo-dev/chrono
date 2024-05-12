@@ -6,10 +6,11 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/widget_date_time_holder"
+        android:id="@+id/digital_clock_holder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center"
         tools:ignore="UnusedAttribute">
 
         <TextClock

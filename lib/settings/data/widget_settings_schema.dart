@@ -19,8 +19,9 @@ SettingGroup widgetSettingSchema = SettingGroup(
           (context) => AppLocalizations.of(context)!.layoutSettingGroup,
           [
             SelectSetting(
-              "Alignment",
-              (context) => AppLocalizations.of(context)!.alignmentSetting,
+              "Horizontal Alignment",
+              (context) =>
+                  AppLocalizations.of(context)!.horizontalAlignmentSetting,
               [
                 SelectSettingOption(
                     (context) => AppLocalizations.of(context)!.alignmentLeft,
@@ -40,12 +41,41 @@ SettingGroup widgetSettingSchema = SettingGroup(
                 setDigitalClockWidgetData(context);
               },
             ),
+            SelectSetting(
+              "Vertical Alignment",
+              (context) =>
+                  AppLocalizations.of(context)!.verticalAlignmentSetting,
+              [
+                SelectSettingOption(
+                    (context) => AppLocalizations.of(context)!.alignmentTop,
+                    30),
+                SelectSettingOption(
+                    (context) => AppLocalizations.of(context)!.alignmentCenter,
+                    10),
+                SelectSettingOption(
+                    (context) => AppLocalizations.of(context)!.alignmentBottom,
+                    50),
+                // SelectSettingOption(
+                //     (context) => AppLocalizations.of(context)!.alignmentJustify,
+                //     7),
+              ],
+              defaultValue: 1,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+            ),
           ],
         ),
         SettingGroup(
           "Time",
           (context) => AppLocalizations.of(context)!.timeSettingGroup,
           [
+            SwitchSetting(
+                "Show Meridiem",
+                (context) => AppLocalizations.of(context)!.showMeridiemSetting,
+                false, onChange: (context, value) async {
+              setDigitalClockWidgetData(context);
+            }),
             SliderSetting(
               "Size",
               (context) => AppLocalizations.of(context)!.sizeSetting,
