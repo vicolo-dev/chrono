@@ -1,0 +1,20 @@
+🚀 Features
+
+* Widget support!
+  * Added analog and digital clock widgets
+  * Added option to customize size, alignment, color, font weight
+* Added localizations
+  * Chinese, French, Spanish mostly complete
+  * Partial support for Bengali, German, Italian, Norwegian, Polish, Portuguese, Russian, Turkish, and Vietnamese
+  * Add your favorite language here: https://hosted.weblate.org/projects/chrono
+
+✨ Enhancements
+
+* Added option to specify default page
+* Added 'plus' button when selecting melodies and tags
+* Added patreons list in about screen
+* Added contributors list in about screen
+
+🐛 Fixes
+
+
