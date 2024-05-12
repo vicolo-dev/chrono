@@ -18,6 +18,73 @@ SettingGroup widgetSettingSchema = SettingGroup(
           "Layout",
           (context) => AppLocalizations.of(context)!.layoutSettingGroup,
           [
+            SelectSetting(
+              "Alignment",
+              (context) => AppLocalizations.of(context)!.alignmentSetting,
+              [
+                SelectSettingOption(
+                    (context) => AppLocalizations.of(context)!.alignmentLeft,
+                    3),
+                SelectSettingOption(
+                    (context) => AppLocalizations.of(context)!.alignmentCenter,
+                    1),
+                SelectSettingOption(
+                    (context) => AppLocalizations.of(context)!.alignmentRight,
+                    5),
+                // SelectSettingOption(
+                //     (context) => AppLocalizations.of(context)!.alignmentJustify,
+                //     7),
+              ],
+              defaultValue: 1,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+            ),
+          ],
+        ),
+        SettingGroup(
+          "Time",
+          (context) => AppLocalizations.of(context)!.timeSettingGroup,
+          [
+            SliderSetting(
+              "Size",
+              (context) => AppLocalizations.of(context)!.sizeSetting,
+              10,
+              100,
+              70,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+              // snapLength: 1,
+            ),
+            ColorSetting(
+              "Color",
+              (context) => AppLocalizations.of(context)!.colorSetting,
+              Colors.white,
+              // enableOpacity: true,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+            ),
+            SliderSetting(
+              "Font Weight",
+              (context) => AppLocalizations.of(context)!.fontWeightSetting,
+              100,
+              900,
+              500,
+              snapLength: 100,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+              // snapLength: 1,
+            ),
+          ],
+        ),
+
+        SettingGroup(
+          "Date",
+          (context) => AppLocalizations.of(context)!.dateSettingGroup,
+          [
             SwitchSetting(
               "Show Date",
               (context) => AppLocalizations.of(context)!.showDateSetting,
@@ -27,22 +94,11 @@ SettingGroup widgetSettingSchema = SettingGroup(
               },
             ),
             SliderSetting(
-              "Time Size",
-              (context) => AppLocalizations.of(context)!.timeSizeSetting,
+              "Size",
+              (context) => AppLocalizations.of(context)!.sizeSetting,
               10,
               100,
-              100,
-              onChange: (context, value) async {
-                setDigitalClockWidgetData(context);
-              },
-              // snapLength: 1,
-            ),
-            SliderSetting(
-              "Date Size",
-              (context) => AppLocalizations.of(context)!.dateSizeSetting,
-              10,
-              100,
-              25,
+              15,
               onChange: (context, value) async {
                 setDigitalClockWidgetData(context);
               },
@@ -51,12 +107,6 @@ SettingGroup widgetSettingSchema = SettingGroup(
               ],
               // snapLength: 1,
             ),
-          ],
-        ),
-        SettingGroup(
-          "Text",
-          (context) => AppLocalizations.of(context)!.textSettingGroup,
-          [
             ColorSetting(
               "Color",
               (context) => AppLocalizations.of(context)!.colorSetting,
@@ -65,6 +115,25 @@ SettingGroup widgetSettingSchema = SettingGroup(
               onChange: (context, value) async {
                 setDigitalClockWidgetData(context);
               },
+              enableConditions: [
+                ValueCondition(["Show Date"], (value) => value == true)
+              ],
+            ),
+            SliderSetting(
+              "Font Weight",
+              (context) => AppLocalizations.of(context)!.fontWeightSetting,
+              100,
+              900,
+              500,
+              snapLength: 100,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+              enableConditions: [
+                ValueCondition(["Show Date"], (value) => value == true)
+              ],
+
+              // snapLength: 1,
             ),
           ],
         ),

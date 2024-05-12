@@ -3,7 +3,7 @@
     android:minWidth="40dp"
     android:minHeight="20dp"
     android:targetCellWidth="3"
-  android:targetCellHeight="2"
+    android:targetCellHeight="2"
     android:updatePeriodMillis="86400000"
     android:initialLayout="@layout/digital_clock_widget"
     android:previewLayout="@layout/digital_clock_widget"

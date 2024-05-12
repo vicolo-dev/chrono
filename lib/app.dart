@@ -203,8 +203,9 @@ class _AppState extends State<App> {
                 return MaterialPageRoute(
                     builder: (context) => const OnBoardingScreen());
               } else {
+                final defaultTab = appSettings.getGroup("General").getSetting("Default Tab").value;
                 final arguments = (ModalRoute.of(context)?.settings.arguments ??
-                    <String, dynamic>{"tab": 0}) as Map;
+                    <String, dynamic>{"tab": defaultTab}) as Map;
                 return MaterialPageRoute(
                     builder: (context) => NavScaffold(
                           initialTabIndex: arguments["tab"],

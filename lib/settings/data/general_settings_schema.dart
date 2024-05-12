@@ -243,6 +243,28 @@ SettingGroup generalSettingsSchema = SettingGroup(
             AppLocalizations.of(context)!.autoStartSettingDescription,
       ),
     ]),
+    SelectSetting(
+      "Default Tab",
+      (context) => AppLocalizations.of(context)!.defaultPageSetting,
+      [
+        SelectSettingOption(
+          (context) => AppLocalizations.of(context)!.alarmTitle,
+          0,
+        ),
+        SelectSettingOption(
+          (context) => AppLocalizations.of(context)!.clockTitle,
+          1,
+        ),
+        SelectSettingOption(
+          (context) => AppLocalizations.of(context)!.timerTitle,
+          2,
+        ),
+        SelectSettingOption(
+          (context) => AppLocalizations.of(context)!.stopwatchTitle,
+          3,
+        ),
+      ],
+    ),
     SettingGroup("Animations",
         (context) => AppLocalizations.of(context)!.animationSettingGroup, [
       SliderSetting(

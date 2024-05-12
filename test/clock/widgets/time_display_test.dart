@@ -11,6 +11,9 @@ void main() {
     String format = "hh:mm";
     await tester.pumpWidget(MaterialApp(
       theme: defaultTheme,
+      locale: const Locale('en'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: TimeDisplay(format: format, fontSize: 32, dateTime: dateTime),
     ));
 

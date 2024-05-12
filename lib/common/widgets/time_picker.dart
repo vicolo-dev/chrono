@@ -1450,6 +1450,7 @@ class _TimePickerInput extends StatefulWidget {
     required this.autofocusHour,
     required this.autofocusMinute,
     required this.onChanged,
+    required this.use24hFormat,
     this.restorationId,
     // required this.entryMode,
     // required this.handleEntryModeToggle,
@@ -1480,6 +1481,8 @@ class _TimePickerInput extends StatefulWidget {
   final bool? autofocusMinute;
 
   final ValueChanged<TimeOfDay> onChanged;
+
+  final bool use24hFormat;
 
   /// Restoration ID to save and restore the state of the time picker input
   /// widget.
@@ -1613,7 +1616,7 @@ class _TimePickerInputState extends State<_TimePickerInput>
     final MediaQueryData media = MediaQuery.of(context);
     final TimeOfDayFormat timeOfDayFormat = MaterialLocalizations.of(context)
         .timeOfDayFormat(alwaysUse24HourFormat: media.alwaysUse24HourFormat);
-    final bool use24HourDials = hourFormat(of: timeOfDayFormat) != HourFormat.h;
+    // final bool use24HourDials = hourFormat(of: timeOfDayFormat) != HourFormat.h;
     final ThemeData theme = Theme.of(context);
     final TextStyle hourMinuteStyle =
         TimePickerTheme.of(context).hourMinuteTextStyle ??
@@ -1635,7 +1638,7 @@ class _TimePickerInputState extends State<_TimePickerInput>
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                if (!use24HourDials &&
+                if (!widget.use24hFormat &&
                     timeOfDayFormat ==
                         TimeOfDayFormat.a_space_h_colon_mm) ...<Widget>[
                   _DayPeriodControl(
@@ -1719,7 +1722,7 @@ class _TimePickerInputState extends State<_TimePickerInput>
                     ],
                   ),
                 ),
-                if (!use24HourDials &&
+                if (!widget.use24hFormat &&
                     timeOfDayFormat !=
                         TimeOfDayFormat.a_space_h_colon_mm) ...<Widget>[
                   const SizedBox(width: 12.0),
@@ -2382,7 +2385,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
     final MediaQueryData media = MediaQuery.of(context);
     final TimeOfDayFormat timeOfDayFormat = localizations.timeOfDayFormat(
         alwaysUse24HourFormat: media.alwaysUse24HourFormat);
-    final bool use24HourDials = hourFormat(of: timeOfDayFormat) != HourFormat.h;
+    // final bool use24HourDials = hourFormat(of: timeOfDayFormat) != HourFormat.h;
     final ThemeData theme = Theme.of(context);
     final ShapeBorder shape =
         TimePickerTheme.of(context).shape ?? _kDefaultShape;
@@ -2445,112 +2448,12 @@ class _TimePickerDialogState extends State<TimePickerDialog>
 
     final Size dialogSize = _dialogSize(context, type);
     final Widget picker;
-    // switch (_entryMode.value) {
-    //   case TimePickerEntryMode.dial:
-    //   case TimePickerEntryMode.dialOnly:
-    //     final Widget dial = Padding(
-    //       padding: orientation == Orientation.portrait
-    //           ? const EdgeInsets.symmetric(horizontal: 24, vertical: 16)
-    //           : const EdgeInsets.only(right: 12, left: 12, top: 24, bottom: 12),
-    //       child: ExcludeSemantics(
-    //         child: AspectRatio(
-    //           aspectRatio: 1.0,
-    //           child: _Dial(
-    //             mode: _mode.value,
-    //             use24HourDials: use24HourDials,
-    //             selectedTime: _selectedTime.value,
-    //             onChanged: _handleTimeChanged,
-    //             onHourSelected: _handleHourSelected,
-    //           ),
-    //         ),
-    //       ),
-    //     );
-    //
-    // final Widget header = _TimePickerHeader(
-    //   selectedTime: _selectedTime.value,
-    //   mode: _mode.value,
-    //   orientation: orientation,
-    //   onModeChanged: _handleModeChanged,
-    //   onChanged: _handleTimeChanged,
-    //   onHourDoubleTapped: _handleHourDoubleTapped,
-    //   onMinuteDoubleTapped: _handleMinuteDoubleTapped,
-    //   use24HourDials: use24HourDials,
-    //   helpText: widget.title,
-    //   entryMode: _entryMode,
-    //   handleEntryModeToggle: _handleEntryModeToggle,
-    // );
-    //
-    //     switch (orientation) {
-    //       case Orientation.portrait:
-    //         picker = Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           crossAxisAlignment: CrossAxisAlignment.stretch,
-    //           children: <Widget>[
-    //             // header,
-    //             Expanded(
-    //               child: Column(
-    //                 mainAxisSize: MainAxisSize.min,
-    //                 children: <Widget>[
-    //                   // Dial grows and shrinks with the available space.
-    //                   Expanded(child: dial),
-    //                   actions,
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         );
-    //         break;
-    //       case Orientation.landscape:
-    //         picker = Column(
-    //           children: <Widget>[
-    //             Expanded(
-    //               child: Row(
-    //                 children: <Widget>[
-    //                   // header,
-    //                   Expanded(child: dial),
-    //                 ],
-    //               ),
-    //             ),
-    //             actions,
-    //           ],
-    //         );
-    //         break;
-    //     }
-    //     break;
-    //   case TimePickerEntryMode.input:
-    //   case TimePickerEntryMode.inputOnly:
-    //     picker = Form(
-    //       key: _formKey,
-    //       autovalidateMode: _autovalidateMode.value,
-    //       child: SingleChildScrollView(
-    //         restorationId: 'time_picker_scroll_view',
-    //         child: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: <Widget>[
-    //
-    //             _TimePickerInput(
-    //               initialSelectedTime: _selectedTime.value,
-    //               helpText: widget.title,
-    //               errorInvalidText: widget.errorInvalidText,
-    //               hourLabelText: widget.hourLabelText,
-    //               minuteLabelText: widget.minuteLabelText,
-    //               autofocusHour: _autofocusHour.value,
-    //               autofocusMinute: _autofocusMinute.value,
-    //               onChanged: _handleTimeChanged,
-    //               restorationId: 'time_picker_input',
-    //               entryMode: _entryMode,
-    //               handleEntryModeToggle: _handleEntryModeToggle,
-    //             ),
-    //             actions,
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //     break;
-    // }
-// ThemeData theme = Theme.of(context);
-    TextTheme textTheme = theme.textTheme;
+       TextTheme textTheme = theme.textTheme;
     ColorScheme colorScheme = theme.colorScheme;
+
+    bool use24hMode = MediaQuery.of(context).alwaysUse24HourFormat ||
+                      appSettings.getSetting("Time Format").value ==
+                          TimeFormat.h24;
 
     switch (type) {
       case TimePickerType.spinner:
@@ -2567,9 +2470,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: TimePickerSpinner(
                   time: _selectedTime.value.toDateTime(),
-                  is24HourMode: MediaQuery.of(context).alwaysUse24HourFormat ||
-                      appSettings.getSetting("Time Format").value ==
-                          TimeFormat.h24,
+                  is24HourMode: use24hMode,
                   normalTextStyle: orientation == Orientation.portrait
                       ? textTheme.displayMedium?.copyWith(
                           color: colorScheme.onSurface.withOpacity(0.5))
@@ -2605,7 +2506,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
           onChanged: _handleTimeChanged,
           onHourDoubleTapped: () => _handleHourDoubleTapped(type),
           onMinuteDoubleTapped: () => _handleMinuteDoubleTapped(type),
-          use24HourDials: use24HourDials,
+          use24HourDials: use24hMode,
           helpText: widget.title,
           // entryMode: _entryMode,
           handlePickerModeChange: _handlePickerTypeChange,
@@ -2631,7 +2532,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                     aspectRatio: 1.0,
                     child: _Dial(
                       mode: _mode.value,
-                      use24HourDials: use24HourDials,
+                      use24HourDials: use24hMode,
                       selectedTime: _selectedTime.value,
                       onChanged: _handleTimeChanged,
                       onHourSelected: _handleHourSelected,
@@ -2658,6 +2559,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
             autofocusMinute: _autofocusMinute.value,
             onChanged: _handleTimeChanged,
             restorationId: 'time_picker_input',
+            use24hFormat: use24hMode,
             // entryMode: _entryMode,
             // handleEntryModeToggle: _handleEntryModeToggle,
             onModeChanged: _handlePickerTypeChange,
