@@ -4,7 +4,6 @@ import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:home_widget/home_widget.dart';
 
 SettingGroup widgetSettingSchema = SettingGroup(
   "Widgets",
@@ -41,29 +40,29 @@ SettingGroup widgetSettingSchema = SettingGroup(
                 setDigitalClockWidgetData(context);
               },
             ),
-            SelectSetting(
-              "Vertical Alignment",
-              (context) =>
-                  AppLocalizations.of(context)!.verticalAlignmentSetting,
-              [
-                SelectSettingOption(
-                    (context) => AppLocalizations.of(context)!.alignmentTop,
-                    30),
-                SelectSettingOption(
-                    (context) => AppLocalizations.of(context)!.alignmentCenter,
-                    10),
-                SelectSettingOption(
-                    (context) => AppLocalizations.of(context)!.alignmentBottom,
-                    50),
-                // SelectSettingOption(
-                //     (context) => AppLocalizations.of(context)!.alignmentJustify,
-                //     7),
-              ],
-              defaultValue: 1,
-              onChange: (context, value) async {
-                setDigitalClockWidgetData(context);
-              },
-            ),
+            // SelectSetting(
+            //   "Vertical Alignment",
+            //   (context) =>
+            //       AppLocalizations.of(context)!.verticalAlignmentSetting,
+            //   [
+            //     SelectSettingOption(
+            //         (context) => AppLocalizations.of(context)!.alignmentTop,
+            //         30),
+            //     SelectSettingOption(
+            //         (context) => AppLocalizations.of(context)!.alignmentCenter,
+            //         10),
+            //     SelectSettingOption(
+            //         (context) => AppLocalizations.of(context)!.alignmentBottom,
+            //         50),
+            //     // SelectSettingOption(
+            //     //     (context) => AppLocalizations.of(context)!.alignmentJustify,
+            //     //     7),
+            //   ],
+            //   defaultValue: 1,
+            //   onChange: (context, value) async {
+            //     setDigitalClockWidgetData(context);
+            //   },
+            // ),
           ],
         ),
         SettingGroup(
