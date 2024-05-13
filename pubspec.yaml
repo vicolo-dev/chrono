@@ -74,6 +74,7 @@ dependencies:
      git:
       url: https://github.com/AhsanSarwar45/home_widget
       ref: main
+  permission_handler: ^11.3.1
 
 
 dev_dependencies:

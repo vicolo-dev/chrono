@@ -1,7 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 
-Future<void> initializeNotifications() async {
+void requestNotificationPermissions({Function? onAlreadyGranted}) async {
   AwesomeNotifications().isNotificationAllowed().then((allowed) {
     if (!allowed) {
       AwesomeNotifications().requestPermissionToSendNotifications(
@@ -11,9 +11,14 @@ Future<void> initializeNotifications() async {
           NotificationPermission.FullScreenIntent,
         ],
       );
+    } else {
+      onAlreadyGranted?.call();
     }
   });
+}
 
+Future<void> initializeNotifications() async {
+  requestNotificationPermissions();
   await AwesomeNotifications().initialize(
     null, // use default app icon
     [

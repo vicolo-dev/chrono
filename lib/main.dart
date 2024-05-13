@@ -17,6 +17,7 @@ import 'package:clock_app/notifications/logic/notifications.dart';
 import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/system/logic/handle_boot.dart';
+import 'package:clock_app/system/logic/permissions.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boot_receiver/flutter_boot_receiver.dart';
@@ -30,6 +31,7 @@ void main() async {
   await initializePackageInfo();
   await initializeAppDataDirectory();
   await initializeStorage();
+  await requestBatteryOptimizationPermission();
   await initializeNotifications();
   await initializeSettings();
   await initializeDatabases();
