@@ -628,5 +628,15 @@
   "alignmentRight": "Derecha",
   "@alignmentRight": {},
   "timeSettingGroup": "Hora",
-  "@timeSettingGroup": {}
+  "@timeSettingGroup": {},
+  "horizontalAlignmentSetting": "Alineamiento Horizontal",
+  "@horizontalAlignmentSetting": {},
+  "verticalAlignmentSetting": "Alineamiento Vertical",
+  "@verticalAlignmentSetting": {},
+  "alignmentTop": "Arriba",
+  "@alignmentTop": {},
+  "alignmentBottom": "Abajo",
+  "@alignmentBottom": {},
+  "showMeridiemSetting": "Modo AM/PM",
+  "@showMeridiemSetting": {}
 }
