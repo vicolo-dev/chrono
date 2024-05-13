@@ -80,7 +80,7 @@ class _ClockDisplayState extends State<ClockDisplay> {
             children: [
               TimeDisplay(
                 format: getTimeFormatString(context, timeFormat,
-                    showMeridian: false),
+                    showMeridiem: false),
                 fontSize: 72 * widget.scale,
                 height: widget.shouldShowDate ? 0.75 : null,
                 color: widget.color,

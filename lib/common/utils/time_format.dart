@@ -2,7 +2,7 @@ import 'package:clock_app/clock/types/time.dart';
 import 'package:flutter/material.dart';
 
 String getTimeFormatString(BuildContext context, TimeFormat timeFormat,
-    {bool showMeridian = true}) {
+    {bool showMeridiem = true}) {
   if (timeFormat == TimeFormat.device) {
     if (MediaQuery.of(context).alwaysUse24HourFormat) {
       timeFormat = TimeFormat.h24;
@@ -12,6 +12,6 @@ String getTimeFormatString(BuildContext context, TimeFormat timeFormat,
   }
 
   return timeFormat == TimeFormat.h12
-      ? "h:mm${showMeridian ? " a" : ""}"
+      ? "h:mm${showMeridiem ? " a" : ""}"
       : "HH:mm";
 }

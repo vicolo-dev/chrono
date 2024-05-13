@@ -1,7 +1,10 @@
 import requests
 import os
 import json
+from PIL import Image
+from io import BytesIO
 
+size = 128,128
 def fetch_contributors(repo_owner, repo_name):
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contributors"
     response = requests.get(url)
@@ -12,9 +15,12 @@ def download_avatar(contributor, output_dir):
     avatar_url = contributor['avatar_url']
     avatar_name = f"{avatar_url.split('/')[-1]}.jpg"
     avatar_path = os.path.join(output_dir, avatar_name)    
-    with open(avatar_path, 'wb') as avatar_file:
-        response = requests.get(avatar_url)
-        avatar_file.write(response.content)
+    response = requests.get(avatar_url)
+    # compress the image to 64 x 64
+    im = Image.open(BytesIO(response.content))
+    im = im.convert('RGB')
+    im.thumbnail(size, Image.Resampling.LANCZOS)
+    im.save(avatar_path, "JPEG")
     return avatar_name
 
 def main(repo_owner, repo_name):
