@@ -31,8 +31,8 @@ void main() async {
   await initializePackageInfo();
   await initializeAppDataDirectory();
   await initializeStorage();
-  await initializeNotifications();
   await requestBatteryOptimizationPermission();
+  await initializeNotifications();
   await initializeSettings();
   await initializeDatabases();
   await AndroidAlarmManager.initialize();

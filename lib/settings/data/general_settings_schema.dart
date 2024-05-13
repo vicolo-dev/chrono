@@ -207,6 +207,8 @@ SettingGroup generalSettingsSchema = SettingGroup(
                             .ignoreBatteryOptimizationAlreadyGranted)
                   });
         },
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.batteryOptimizationSettingDescription,
       ),
       SettingAction(
         "Notifications",

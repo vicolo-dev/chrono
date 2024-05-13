@@ -81,7 +81,7 @@
   "@permissionsSettingGroup": {},
   "ignoreBatteryOptimizationSetting": "Ignore Battery Optimization",
   "@ignoreBatteryOptimizationSetting": {},
-  "notificationPermissionSetting": "Notifications",
+  "notificationPermissionSetting": "Notifications Permission",
   "@notificationPermissionSetting": {},
   "notificationPermissionAlreadyGranted": "Notifications permission already granted",
   "@notificationPermissionAlreadyGranted": {},
