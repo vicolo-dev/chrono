@@ -237,7 +237,7 @@
   "@vendorSetting": {},
   "vendorSettingDescription": "Desactivar manualmente las optimizaciones específicas del proveedor",
   "@vendorSettingDescription": {},
-  "batteryOptimizationSetting": "Desactivar la optimización de la batería",
+  "batteryOptimizationSetting": "Desactivar la optimización de la batería manualmente",
   "@batteryOptimizationSetting": {},
   "allowNotificationSetting": "Permitir notificaciones",
   "@allowNotificationSetting": {},
