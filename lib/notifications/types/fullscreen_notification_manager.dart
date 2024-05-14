@@ -8,19 +8,14 @@ import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/common/types/notification_type.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/navigation/data/fullscreen_intent.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:move_to_background/move_to_background.dart';
-import 'package:receive_intent/receive_intent.dart';
 
 class AlarmNotificationManager {
   static const String _snoozeActionKey = "snooze";
@@ -176,10 +171,11 @@ class AlarmNotificationManager {
   }
 
   static Future<void> openNotificationScreen(
-      FullScreenNotificationData data, List<int> scheduleIds,
-      {bool tasksOnly = false,
-      AlarmDismissType dismissType = AlarmDismissType.dismiss}) async {
-    // await LockScreenFlagManager.setLockScreenFlags();
+    FullScreenNotificationData data,
+    List<int> scheduleIds, {
+    bool tasksOnly = false,
+    AlarmDismissType dismissType = AlarmDismissType.dismiss,
+  }) async {
     await FlutterShowWhenLocked().show();
     // If we're already on the same notification screen, pop it off the
     // stack so we don't have two of them on the stack.
@@ -232,10 +228,7 @@ class AlarmNotificationManager {
         break;
 
       default:
-        /*   print("ahsan is the besttttttttttttttttttttt ${AppVisibility.state}"); */
-
         await openNotificationScreen(data, scheduleIds);
-
         break;
     }
   }

@@ -14,24 +14,38 @@ class RingtonePlayer {
   static bool _vibratorIsAvailable = false;
 
   static Future<void> initialize() async {
-    _alarmPlayer ??= AudioPlayer(handleInterruptions: false);
-    _timerPlayer ??= AudioPlayer(handleInterruptions: false);
-    _mediaPlayer ??= AudioPlayer(handleInterruptions: false);
+    _alarmPlayer ??= AudioPlayer(handleInterruptions: true);
+    _timerPlayer ??= AudioPlayer(handleInterruptions: true);
+    _mediaPlayer ??= AudioPlayer(handleInterruptions: true);
+    _mediaPlayer?.setAndroidAudioAttributes(
+      const AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.music,
+        usage: AndroidAudioUsage.media,
+      ),
+    );
     _vibratorIsAvailable = (await Vibration.hasVibrator()) ?? false;
   }
 
   static Future<void> playUri(String ringtoneUri,
       {bool vibrate = false,
       LoopMode loopMode = LoopMode.one,
-      AndroidAudioUsage channel = AndroidAudioUsage.media}) async {
-    await initializeAudioSession(channel);
+      AndroidAudioUsage channel = AndroidAudioUsage.alarm}) async {
+    // await initializeAudioSession(channel);
     activePlayer = _mediaPlayer;
     await _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
   }
 
   static Future<void> playAlarm(Alarm alarm,
       {LoopMode loopMode = LoopMode.one}) async {
-    await initializeAudioSession(alarm.audioChannel);
+    print(
+        "******************** ${alarm.audioChannel.value} *******************");
+    await activePlayer?.stop();
+    // await initializeAudioSession(alarm.audioChannel);
+    _alarmPlayer = AudioPlayer(handleInterruptions: false);
+    await _alarmPlayer?.setAndroidAudioAttributes(AndroidAudioAttributes(
+      usage: alarm.audioChannel,
+      contentType: AndroidAudioContentType.music,
+    ));
     activePlayer = _alarmPlayer;
     String uri = alarm.ringtone.uri;
     // if (alarm.ringtone.type == FileItemType.directory) {
@@ -74,7 +88,10 @@ class RingtonePlayer {
 
   static Future<void> playTimer(ClockTimer timer,
       {LoopMode loopMode = LoopMode.one}) async {
-    await initializeAudioSession(timer.audioChannel);
+    await _timerPlayer?.setAndroidAudioAttributes(AndroidAudioAttributes(
+      usage: timer.audioChannel,
+      contentType: AndroidAudioContentType.music,
+    ));
     activePlayer = _timerPlayer;
     await _play(
       timer.ringtone.uri,
@@ -106,6 +123,7 @@ class RingtonePlayer {
     await activePlayer?.setLoopMode(loopMode);
     await activePlayer?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
     await activePlayer?.setVolume(volume);
+    // activePlayer.setMode
 
     if (secondsToMaxVolume > 0) {
       for (int i = 0; i <= 10; i++) {
@@ -124,6 +142,7 @@ class RingtonePlayer {
     //   },
     // );
 
+    // Don't use await here as this will only return after the audio is done
     activePlayer?.play();
   }
 
