@@ -13,9 +13,11 @@ import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
 import 'package:move_to_background/move_to_background.dart';
+import 'package:receive_intent/receive_intent.dart';
 
 class AlarmNotificationManager {
   static const String _snoozeActionKey = "snooze";
@@ -95,17 +97,25 @@ class AlarmNotificationManager {
   }
 
   static Future<void> closeNotification(ScheduledNotificationType type) async {
+    final intent = await ReceiveIntent.getInitialIntent();
+
+    print(intent?.action);
+
     await removeNotification(type);
 
     await FlutterShowWhenLocked().hide();
 
+    if (intent?.action == "SELECT_NOTIFICATION") {
+      SystemNavigator.pop();
+    }
+
     // If notification was created while app was in background, move app back
     // to background when we close the notification
 
-    if (appVisibilityWhenCreated == FGBGType.background &&
-        AppVisibility.state == FGBGType.foreground) {
-      MoveToBackground.moveTaskToBack();
-    }
+    // if (appVisibilityWhenCreated == FGBGType.background &&
+    // AppVisibility.state == FGBGType.foreground) {
+    // MoveToBackground.moveTaskToBack();
+    // }
 
     // try {
     //   final receivedIntent = await ReceiveIntent.getInitialIntent();
@@ -119,7 +129,9 @@ class AlarmNotificationManager {
     // If we were on the alarm screen, pop it off the stack. Sometimes the system
     // decides to show a heads up notification instead of a full screen one, so
     // we can't always pop the top screen.
-    Routes.popIf(alarmNotificationData[type]?.route);
+    else {
+      Routes.popIf(alarmNotificationData[type]?.route);
+    }
   }
 
   static Future<void> snoozeAlarm(
@@ -163,7 +175,7 @@ class AlarmNotificationManager {
     SendPort? sendPort = IsolateNameServer.lookupPortByName(stopAlarmPortName);
     sendPort?.send([scheduleId, type.name, action.name]);
 
-    await closeNotification(type);
+    // await closeNotification(type);
   }
 
   static void handleNotificationCreated(ReceivedNotification notification) {

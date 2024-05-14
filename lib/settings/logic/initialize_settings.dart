@@ -50,7 +50,7 @@ Future<void> initializeStorage([bool clearSettingsOnDebug = true]) async {
 
   // Used to clear the preferences in case of a change in format of the data
   // Comment this out after the preferences are cleared
-  if (kDebugMode && clearSettingsOnDebug) await _clearSettings();
+  // if (kDebugMode && clearSettingsOnDebug) await _clearSettings();
 
   // bool? firstLaunch = GetStorage().read('first_launch');
   // if (firstLaunch == null) {
