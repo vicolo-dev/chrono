@@ -10,7 +10,6 @@ import 'package:clock_app/app.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
-import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
 import 'package:flutter/services.dart';
@@ -105,31 +104,21 @@ class AlarmNotificationManager {
 
     await FlutterShowWhenLocked().hide();
 
+    // If app was launched from a notification, close the app when the notification
+    // is closed
     if (intent?.action == "SELECT_NOTIFICATION") {
       SystemNavigator.pop();
-    }
+    } else {
+      // If notification was created while app was in background, move app back
+      // to background when we close the notification
+      if (appVisibilityWhenCreated == FGBGType.background) {
+        appVisibilityWhenCreated = FGBGType.foreground;
+        MoveToBackground.moveTaskToBack();
+      }
 
-    // If notification was created while app was in background, move app back
-    // to background when we close the notification
-
-    // if (appVisibilityWhenCreated == FGBGType.background &&
-    // AppVisibility.state == FGBGType.foreground) {
-    // MoveToBackground.moveTaskToBack();
-    // }
-
-    // try {
-    //   final receivedIntent = await ReceiveIntent.getInitialIntent();
-    //   print("reeeeeeeeeeeeeeeeeeeeeeeeeee ${receivedIntent}");
-    //   // Validate receivedIntent and warn the user, if it is not correct,
-    //   // but keep in mind it could be `null` or "empty"(`receivedIntent.isNull`).
-    // } on PlatformException {
-    //   // Handle exception
-    // }
-
-    // If we were on the alarm screen, pop it off the stack. Sometimes the system
-    // decides to show a heads up notification instead of a full screen one, so
-    // we can't always pop the top screen.
-    else {
+      // If we were on the alarm screen, pop it off the stack. Sometimes the system
+      // decides to show a heads up notification instead of a full screen one, so
+      // we can't always pop the top screen.
       Routes.popIf(alarmNotificationData[type]?.route);
     }
   }

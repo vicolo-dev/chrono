@@ -16,7 +16,7 @@ Future<void> onNotificationCreatedMethod(
     case alarmNotificationChannelKey:
       Payload payload = receivedNotification.payload!;
       int? scheduleId = int.tryParse(payload['scheduleId']);
-      if (scheduleId == null) return;
+           if (scheduleId == null) return;
       AlarmNotificationManager.handleNotificationCreated(receivedNotification);
       break;
   }

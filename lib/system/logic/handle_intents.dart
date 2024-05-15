@@ -96,8 +96,8 @@ void handleIntent(Intent? receivedIntent, BuildContext context,
       case "android.intent.action.VIEW_TIMERS":
         break;
       case "SELECT_NOTIFICATION":
-        // AlarmNotificationManager.appVisibilityWhenCreated = AppVisibility.state;
-        // print("************************************** ${AppVisibility.state}");
+        AlarmNotificationManager.appVisibilityWhenCreated = AppVisibility.state;
+        print("************Select************************** ${AppVisibility.state}");
         break;
       default:
         break;

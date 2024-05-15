@@ -18,8 +18,6 @@ import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/utils/timer_id.dart';
-import 'package:flutter/services.dart';
-import 'package:receive_intent/receive_intent.dart';
 
 const String stopAlarmPortName = "stopAlarmPort";
 const String updatePortName = "updatePort";
@@ -51,15 +49,6 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
   receivePort.listen((message) {
     stopScheduledNotification(message);
   });
-
-  try {
-      final receivedIntent = await ReceiveIntent.getInitialIntent();
-      print("reeeeeeeeeeeeeeeeeeeeeeeeeee ${receivedIntent}");
-      // Validate receivedIntent and warn the user, if it is not correct,
-      // but keep in mind it could be `null` or "empty"(`receivedIntent.isNull`).
-    } on PlatformException {
-      // Handle exception
-    }
 
 
   if (notificationType == ScheduledNotificationType.alarm) {
@@ -132,6 +121,8 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   String timeFormatString = await loadTextFile("time_format_string");
   String title = alarm.label.isEmpty ? "Alarm Ringing..." : alarm.label;
+
+  // AlarmNotificationManager.appVisibilityWhenCreated = fgbg
 
   AlarmNotificationManager.showFullScreenNotification(
     type: ScheduledNotificationType.alarm,
