@@ -265,7 +265,7 @@ class Alarm extends CustomizableListItem {
           id, currentScheduleDateTime!, tasks.isNotEmpty);
     } else {
       for (var schedule in _schedules) {
-        await cancelAlarmReminderNotification(schedule.currentAlarmRunnerId);
+        cancelAlarmReminderNotification(schedule.currentAlarmRunnerId);
       }
     }
   }
@@ -280,6 +280,7 @@ class Alarm extends CustomizableListItem {
     for (var schedule in _schedules) {
       await schedule.cancel();
     }
+    updateReminderNotification();
   }
 
   Future<void> enable(String description) async {
@@ -312,12 +313,13 @@ class Alarm extends CustomizableListItem {
   }
 
   Future<void> update(String description) async {
-    if (_skippedTime != null &&
-        _skippedTime!.millisecondsSinceEpoch <
-            DateTime.now().millisecondsSinceEpoch) {
-      cancelSkip();
-    }
     if (isEnabled) {
+      if (_skippedTime != null &&
+          _skippedTime!.millisecondsSinceEpoch <
+              DateTime.now().millisecondsSinceEpoch) {
+        cancelSkip();
+      }
+
       await schedule(description);
 
       if (isSnoozed) {

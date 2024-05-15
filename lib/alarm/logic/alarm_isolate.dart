@@ -86,7 +86,7 @@ void triggerAlarm(int scheduleId, Json params) async {
   await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
 
   // Ignore in the following cases:
-  // 1. Alarm was deleted and somehow wasn't cancelled  
+  // 1. Alarm was deleted and somehow wasn't cancelled
   // 2. Alarm is disabled and somehow wasn't cancelled
   // 3. Alarm is set to skip the next alarm
   // 4. Alarm is set to ring in the future but somehow was triggered
@@ -157,9 +157,9 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
         RingtonePlayer.playTimer(timer);
       }
     }
+    await updateAlarmById(scheduleId, (alarm) async => alarm.handleDismiss());
   }
   RingingManager.stopAlarm();
-  await updateAlarmById(scheduleId, (alarm) async => alarm.handleDismiss());
 }
 
 void triggerTimer(int scheduleId, Json params) async {
