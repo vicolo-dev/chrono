@@ -23,6 +23,7 @@ import 'package:clock_app/timer/data/default_timer_presets.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
 
@@ -56,7 +57,7 @@ Future<void> initializeStorage([bool clearSettingsOnDebug = true]) async {
 
   // Used to clear the preferences in case of a change in format of the data
   // Comment this out after the preferences are cleared
-  // if (kDebugMode && clearSettingsOnDebug) await _clearSettings();
+  if (kDebugMode && clearSettingsOnDebug) await _clearSettings();
 
   // bool? firstLaunch = GetStorage().read('first_launch');
   // if (firstLaunch == null) {

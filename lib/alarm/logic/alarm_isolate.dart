@@ -50,7 +50,6 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
     stopScheduledNotification(message);
   });
 
-
   if (notificationType == ScheduledNotificationType.alarm) {
     triggerAlarm(scheduleId, params);
   } else if (notificationType == ScheduledNotificationType.timer) {
@@ -84,25 +83,30 @@ void triggerAlarm(int scheduleId, Json params) async {
   Alarm? alarm = getAlarmById(scheduleId);
   DateTime now = DateTime.now();
 
-  // if alarm is triggered more than 10 minutes after the scheduled time, ignore
+  await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
+
+  // Ignore in the following cases:
+  // 1. Alarm was deleted and somehow wasn't cancelled  
+  // 2. Alarm is disabled and somehow wasn't cancelled
+  // 3. Alarm is set to skip the next alarm
+  // 4. Alarm is set to ring in the future but somehow was triggered
+  // 5. Alarm is ringing 1 hour later than its time
   if (alarm == null ||
       alarm.isEnabled == false ||
+      alarm.shouldSkipNextAlarm ||
       alarm.currentScheduleDateTime == null ||
       now.millisecondsSinceEpoch <
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
       now.millisecondsSinceEpoch >
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
               1000 * 60 * 60) {
-    await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
     return;
   }
 
-  await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
-
-  if (alarm.shouldSkipNextAlarm) {
-    alarm.cancelSkip();
-    return;
-  }
+  // if (alarm.shouldSkipNextAlarm) {
+  //   alarm.cancelSkip();
+  //   return;
+  // }
 
   // Pause any currently ringing timers. We will continue them after the alarm
   // is dismissed
