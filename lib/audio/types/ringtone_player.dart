@@ -155,6 +155,8 @@ class RingtonePlayer {
 
   static Future<void> stop() async {
     await activePlayer?.stop();
+    final session = await AudioSession.instance;
+    await session.setActive(false);
     if (_vibratorIsAvailable) {
       await Vibration.cancel();
     }
