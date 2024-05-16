@@ -64,5 +64,7 @@
   "colorSchemeErrorSettingGroup": "Errore",
   "@colorSchemeErrorSettingGroup": {},
   "generalSettingGroupDescription": "Impostare la applicazione, es. formato dell'ora",
-  "@generalSettingGroupDescription": {}
+  "@generalSettingGroupDescription": {},
+  "pickerDial": "Quadrante",
+  "@pickerDial": {}
 }
