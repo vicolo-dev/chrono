@@ -15,6 +15,7 @@ import 'package:clock_app/settings/data/general_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/theme/border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -2448,12 +2449,11 @@ class _TimePickerDialogState extends State<TimePickerDialog>
 
     final Size dialogSize = _dialogSize(context, type);
     final Widget picker;
-       TextTheme textTheme = theme.textTheme;
+    TextTheme textTheme = theme.textTheme;
     ColorScheme colorScheme = theme.colorScheme;
 
     bool use24hMode = MediaQuery.of(context).alwaysUse24HourFormat ||
-                      appSettings.getSetting("Time Format").value ==
-                          TimeFormat.h24;
+        appSettings.getSetting("Time Format").value == TimeFormat.h24;
 
     switch (type) {
       case TimePickerType.spinner:
@@ -2467,31 +2467,44 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                 onPickerModeChanged: _handlePickerTypeChange,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: TimePickerSpinner(
-                  time: _selectedTime.value.toDateTime(),
-                  is24HourMode: use24hMode,
-                  normalTextStyle: orientation == Orientation.portrait
-                      ? textTheme.displayMedium?.copyWith(
-                          color: colorScheme.onSurface.withOpacity(0.5))
-                      : textTheme.displaySmall?.copyWith(
-                          color: colorScheme.onSurface.withOpacity(0.5)),
-                  highlightedTextStyle: orientation == Orientation.portrait
-                      ? textTheme.displayMedium
-                          ?.copyWith(color: colorScheme.onSurface)
-                      : textTheme.displaySmall
-                          ?.copyWith(color: colorScheme.onSurface),
-                  // spacing: 50,
-                  itemHeight: orientation == Orientation.portrait
-                      ? null
-                      : dialogSize.height / 6,
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: SizedBox(
+                  height: 250,
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.time,
+                      initialDateTime: _selectedTime.value.toDateTime(),
+                      onDateTimeChanged: (time) {
+                        _handleTimeChanged(
+                            TimeOfDay(hour: time.hour, minute: time.minute));
+                      },
+                      use24hFormat: use24hMode,
+                    ),
+                  )
 
-                  isForce2Digits: true,
-                  onTimeChange: (time) {
-                    _handleTimeChanged(time.toTimeOfDay());
-                  },
-                ),
-              ),
+                  // TimePickerSpinner(
+                  //   time: _selectedTime.value.toDateTime(),
+                  //   is24HourMode: use24hMode,
+                  //   normalTextStyle: orientation == Orientation.portrait
+                  //       ? textTheme.displayMedium?.copyWith(
+                  //           color: colorScheme.onSurface.withOpacity(0.5))
+                  //       : textTheme.displaySmall?.copyWith(
+                  //           color: colorScheme.onSurface.withOpacity(0.5)),
+                  //   highlightedTextStyle: orientation == Orientation.portrait
+                  //       ? textTheme.displayMedium
+                  //           ?.copyWith(color: colorScheme.onSurface)
+                  //       : textTheme.displaySmall
+                  //           ?.copyWith(color: colorScheme.onSurface),
+                  //   // spacing: 50,
+                  //   itemHeight: orientation == Orientation.portrait
+                  //       ? null
+                  //       : dialogSize.height / 6,
+                  //
+                  //   isForce2Digits: true,
+                  //   onTimeChange: (time) {
+                  //     _handleTimeChanged(time.toTimeOfDay());
+                  //   },
+                  // ),
+                  ),
             ],
           ),
         );

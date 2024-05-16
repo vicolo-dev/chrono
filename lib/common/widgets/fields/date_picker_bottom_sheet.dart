@@ -108,13 +108,13 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                 ),
                 const SizedBox(height: 12.0),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         widget.title,
-                        style: textTheme.labelMedium?.copyWith(
+                        style: textTheme.titleMedium?.copyWith(
                             color: colorScheme.onSurface.withOpacity(0.6)),
                       ),
                       const SizedBox(height: 4.0),
@@ -191,6 +191,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                         availableCalendarFormats: const {
                           CalendarFormat.month: 'Month',
                         },
+                        // startingDayOfWeek: StartingDayOfWeek.tuesday,
                         rowHeight: 48,
                         headerStyle: HeaderStyle(
                           // headerMargin: EdgeInsets.symmetric(vertical: 8.0),
@@ -288,7 +289,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                           },
                           child: Text(
                             'Clear',
-                            style: textTheme.labelLarge?.copyWith(
+                            style: textTheme.labelMedium?.copyWith(
                               color: colorScheme.onSurface.withOpacity(0.5),
                             ),
                           ),
@@ -302,7 +303,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                           },
                           child: Text(
                             'Save',
-                            style: textTheme.labelLarge?.copyWith(
+                            style: textTheme.labelMedium?.copyWith(
                               color: _isSaveEnabled
                                   ? colorScheme.primary
                                   : colorScheme.onSurface.withOpacity(0.2),

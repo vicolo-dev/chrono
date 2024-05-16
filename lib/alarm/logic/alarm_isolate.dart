@@ -103,11 +103,6 @@ void triggerAlarm(int scheduleId, Json params) async {
     return;
   }
 
-  // if (alarm.shouldSkipNextAlarm) {
-  //   alarm.cancelSkip();
-  //   return;
-  // }
-
   // Pause any currently ringing timers. We will continue them after the alarm
   // is dismissed
   if (RingingManager.isTimerRinging) {
@@ -175,7 +170,7 @@ void triggerTimer(int scheduleId, Json params) async {
   // Pause any currently ringing alarms. We will continue them after the timer
   // is dismissed
   if (RingingManager.isAlarmRinging) {
-    RingtonePlayer.pause();
+    // RingtonePlayer.pause();
   }
 
   // Remove any existing timer notifications

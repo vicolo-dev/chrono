@@ -1,6 +1,5 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:just_audio/just_audio.dart';
@@ -30,17 +29,13 @@ class RingtonePlayer {
       {bool vibrate = false,
       LoopMode loopMode = LoopMode.one,
       AndroidAudioUsage channel = AndroidAudioUsage.alarm}) async {
-    // await initializeAudioSession(channel);
     activePlayer = _mediaPlayer;
     await _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
   }
 
   static Future<void> playAlarm(Alarm alarm,
       {LoopMode loopMode = LoopMode.one}) async {
-    print(
-        "******************** ${alarm.audioChannel.value} *******************");
     await activePlayer?.stop();
-    // await initializeAudioSession(alarm.audioChannel);
     _alarmPlayer = AudioPlayer(handleInterruptions: false);
     await _alarmPlayer?.setAndroidAudioAttributes(AndroidAudioAttributes(
       usage: alarm.audioChannel,
