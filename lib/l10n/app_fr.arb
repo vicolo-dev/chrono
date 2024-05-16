@@ -199,7 +199,7 @@
   "@durationPickerSetting": {},
   "autoStartSettingDescription": "Certains appareils nécessitent que le démarrage automatique ne soit activé pour que les alarmes sonnent malgré que l'application ne soit fermée",
   "@autoStartSettingDescription": {},
-  "pickerRings": "Sonneries",
+  "pickerRings": "Anneaux",
   "@pickerRings": {},
   "swipeActionSetting": "Action de glisser",
   "@swipeActionSetting": {},
