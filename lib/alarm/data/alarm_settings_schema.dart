@@ -16,7 +16,9 @@ import 'package:clock_app/common/logic/tags.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/types/tag.dart';
+import 'package:clock_app/common/types/weekday.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/screens/ringtones_screen.dart';
 import 'package:clock_app/settings/screens/tags_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -75,6 +77,20 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             ),
           ],
         ),
+        //  DynamicToggleSetting(
+        //   "Week Days",
+        //   (context) => AppLocalizations.of(context)!.alarmWeekdaysSetting,
+        //   () {
+        //     return weekdays
+        //         .map((weekday) => SelectSettingOption(
+        //             (context) => weekday.getAbbreviation(context), weekday))
+        //         .toList();
+        //   },
+        //   enableConditions: [
+        //     ValueCondition(["Type"], (value) => value == WeeklyAlarmSchedule)
+        //   ],
+        // ),
+
         ToggleSetting(
           "Week Days",
           (context) => AppLocalizations.of(context)!.alarmWeekdaysSetting,
@@ -82,6 +98,14 @@ SettingGroup alarmSettingsSchema = SettingGroup(
               .map((weekday) => ToggleSettingOption(
                   (context) => weekday.getAbbreviation(context), weekday.id))
               .toList(),
+          getOffset: () {
+            Weekday weekday = appSettings
+                .getGroup("General")
+                .getGroup("Display")
+                .getSetting("First Day of Week")
+                .value;
+            return weekday.id - 1;
+          },
           enableConditions: [
             ValueCondition(["Type"], (value) => value == WeeklyAlarmSchedule)
           ],
