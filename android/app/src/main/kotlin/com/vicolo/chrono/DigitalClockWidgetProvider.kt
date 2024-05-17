@@ -115,10 +115,16 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
                     }
                     // setInt(R.id.digital_clock_holder, "setVerticalGravity", 10)
 
-                    setColorInt(textClock, "setTextColor", Color.parseColor(timeColor), Color.parseColor(timeColor))
-                    setColorInt(textDate, "setTextColor", Color.parseColor(dateColor), Color.parseColor(dateColor))
-                    setViewLayoutHeight(textClock, timeSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
-                    setViewLayoutHeight(textDate, dateSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
+                    setInt(textClock, "setTextColor", Color.parseColor(timeColor))
+                    setInt(textDate, "setTextColor", Color.parseColor(dateColor))
+                    setInt(textClock, "setMaxHeight", timeSize)
+                    setInt(textDate, "setMaxHeight", dateSize)
+                    setInt(textDate, "setHeight", dateSize)
+                    setInt(textClock, "setHeight", timeSize)
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        // setViewLayoutHeight(textClock, timeSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
+                        // setViewLayoutHeight(textDate, dateSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
+                    }
                     setViewVisibility(textDate, if (showDate) View.VISIBLE else View.GONE)
                     //
                     // R.layout.digital_clock_widget.findViewById(R.id.widget_text_clock).apply {

@@ -26,9 +26,16 @@ import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
+
 Future<void> _clearSettings() async {
+  // List<ClockTimer> timers = await loadList<ClockTimer>('timers');
+  // List<Alarm> alarms = await loadList<Alarm>('alarms');
   // We need to remove all scheduled alarms and timers before clearing the data
   // Otherwise, there would be no way to remove them in the future
+
+  // for (var timer in timers) {
+  //   timer.reset();
+  // }
   await cancelAllAlarms();
   await cancelAllTimers();
   await GetStorage().erase();
@@ -68,7 +75,7 @@ Future<void> initializeStorage([bool clearSettingsOnDebug = true]) async {
   await initList<TimerPreset>("timer_presets", defaultTimerPresets);
   await initList<FileItem>("ringtones", await getSystemRingtones());
   await initTextFile("time_format_string", "h:mm a");
-  // await initTextFile("alarms-sort-index", "0");
+  // await initTextFile("", "0");
   // await initTextFile("timers-sort-index", "0");
 }
 

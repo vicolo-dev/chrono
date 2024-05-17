@@ -4,6 +4,8 @@ import 'package:app_settings/app_settings.dart';
 import 'package:auto_start_flutter/auto_start_flutter.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/time.dart';
+import 'package:clock_app/common/data/weekdays.dart';
+import 'package:clock_app/common/types/weekday.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/utils/time_format.dart';
@@ -111,6 +113,16 @@ SettingGroup generalSettingsSchema = SettingGroup(
             saveTextFile("time_format_string", timeFormat);
             setDigitalClockWidgetData(context);
           },
+        ),
+        SelectSetting<Weekday>(
+          "First Day of Week",
+          (context) => AppLocalizations.of(context)!.firstDayOfWeekSetting,
+          weekdays.map((weekday) {
+            return SelectSettingOption(
+              (context) => weekday.getFullName(context),
+              weekday,
+            );
+          }).toList(),
         ),
         SwitchSetting(
             "Show Seconds",

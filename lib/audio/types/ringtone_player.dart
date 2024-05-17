@@ -1,6 +1,5 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:just_audio/just_audio.dart';
@@ -14,24 +13,34 @@ class RingtonePlayer {
   static bool _vibratorIsAvailable = false;
 
   static Future<void> initialize() async {
-    _alarmPlayer ??= AudioPlayer(handleInterruptions: false);
-    _timerPlayer ??= AudioPlayer(handleInterruptions: false);
-    _mediaPlayer ??= AudioPlayer(handleInterruptions: false);
+    _alarmPlayer ??= AudioPlayer(handleInterruptions: true);
+    _timerPlayer ??= AudioPlayer(handleInterruptions: true);
+    _mediaPlayer ??= AudioPlayer(handleInterruptions: true);
+    _mediaPlayer?.setAndroidAudioAttributes(
+      const AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.music,
+        usage: AndroidAudioUsage.media,
+      ),
+    );
     _vibratorIsAvailable = (await Vibration.hasVibrator()) ?? false;
   }
 
   static Future<void> playUri(String ringtoneUri,
       {bool vibrate = false,
       LoopMode loopMode = LoopMode.one,
-      AndroidAudioUsage channel = AndroidAudioUsage.media}) async {
-    await initializeAudioSession(channel);
+      AndroidAudioUsage channel = AndroidAudioUsage.alarm}) async {
     activePlayer = _mediaPlayer;
     await _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
   }
 
   static Future<void> playAlarm(Alarm alarm,
       {LoopMode loopMode = LoopMode.one}) async {
-    await initializeAudioSession(alarm.audioChannel);
+    await activePlayer?.stop();
+    _alarmPlayer = AudioPlayer(handleInterruptions: false);
+    await _alarmPlayer?.setAndroidAudioAttributes(AndroidAudioAttributes(
+      usage: alarm.audioChannel,
+      contentType: AndroidAudioContentType.music,
+    ));
     activePlayer = _alarmPlayer;
     String uri = alarm.ringtone.uri;
     // if (alarm.ringtone.type == FileItemType.directory) {
@@ -74,7 +83,10 @@ class RingtonePlayer {
 
   static Future<void> playTimer(ClockTimer timer,
       {LoopMode loopMode = LoopMode.one}) async {
-    await initializeAudioSession(timer.audioChannel);
+    await _timerPlayer?.setAndroidAudioAttributes(AndroidAudioAttributes(
+      usage: timer.audioChannel,
+      contentType: AndroidAudioContentType.music,
+    ));
     activePlayer = _timerPlayer;
     await _play(
       timer.ringtone.uri,
@@ -106,6 +118,7 @@ class RingtonePlayer {
     await activePlayer?.setLoopMode(loopMode);
     await activePlayer?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
     await activePlayer?.setVolume(volume);
+    // activePlayer.setMode
 
     if (secondsToMaxVolume > 0) {
       for (int i = 0; i <= 10; i++) {
@@ -124,6 +137,7 @@ class RingtonePlayer {
     //   },
     // );
 
+    // Don't use await here as this will only return after the audio is done
     activePlayer?.play();
   }
 
@@ -136,6 +150,8 @@ class RingtonePlayer {
 
   static Future<void> stop() async {
     await activePlayer?.stop();
+    final session = await AudioSession.instance;
+    await session.setActive(false);
     if (_vibratorIsAvailable) {
       await Vibration.cancel();
     }

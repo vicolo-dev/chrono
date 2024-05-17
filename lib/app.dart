@@ -1,9 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/screens/alarm_notification_screen.dart';
-import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/data/app_info.dart';
-import 'package:clock_app/common/utils/time_format.dart';
-import 'package:clock_app/l10n/language_local.dart';
 import 'package:clock_app/navigation/data/route_observer.dart';
 import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
@@ -27,7 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:home_widget/home_widget.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -63,9 +59,6 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
 
-    // HomeWidget.updateWidget(
-    //   androidName: 'DigitalClockWidgetProvider',
-    // );
     setDigitalClockWidgetData(context);
 
     NotificationController.setListeners();
@@ -82,9 +75,7 @@ class _AppState extends State<App> {
   }
 
   void setAnimationSpeed(dynamic speed) {
-    // setState(() {
     timeDilation = 1 / speed;
-    // });
   }
 
   refreshTheme() {
@@ -198,12 +189,16 @@ class _AppState extends State<App> {
           Routes.push(settings.name ?? Routes.rootRoute);
           switch (settings.name) {
             case Routes.rootRoute:
+              print("---------------------------- main route");
               final bool? onboarded = GetStorage().read('onboarded');
               if (onboarded == null) {
                 return MaterialPageRoute(
                     builder: (context) => const OnBoardingScreen());
               } else {
-                final defaultTab = appSettings.getGroup("General").getSetting("Default Tab").value;
+                final defaultTab = appSettings
+                    .getGroup("General")
+                    .getSetting("Default Tab")
+                    .value;
                 final arguments = (ModalRoute.of(context)?.settings.arguments ??
                     <String, dynamic>{"tab": defaultTab}) as Map;
                 return MaterialPageRoute(
@@ -213,6 +208,8 @@ class _AppState extends State<App> {
               }
 
             case Routes.alarmNotificationRoute:
+                          print("---------------------------- notification route");
+
               return MaterialPageRoute(
                 builder: (context) {
                   final args = settings.arguments as AlarmNotificationArguments;
