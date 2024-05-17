@@ -67,7 +67,7 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                 ),
                 const SizedBox(height: 12.0),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -1,3 +1,5 @@
+import 'package:clock_app/common/types/weekday.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +28,12 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
   DateTime? _rangeStartDate;
   DateTime? _rangeEndDate;
   DateTime _focusedDate = DateTime.now();
+  late Weekday firstWeekday = appSettings
+          .getGroup("General")
+          .getGroup("Display")
+          .getSetting("First Day of Week")
+          .value;
+
 
   bool get _isSaveEnabled =>
       widget.rangeOnly ? _selectedDates.length == 2 : _selectedDates.isNotEmpty;
@@ -108,13 +116,13 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                 ),
                 const SizedBox(height: 12.0),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         widget.title,
-                        style: textTheme.labelMedium?.copyWith(
+                        style: textTheme.titleMedium?.copyWith(
                             color: colorScheme.onSurface.withOpacity(0.6)),
                       ),
                       const SizedBox(height: 4.0),
@@ -191,6 +199,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                         availableCalendarFormats: const {
                           CalendarFormat.month: 'Month',
                         },
+                        startingDayOfWeek: StartingDayOfWeek.values[firstWeekday.id - 1],
                         rowHeight: 48,
                         headerStyle: HeaderStyle(
                           // headerMargin: EdgeInsets.symmetric(vertical: 8.0),
@@ -288,7 +297,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                           },
                           child: Text(
                             'Clear',
-                            style: textTheme.labelLarge?.copyWith(
+                            style: textTheme.labelMedium?.copyWith(
                               color: colorScheme.onSurface.withOpacity(0.5),
                             ),
                           ),
@@ -302,7 +311,7 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                           },
                           child: Text(
                             'Save',
-                            style: textTheme.labelLarge?.copyWith(
+                            style: textTheme.labelMedium?.copyWith(
                               color: _isSaveEnabled
                                   ? colorScheme.primary
                                   : colorScheme.onSurface.withOpacity(0.2),

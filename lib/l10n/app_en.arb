@@ -656,7 +656,11 @@
   "defaultPageSetting": "Default Tab",
   "@defaultPageSetting": {},
   "showMeridiemSetting": "Show AM/PM",
-  "@showMeridiemSetting": {}
+  "@showMeridiemSetting": {},
+  "editPresetsTitle": "Edit Presets",
+  "@editPresetsTitle": {},
+  "firstDayOfWeekSetting": "First Day of Week",
+  "@firstDayOfWeekSetting": {}
 
   
 }

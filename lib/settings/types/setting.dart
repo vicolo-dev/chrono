@@ -2,6 +2,7 @@ import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:clock_app/common/utils/list.dart';
 import 'package:clock_app/common/utils/list_item.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
@@ -601,6 +602,7 @@ class MultiSelectSetting<T> extends Setting<List<int>> {
 class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
   List<SelectSettingOption<T>> Function() optionsGetter;
   final List<MenuAction> actions;
+
   List<SelectSettingOption<T>> get options => optionsGetter();
   @override
   dynamic get value {
@@ -686,36 +688,114 @@ class DynamicMultiSelectSetting<T extends ListItem> extends Setting<List<int>> {
   }
 }
 
+class DynamicToggleSetting<T extends ListItem>
+    extends DynamicMultiSelectSetting<T> {
+  List<bool> get selectedIndicesBool {
+    final _selectedIndices = selectedIndices;
+    return List.generate(
+        options.length, (index) => _selectedIndices.contains(index));
+  }
+
+  List<T> get selected => value;
+
+  List<int> get selectedIds => _value;
+
+  DynamicToggleSetting(
+    super.name,
+    super.getLocalizedName,
+    super.optionsGetter, {
+    super.onChange,
+    super.getDescription,
+    super.defaultValue,
+    super.isVisual,
+    super.enableConditions,
+    super.searchTags,
+  }) {
+    if (defaultValue.contains(-1) || defaultValue.isEmpty) {
+      final _options = optionsGetter();
+      _value = [_options[0].value.id];
+    }
+  }
+
+  @override
+  DynamicToggleSetting<T> copy() {
+    return DynamicToggleSetting(
+      name,
+      getLocalizedName,
+      optionsGetter,
+      onChange: onChange,
+      defaultValue: _value,
+      getDescription: getDescription,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
+  }
+
+  void toggle(BuildContext context, int index) {
+    int id = getIdAtIndex(index);
+    // We want atleast 1 item selected
+    if (_value.length == 1 && _value.contains(id)) {
+      return;
+    }
+    if (_value.contains(id)) {
+      _value.remove(id);
+    } else {
+      _value.add(id);
+    }
+    setValue(context, _value);
+  }
+
+  @override
+  int getIndexOfId(int id) {
+    int index = options.indexWhere((element) => element.value.id == id);
+    return index == -1 ? 0 : index;
+  }
+}
+
 class ToggleSetting<T> extends Setting<List<bool>> {
-  List<ToggleSettingOption<T>> options;
+  final List<ToggleSettingOption<T>> _options;
+  int Function()? getOffset;
+
+  @override
+  dynamic get value {
+    int offset = getOffset?.call() ?? 0;
+    return _value.rotate(offset);
+  }
 
   List<T> get selected {
     List<T> values = [];
     for (int i = 0; i < _value.length; i++) {
       if (_value[i]) {
-        values.add(options[i].value);
+        values.add(_options[i].value);
       }
     }
     return values;
   }
 
+  List<ToggleSettingOption<T>> get options {
+    int offset = getOffset?.call() ?? 0;
+    return _options.rotate(offset);
+  }
+
   ToggleSetting(
     String name,
     String Function(BuildContext) getLocalizedName,
-    this.options, {
+    this._options, {
     void Function(BuildContext, List<bool>)? onChange,
     List<bool> defaultValue = const [],
     String Function(BuildContext) getDescription = defaultDescription,
     bool isVisual = true,
+    this.getOffset,
     List<EnableConditionParameter> enableConditions = const [],
     List<String> searchTags = const [],
   }) : super(
           name,
           getLocalizedName,
           getDescription,
-          defaultValue.length == options.length
+          defaultValue.length == _options.length
               ? List.from(defaultValue)
-              : List.generate(options.length, (index) => index == 0),
+              : List.generate(_options.length, (index) => index == 0),
           onChange,
           enableConditions,
           searchTags,
@@ -728,22 +808,28 @@ class ToggleSetting<T> extends Setting<List<bool>> {
     return ToggleSetting(
       name,
       getLocalizedName,
-      options,
+      _options,
       defaultValue: _value,
       onChange: onChange,
       getDescription: getDescription,
       enableConditions: enableConditions,
+      getOffset: getOffset,
       isVisual: isVisual,
       searchTags: searchTags,
     );
   }
 
   void toggle(BuildContext context, int index) {
+    int offset = getOffset?.call() ?? 0;
+
+    // Add offset to index, if overflow, wrap around
+    index = (index + offset) % _options.length;
+
     if (_value.where((option) => option == true).length == 1 && _value[index]) {
       return;
     }
     _value[index] = !_value[index];
-    onChange?.call(context, _value);
+    setValue(context, _value);
   }
 
   @override

@@ -16,7 +16,7 @@
         <TextClock
             android:id="@+id/widget_clock_100"
             android:layout_width="match_parent"
-            android:layout_height="70sp"
+            android:layout_height="wrap_content"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -37,7 +37,7 @@
       <TextClock
             android:id="@+id/widget_clock_200"
             android:layout_width="match_parent"
-            android:layout_height="70sp"
+            android:layout_height="wrap_content"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -59,7 +59,7 @@
       <TextClock
             android:id="@+id/widget_clock_300"
             android:layout_width="match_parent"
-            android:layout_height="70sp"
+            android:layout_height="wrap_content"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -81,7 +81,7 @@
       <TextClock
             android:id="@+id/widget_clock_400"
             android:layout_width="match_parent"
-            android:layout_height="70sp"
+            android:layout_height="wrap_content"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -103,7 +103,7 @@
       <TextClock
             android:id="@+id/widget_clock_500"
             android:layout_width="match_parent"
-            android:layout_height="70sp"
+            android:layout_height="wrap_content"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -125,7 +125,7 @@
       <TextClock
             android:id="@+id/widget_clock_600"
             android:layout_width="match_parent"
-            android:layout_height="70sp"
+            android:layout_height="wrap_content"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -147,7 +147,7 @@
       <TextClock
             android:id="@+id/widget_clock_700"
             android:layout_width="match_parent"
-            android:layout_height="70sp"
+            android:layout_height="wrap_content"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -169,7 +169,7 @@
        <TextClock
             android:id="@+id/widget_clock_800"
             android:layout_width="match_parent"
-            android:layout_height="70sp"
+            android:layout_height="wrap_content"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -192,7 +192,7 @@
        <TextClock
             android:id="@+id/widget_clock_900"
             android:layout_width="match_parent"
-            android:layout_height="70sp"
+            android:layout_height="wrap_content"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeMinTextSize="10sp"
             android:autoSizeStepGranularity="1sp"
@@ -218,7 +218,7 @@
         <TextClock
             android:id="@+id/widget_date_100"
             android:layout_width="match_parent"
-            android:layout_height="15sp"
+            android:layout_height="wrap_content"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
@@ -238,7 +238,7 @@
         <TextClock
             android:id="@+id/widget_date_200"
             android:layout_width="match_parent"
-            android:layout_height="15sp"
+            android:layout_height="wrap_content"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
@@ -259,7 +259,7 @@
         <TextClock
             android:id="@+id/widget_date_300"
             android:layout_width="match_parent"
-            android:layout_height="15sp"
+            android:layout_height="wrap_content"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
@@ -280,7 +280,7 @@
         <TextClock
             android:id="@+id/widget_date_400"
             android:layout_width="match_parent"
-            android:layout_height="15sp"
+            android:layout_height="wrap_content"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
@@ -301,7 +301,7 @@
         <TextClock
             android:id="@+id/widget_date_500"
             android:layout_width="match_parent"
-            android:layout_height="15sp"
+            android:layout_height="wrap_content"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
@@ -322,7 +322,7 @@
         <TextClock
             android:id="@+id/widget_date_600"
             android:layout_width="match_parent"
-            android:layout_height="15sp"
+            android:layout_height="wrap_content"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
@@ -343,7 +343,7 @@
         <TextClock
             android:id="@+id/widget_date_700"
             android:layout_width="match_parent"
-            android:layout_height="15sp"
+            android:layout_height="wrap_content"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
@@ -363,7 +363,7 @@
         <TextClock
             android:id="@+id/widget_date_800"
             android:layout_width="match_parent"
-            android:layout_height="15sp"
+            android:layout_height="wrap_content"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
@@ -383,7 +383,7 @@
         <TextClock
             android:id="@+id/widget_date_900"
             android:layout_width="match_parent"
-            android:layout_height="15sp"
+            android:layout_height="wrap_content"
             android:autoSizeMinTextSize="2sp"
             android:autoSizeStepGranularity="1sp"
             android:autoSizeTextType="uniform"
