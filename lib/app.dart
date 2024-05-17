@@ -59,9 +59,6 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
 
-    // HomeWidget.updateWidget(
-    //   androidName: 'DigitalClockWidgetProvider',
-    // );
     setDigitalClockWidgetData(context);
 
     NotificationController.setListeners();
@@ -78,9 +75,7 @@ class _AppState extends State<App> {
   }
 
   void setAnimationSpeed(dynamic speed) {
-    // setState(() {
     timeDilation = 1 / speed;
-    // });
   }
 
   refreshTheme() {
