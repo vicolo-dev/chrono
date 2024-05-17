@@ -758,7 +758,7 @@ class ToggleSetting<T> extends Setting<List<bool>> {
   int Function()? getOffset;
 
   @override
-  dynamic get value{
+  dynamic get value {
     int offset = getOffset?.call() ?? 0;
     return _value.rotate(offset);
   }
@@ -821,7 +821,10 @@ class ToggleSetting<T> extends Setting<List<bool>> {
 
   void toggle(BuildContext context, int index) {
     int offset = getOffset?.call() ?? 0;
-    index += offset;
+
+    // Add offset to index, if overflow, wrap around
+    index = (index + offset) % _options.length;
+
     if (_value.where((option) => option == true).length == 1 && _value[index]) {
       return;
     }
