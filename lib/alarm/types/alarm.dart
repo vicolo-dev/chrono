@@ -177,12 +177,13 @@ class Alarm extends CustomizableListItem {
 
   void skip() {
     _skippedTime = currentScheduleDateTime;
-    cancelReminderNotification();
+    updateReminderNotification();
   }
 
   void cancelSkip() {
+    if (_skippedTime == null) return;
     _skippedTime = null;
-    createReminderNotification();
+    updateReminderNotification();
   }
 
   Future<void> toggle(String description) async {
@@ -252,29 +253,34 @@ class Alarm extends CustomizableListItem {
         await schedule.cancel();
       }
     }
-
-    createReminderNotification();
+    updateReminderNotification();
   }
 
-  Future<void> createReminderNotification() async {
-    if (!isSnoozed && currentScheduleDateTime != null && !shouldSkipNextAlarm) {
+  Future<void> updateReminderNotification() async {
+    if (!isSnoozed &&
+        !activeSchedule.isDisabled &&
+        currentScheduleDateTime != null &&
+        !shouldSkipNextAlarm) {
       await createAlarmReminderNotification(
           id, currentScheduleDateTime!, tasks.isNotEmpty);
+    } else {
+      for (var schedule in _schedules) {
+        cancelAlarmReminderNotification(schedule.currentAlarmRunnerId);
+      }
     }
   }
-
-  Future<void> cancelReminderNotification() async {
-    await cancelAlarmReminderNotification(id);
-  }
+  // Future<void> cancelReminderNotification() async {
+  //   await cancelAlarmReminderNotification(id);
+  // }
 
   Future<void> cancelAllSchedules() async {}
 
   Future<void> cancel() async {
-    cancelReminderNotification();
     cancelSkip();
     for (var schedule in _schedules) {
       await schedule.cancel();
     }
+    updateReminderNotification();
   }
 
   Future<void> enable(String description) async {
@@ -290,11 +296,12 @@ class Alarm extends CustomizableListItem {
 
   Future<void> finish() async {
     await disable();
-        // _isFinished = true;
+    // _isFinished = true;
   }
 
   void handleDismiss() {
-    if (scheduleType == OnceAlarmSchedule && shouldDeleteAfterRinging || shouldDeleteAfterFinish && isFinished) {
+    if (scheduleType == OnceAlarmSchedule && shouldDeleteAfterRinging ||
+        shouldDeleteAfterFinish && isFinished) {
       _markedForDeletion = true;
     }
   }
@@ -307,6 +314,12 @@ class Alarm extends CustomizableListItem {
 
   Future<void> update(String description) async {
     if (isEnabled) {
+      if (_skippedTime != null &&
+          _skippedTime!.millisecondsSinceEpoch <
+              DateTime.now().millisecondsSinceEpoch) {
+        cancelSkip();
+      }
+
       await schedule(description);
 
       if (isSnoozed) {

@@ -9,8 +9,10 @@ import 'package:clock_app/alarm/types/schedules/range_alarm_schedule.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/common/types/weekday.dart';
 import 'package:clock_app/common/utils/date_time.dart';
+import 'package:clock_app/common/utils/list.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/common/utils/weekday_utils.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -50,7 +52,13 @@ String getAlarmScheduleDescription(BuildContext context, Alarm alarm,
           weekdaysContainsAll(alarmWeekdays, [1, 2, 3, 4, 5])) {
         return '${AppLocalizations.of(context)!.alarmDescriptionWeekday}$suffix';
       }
-      final weekdaysString = weekdays
+      Weekday weekday = appSettings
+          .getGroup("General")
+          .getGroup("Display")
+          .getSetting("First Day of Week")
+          .value;
+      final sortedWeekdays = weekdays.rotate(weekday.id - 1);
+      final weekdaysString = sortedWeekdays
           .where((weekday) => alarmWeekdays.contains(weekday))
           .map((weekday) => weekday.getDisplayName(context))
           .join(', ');
@@ -80,7 +88,7 @@ String getAlarmScheduleDescription(BuildContext context, Alarm alarm,
         }
       }
       return '${AppLocalizations.of(context)!.alarmDescriptionRange(endString, interval == RangeInterval.daily ? "daily" : "weekly", startString)}$suffix';
-      // return '${interval == RangeInterval.daily ? "Daily" : "Weekly"} from $startString to $endString$suffix';
+    // return '${interval == RangeInterval.daily ? "Daily" : "Weekly"} from $startString to $endString$suffix';
     default:
       return AppLocalizations.of(context)!.alarmDescriptionNotScheduled;
   }

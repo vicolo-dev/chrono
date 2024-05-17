@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:clock_app/alarm/logic/new_alarm_snackbar.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
-import 'package:clock_app/navigation/types/tab.dart';
 import 'package:clock_app/navigation/widgets/app_navigation_bar.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/general_settings_schema.dart';
@@ -16,7 +14,6 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/system/logic/handle_intents.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:home_widget/home_widget.dart';
 import 'package:receive_intent/receive_intent.dart' as intent_handler;
 
 class NavScaffold extends StatefulWidget {
