@@ -14,5 +14,8 @@ This is a beta release. Please report any issues via GitHub or email.
 * Fixed media, notification and ringtone audio channels not working
 * Fixed other apps' music not restarting after alarm rings
 * Fixed upcoming alarm notification appearing after alarm rings
+* Fixed upcoming alarm notification not updating for repeating alarms
+* Fixed upcoming alarm notification not updating for repeating alarms
+
 
 
