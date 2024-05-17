@@ -237,9 +237,9 @@
   "@vendorSetting": {},
   "vendorSettingDescription": "Desactivar manualmente las optimizaciones específicas del proveedor",
   "@vendorSettingDescription": {},
-  "batteryOptimizationSetting": "Desactivar la optimización de la batería",
+  "batteryOptimizationSetting": "Desactivar la optimización de la batería manualmente",
   "@batteryOptimizationSetting": {},
-  "allowNotificationSetting": "Permitir notificaciones",
+  "allowNotificationSetting": "Permitir de forma manual todas las notificaciones",
   "@allowNotificationSetting": {},
   "autoStartSetting": "Inicio automático",
   "@autoStartSetting": {},
@@ -638,5 +638,15 @@
   "alignmentBottom": "Abajo",
   "@alignmentBottom": {},
   "showMeridiemSetting": "Modo AM/PM",
-  "@showMeridiemSetting": {}
+  "@showMeridiemSetting": {},
+  "permissionsSettingGroup": "Permisos",
+  "@permissionsSettingGroup": {},
+  "notificationPermissionSetting": "Permiso de notificaciones",
+  "@notificationPermissionSetting": {},
+  "ignoreBatteryOptimizationSetting": "Ignorar la optimización de la batería",
+  "@ignoreBatteryOptimizationSetting": {},
+  "notificationPermissionAlreadyGranted": "El permiso de notificaciones ya se ha concedido",
+  "@notificationPermissionAlreadyGranted": {},
+  "ignoreBatteryOptimizationAlreadyGranted": "Ignorar el permiso de optimización de batería ya se ha concedido",
+  "@ignoreBatteryOptimizationAlreadyGranted": {}
 }
