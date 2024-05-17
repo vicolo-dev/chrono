@@ -97,7 +97,7 @@ class _SliderFieldState extends State<SliderField> {
                 // height: textSize.height,
                 // width: 50,
                 child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                // crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     IntrinsicWidth(
                       child: TextField(

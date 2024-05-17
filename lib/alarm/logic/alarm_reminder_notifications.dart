@@ -14,7 +14,9 @@ Future<void> cancelAlarmReminderNotification(int id) async {
   await AwesomeNotifications().cancel(id);
 }
 
-Future<void> createAlarmReminderNotification(int id, DateTime time, bool tasksRequired) async {
+Future<void> createAlarmReminderNotification(
+    int id, DateTime time, bool tasksRequired) async {
+  await cancelAlarmReminderNotification(id);
   bool shouldShow = appSettings
       .getGroup("Alarm")
       .getGroup("Notifications")

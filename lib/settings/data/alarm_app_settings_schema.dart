@@ -91,7 +91,7 @@ SettingGroup alarmAppSettingsSchema = SettingGroup(
           "Upcoming Lead Time",
           (context) => AppLocalizations.of(context)!.upcomingLeadTimeSetting,
           5,
-          120,
+          600,
           10,
           unit: 'm',
           snapLength: 5,
