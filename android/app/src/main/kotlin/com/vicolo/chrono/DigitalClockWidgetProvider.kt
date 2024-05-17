@@ -119,8 +119,8 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
                     setInt(textDate, "setTextColor", Color.parseColor(dateColor))
                     setInt(textClock, "setMaxHeight", timeSize)
                     setInt(textDate, "setMaxHeight", dateSize)
-                    setInt(textClock, "setHeight", timeSize)
                     setInt(textDate, "setHeight", dateSize)
+                    setInt(textClock, "setHeight", timeSize)
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                         // setViewLayoutHeight(textClock, timeSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
                         // setViewLayoutHeight(textDate, dateSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)

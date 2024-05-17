@@ -20,7 +20,7 @@ SettingGroup backupSettingsSchema = SettingGroup(
   [
     SettingGroup(
       "Settings",
-      (context) => AppLocalizations.of(context)!.backupSettingGroup,
+      (context) => AppLocalizations.of(context)!.settingsTitle,
       [
         SettingAction(
           "Export",
