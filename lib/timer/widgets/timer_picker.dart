@@ -11,7 +11,6 @@ import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 Future<PickerResult<ClockTimer>?> showTimerPicker(
   BuildContext context, {
   ClockTimer? initialTimer,
@@ -26,8 +25,8 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
       ClockTimer timer = ClockTimer.from(
           initialTimer ?? ClockTimer(const TimeDuration(minutes: 5)));
 
-      List<TimerPreset> presets = loadListSync<TimerPreset>("timer_presets");
       TimerPreset? selectedPreset;
+      List<TimerPreset> presets = loadListSync<TimerPreset>("timer_presets");
 
       return OrientationBuilder(
         builder: (context, orientation) => StatefulBuilder(
@@ -54,9 +53,10 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(AppLocalizations.of(context)!.presetsSetting,
-                                    
-                                style: textTheme.labelMedium),
+                                Text(
+                                    AppLocalizations.of(context)!
+                                        .presetsSetting,
+                                    style: textTheme.labelMedium),
                                 const Spacer(),
                                 TextButton(
                                   style: TextButton.styleFrom(
@@ -124,6 +124,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                             timer = ClockTimer(newDuration);
                           });
                         },
+                        preset: selectedPreset,
                       );
 
                   Widget label() => Text(timer.duration.toString(),
@@ -141,7 +142,8 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                             onPressed: () => editDurationPickerMode(
                                 context, () => setState(() {})),
                             child: Text(
-                              AppLocalizations.of(context)!.timePickerModeButton,
+                              AppLocalizations.of(context)!
+                                  .timePickerModeButton,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall
