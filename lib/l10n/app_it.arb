@@ -62,5 +62,9 @@
   "colorSchemeBackgroundSettingGroup": "Sfondo",
   "@colorSchemeBackgroundSettingGroup": {},
   "colorSchemeErrorSettingGroup": "Errore",
-  "@colorSchemeErrorSettingGroup": {}
+  "@colorSchemeErrorSettingGroup": {},
+  "generalSettingGroupDescription": "Impostare la applicazione, es. formato dell'ora",
+  "@generalSettingGroupDescription": {},
+  "pickerDial": "Quadrante",
+  "@pickerDial": {}
 }
