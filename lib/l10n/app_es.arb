@@ -648,5 +648,13 @@
   "notificationPermissionAlreadyGranted": "El permiso de notificaciones ya se ha concedido",
   "@notificationPermissionAlreadyGranted": {},
   "ignoreBatteryOptimizationAlreadyGranted": "Ignorar el permiso de optimización de batería ya se ha concedido",
-  "@ignoreBatteryOptimizationAlreadyGranted": {}
+  "@ignoreBatteryOptimizationAlreadyGranted": {},
+  "editPresetsTitle": "Editar ajustes preestablecidos",
+  "@editPresetsTitle": {},
+  "firstDayOfWeekSetting": "Primer dia de la semana",
+  "@firstDayOfWeekSetting": {},
+  "translateLink": "Traducir",
+  "@translateLink": {},
+  "translateDescription": "Ayuda a traducir la aplicación",
+  "@translateDescription": {}
 }
