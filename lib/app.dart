@@ -208,7 +208,7 @@ class _AppState extends State<App> {
               }
 
             case Routes.alarmNotificationRoute:
-                          print("---------------------------- notification route");
+              print("---------------------------- notification route");
 
               return MaterialPageRoute(
                 builder: (context) {
