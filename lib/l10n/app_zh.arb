@@ -660,5 +660,9 @@
   "editPresetsTitle": "编辑预设",
   "@editPresetsTitle": {},
   "firstDayOfWeekSetting": "每周起始日",
-  "@firstDayOfWeekSetting": {}
+  "@firstDayOfWeekSetting": {},
+  "translateLink": "翻译",
+  "@translateLink": {},
+  "translateDescription": "帮助翻译此应用",
+  "@translateDescription": {}
 }
