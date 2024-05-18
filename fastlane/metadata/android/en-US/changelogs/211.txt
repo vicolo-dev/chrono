@@ -4,6 +4,7 @@ This is a beta release. Please report any issues via GitHub or email.
 
 * Added option to change first day of week
 * Improved spinner time picker interface
+* Improved dial time picker 24h interface
 * Added discription for audio channel options
 
 

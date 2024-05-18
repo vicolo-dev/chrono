@@ -2840,14 +2840,22 @@ class _TimePickerDialogState extends State<TimePickerDialog>
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: SizedBox(
                     height: 250,
-                    child: CupertinoDatePicker(
-                      mode: CupertinoDatePickerMode.time,
-                      initialDateTime: _selectedTime.value.toDateTime(),
-                      onDateTimeChanged: (time) {
-                        _handleTimeChanged(
-                            TimeOfDay(hour: time.hour, minute: time.minute));
-                      },
-                      use24hFormat: use24hMode,
+                    child: CupertinoTheme(
+                      data: CupertinoThemeData(
+                        brightness:
+                            colorScheme.background.computeLuminance() > 0.179
+                                ? Brightness.light
+                                : Brightness.dark,
+                      ),
+                      child: CupertinoDatePicker(
+                        mode: CupertinoDatePickerMode.time,
+                        initialDateTime: _selectedTime.value.toDateTime(),
+                        onDateTimeChanged: (time) {
+                          _handleTimeChanged(
+                              TimeOfDay(hour: time.hour, minute: time.minute));
+                        },
+                        use24hFormat: use24hMode,
+                      ),
                     ),
                   )),
             ],
