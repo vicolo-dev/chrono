@@ -664,7 +664,9 @@
   "translateLink": "Translate",
   "@translateLink": {},
   "translateDescription": "Help translate the app",
-  "@translateDescription": {}
+  "@translateDescription": {},
+  "separatorSetting": "Separator",
+  "@separatorSetting": {}
 
   
 }
