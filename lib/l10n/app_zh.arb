@@ -656,5 +656,9 @@
   "permissionsSettingGroup": "权限",
   "@permissionsSettingGroup": {},
   "ignoreBatteryOptimizationAlreadyGranted": "已获得忽略电池优化权限",
-  "@ignoreBatteryOptimizationAlreadyGranted": {}
+  "@ignoreBatteryOptimizationAlreadyGranted": {},
+  "editPresetsTitle": "编辑预设",
+  "@editPresetsTitle": {},
+  "firstDayOfWeekSetting": "每周起始日",
+  "@firstDayOfWeekSetting": {}
 }
