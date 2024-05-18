@@ -31,7 +31,7 @@ void main() async {
   await initializePackageInfo();
   await initializeAppDataDirectory();
   await initializeStorage();
-  await requestBatteryOptimizationPermission();
+  // await requestBatteryOptimizationPermission();
   await initializeNotifications();
   await initializeSettings();
   await initializeDatabases();
