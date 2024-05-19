@@ -21,4 +21,3 @@ This is a beta release. Please report any issues via GitHub or email.
 * Fixed splash color
 
 
-

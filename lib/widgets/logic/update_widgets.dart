@@ -25,6 +25,8 @@ void setDigitalClockWidgetData(BuildContext context) async {
         '#${dateSettingGroup.getSetting('Color').value.value.toRadixString(16)}';
     final bool showMeridiem =
         timeSettingGroup.getSetting('Show Meridiem').value;
+    final String separator =
+      timeSettingGroup.getSetting('Separator').value.toString();
     final String timeFormat = getTimeFormatString(
       context,
       appSettings
@@ -33,6 +35,7 @@ void setDigitalClockWidgetData(BuildContext context) async {
           .getSetting('Time Format')
           .value,
       showMeridiem: showMeridiem,
+      separator: separator,
     );
 
     await HomeWidget.saveWidgetData("timeFormat", timeFormat);

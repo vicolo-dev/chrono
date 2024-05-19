@@ -70,6 +70,7 @@ ThemeData getTheme(
       bodyColor: colorSchemeData.onBackground,
       displayColor: colorSchemeData.onBackground,
     ),
+    splashColor: colorSchemeData.background,
     snackBarTheme: getSnackBarTheme(colorSchemeData, styleTheme),
     inputDecorationTheme: getInputTheme(colorSchemeData, styleTheme),
     popupMenuTheme: getPopupMenuTheme(colorSchemeData, styleTheme),

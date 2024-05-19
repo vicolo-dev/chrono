@@ -79,7 +79,7 @@ SettingGroup widgetSettingSchema = SettingGroup(
               "Size",
               (context) => AppLocalizations.of(context)!.sizeSetting,
               10,
-              100,
+              150,
               70,
               onChange: (context, value) async {
                 setDigitalClockWidgetData(context);
@@ -107,6 +107,24 @@ SettingGroup widgetSettingSchema = SettingGroup(
               },
               // snapLength: 1,
             ),
+            SelectSetting(
+              "Separator",
+              (context) => AppLocalizations.of(context)!.separatorSetting,
+              [
+                SelectSettingOption(
+                    (context) => AppLocalizations.of(context)!.defaultLabel,
+                    "default"),
+                SelectSettingOption((context) => ".", "."),
+                SelectSettingOption((context) => ":", ":"),
+                SelectSettingOption((context) => "/", "/"),
+                SelectSettingOption((context) => "-", "-"),
+                SelectSettingOption((context) => "Space", " "),
+              ],
+              defaultValue: 0,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+            ),
           ],
         ),
 
@@ -126,7 +144,7 @@ SettingGroup widgetSettingSchema = SettingGroup(
               "Size",
               (context) => AppLocalizations.of(context)!.sizeSetting,
               10,
-              100,
+              150,
               15,
               onChange: (context, value) async {
                 setDigitalClockWidgetData(context);

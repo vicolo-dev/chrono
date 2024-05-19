@@ -15,6 +15,13 @@ import es.antonborri.home_widget.HomeWidgetLaunchIntent
 import es.antonborri.home_widget.HomeWidgetProvider
 
 class DigitalClockWidgetProvider : HomeWidgetProvider() {
+    fun spToPx(
+        sp: Float,
+        context: Context,
+    ): Int {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.resources.displayMetrics).toInt()
+    }
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -117,10 +124,10 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
 
                     setInt(textClock, "setTextColor", Color.parseColor(timeColor))
                     setInt(textDate, "setTextColor", Color.parseColor(dateColor))
-                    setInt(textClock, "setMaxHeight", timeSize)
-                    setInt(textDate, "setMaxHeight", dateSize)
-                    setInt(textDate, "setHeight", dateSize)
-                    setInt(textClock, "setHeight", timeSize)
+                    setInt(textClock, "setMaxHeight", spToPx(timeSize.toFloat(), context))
+                    setInt(textDate, "setMaxHeight", spToPx(dateSize.toFloat(), context))
+                    setInt(textDate, "setHeight", spToPx(dateSize.toFloat(), context))
+                    setInt(textClock, "setHeight", spToPx(timeSize.toFloat(), context))
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                         // setViewLayoutHeight(textClock, timeSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
                         // setViewLayoutHeight(textDate, dateSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
