@@ -1,0 +1,24 @@
+
+  <TextClock
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+            android:id="@+id/widget_date"
+            android:layout_width="match_parent"
+            android:layout_height="15sp"
+            android:autoSizeMinTextSize="2sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            android:format12Hour="EEE, d MMM"
+            android:format24Hour="EEE, d MMM"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:shadowColor="@android:color/black"
+            android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textFontWeight="500"
+      android:visibility="visible"
+      tools:text="Mon, 1 January" />
+

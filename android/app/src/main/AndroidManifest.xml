@@ -14,10 +14,10 @@
     android:name="android.permission.VIBRATE" />
   <uses-permission
     android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-  <!-- For Android 12 and higher -->
-  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
+      <!-- For before Android 12 -->
+   <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
     android:maxSdkVersion="32" />
-  <!-- For before Android 12 -->
+   <!-- For Android 12 and higher -->
   <uses-permission
     android:name="android.permission.USE_EXACT_ALARM" />
 
@@ -65,6 +65,9 @@
         <data android:scheme="id" />
 
         <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+      <intent-filter>
+        <action android:name="es.antonborri.home_widget.action.LAUNCH" />
       </intent-filter>
     </activity>
     <!-- Don't delete the meta-data below.
@@ -140,14 +143,5 @@
       <meta-data android:name="android.appwidget.provider"
         android:resource="@xml/digital_clock_widget" />
       </receiver>
-    <!--  <receiver android:name="DigitalClockDateWidgetProvider" android:exported="true" android:label="Digital with Date"> -->
-    <!--   <intent-filter> -->
-    <!--     <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
-    <!--   </intent-filter> -->
-    <!--   <meta-data android:name="android.appwidget.provider" -->
-    <!--     android:resource="@xml/digital_clock_date_widget" /> -->
-    <!-- </receiver> -->
-
-
   </application>
 </manifest>

@@ -15,6 +15,7 @@ def csv_to_json(csv_file, json_file):
                     'email': row['Email'],
                 }
                 members.append(member_info)
+    members = sorted(members, key=lambda x: float(x['lifetime_amount']), reverse=True)
     json_output_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../assets/patreons/')
     os.makedirs(json_output_dir, exist_ok=True)
     json_output_path = os.path.join(json_output_dir, 'patreons.json')

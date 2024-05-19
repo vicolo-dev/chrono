@@ -59,6 +59,15 @@ class AboutScreen extends StatelessWidget {
                       (context) =>
                           AppLocalizations.of(context)!.contributorsSetting,
                       ContributorsScreen())),
+              SettingActionCard(
+                setting: SettingAction(
+                    "Translate",
+                    getDescription: (context) =>
+                        AppLocalizations.of(context)!.translateDescription,
+                    (context) => AppLocalizations.of(context)!.translateLink,
+                    (context) =>
+                        launchUrl(Uri.parse("https://hosted.weblate.org/projects/chrono"))),
+              ),
               SettingPageLinkCard(
                   setting: SettingPageLink(
                       "Open Source Licenses",

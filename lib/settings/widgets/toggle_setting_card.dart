@@ -14,11 +14,13 @@ class ToggleSettingCard<T> extends StatefulWidget {
   final bool showAsCard;
   final void Function(T)? onChanged;
 
+
   @override
   State<ToggleSettingCard<T>> createState() => _ToggleSettingCardState<T>();
 }
 
 class _ToggleSettingCardState<T> extends State<ToggleSettingCard<T>> {
+  final offset = 1;
   @override
   Widget build(BuildContext context) {
     ToggleField<T> toggleCard = ToggleField<T>(

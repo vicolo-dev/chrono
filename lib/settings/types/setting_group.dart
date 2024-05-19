@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -56,8 +57,8 @@ class SettingGroup extends SettingItem {
         _settingPageLinks = [],
         _settingActions = [],
         _version = version,
-        super(
-            name, getLocalizedName, getDescription, searchTags, enableConditions) {
+        super(name, getLocalizedName, getDescription, searchTags,
+            enableConditions) {
     for (SettingItem item in _settingItems) {
       item.parent = this;
       if (item is Setting) {
@@ -198,16 +199,35 @@ class SettingGroup extends SettingItem {
 
         //Incase of removal
         //value.remove("Old Setting");
+        try {
+          if (name == "AlarmSettings") {
+            // if (value["version"] == 4) {
+            //   final oldWeekdays = value["Schedule"]["Week Days"];
+            //   if (oldWeekdays != null) {
+            //     List<bool> oldValue =
+            //         (oldWeekdays as List).map((e) => e == "1").toList();
+            //     List<int> newValue = [];
+            //     for (int i = 0; i < weekdays.length; i++) {
+            //       if (oldValue[i]) {
+            //         newValue.add(weekdays[i].id);
+            //       }
+            //     }
+            //     value["Schedule"]["Week Days"] = newValue;
+            //   }
+            // }
 
-        if (name == "AlarmSettings") {
-          // if (value["version"] == 1) {
-          final old1 = value["Snooze"]["Prevent Disabling while Snoozed"];
-          final old2 = value["Snooze"]["Prevent Deleting while Snoozed"];
-          if (old1) {
-            value["Snooze"]["While Snoozed"]["Prevent Disabling"] = old1;
+            final old1 = value["Snooze"]["Prevent Disabling while Snoozed"];
+            final old2 = value["Snooze"]["Prevent Deleting while Snoozed"];
+            if (old1) {
+              value["Snooze"]["While Snoozed"]["Prevent Disabling"] = old1;
+            }
+            if (old2) {
+              value["Snooze"]["While Snoozed"]["Prevent Deletion"] = old2;
+            }
           }
-          if (old2) value["Snooze"]["While Snoozed"]["Prevent Deletion"] = old2;
-          // }
+        } catch (e) {
+          debugPrint(
+              "Error migrating value in setting group ($name): ${e.toString()}");
         }
       }
       for (var setting in _settingItems) {

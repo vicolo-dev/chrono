@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/navigation/data/fullscreen_intent.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 
 class AppVisibility {
   static StreamSubscription<FGBGType>? subscription;
 
-  static FGBGType _state = FGBGType.background;
+  static FGBGType _state = FGBGType.foreground;
 
   static FGBGType get state => _state;
 
@@ -19,7 +17,7 @@ class AppVisibility {
     // if (loadTextFileSync(fullscreenIntentKey) == "true") {
     //   saveTextFile(fullscreenIntentKey, "false");
     // } else {
-      setState(FGBGType.foreground);
+      // setState(FGBGType.foreground);
     // }
 
     subscription = FGBGEvents.stream.listen((event) {

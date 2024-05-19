@@ -1,0 +1,24 @@
+This is a beta release. Please report any issues via GitHub or email.
+
+✨ Enhancements
+
+* Added option to change first day of week
+* Improved spinner time picker interface
+* Improved dial time picker 24h interface
+* Added discription for audio channel options
+* Added option to change separator for digital clock widget
+
+
+🐛 Fixes
+
+* Fixed app not opening on Android 11 and lower when Digital clock widget is used
+* Fixed app assuming foreground after alarm rings, even though it was closed before
+* Fixed media, notification and ringtone audio channels not working
+* Fixed other apps' music not restarting after alarm rings
+* Fixed upcoming alarm notification appearing after alarm rings
+* Fixed upcoming alarm notification not updating for repeating alarms
+* Fixed upcoming alarm notification not updating for repeating alarms
+* Fixed splash color
+
+
+

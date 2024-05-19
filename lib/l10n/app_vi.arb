@@ -248,5 +248,7 @@
   "vendorSetting": "Thiết đặt nhà cung cấp",
   "@vendorSetting": {},
   "vendorSettingDescription": "Tắt thủ công các tối ưu hóa dành riêng cho nhà cung cấp",
-  "@vendorSettingDescription": {}
+  "@vendorSettingDescription": {},
+  "pickerInput": "Đầu vào",
+  "@pickerInput": {}
 }

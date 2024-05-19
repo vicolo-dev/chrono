@@ -11,6 +11,7 @@ import 'package:clock_app/settings/widgets/date_setting_card.dart';
 import 'package:clock_app/settings/widgets/duration_setting_card.dart';
 import 'package:clock_app/settings/widgets/dynamic_multi_select_setting_card.dart';
 import 'package:clock_app/settings/widgets/dynamic_select_setting_card.dart';
+import 'package:clock_app/settings/widgets/dynamic_toggle_setting_card.dart';
 import 'package:clock_app/settings/widgets/list_setting_card.dart';
 import 'package:clock_app/settings/widgets/multi_select_setting_card.dart';
 import 'package:clock_app/settings/widgets/select_setting_card.dart';
@@ -35,7 +36,7 @@ List<Widget> getSettingWidgets(
       .getGroup("Animations")
       .getSetting("Extra Animations")
       .value;
-  double animationSpeed =  appSettings
+  double animationSpeed = appSettings
       .getGroup("General")
       .getGroup("Animations")
       .getSetting("Animation Speed")
@@ -53,7 +54,7 @@ List<Widget> getSettingWidgets(
     if (widget != null) {
       if (showExtraAnimations) {
         widgets.add(AnimatedSize(
-            duration:  Duration(milliseconds: (250 / animationSpeed).round()),
+            duration: Duration(milliseconds: (250 / animationSpeed).round()),
             child: SizedBox(height: item.isEnabled ? null : 0, child: widget)));
       } else {
         widgets.add(widget);
@@ -104,6 +105,13 @@ Widget? getSettingItemWidget(
 
     if (item is SelectSetting) {
       return SelectSettingCard(
+        setting: item,
+        showAsCard: showAsCard,
+        onChanged: onChanged,
+      );
+    }
+    if (item is DynamicToggleSetting) {
+      return DynamicToggleSettingCard(
         setting: item,
         showAsCard: showAsCard,
         onChanged: onChanged,
