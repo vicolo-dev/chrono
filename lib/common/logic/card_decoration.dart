@@ -5,27 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:material_color_utilities/hct/hct.dart';
 import 'package:material_color_utilities/palettes/tonal_palette.dart';
 
-TonalPalette toTonalPalette(int value) {
-  final color = Hct.fromInt(value);
-  return TonalPalette.of(color.hue, color.chroma);
-}
 
-Color getCardColor(BuildContext context, [Color? color]){
-  ColorScheme colorScheme = Theme.of(context).colorScheme;
-  bool useMaterialYou = appSettings
-      .getGroup("Appearance")
-      .getGroup("Colors")
-      .getSetting("Use Material You")
-      .value;
-
-  TonalPalette tonalPalette = toTonalPalette(colorScheme.surface.value);
-
-  return color ??
-        (useMaterialYou
-            ? Color(tonalPalette.get(
-                Theme.of(context).brightness == Brightness.light ? 96 : 15))
-            : colorScheme.surface);
-}
 
 BoxDecoration getCardDecoration(BuildContext context,
     {Color? color,
@@ -52,7 +32,7 @@ BoxDecoration getCardDecoration(BuildContext context,
                 strokeAlign: BorderSide.strokeAlignInside,
               )
             : null,
-    color: getCardColor(context, color),
+    color: color,
     borderRadius: theme.cardTheme.shape != null
         ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
         : const BorderRadius.all(Radius.circular(8.0)),

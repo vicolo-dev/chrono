@@ -1,5 +1,32 @@
 import 'package:clock_app/common/logic/card_decoration.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:flutter/material.dart';
+import 'package:clock_app/common/utils/color.dart';
+import 'package:material_color_utilities/hct/hct.dart';
+import 'package:material_color_utilities/palettes/tonal_palette.dart';
+
+
+TonalPalette toTonalPalette(int value) {
+  final color = Hct.fromInt(value);
+  return TonalPalette.of(color.hue, color.chroma);
+}
+
+Color getCardColor(BuildContext context, [Color? color]){
+  ColorScheme colorScheme = Theme.of(context).colorScheme;
+  bool useMaterialYou = appSettings
+      .getGroup("Appearance")
+      .getGroup("Colors")
+      .getSetting("Use Material You")
+      .value;
+
+  TonalPalette tonalPalette = toTonalPalette(colorScheme.surface.value);
+
+  return color ??
+        (useMaterialYou
+            ? Color(tonalPalette.get(
+                Theme.of(context).brightness == Brightness.light ? 96 : 15))
+            : colorScheme.surface);
+}
 
 class CardContainer extends StatelessWidget {
   const CardContainer({
@@ -11,6 +38,7 @@ class CardContainer extends StatelessWidget {
     this.onTap,
     this.alignment,
     this.showShadow = true,
+
     this.showLightBorder = false,
     this.blurStyle = BlurStyle.normal,
   });
@@ -36,6 +64,7 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color cardColor = getCardColor(context, color);
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
     return Container(
@@ -44,7 +73,7 @@ class CardContainer extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       decoration: getCardDecoration(
         context,
-        color: color,
+        color: cardColor,
         showLightBorder: showLightBorder,
         showShadow: showShadow,
         elevationMultiplier: elevationMultiplier,
@@ -56,6 +85,7 @@ class CardContainer extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: onTap,
+                splashColor: cardColor.darken(0.075),
                 borderRadius: Theme.of(context).toggleButtonsTheme.borderRadius,
                 child: child,
               ),

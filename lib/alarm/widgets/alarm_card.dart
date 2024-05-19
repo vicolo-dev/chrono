@@ -203,9 +203,6 @@ class _AlarmCardState extends State<AlarmCard> {
               // const SizedBox(width: 8),
               getActionButton(),
               CardEditMenu(actions: [
-                if (widget.alarm.isDeletable)
-                  getDeletePopupAction(context, widget.onPressDelete),
-                getDuplicatePopupAction(context, widget.onPressDuplicate),
                 if (widget.alarm.canBeSkipped)
                   MenuAction(
                     widget.alarm.shouldSkipNextAlarm
@@ -219,7 +216,10 @@ class _AlarmCardState extends State<AlarmCard> {
                       }
                     },
                     Icons.skip_next_rounded,
-                  )
+                  ),
+                getDuplicatePopupAction(context, widget.onPressDuplicate),
+                if (widget.alarm.isDeletable)
+                  getDeletePopupAction(context, widget.onPressDelete),
               ]),
             ],
           ),
