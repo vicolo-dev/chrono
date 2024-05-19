@@ -660,7 +660,13 @@
   "editPresetsTitle": "Edit Presets",
   "@editPresetsTitle": {},
   "firstDayOfWeekSetting": "First Day of Week",
-  "@firstDayOfWeekSetting": {}
+  "@firstDayOfWeekSetting": {},
+  "translateLink": "Translate",
+  "@translateLink": {},
+  "translateDescription": "Help translate the app",
+  "@translateDescription": {},
+  "separatorSetting": "Separator",
+  "@separatorSetting": {}
 
   
 }

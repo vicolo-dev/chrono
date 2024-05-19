@@ -189,7 +189,6 @@ class _AppState extends State<App> {
           Routes.push(settings.name ?? Routes.rootRoute);
           switch (settings.name) {
             case Routes.rootRoute:
-              print("---------------------------- main route");
               final bool? onboarded = GetStorage().read('onboarded');
               if (onboarded == null) {
                 return MaterialPageRoute(
@@ -208,8 +207,6 @@ class _AppState extends State<App> {
               }
 
             case Routes.alarmNotificationRoute:
-                          print("---------------------------- notification route");
-
               return MaterialPageRoute(
                 builder: (context) {
                   final args = settings.arguments as AlarmNotificationArguments;

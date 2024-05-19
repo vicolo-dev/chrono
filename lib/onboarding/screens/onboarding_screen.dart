@@ -7,7 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
-  const OnBoardingScreen({Key? key}) : super(key: key);
+  const OnBoardingScreen({super.key});
 
   @override
   OnBoardingScreenState createState() => OnBoardingScreenState();

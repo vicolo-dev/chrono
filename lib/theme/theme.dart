@@ -31,6 +31,7 @@ ThemeData defaultTheme = ThemeData(
   colorScheme: getColorScheme(defaultColorScheme),
   timePickerTheme: timePickerTheme,
   dialogTheme: dialogTheme,
+  splashColor: defaultColorScheme.background,
   switchTheme: getSwitchTheme(defaultColorScheme),
   snackBarTheme: getSnackBarTheme(defaultColorScheme, defaultStyleTheme),
   inputDecorationTheme: getInputTheme(defaultColorScheme, defaultStyleTheme),
