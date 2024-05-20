@@ -1,3 +1,4 @@
+
 package com.vicolo.chrono
 
 import android.app.PendingIntent
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -29,7 +31,7 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
         widgetData: SharedPreferences,
     ) { // Perform this loop procedure for each widget that belongs to this
         // provider.
-        Log.d("TAG", "Updating Digital Clock Widget")
+        Log.d("CHRONO", "Updating Digital Clock Widget")
 
         appWidgetIds.forEach { appWidgetId ->
             // Create an Intent to launch ExampleActivity.
@@ -111,24 +113,27 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
                     setCharSequence(textClock, "setFormat12Hour", timeFormat)
                     setCharSequence(textDate, "setFormat24Hour", "EEE, d MMM")
                     setCharSequence(textDate, "setFormat12Hour", "EEE, d MMM")
-                    if (horizontalAlignment == 7) {
-                        setInt(textClock, "setGravity", 1)
-                        setInt(textDate, "setGravity", 1)
-                        setInt(textClock, "setJustificationMode", 2)
-                        setInt(textDate, "setJustificationMode", 2)
-                    } else {
-                        setInt(textClock, "setGravity", horizontalAlignment)
-                        setInt(textDate, "setGravity", horizontalAlignment)
-                    }
-                    // setInt(R.id.digital_clock_holder, "setVerticalGravity", 10)
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (horizontalAlignment == 7) {
+                            setInt(textClock, "setGravity", 1)
+                            setInt(textDate, "setGravity", 1)
+                            setInt(textClock, "setJustificationMode", 2)
+                            setInt(textDate, "setJustificationMode", 2)
+                        } else {
+                            setInt(textClock, "setGravity", horizontalAlignment)
+                            setInt(textDate, "setGravity", horizontalAlignment)
+                        }
+                    } // setInt(R.id.digital_clock_holder, "setVerticalGravity", 10)
 
                     setInt(textClock, "setTextColor", Color.parseColor(timeColor))
                     setInt(textDate, "setTextColor", Color.parseColor(dateColor))
-                    setInt(textClock, "setMaxHeight", spToPx(timeSize.toFloat(), context))
-                    setInt(textDate, "setMaxHeight", spToPx(dateSize.toFloat(), context))
-                    setInt(textDate, "setHeight", spToPx(dateSize.toFloat(), context))
-                    setInt(textClock, "setHeight", spToPx(timeSize.toFloat(), context))
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        setInt(textClock, "setMaxHeight", spToPx(timeSize.toFloat(), context))
+                        setInt(textDate, "setMaxHeight", spToPx(dateSize.toFloat(), context))
+                        setInt(textDate, "setHeight", spToPx(dateSize.toFloat(), context))
+                        setInt(textClock, "setHeight", spToPx(timeSize.toFloat(), context))
                         // setViewLayoutHeight(textClock, timeSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
                         // setViewLayoutHeight(textDate, dateSize.toFloat(), TypedValue.COMPLEX_UNIT_SP)
                     }

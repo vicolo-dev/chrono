@@ -1,6 +1,7 @@
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:clock_app/system/data/device_info.dart';
 import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -34,6 +35,10 @@ SettingGroup widgetSettingSchema = SettingGroup(
                 // SelectSettingOption(
                 //     (context) => AppLocalizations.of(context)!.alignmentJustify,
                 //     7),
+              ],
+              enableConditions: [
+                GeneralCondition(
+                    () => (androidInfo?.version.sdkInt ?? 34) >= 31)
               ],
               defaultValue: 1,
               onChange: (context, value) async {
