@@ -400,9 +400,10 @@ packages:
   flutter_show_when_locked:
     dependency: "direct main"
     description:
-      path: "../flutter_show_when_locked"
-      relative: true
-    source: path
+      name: flutter_show_when_locked
+      sha256: "7b02eaa7e68e0395dc48469446933fca40eef8de506b7737522b1c4ee3a34fd9"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.4"
   flutter_slidable:
     dependency: "direct main"
