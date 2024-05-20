@@ -86,6 +86,11 @@ SettingGroup widgetSettingSchema = SettingGroup(
               10,
               150,
               70,
+              enableConditions: [
+                GeneralCondition(
+                    () => (androidInfo?.version.sdkInt ?? 34) >= 26)
+              ],
+
               onChange: (context, value) async {
                 setDigitalClockWidgetData(context);
               },
@@ -155,7 +160,9 @@ SettingGroup widgetSettingSchema = SettingGroup(
                 setDigitalClockWidgetData(context);
               },
               enableConditions: [
-                ValueCondition(["Show Date"], (value) => value == true)
+                ValueCondition(["Show Date"], (value) => value == true),
+                GeneralCondition(
+                    () => (androidInfo?.version.sdkInt ?? 34) >= 26)
               ],
               // snapLength: 1,
             ),
