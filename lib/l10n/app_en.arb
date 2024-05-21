@@ -25,6 +25,8 @@
   "@languageSetting": {},
   "dateFormatSetting": "Date Format",
   "@dateFormatSetting": {},
+  "longDateFormatSetting": "Long Date Format",
+  "@longDateFormatSetting": {},
   "timeFormatSetting": "Time Format",
   "@timeFormatSetting": {},
   "timeFormat12": "12 hours",
@@ -355,6 +357,8 @@
   "@noAlarmMessage": {},
   "noTimerMessage": "No timers created",
   "@noTimerMessage": {},
+  "noTagsMessage": "No tags created",
+  "@noTagsMessage": {},
   "noStopwatchMessage": "No stopwatches created",
   "@noStopwatchMessage": {},
   "noTaskMessage": "No tasks created",
@@ -666,7 +670,11 @@
   "translateDescription": "Help translate the app",
   "@translateDescription": {},
   "separatorSetting": "Separator",
-  "@separatorSetting": {}
+  "@separatorSetting": {},
+  "editTagLabel": "Edit Tag",
+  "@editTagLabel": {},
+  "tagNamePlaceholder": "Tag name",
+  "@tagNamePlaceholder": {}
 
   
 }

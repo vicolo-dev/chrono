@@ -37,8 +37,14 @@ void setDigitalClockWidgetData(BuildContext context) async {
       showMeridiem: showMeridiem,
       separator: separator,
     );
+    final String dateFormat = appSettings
+      .getGroup('General')
+      .getGroup('Display')
+      .getSetting('Long Date Format')
+      .value;
 
     await HomeWidget.saveWidgetData("timeFormat", timeFormat);
+    await HomeWidget.saveWidgetData("dateFormat", dateFormat);
     await HomeWidget.saveWidgetData<bool>('showDate', showDate);
     await HomeWidget.saveWidgetData<int>('timeSize', timeSize);
     await HomeWidget.saveWidgetData<int>('dateSize', dateSize);
