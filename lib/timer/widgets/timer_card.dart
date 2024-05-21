@@ -138,8 +138,6 @@ class _TimerCardState extends State<TimerCard> {
             ),
             const Spacer(),
             CardEditMenu(actions: [
-              getDeletePopupAction(context, widget.onPressDelete),
-              getDuplicatePopupAction(context, widget.onPressDuplicate),
               if (!widget.timer.isStopped)
                 MenuAction(
                   "Reset",
@@ -151,7 +149,9 @@ class _TimerCardState extends State<TimerCard> {
                   '+${widget.timer.addLength.floor()}:00',
                   (context) => widget.onPressAddTime(),
                   Icons.add_rounded,
-                )
+                ),
+              getDuplicatePopupAction(context, widget.onPressDuplicate),
+              getDeletePopupAction(context, widget.onPressDelete),
             ]),
           ],
         ));

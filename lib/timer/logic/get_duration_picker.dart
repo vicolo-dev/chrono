@@ -31,14 +31,21 @@ Widget getDurationPicker(BuildContext context, TimeDuration duration,
       picker = SizedBox(
         height: 220,
         width: width - 64,
-        child: CupertinoTimerPicker(
-          key: Key(preset?.id.toString() ??
-              ""), // This is so everytime user selects a preset, the picker is rebuilt with initialTimerDuration of duration
-          mode: CupertinoTimerPickerMode.hms,
-          initialTimerDuration: Duration(seconds: duration.inSeconds),
-          onTimerDurationChanged: (Duration duration) {
-            onDurationChange(duration.toTimeDuration());
-          },
+        child: CupertinoTheme(
+          data: CupertinoThemeData(
+            brightness: colorScheme.background.computeLuminance() > 0.179
+                ? Brightness.light
+                : Brightness.dark,
+          ),
+          child: CupertinoTimerPicker(
+            key: Key(preset?.id.toString() ??
+                ""), // This is so everytime user selects a preset, the picker is rebuilt with initialTimerDuration of duration
+            mode: CupertinoTimerPickerMode.hms,
+            initialTimerDuration: Duration(seconds: duration.inSeconds),
+            onTimerDurationChanged: (Duration duration) {
+              onDurationChange(duration.toTimeDuration());
+            },
+          ),
         ),
       );
 

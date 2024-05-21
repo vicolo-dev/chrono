@@ -182,5 +182,7 @@
   "permissionsSettingGroup": "Разрешения",
   "@permissionsSettingGroup": {},
   "notificationPermissionSetting": "Разрешения уведомлений",
-  "@notificationPermissionSetting": {}
+  "@notificationPermissionSetting": {},
+  "pickerInput": "Интерфейс выбора времени, состоящий из полей ввода.",
+  "@pickerInput": {}
 }
