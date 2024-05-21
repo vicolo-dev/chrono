@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/common/widgets/clock/time_display.dart';
@@ -30,7 +32,15 @@ class ClockDisplay extends StatefulWidget {
 
 class _ClockDisplayState extends State<ClockDisplay> {
   // late TimeFormat timeFormat;
-  late Setting timeFormatSetting;
+  late Setting timeFormatSetting = appSettings
+      .getGroup("General")
+      .getGroup("Display")
+      .getSetting("Time Format");
+
+  late Setting longDateFormatSetting = appSettings
+      .getGroup("General")
+      .getGroup("Display")
+      .getSetting("Long Date Format");
 
   TimeFormat getTimeFormat() {
     TimeFormat timeFormat = timeFormatSetting.value;
@@ -51,16 +61,14 @@ class _ClockDisplayState extends State<ClockDisplay> {
   @override
   void initState() {
     super.initState();
-    timeFormatSetting = appSettings
-        .getGroup("General")
-        .getGroup("Display")
-        .getSetting("Time Format");
     timeFormatSetting.addListener(update);
+    longDateFormatSetting.addListener(update);
   }
 
   @override
   void dispose() {
     timeFormatSetting.removeListener(update);
+    longDateFormatSetting.removeListener(update);
     super.dispose();
   }
 
@@ -124,7 +132,7 @@ class _ClockDisplayState extends State<ClockDisplay> {
         if (widget.shouldShowDate) SizedBox(height: 4 * widget.scale),
         if (widget.shouldShowDate)
           TimeDisplay(
-            format: 'EEE, MMM d',
+            format: longDateFormatSetting.value,
             fontSize: 16 * widget.scale,
             height: 1,
             dateTime: widget.dateTime,

@@ -20,8 +20,6 @@
 
 Its usable, but still WIP, so you might encounter some bugs. Make sure to test it out thorougly on your device before using it for critical alarms. Feel free to open an issue.
 
-
-
 # Table of Content
 - [Features](#features)
 - [Platforms](#platforms)
@@ -82,6 +80,9 @@ The amount of time I can given to the app is bound by financial constraints. Don
 
 <span class="badge-patreon"><a href="https://patreon.com/vicolo" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-orange.svg" alt="Patreon donate button" /></a></span>
 
+### Our generous patreons
+- Potato @potatocinna
+- Thorsten @th23x
 
 ## Development
 

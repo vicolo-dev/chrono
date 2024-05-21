@@ -1,4 +1,3 @@
-import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/screens/contributors.dart';
@@ -8,6 +7,7 @@ import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
 import 'package:clock_app/settings/widgets/setting_action_card.dart';
 import 'package:clock_app/settings/widgets/setting_page_link_card.dart';
+import 'package:clock_app/system/data/app_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';

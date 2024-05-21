@@ -10,6 +10,27 @@ abstract class EnableConditionParameter {
   EnableConditionEvaluator getEvaluator(SettingGroup group);
 }
 
+
+class GeneralCondition extends EnableConditionParameter {
+  bool Function() condition;
+
+  GeneralCondition(this.condition);
+
+  @override
+  EnableConditionEvaluator getEvaluator(SettingGroup group) {
+    return GeneralConditionEvaluator (condition);
+  }
+
+  @override
+  void setupEnableSettings(SettingGroup group, SettingItem item) {
+    item.enableSettings.add(getEvaluator(group));
+      }
+
+  @override
+  void setupChangesEnableCondition(SettingGroup group, SettingItem item) {
+  }
+}
+
 class ValueCondition extends EnableConditionParameter {
   List<String> settingPath;
   bool Function(dynamic settingValue) condition;
@@ -75,6 +96,16 @@ class ValueConditionEvaluator extends EnableConditionEvaluator {
   @override
   bool evaluate() {
     return condition(setting.value);
+  }
+}
+
+class GeneralConditionEvaluator extends EnableConditionEvaluator {
+  bool Function() condition;
+  GeneralConditionEvaluator(this.condition);
+
+  @override
+  bool evaluate() {
+    return condition();
   }
 }
 

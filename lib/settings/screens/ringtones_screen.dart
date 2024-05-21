@@ -7,9 +7,11 @@ import 'package:clock_app/common/widgets/file_item_card.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
+import 'package:clock_app/settings/widgets/settings_top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:pick_or_save/pick_or_save.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RingtonesScreen extends StatefulWidget {
   const RingtonesScreen({
@@ -48,7 +50,9 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
     TextTheme textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: AppTopBar(title: Text("Melodies", style: textTheme.titleMedium)),
+      appBar: SettingsTopBar(
+        title: AppLocalizations.of(context)!.melodiesSetting,
+      ),
       body: Stack(
         children: [
           Column(
@@ -91,7 +95,6 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
                 for (String uri in result) {
                   final metadata = await PickOrSave()
                       .fileMetaData(params: FileMetadataParams(filePath: uri));
-                  print("---------- ${metadata.displayName}");
                   var name = metadata.displayName ?? "File";
                   name = basenameWithoutExtension(name)
                       .replaceAll(RegExp(r"[0-9]+"), "")

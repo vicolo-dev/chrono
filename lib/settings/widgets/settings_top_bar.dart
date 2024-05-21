@@ -11,11 +11,11 @@ class SettingsTopBar extends StatefulWidget implements PreferredSizeWidget {
 
   const SettingsTopBar(
       {super.key,
-      required this.onSearch,
+      this.onSearch,
       this.showSearch = false,
       required this.title});
 
-  final void Function(List<SettingItem> settings) onSearch;
+  final void Function(List<SettingItem> settings)? onSearch;
   final String title;
   final bool showSearch;
 
@@ -30,7 +30,7 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
   _SettingsTopBarState() {
     _filterController.addListener(() async {
       if (_filterController.text.isEmpty) {
-        widget.onSearch([]);
+        widget.onSearch?.call([]);
       } else {
         var results = extractTop<SettingItem>(
             query: _filterController.text,
@@ -46,7 +46,7 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
               return "${item.name} ${item.path.map((group) => group.name).join(" ")} ${item.searchTags.join(" ")}";
             });
 
-        widget.onSearch(results.map((result) => result.choice).toList());
+        widget.onSearch?.call(results.map((result) => result.choice).toList());
       }
     });
   }

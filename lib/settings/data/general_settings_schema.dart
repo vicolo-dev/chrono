@@ -32,9 +32,10 @@ enum TimePickerType { dial, input, spinner }
 enum DurationPickerType { rings, spinner }
 
 SelectSettingOption<String> _getDateSettingOption(String format) {
-  return SelectSettingOption(
-      (context) => "${DateFormat(format).format(DateTime.now())} ($format)",
-      format);
+  return SelectSettingOption((context) {
+    Locale locale = Localizations.localeOf(context);
+    return "${DateFormat(format, locale.languageCode).format(DateTime.now())} ($format)";
+  }, format);
 }
 
 final dateFormatOptions = [
@@ -54,6 +55,17 @@ final dateFormatOptions = [
   _getDateSettingOption("yyyy-MM-dd"),
   _getDateSettingOption("d MMM yyyy"),
   _getDateSettingOption("d MMMM yyyy"),
+];
+
+final longDateFormatOptions = [
+  _getDateSettingOption("EEE, MMM d"),
+  _getDateSettingOption("EEE, MMMM d "),
+  _getDateSettingOption("EEE, d MMM"),
+  _getDateSettingOption("EEE, d MMMM"),
+  _getDateSettingOption("EEEE, MMM d"),
+  _getDateSettingOption("EEEE, MMMM d "),
+  _getDateSettingOption("EEEE, d MMM"),
+  _getDateSettingOption("EEEE, d MMMM"),
 ];
 
 enum SwipeAction {
@@ -97,6 +109,19 @@ SettingGroup generalSettingsSchema = SettingGroup(
           dateFormatOptions,
           getDescription: (context) => "How to display the dates",
           onChange: (context, index) async {
+            // await HomeWidget.saveWidgetData(
+            //     "dateFormat", dateFormatOptions[index].value);
+            // updateDigitalClockWidget();
+          },
+        ),
+        SelectSetting<String>(
+          "Long Date Format",
+          (context) => AppLocalizations.of(context)!.longDateFormatSetting,
+          longDateFormatOptions,
+          getDescription: (context) => "How to display the dates",
+          onChange: (context, index) async {
+            setDigitalClockWidgetData(context);
+
             // await HomeWidget.saveWidgetData(
             //     "dateFormat", dateFormatOptions[index].value);
             // updateDigitalClockWidget();
