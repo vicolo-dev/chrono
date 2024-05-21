@@ -111,8 +111,8 @@ class DigitalClockWidgetProvider : HomeWidgetProvider() {
                     //
                     setCharSequence(textClock, "setFormat24Hour", timeFormat)
                     setCharSequence(textClock, "setFormat12Hour", timeFormat)
-                    setCharSequence(textDate, "setFormat24Hour", "EEE, d MMM")
-                    setCharSequence(textDate, "setFormat12Hour", "EEE, d MMM")
+                    setCharSequence(textDate, "setFormat24Hour", dateFormat)
+                    setCharSequence(textDate, "setFormat12Hour", dateFormat)
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         if (horizontalAlignment == 7) {

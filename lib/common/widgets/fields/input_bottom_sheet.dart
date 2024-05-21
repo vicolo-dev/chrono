@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class InputBottomSheet extends StatefulWidget {
   const InputBottomSheet({
@@ -95,7 +97,7 @@ class _InputBottomSheetState extends State<InputBottomSheet> {
                             }
                             Navigator.pop(context, _controller.text);
                           },
-                          child: Text('Save',
+                          child: Text(AppLocalizations.of(context)!.saveButton,
                               style: textTheme.labelMedium?.copyWith(
                                   color: widget.isInputRequired &&
                                           _controller.text.isEmpty
