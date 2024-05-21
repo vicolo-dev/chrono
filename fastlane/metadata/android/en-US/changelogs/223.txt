@@ -1,0 +1,20 @@
+This is a beta release. Please report any issues via GitHub or email.
+
+✨ Enhancements
+
+* Reversed card actions order so delete is at bottom
+
+🐛 Fixes
+
+* Fixed duplicate action in dropdowns not working
+* Remove widget customization options based on availibity on the OS versions
+* Fixed digital clock widget not working on Android 11 and lower
+* Fixed theme page title not localized
+* Fixed app getting stuck on a screen when minimized after alarm rings
+* Fixed spinner time picker legibility
+
+
+
+
+
+

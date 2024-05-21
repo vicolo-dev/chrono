@@ -38,17 +38,18 @@ class AlarmTaskCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(task.getLocalizedName(context), style: textTheme.displaySmall),
+                    Text(task.getLocalizedName(context),
+                        style: textTheme.displaySmall),
                   ],
                 ),
               ),
               const Spacer(),
               if (onPressDuplicate != null || onPressDelete != null)
                 CardEditMenu(actions: [
-                  if (onPressDelete != null)
-                    getDeletePopupAction(context, onPressDelete!),
                   if (onPressDuplicate != null)
                     getDuplicatePopupAction(context, onPressDuplicate!),
+                  if (onPressDelete != null)
+                    getDeletePopupAction(context, onPressDelete!),
                 ]),
               if (!isAddCard)
                 Icon(FluxIcons.settings, color: colorScheme.onSurface),

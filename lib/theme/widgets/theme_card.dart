@@ -72,9 +72,9 @@ class ThemeCard<Item extends ThemeItem> extends StatelessWidget {
                         : colorScheme.onSurface.withOpacity(0.5)),
               ),
               CardEditMenu(actions: [
+                getDuplicatePopupAction(context, onPressDuplicate),
                 if (themeItem.isDeletable)
                   getDeletePopupAction(context, onPressDelete),
-                getDuplicatePopupAction(context,onPressDuplicate),
               ]),
             ],
           ),

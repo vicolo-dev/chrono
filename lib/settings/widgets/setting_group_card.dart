@@ -54,6 +54,13 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
             .toList()
         : widget.settingGroup.settingItems;
 
+    List<Widget> childWidgets = getSettingWidgets(
+      settingItems,
+      showAsCard: false,
+      checkDependentEnableConditions: widget.checkDependentEnableConditions,
+      onSettingChanged: widget.onSettingChanged,
+    );
+
     CardContainer expandedView = CardContainer(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -66,13 +73,7 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
               showSummaryView: showSummaryView,
               onTap: openSettingGroupScreen,
             ),
-            ...getSettingWidgets(
-              settingItems,
-              showAsCard: false,
-              checkDependentEnableConditions:
-                  widget.checkDependentEnableConditions,
-              onSettingChanged: widget.onSettingChanged,
-            )
+            ...childWidgets
           ],
         ),
       ),
@@ -116,7 +117,11 @@ class _SettingGroupCardState extends State<SettingGroupCard> {
       ),
     );
 
-    return showExpandedView ? expandedView : cardView;
+    return childWidgets.isNotEmpty
+        ? showExpandedView
+            ? expandedView
+            : cardView
+        : Container();
   }
 }
 

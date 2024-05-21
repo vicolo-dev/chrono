@@ -107,20 +107,20 @@ class AlarmNotificationManager {
     // If app was launched from a notification, close the app when the notification
     // is closed
     if (intent?.action == "SELECT_NOTIFICATION") {
-      SystemNavigator.pop();
+      await MoveToBackground.moveTaskToBack();
+      // SystemNavigator.pop();
     } else {
       // If notification was created while app was in background, move app back
       // to background when we close the notification
       if (appVisibilityWhenCreated == FGBGType.background) {
         appVisibilityWhenCreated = FGBGType.foreground;
-        MoveToBackground.moveTaskToBack();
+        await MoveToBackground.moveTaskToBack();
       }
-
-      // If we were on the alarm screen, pop it off the stack. Sometimes the system
-      // decides to show a heads up notification instead of a full screen one, so
-      // we can't always pop the top screen.
-      Routes.popIf(alarmNotificationData[type]?.route);
     }
+    // If we were on the alarm screen, pop it off the stack. Sometimes the system
+    // decides to show a heads up notification instead of a full screen one, so
+    // we can't always pop the top screen.
+    Routes.popIf(alarmNotificationData[type]?.route);
   }
 
   static Future<void> snoozeAlarm(

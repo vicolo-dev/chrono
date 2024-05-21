@@ -9,15 +9,15 @@ import 'package:clock_app/app.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/clock/logic/timezone_database.dart';
-import 'package:clock_app/common/data/app_info.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/debug.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/notifications/logic/notifications.dart';
 import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
+import 'package:clock_app/system/data/app_info.dart';
+import 'package:clock_app/system/data/device_info.dart';
 import 'package:clock_app/system/logic/handle_boot.dart';
-import 'package:clock_app/system/logic/permissions.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boot_receiver/flutter_boot_receiver.dart';
@@ -28,21 +28,24 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   initializeTimeZones();
-  await initializePackageInfo();
-  await initializeAppDataDirectory();
+  final initializeData = [
+    initializePackageInfo(),
+    initializeAndroidInfo(),
+    initializeAppDataDirectory(),
+    initializeNotifications(),
+    AndroidAlarmManager.initialize(),
+    BootReceiver.initialize(handleBoot),
+    RingtonePlayer.initialize(),
+    initializeAudioSession(),
+    FlutterShowWhenLocked().hide(),
+    initializeDatabases(),
+  ];
+  await Future.wait(initializeData);
   await initializeStorage();
-  // await requestBatteryOptimizationPermission();
-  await initializeNotifications();
   await initializeSettings();
-  await initializeDatabases();
-  await AndroidAlarmManager.initialize();
-  await RingtonePlayer.initialize();
-  await initializeAudioSession(); //Needs to be initialized after settings
-  await BootReceiver.initialize(handleBoot);
-  AppVisibility.initialize();
-  await FlutterShowWhenLocked().hide();
   await updateAlarms("Update Alarms on Start");
   await updateTimers("Update Timers on Start");
+  AppVisibility.initialize();
 
   ReceivePort receivePort = ReceivePort();
   IsolateNameServer.removePortNameMapping(updatePortName);
@@ -58,12 +61,5 @@ void main() async {
     }
   });
 
-  // String appDataDirectory = await getAppDataDirectoryPath();
-  // String path = '$appDataDirectory/ringing-alarm.txt';
-  // File file = File(path);
-  // if (!file.existsSync()) {
-  //   file.createSync();
-  // }
-  // file.writeAsStringSync("", mode: FileMode.writeOnly);
   runApp(const App());
 }
