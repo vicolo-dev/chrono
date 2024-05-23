@@ -1,0 +1,37 @@
+Changes since v0.4.3:
+
+🚀 Features
+
+* Widget support!
+  * Added analog and digital clock widgets
+  * Added option to customize size, alignment, color, font weight, formats
+* Added localizations
+  * Chinese, French, Spanish mostly complete
+  * Partial support for Bengali, German, Italian, Norwegian, Polish, Portuguese, Russian, Turkish, and Vietnamese
+  * Add your favorite language here: https://hosted.weblate.org/projects/chrono
+
+✨ Enhancements
+
+* Added option to specify default page
+* Added 'plus' button when selecting melodies and tags
+* Added sections in settings to get notification and ignore baterry optimization settings
+* Reversed card actions order so delete is at bottom
+* Add option to change long date format (displayed on clock screen and clock widget)
+* Added option to change first day of week
+* Improved spinner time picker interface
+* Improved dial time picker 24h interface
+* Added discription for audio channel options
+* Added option to change separator for digital clock widget
+* Reversed card actions order so delete is at bottom
+* Add option to change long date format (displayed on clock screen and clock widget)
+* Added patreons list in about screen
+* Added contributors list in about screen
+
+🐛 Fixes
+
+* Fixed app assuming foreground after alarm rings, even though it was closed before
+* Fixed tap splash color
+* Fixed media, notification and ringtone audio channels not working
+* Fixed other apps' music not restarting after alarm rings
+* Fixed upcoming alarm notification appearing after alarm rings
+* Fixed upcoming alarm notification not updating for repeating alarms
