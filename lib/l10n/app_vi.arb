@@ -250,5 +250,7 @@
   "vendorSettingDescription": "Tắt thủ công các tối ưu hóa dành riêng cho nhà cung cấp",
   "@vendorSettingDescription": {},
   "pickerInput": "Đầu vào",
-  "@pickerInput": {}
+  "@pickerInput": {},
+  "longDateFormatSetting": "Định dạng ngày theo thứ, tháng, ngày và năm",
+  "@longDateFormatSetting": {}
 }
