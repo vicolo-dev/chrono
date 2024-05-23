@@ -6,7 +6,7 @@ Changes since v0.4.3:
   * Added analog and digital clock widgets
   * Added option to customize size, alignment, color, font weight, formats
 * Added localizations
-  * Chinese, French, Spanish, Turkish and Portugese mostly complete
+  * Chinese, French, Spanish, Turkish and Portuguese mostly complete
   * Partial support for Bengali, German, Italian, Norwegian, Polish, Russian,and Vietnamese
   * Add your favorite language here: https://hosted.weblate.org/projects/chrono
 
