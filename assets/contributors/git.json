@@ -15,19 +15,24 @@
         "profile_url": "https://github.com/bdOtopsy63"
     },
     {
-        "username": "weblate",
-        "avatar_url": "assets/contributors/avatars/1607653?v=4.jpg",
-        "profile_url": "https://github.com/weblate"
-    },
-    {
         "username": "CloneWith",
         "avatar_url": "assets/contributors/avatars/110881926?v=4.jpg",
         "profile_url": "https://github.com/CloneWith"
     },
     {
+        "username": "weblate",
+        "avatar_url": "assets/contributors/avatars/1607653?v=4.jpg",
+        "profile_url": "https://github.com/weblate"
+    },
+    {
         "username": "ngocanhtve",
         "avatar_url": "assets/contributors/avatars/125894401?v=4.jpg",
         "profile_url": "https://github.com/ngocanhtve"
+    },
+    {
+        "username": "Schipunov",
+        "avatar_url": "assets/contributors/avatars/23407397?v=4.jpg",
+        "profile_url": "https://github.com/Schipunov"
     },
     {
         "username": "zxrpn",
@@ -90,11 +95,6 @@
         "profile_url": "https://github.com/NathanBnm"
     },
     {
-        "username": "Schipunov",
-        "avatar_url": "assets/contributors/avatars/23407397?v=4.jpg",
-        "profile_url": "https://github.com/Schipunov"
-    },
-    {
         "username": "matsukky",
         "avatar_url": "assets/contributors/avatars/46320254?v=4.jpg",
         "profile_url": "https://github.com/matsukky"
@@ -118,6 +118,11 @@
         "username": "jona512",
         "avatar_url": "assets/contributors/avatars/38784748?v=4.jpg",
         "profile_url": "https://github.com/jona512"
+    },
+    {
+        "username": "HeXedek",
+        "avatar_url": "assets/contributors/avatars/100072714?v=4.jpg",
+        "profile_url": "https://github.com/HeXedek"
     },
     {
         "username": "thejenja",
