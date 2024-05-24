@@ -225,7 +225,7 @@
   "@showSecondsSetting": {},
   "pickerInput": "Girdi",
   "@pickerInput": {},
-  "timePickerSetting": "https://hosted.weblate.org/translate/flathub/frontend/tr/?checksum=f9ea9ac0139d213e",
+  "timePickerSetting": "",
   "@timePickerSetting": {},
   "ignoreBatteryOptimizationSetting": "Batarya İyileştirmesini Yoksay",
   "@ignoreBatteryOptimizationSetting": {},
