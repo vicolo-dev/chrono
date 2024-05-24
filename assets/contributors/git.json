@@ -15,6 +15,11 @@
         "profile_url": "https://github.com/bdOtopsy63"
     },
     {
+        "username": "CloneWith",
+        "avatar_url": "assets/contributors/avatars/110881926?v=4.jpg",
+        "profile_url": "https://github.com/CloneWith"
+    },
+    {
         "username": "weblate",
         "avatar_url": "assets/contributors/avatars/1607653?v=4.jpg",
         "profile_url": "https://github.com/weblate"
@@ -25,19 +30,9 @@
         "profile_url": "https://github.com/ngocanhtve"
     },
     {
-        "username": "inson1",
-        "avatar_url": "assets/contributors/avatars/75314629?v=4.jpg",
-        "profile_url": "https://github.com/inson1"
-    },
-    {
-        "username": "CloneWith",
-        "avatar_url": "assets/contributors/avatars/110881926?v=4.jpg",
-        "profile_url": "https://github.com/CloneWith"
-    },
-    {
-        "username": "BurnBirdX7",
-        "avatar_url": "assets/contributors/avatars/24733391?v=4.jpg",
-        "profile_url": "https://github.com/BurnBirdX7"
+        "username": "Schipunov",
+        "avatar_url": "assets/contributors/avatars/23407397?v=4.jpg",
+        "profile_url": "https://github.com/Schipunov"
     },
     {
         "username": "zxrpn",
@@ -45,9 +40,24 @@
         "profile_url": "https://github.com/zxrpn"
     },
     {
+        "username": "inson1",
+        "avatar_url": "assets/contributors/avatars/75314629?v=4.jpg",
+        "profile_url": "https://github.com/inson1"
+    },
+    {
+        "username": "BurnBirdX7",
+        "avatar_url": "assets/contributors/avatars/24733391?v=4.jpg",
+        "profile_url": "https://github.com/BurnBirdX7"
+    },
+    {
         "username": "oersen",
         "avatar_url": "assets/contributors/avatars/88676873?v=4.jpg",
         "profile_url": "https://github.com/oersen"
+    },
+    {
+        "username": "Akitiltkaas",
+        "avatar_url": "assets/contributors/avatars/106187527?v=4.jpg",
+        "profile_url": "https://github.com/Akitiltkaas"
     },
     {
         "username": "spiderVS",
@@ -108,6 +118,11 @@
         "username": "jona512",
         "avatar_url": "assets/contributors/avatars/38784748?v=4.jpg",
         "profile_url": "https://github.com/jona512"
+    },
+    {
+        "username": "HeXedek",
+        "avatar_url": "assets/contributors/avatars/100072714?v=4.jpg",
+        "profile_url": "https://github.com/HeXedek"
     },
     {
         "username": "thejenja",

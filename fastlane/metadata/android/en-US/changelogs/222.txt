@@ -3,6 +3,7 @@ This is a beta release. Please report any issues via GitHub or email.
 ✨ Enhancements
 
 * Reversed card actions order so delete is at bottom
+* Add option to change long date format (displayed on clock screen and clock widget)
 
 🐛 Fixes
 
@@ -12,9 +13,4 @@ This is a beta release. Please report any issues via GitHub or email.
 * Fixed theme page title not localized
 * Fixed app getting stuck on a screen when minimized after alarm rings
 * Fixed spinner time picker legibility
-
-
-
-
-
-
+* Fixed various localization issues

@@ -1,0 +1,9 @@
+✨ Enhancements
+
+* Updated translations
+
+🐛 Fixes
+
+* Removed extra space at the end of long date formats
+* Fix timer fullscreen notification not dismissing
+* Fix fastest and slowest laps of stopwatch not saving

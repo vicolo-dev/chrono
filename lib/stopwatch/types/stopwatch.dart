@@ -94,7 +94,9 @@ class ClockStopwatch extends JsonSerializable {
     }
   }
 
+
   void updateFastestAndSlowestLap() {
+    if(laps.isEmpty) return;
     _fastestLap = _laps.reduce((value, element) =>
         value.lapTime.inMilliseconds < element.lapTime.inMilliseconds
             ? value
@@ -144,5 +146,6 @@ class ClockStopwatch extends JsonSerializable {
         orElse: () => TimerState.stopped);
     _id = json['id'] ?? UniqueKey().hashCode;
     _laps = ((json['laps'] ?? []) as List).map((e) => Lap.fromJson(e)).toList();
+    updateFastestAndSlowestLap();
   }
 }

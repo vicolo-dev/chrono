@@ -2,7 +2,9 @@ import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
+import 'package:clock_app/settings/widgets/settings_top_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingCheckBox extends StatelessWidget {
   const SettingCheckBox(
@@ -63,12 +65,8 @@ class _RestoreDefaultScreenState extends State<RestoreDefaultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppTopBar(
-        title: Hero(
-          tag: "Reset to Default",
-          child: Text("Reset to Default",
-              style: Theme.of(context).textTheme.titleMedium),
-        ),
+      appBar: SettingsTopBar(
+        title: AppLocalizations.of(context)!.restoreSettingGroup,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -82,7 +80,7 @@ class _RestoreDefaultScreenState extends State<RestoreDefaultScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Reset",
+                      Text(AppLocalizations.of(context)!.resetButton,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall
@@ -100,19 +98,17 @@ class _RestoreDefaultScreenState extends State<RestoreDefaultScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              ...widget.settingGroup.settingItems
-                  .map(
-                    (settingItem) => SettingCheckBox(
-                      settingItem: settingItem,
-                      isChecked: _settingsToRestore[settingItem.id] ?? false,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _settingsToRestore[settingItem.id] = value!;
-                        });
-                      },
-                    ),
-                  )
-                  ,
+              ...widget.settingGroup.settingItems.map(
+                (settingItem) => SettingCheckBox(
+                  settingItem: settingItem,
+                  isChecked: _settingsToRestore[settingItem.id] ?? false,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _settingsToRestore[settingItem.id] = value!;
+                    });
+                  },
+                ),
+              ),
               const SizedBox(height: 16),
             ],
           ),

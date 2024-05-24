@@ -656,5 +656,15 @@
   "translateLink": "Traducir",
   "@translateLink": {},
   "translateDescription": "Ayuda a traducir la aplicación",
-  "@translateDescription": {}
+  "@translateDescription": {},
+  "separatorSetting": "Separador",
+  "@separatorSetting": {},
+  "tagNamePlaceholder": "Nombre de etiqueta",
+  "@tagNamePlaceholder": {},
+  "longDateFormatSetting": "Formato de fecha larga",
+  "@longDateFormatSetting": {},
+  "noTagsMessage": "No se crearon etiquetas",
+  "@noTagsMessage": {},
+  "editTagLabel": "Editar etiqueta",
+  "@editTagLabel": {}
 }

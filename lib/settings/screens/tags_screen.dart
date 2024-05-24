@@ -3,8 +3,10 @@ import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/fields/input_bottom_sheet.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
+import 'package:clock_app/settings/widgets/settings_top_bar.dart';
 import 'package:clock_app/settings/widgets/tag_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TagsScreen extends StatefulWidget {
   const TagsScreen({
@@ -29,10 +31,10 @@ class _TagsScreenState extends State<TagsScreen> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return InputBottomSheet(
-              title: "Edit Tag",
+              title: AppLocalizations.of(context)!.editTagLabel,
               description: "",
               initialValue: newTag.name,
-              hintText: "Tag name",
+              hintText: AppLocalizations.of(context)!.tagNamePlaceholder,
               onChange: (value) {},
             );
           },
@@ -46,9 +48,7 @@ class _TagsScreenState extends State<TagsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppTopBar(
-        title: Text("Edit Tags"),
-      ),
+      appBar: SettingsTopBar(title: AppLocalizations.of(context)!.tagsSetting),
       body: Stack(
         children: [
           Column(
