@@ -337,7 +337,7 @@
   "@timePickerModeButton": {},
   "scheduleTypeDate": "Em datas específicas",
   "@scheduleTypeDate": {},
-  "soundAndVibrationSettingGroup": "Sim e vibração",
+  "soundAndVibrationSettingGroup": "Som e vibração",
   "@soundAndVibrationSettingGroup": {},
   "timeToFullVolumeSetting": "Duração para volume total",
   "@timeToFullVolumeSetting": {},
@@ -650,5 +650,15 @@
   "ignoreBatteryOptimizationAlreadyGranted": "Permissão para ignorar otimização de bateria já concedida",
   "@ignoreBatteryOptimizationAlreadyGranted": {},
   "showSnoozeNotificationSetting": "Mostrar notificação para snooze",
-  "@showSnoozeNotificationSetting": {}
+  "@showSnoozeNotificationSetting": {},
+  "noTagsMessage": "Não existem etiquetas",
+  "@noTagsMessage": {},
+  "separatorSetting": "Separador",
+  "@separatorSetting": {},
+  "editTagLabel": "Editar etiqueta",
+  "@editTagLabel": {},
+  "tagNamePlaceholder": "Nome da etiqueta",
+  "@tagNamePlaceholder": {},
+  "longDateFormatSetting": "Formato longo de data",
+  "@longDateFormatSetting": {}
 }
