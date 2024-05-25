@@ -1,1 +1,50 @@
-{}
+{
+  "clockTitle": "Óra",
+  "@clockTitle": {
+    "description": "Title of the clock screen"
+  },
+  "timerTitle": "Időzítő",
+  "@timerTitle": {
+    "description": "Title of the timer screen"
+  },
+  "stopwatchTitle": "Stopperóra",
+  "@stopwatchTitle": {
+    "description": "Title of the stopwatch screen"
+  },
+  "generalSettingGroup": "Általános",
+  "@generalSettingGroup": {},
+  "generalSettingGroupDescription": "Alkalmazáson belüli beállítások, mint a dátumformátum",
+  "@generalSettingGroupDescription": {},
+  "languageSetting": "Nyelv",
+  "@languageSetting": {},
+  "longDateFormatSetting": "Hosszú dátumformátum",
+  "@longDateFormatSetting": {},
+  "timeFormatSetting": "Idő Formátum",
+  "@timeFormatSetting": {},
+  "timeFormat12": "12 órás",
+  "@timeFormat12": {},
+  "timeFormat24": "24 órás",
+  "@timeFormat24": {},
+  "timeFormatDevice": "Eszközbeállítások",
+  "@timeFormatDevice": {},
+  "timePickerSetting": "Idő Kiválasztók",
+  "@timePickerSetting": {},
+  "pickerDial": "Tárcsázós",
+  "@pickerDial": {},
+  "pickerInput": "Beírás",
+  "@pickerInput": {},
+  "swipeActionSetting": "csúsztatás",
+  "@swipeActionSetting": {},
+  "system": "Rendszer",
+  "@system": {},
+  "dateFormatSetting": "Dátumformátum",
+  "@dateFormatSetting": {},
+  "durationPickerSetting": "Időtartam-választó",
+  "@durationPickerSetting": {},
+  "pickerRings": "Gyűrűk",
+  "@pickerRings": {},
+  "showSecondsSetting": "Másodpercek mutatása",
+  "@showSecondsSetting": {},
+  "pickerSpinner": "Pörgetős",
+  "@pickerSpinner": {}
+}
