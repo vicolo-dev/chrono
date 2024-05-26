@@ -656,5 +656,21 @@
   "showMeridiemSetting": "Afficher Am/Pm",
   "@showMeridiemSetting": {},
   "fontWeightSetting": "Hauteur de la police",
-  "@fontWeightSetting": {}
+  "@fontWeightSetting": {},
+  "translateLink": "Traduire",
+  "@translateLink": {},
+  "translateDescription": "Aider à traduire l'application",
+  "@translateDescription": {},
+  "editPresetsTitle": "Modifier les préréglages",
+  "@editPresetsTitle": {},
+  "firstDayOfWeekSetting": "Premier jour de la semaine",
+  "@firstDayOfWeekSetting": {},
+  "editTagLabel": "Modifier l'étiquette",
+  "@editTagLabel": {},
+  "tagNamePlaceholder": "Nom de l'étiquette",
+  "@tagNamePlaceholder": {},
+  "longDateFormatSetting": "Format de date longue",
+  "@longDateFormatSetting": {},
+  "noTagsMessage": "Aucun tag créé",
+  "@noTagsMessage": {}
 }
