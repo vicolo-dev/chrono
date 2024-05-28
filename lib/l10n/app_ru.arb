@@ -184,5 +184,13 @@
   "notificationPermissionSetting": "Разрешения уведомлений",
   "@notificationPermissionSetting": {},
   "pickerInput": "Интерфейс выбора времени, состоящий из полей ввода.",
-  "@pickerInput": {}
+  "@pickerInput": {},
+  "longDateFormatSetting": "Длинный формат даты",
+  "@longDateFormatSetting": {},
+  "pickerRings": "Кольца",
+  "@pickerRings": {},
+  "pickerSpinner": "Спиннер",
+  "@pickerSpinner": {},
+  "durationPickerSetting": "Выбор стиля длительности",
+  "@durationPickerSetting": {}
 }
