@@ -483,7 +483,7 @@
   "@sundayShort": {},
   "longDateFormatSetting": "Langes Datumsformat",
   "@longDateFormatSetting": {},
-  "batteryOptimizationSettingDescription": "Deaktivieren Sie die Batterieoptimierung für diese Anwendung, um zu verhindern, dass Alarme verzögert werden.",
+  "batteryOptimizationSettingDescription": "Deaktivieren Sie die Batterieoptimierung für diese Anwendung, um zu verhindern, dass Alarme verzögert werden",
   "@batteryOptimizationSettingDescription": {},
   "allowNotificationSettingDescription": "Sperrbildschirm Benachrichtigungen für Alarme und Timer zulassen",
   "@allowNotificationSettingDescription": {},
