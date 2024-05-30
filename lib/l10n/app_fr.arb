@@ -672,5 +672,7 @@
   "longDateFormatSetting": "Format de date longue",
   "@longDateFormatSetting": {},
   "noTagsMessage": "Aucun tag créé",
-  "@noTagsMessage": {}
+  "@noTagsMessage": {},
+  "separatorSetting": "Séparateur",
+  "@separatorSetting": {}
 }
