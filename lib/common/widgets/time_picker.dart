@@ -2820,8 +2820,15 @@ class _TimePickerDialogState extends State<TimePickerDialog>
     TextTheme textTheme = theme.textTheme;
     ColorScheme colorScheme = theme.colorScheme;
 
-    bool use24hMode = MediaQuery.of(context).alwaysUse24HourFormat ||
-        appSettings.getSetting("Time Format").value == TimeFormat.h24;
+    TimeFormat timeFormat = appSettings.getSetting("Time Format").value;
+
+    bool use24hMode = false;
+    if (timeFormat == TimeFormat.device) {
+      use24hMode = MediaQuery.of(context).alwaysUse24HourFormat;
+    } else {
+      use24hMode =
+          appSettings.getSetting("Time Format").value == TimeFormat.h24;
+    }
 
     switch (type) {
       case TimePickerType.spinner:
