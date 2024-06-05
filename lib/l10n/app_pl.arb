@@ -152,5 +152,7 @@
   "animationSpeedSetting": "Szybkość animacji",
   "@animationSpeedSetting": {},
   "extraAnimationSetting": "Dodatkowe animacje",
-  "@extraAnimationSetting": {}
+  "@extraAnimationSetting": {},
+  "generalSettingGroupDescription": "Ustawienia aplikacji, takie jak format czasu",
+  "@generalSettingGroupDescription": {}
 }
