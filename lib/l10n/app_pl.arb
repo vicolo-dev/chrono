@@ -154,5 +154,11 @@
   "extraAnimationSetting": "Dodatkowe animacje",
   "@extraAnimationSetting": {},
   "generalSettingGroupDescription": "Ustawienia aplikacji, takie jak format czasu",
-  "@generalSettingGroupDescription": {}
+  "@generalSettingGroupDescription": {},
+  "longDateFormatSetting": "Długi format daty",
+  "@longDateFormatSetting": {},
+  "timePickerSetting": "Selektor czasu",
+  "@timePickerSetting": {},
+  "pickerDial": "Zegar",
+  "@pickerDial": {}
 }
