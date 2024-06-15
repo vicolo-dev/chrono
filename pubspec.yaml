@@ -41,6 +41,8 @@ dependencies:
     git:
       url: https://github.com/AhsanSarwar45/great_list_view
       ref: master
+  # great_list_view:
+  #   path: "../great_list_view"
   get_storage: ^2.1.1
   queue: ^3.1.0+2
   table_calendar: ^3.0.8

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class StopwatchTicker extends StatefulWidget {
   const StopwatchTicker({super.key, required this.stopwatch});
 
@@ -31,10 +30,6 @@ class _StopwatchTickerState extends State<StopwatchTicker> {
   }
 
   void tick(Duration elapsed) {
-    // var t = elapsed.inMicroseconds * 1e-6;
-    // double radius = 100;
-    // drawState.x = radius * math.sin(t);
-    // drawState.y = radius * math.cos(t);
     setState(() {});
   }
 
@@ -77,9 +72,6 @@ class _StopwatchTickerState extends State<StopwatchTicker> {
 
     ticker.stop();
     ticker.dispose();
-    // updateNotificationInterval?.cancel();
-    // updateNotificationInterval = null;
-
     super.dispose();
   }
 
