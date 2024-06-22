@@ -1,0 +1,35 @@
+<h2>Özellikler</h2>
+<ul>
+<li>Modern ve kullanımı kolay arayüz</li>
+</ul>
+<h3>Alarm</h3>
+<ul>
+<li>Özelleştirilebilir programlar (günlük, haftalık, haftanın belirli günleri, belirli tarihler, tarih aralığı)</li>
+<li>Melodiyi, artan ses seviyesini ve titreşimleri yapılandırma</li>
+<li>Erteleme uzunluğunu ve maksimum erteleme sayısını yapılandırma</li>
+<li>Görev tanımlı alarmlar (matematik problemleri, metni yeniden yazma, sıralama, dahası gelecek)</li>
+<li>Alarmları filtreleme (tümü, bugün, yarın, ertelendi, devre dışı bırakıldı, tamamlandı)</li>
+</ul>
+<h3>Saat</h3>
+<ul>
+<li>Özelleştirilebilir saat ekranı</li>
+<li>Göreceli zaman farkı olan dünya saatleri</li>
+<li>Şehirleri ara ve ekle</li>
+</ul>
+<h3>Zamanlayıcı</h3>
+<ul>
+<li>Melodiyi, artan ses seviyesini ve titreşimleri yapılandırma</li>
+<li>Zamanlayıcı ön ayarları</li>
+<li>Zamanlayıcıları filtreleme (tümü, çalışıyor, duraklatıldı, durduruldu)</li>
+</ul>
+<h3>Kronometre</h3>
+<ul>
+<li>Tur süreleri ve geçen sürelerle birlikte tur geçmişi</li>
+<li>Tur karşılaştırmaları</li>
+</ul
+<h3>Görünüm</h3>
+<ul>
+<li>Materyal You temaları</li>
+<li>Son derece özelleştirilebilir renk temaları</li>
+<li>Son derece özelleştirilebilir tarz temaları</li>
+</ul>

@@ -1,4 +1,0 @@
-🐛 Fixes
-
-* Fix app crashing after updating from 0.2.10
-

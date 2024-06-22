@@ -1,0 +1,35 @@
+<h2>Funksjoner</h2>
+<ul>
+<li>Moderne og lettfattelig grensesnitt</li>
+</ul>
+<h3>Alarmer</h3>
+<ul>
+<li>Tilpassbare timeplaner, (daglig, ukentlig, spesifikke ukedager, spesifikke dager, datofølge)</li>
+<li>Velg melodi, økende lydstyrke, og vibrasjon</li>
+<li>Slumringsvarighet, og maks. antall slumringer</li>
+<li>Alarmgjøremål (matematikkproblemer, gjenskriving av tekst, sekvensering, og andre planlagte ting)</li>
+<li>Filtrering av alarmer, (alle, i dag, i morgen, slumrede, avskrudde, fullførte)</li>
+</ul>
+<h3>Klokke</h3>
+<ul>
+<li>Tilpassbar klokkevisning</li>
+<li>Verdensklokke med relativ tidsforskyvelse</li>
+<li>Søk etter og legg til byer</li>
+</ul>
+<h3>Tidsur</h3>
+<ul>
+<li>Velg melodi, økende lydstyrke, og vibrasjon</li>
+<li>Tidsurforhåndsstillinger</li>
+<li>Filtrering av tidsur (alle, kjørende, pausede, stoppede)</li>
+</ul>
+<h3>Stoppeklokke</h3>
+<ul>
+<li>Rundehistorikk med rundetider og forløpt tid</li>
+<li>Rundesammenligninger</li>
+</ul
+<h3>Utseende</h3>
+<ul>
+<li>Drakt av materiell deig</li>
+<li>Tilpassbar fargepalett</li>
+<li>Tilpassbare stilvalg</li>
+</ul>

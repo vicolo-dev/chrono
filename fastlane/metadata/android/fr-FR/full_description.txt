@@ -1,0 +1,35 @@
+<h2>Fonctionnalités</h2>
+<ul>
+<li>Interface moderne et facile à utiliser</li>
+</ul>
+<h3>Alarmes</h3>
+<ul>
+<li>Programmes personnalisables (quotidiens, hebdomadaires, jours spécifiques, dates spécifiques, plage de dates)</li>
+<li>Configurer la mélodie, l'augmentation du volume et les vibrations</li>
+<li>Configurer la durée et le nombre maximal de répétitions</li>
+<li>Tâches d'alarme (problèmes mathématiques, retapez du texte, séquence, etc.)</li>
+<li>Filtrer les alarmes (toutes, aujourd'hui, demain, répétées, désactivées, terminées)</li>
+</ul>
+<h3>Horloge</h3>
+<ul>
+<li>Affichage de l'horloge personnalisable</li>
+<li>Horloges mondiales avec décalage horaire relatif</li>
+<li>Rechercher et ajouter des villes</li>
+</ul>
+<h3>Minuterie</h3>
+<ul>
+<li>Configurer la mélodie, l'augmentation du volume et les vibrations</li>
+<li>Préréglages de minuterie</li>
+<li>Filtrer les minuteurs (tous, en cours d'exécution, en pause, arrêtés)</li>
+</ul>
+<h3>Chronomètre</h3>
+<ul>
+<li>Historique des tours avec temps du tour et temps écoulés</li>
+<li>Comparaisons de tours</li>
+</ul
+<h3>Apparence</h3>
+<ul>
+<li>Thèmes Material You</li>
+<li>Thèmes de couleurs personnalisables</li>
+<li>Thèmes de style personnalisables</li>
+</ul>

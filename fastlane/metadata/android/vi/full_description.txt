@@ -1,0 +1,35 @@
+<h2>Tính năng</h2>
+ <ul>
+ <li>Giao diện hiện đại và dễ sử dụng</li>
+ </ul>
+ <h3>Báo thức</h3>
+ <ul>
+ <li>Lịch trình có thể tùy chỉnh (hàng ngày, hàng tuần, các ngày cụ thể trong tuần, ngày cụ thể, phạm vi ngày)</li>
+ <li>Định cấu hình giai điệu, tăng âm lượng và rung</li>
+ <li>Định cấu hình thời lượng hoãn và thời gian hoãn tối đa</li>
+ <li>Nhiệm vụ báo thức (bài toán, gõ lại văn bản, trình tự, nhiều nội dung khác sắp tới)</li>
+ <li>Bộ lọc báo thức (tất cả, hôm nay, ngày mai, đã hoãn, đã tắt, đã hoàn thành)</li>
+ </ul>
+ <h3>Đồng hồ</h3>
+ <ul>
+ <li>Hiển thị đồng hồ có thể tùy chỉnh</li>
+ <li>Đồng hồ thế giới có chênh lệch thời gian tương đối</li>
+ <li>Tìm kiếm và thêm thành phố</li>
+ </ul>
+ <h3>Bộ hẹn giờ</h3>
+ <ul>
+ <li>Định cấu hình giai điệu, tăng âm lượng và rung</li>
+ <li>Cài đặt trước bộ hẹn giờ</li>
+ <li>Lọc bộ hẹn giờ (tất cả, đang chạy, đã tạm dừng, đã dừng)</li>
+ </ul>
+ <h3>Đồng hồ bấm giờ</h3>
+ <ul>
+ <li>Lịch sử vòng chạy với thời gian vòng chạy và thời gian đã trôi qua</li>
+ <li>So sánh vòng</li>
+ </ul
+ <h3>Diện mạo</h3>
+ <ul>
+ <li>Chủ đề của Material You</li>
+ <li>Chủ đề màu sắc có khả năng tùy chỉnh cao</li>
+ <li>Chủ đề phong cách có khả năng tùy chỉnh cao</li>
+ </ul>
