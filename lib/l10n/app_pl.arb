@@ -188,5 +188,15 @@
   "tagsSetting": "znaczniki",
   "@tagsSetting": {},
   "vendorSettingDescription": "ręczne wyłączenie ustawień producenta",
-  "@vendorSettingDescription": {}
+  "@vendorSettingDescription": {},
+  "pickerSpinner": "Wybór",
+  "@pickerSpinner": {},
+  "durationPickerSetting": "Wybór czasu trwania",
+  "@durationPickerSetting": {},
+  "swipActionCardAction": "Akcje kart",
+  "@swipActionCardAction": {},
+  "swipeActionCardActionDescription": "Przesuń w lewo lub w prawo na karcie, aby wykonać czynności",
+  "@swipeActionCardActionDescription": {},
+  "swipActionSwitchTabs": "Przełącz karty",
+  "@swipActionSwitchTabs": {}
 }
