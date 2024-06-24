@@ -225,7 +225,7 @@
   "@showSecondsSetting": {},
   "pickerInput": "Girdi",
   "@pickerInput": {},
-  "timePickerSetting": "",
+  "timePickerSetting": "Zaman Seçici",
   "@timePickerSetting": {},
   "ignoreBatteryOptimizationSetting": "Batarya İyileştirmesini Yoksay",
   "@ignoreBatteryOptimizationSetting": {},
