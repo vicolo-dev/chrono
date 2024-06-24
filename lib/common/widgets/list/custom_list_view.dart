@@ -417,6 +417,7 @@ class _CustomListViewState<Item extends ListItem>
             ),
           ),
         ),
+        if(widget.header != null) widget.header!,
         Expanded(
           flex: 1,
           child: Stack(children: [

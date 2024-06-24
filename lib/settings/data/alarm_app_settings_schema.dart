@@ -77,6 +77,9 @@ SettingGroup alarmAppSettingsSchema = SettingGroup(
           (context) => AppLocalizations.of(context)!.showFiltersSetting, true),
       SwitchSetting("Show Sort",
           (context) => AppLocalizations.of(context)!.showSortSetting, true),
+          SwitchSetting("Show Next Alarm",
+          (context) => AppLocalizations.of(context)!.showNextAlarm, false),
+
     ]),
     SettingGroup(
       "Notifications",

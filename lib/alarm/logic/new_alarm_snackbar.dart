@@ -1,30 +1,76 @@
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-String getNewAlarmSnackbarText(Alarm alarm) {
+String getRemainingAlarmTimeText(BuildContext context, Alarm alarm) {
   Duration etaNextAlarm =
       alarm.currentScheduleDateTime!.difference(DateTime.now().toLocal());
 
   String etaText = '';
 
+  AppLocalizations localizations = AppLocalizations.of(context)!;
+
   if (etaNextAlarm.inDays > 0) {
-    int days = etaNextAlarm.inDays;
-    String dayTextSuffix = days <= 1 ? 'day' : 'days';
-    etaText = '$days $dayTextSuffix';
+    etaText = localizations.daysString(etaNextAlarm.inDays);
   } else if (etaNextAlarm.inHours > 0) {
     int hours = etaNextAlarm.inHours;
     int minutes = etaNextAlarm.inMinutes % 60;
-    String hourTextSuffix = hours <= 1 ? 'hour' : 'hours';
-    String minuteTextSuffix = minutes <= 1 ? 'minute' : 'minutes';
-    String hoursText = '$hours $hourTextSuffix';
-    String minutesText = minutes == 0 ? '' : ' and $minutes $minuteTextSuffix';
-    etaText = '$hoursText$minutesText';
+    if (minutes > 0) {
+      etaText = localizations.combinedTime(localizations.hoursString(hours),
+          localizations.minutesString(minutes));
+    } else {
+      etaText = localizations.hoursString(hours);
+    }
   } else if (etaNextAlarm.inMinutes > 0) {
     int minutes = etaNextAlarm.inMinutes;
-    String minuteTextSuffix = minutes <= 1 ? 'minute' : 'minutes';
-    etaText = '$minutes $minuteTextSuffix';
+    etaText = localizations.minutesString(minutes);
   } else {
-    etaText = 'less than 1 minute';
+    etaText = localizations.lessThanOneMinute;
   }
 
-  return 'Alarm will ring in $etaText';
+  return etaText;
+}
+
+String getShortRemainingAlarmTimeText(BuildContext context, Alarm alarm) {
+  Duration etaNextAlarm =
+      alarm.currentScheduleDateTime!.difference(DateTime.now().toLocal());
+
+  String etaText = '';
+
+  AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  if (etaNextAlarm.inDays > 0) {
+    etaText = localizations.daysString(etaNextAlarm.inDays);
+  } else if (etaNextAlarm.inHours > 0) {
+    int hours = etaNextAlarm.inHours;
+    int minutes = etaNextAlarm.inMinutes % 60;
+    if (minutes > 0) {
+      etaText = '${localizations.shortHoursString(hours)} ${localizations.shortMinutesString(minutes)}';
+    } else {
+      etaText = localizations.shortHoursString(hours);
+    }
+  } else if (etaNextAlarm.inMinutes > 0) {
+    int minutes = etaNextAlarm.inMinutes;
+    etaText = localizations.shortMinutesString(minutes);
+  } else {
+    etaText = localizations.shortMinutesString(1);
+  }
+
+  return etaText;
+}
+
+String getNewAlarmText(BuildContext context, Alarm alarm) {
+  AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  final etaText = getRemainingAlarmTimeText(context, alarm);
+
+  return localizations.alarmRingInMessage(etaText);
+}
+
+String getNextAlarmText(BuildContext context, Alarm alarm) {
+  AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  final etaText = getShortRemainingAlarmTimeText(context, alarm);
+
+  return localizations.nextAlarmIn(etaText);
 }

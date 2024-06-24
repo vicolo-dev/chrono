@@ -152,7 +152,6 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                         lap: lap,
                       ),
                 placeholderText: AppLocalizations.of(context)!.noLapsMessage,
-                // header: CardContainer(child:),
                 isDeleteEnabled: false,
                 isDuplicateEnabled: false,
                 isReorderable: false,

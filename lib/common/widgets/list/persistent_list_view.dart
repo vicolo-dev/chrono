@@ -75,6 +75,8 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
     this.listFilters = const [],
     this.customActions = const [],
     this.sortOptions = const [],
+    this.header,
+    this.onSaveItems = null,
     // this.initialSortIndex = 0,
   });
 
@@ -91,10 +93,12 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final bool isDuplicateEnabled;
   final bool reloadOnPop;
   final bool shouldInsertOnTop;
+      final Widget? header;
   // final int initialSortIndex;
   final List<ListFilterItem<Item>> listFilters;
   final List<ListFilterCustomAction<Item>> customActions;
   final List<ListSortOption<Item>> sortOptions;
+  final Function(List<Item> items)? onSaveItems;
 
   @override
   State<PersistentListView> createState() => _PersistentListViewState<Item>();
@@ -159,10 +163,12 @@ class _PersistentListViewState<Item extends ListItem>
     }
   }
 
-  void _saveItems() {
+  void _saveItems () async {
     if (widget.saveTag.isNotEmpty) {
-      saveList<Item>(widget.saveTag, _items);
+      await saveList<Item>(widget.saveTag, _items);
     }
+    widget.onSaveItems?.call(_items);
+      
   }
 
   void _handleChangeSort(int index) {
@@ -191,6 +197,7 @@ class _PersistentListViewState<Item extends ListItem>
       sortOptions: widget.sortOptions,
       initialSortIndex: _initialSortIndex,
       onChangeSortIndex: _handleChangeSort,
+      header: widget.header,
     );
   }
 }

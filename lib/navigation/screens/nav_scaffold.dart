@@ -57,7 +57,7 @@ class _NavScaffoldState extends State<NavScaffold> {
       DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
       if (nextScheduleDateTime == null) return;
       ScaffoldMessenger.of(context).showSnackBar(
-          getSnackbar(getNewAlarmSnackbarText(alarm), fab: true, navBar: true));
+          getSnackbar(getNewAlarmText(context, alarm), fab: true, navBar: true));
     });
   }
 
