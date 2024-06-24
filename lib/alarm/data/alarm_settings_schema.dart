@@ -121,7 +121,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         DateTimeSetting(
           "Date Range",
           (context) => AppLocalizations.of(context)!.alarmRangeSetting,
-          [],
+          [DateTime.now(), DateTime.now().add(const Duration(days: 2))],
           rangeOnly: true,
           enableConditions: [
             ValueCondition(["Type"], (value) => value == RangeAlarmSchedule)
