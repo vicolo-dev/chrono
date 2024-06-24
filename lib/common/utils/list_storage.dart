@@ -61,12 +61,13 @@ Future<List<T>> loadList<T extends JsonSerializable>(String key) async {
 
 Future<void> saveList<T extends JsonSerializable>(
     String key, List<T> list) async {
-  await saveTextFile(key, listToString(list));
+       await saveTextFile(key, listToString(list));
 }
 
 Future<void> initList<T extends JsonSerializable>(
-    String key, List<T> value) async {
-  await initTextFile(key, listToString(value));
+    String key, List<T> list) async {
+
+  await initTextFile(key, listToString(list));
 }
 
 Future<void> initTextFile(String key, String value) async {

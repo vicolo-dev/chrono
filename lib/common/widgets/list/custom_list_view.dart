@@ -39,6 +39,8 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
     this.sortOptions = const [],
     this.initialSortIndex = 0,
     this.onChangeSortIndex,
+    this.header,
+      
   });
 
   final List<Item> items;
@@ -60,6 +62,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final List<ListFilterCustomAction<Item>> customActions;
   final List<ListSortOption<Item>> sortOptions;
   final Function(int index)? onChangeSortIndex;
+  final Widget? header;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -414,6 +417,7 @@ class _CustomListViewState<Item extends ListItem>
             ),
           ),
         ),
+        if(widget.header != null) widget.header!,
         Expanded(
           flex: 1,
           child: Stack(children: [
@@ -462,6 +466,8 @@ class _CustomListViewState<Item extends ListItem>
                 reorderDecorationBuilder:
                     widget.isReorderable ? reorderableListDecorator : null,
                 footer: const SizedBox(height: 64 + 80),
+                // header: widget.header,
+
                 // cacheExtent: double.infinity,
               ),
             ),

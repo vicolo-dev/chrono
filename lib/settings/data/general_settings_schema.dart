@@ -59,11 +59,11 @@ final dateFormatOptions = [
 
 final longDateFormatOptions = [
   _getDateSettingOption("EEE, MMM d"),
-  _getDateSettingOption("EEE, MMMM d "),
+  _getDateSettingOption("EEE, MMMM d"),
   _getDateSettingOption("EEE, d MMM"),
   _getDateSettingOption("EEE, d MMMM"),
   _getDateSettingOption("EEEE, MMM d"),
-  _getDateSettingOption("EEEE, MMMM d "),
+  _getDateSettingOption("EEEE, MMMM d"),
   _getDateSettingOption("EEEE, d MMM"),
   _getDateSettingOption("EEEE, d MMMM"),
 ];
