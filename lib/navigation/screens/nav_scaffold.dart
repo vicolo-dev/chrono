@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:clock_app/alarm/logic/new_alarm_snackbar.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
@@ -14,7 +15,39 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/system/logic/handle_intents.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:receive_intent/receive_intent.dart' as intent_handler;
+
+// The callback function should always be a top-level function.
+@pragma('vm:entry-point')
+void startCallback() {
+  // The setTaskHandler function must be called to handle the task in the background.
+  FlutterForegroundTask.setTaskHandler(FirstTaskHandler());
+}
+
+class FirstTaskHandler extends TaskHandler {
+  SendPort? _sendPort;
+
+  // Called when the task is started.
+  @override
+  void onStart(DateTime timestamp, SendPort? sendPort) async {
+    _sendPort = sendPort;
+  }
+
+  @override
+  void onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {}
+
+  @override
+  void onDestroy(DateTime timestamp, SendPort? sendPort) async {}
+
+  @override
+  void onNotificationButtonPressed(String id) {}
+
+  @override
+  void onNotificationPressed() {
+    FlutterForegroundTask.launchApp("/");
+  }
+}
 
 class NavScaffold extends StatefulWidget {
   const NavScaffold({super.key, this.initialTabIndex = 0});
@@ -29,6 +62,7 @@ class _NavScaffoldState extends State<NavScaffold> {
   late int _selectedTabIndex;
   late Setting useMaterialNavBarSetting;
   late Setting swipeActionSetting;
+  late Setting showForegroundSetting;
   late StreamSubscription _sub;
   late PageController _controller;
 
@@ -56,8 +90,10 @@ class _NavScaffoldState extends State<NavScaffold> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
       if (nextScheduleDateTime == null) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-          getSnackbar(getNewAlarmText(context, alarm), fab: true, navBar: true));
+      ScaffoldMessenger.of(context).showSnackBar(getSnackbar(
+          getNewAlarmText(context, alarm),
+          fab: true,
+          navBar: true));
     });
   }
 
@@ -86,6 +122,25 @@ class _NavScaffoldState extends State<NavScaffold> {
     });
   }
 
+  Future<bool> _updateForegroundNotification(dynamic value) async {
+    if (!value) {
+      return FlutterForegroundTask.stopService();
+    }
+    if (await FlutterForegroundTask.isRunningService) {
+      return FlutterForegroundTask.updateService(
+        notificationTitle: 'Foreground Service is running',
+        notificationText: '',
+        callback: startCallback,
+      );
+    } else {
+      return FlutterForegroundTask.startService(
+        notificationTitle: 'Foreground Service is running',
+        notificationText: '',
+        callback: startCallback,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -96,16 +151,24 @@ class _NavScaffoldState extends State<NavScaffold> {
         .getSetting("Use Material Style");
     swipeActionSetting =
         appSettings.getGroup("General").getSetting("Swipe Action");
+    showForegroundSetting = appSettings
+        .getGroup("General")
+        .getGroup("Reliability")
+        .getSetting("Show Foreground Notification");
     swipeActionSetting.addListener(update);
     useMaterialNavBarSetting.addListener(update);
+    showForegroundSetting.addListener(_updateForegroundNotification);
     _controller = PageController(initialPage: widget.initialTabIndex);
     _selectedTabIndex = widget.initialTabIndex;
+
+    _updateForegroundNotification(showForegroundSetting.value);
   }
 
   @override
   void dispose() {
     useMaterialNavBarSetting.removeListener(update);
     swipeActionSetting.removeListener(update);
+    showForegroundSetting.removeListener(_updateForegroundNotification);
     _sub.cancel();
     _controller.dispose();
     super.dispose();

@@ -704,5 +704,7 @@
   "shortSecondsString": "{seconds}s",
   "@shortSecondsString": {},
   "showNextAlarm": "Show Next Alarm",
-  "@showNextAlarm": {}
+  "@showNextAlarm": {},
+  "showForegroundNotification": "Show Foreground Notification",
+  "@showForegroundNotification": {}
 }

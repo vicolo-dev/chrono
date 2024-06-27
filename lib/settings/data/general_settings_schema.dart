@@ -231,6 +231,7 @@ SettingGroup generalSettingsSchema = SettingGroup(
     ),
     SettingGroup("Reliability",
         (context) => AppLocalizations.of(context)!.reliabilitySettingGroup, [
+        SwitchSetting("Show Foreground Notification", (context) => AppLocalizations.of(context)!.showForegroundNotification, false),
       SettingAction(
         "Ignore Battery Optimizations",
         (context) =>

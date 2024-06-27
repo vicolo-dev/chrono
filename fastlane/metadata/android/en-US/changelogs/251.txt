@@ -1,0 +1,2 @@
+* Added current lap card for stopwatch. Now you can view the current lap time in real time.
+* Removed support for Android 5 (min api level now is 23/Android 6)

@@ -1,28 +1,112 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/data/update_notification_intervals.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/data/timer_list_filters.dart';
 import 'package:clock_app/timer/data/timer_sort_options.dart';
 import 'package:clock_app/timer/logic/timer_notification.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
+import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
 import 'package:clock_app/timer/widgets/timer_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:great_list_view/great_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/widgets/timer_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+// Future<bool> updateForegroundTask(List<ClockTimer> timers) async {
+//   final runningTimers = timers.where((timer) => !timer.isStopped).toList();
+//   if (runningTimers.isEmpty) {
+//     FlutterForegroundTask.stopService();
+//     // timerNotificationInterval?.cancel();
+//     return false;
+//   }
+//   // Get timer with lowest remaining time
+//   final timer = runningTimers
+//       .reduce((a, b) => a.remainingSeconds < b.remainingSeconds ? a : b);
+//   final count = runningTimers.length;
+//
+//   if (await FlutterForegroundTask.isRunningService) {
+//     return FlutterForegroundTask.updateService(
+//       notificationTitle:
+//           "${timer.label.isEmpty ? 'Timer' : timer.label}${count > 1 ? ' + ${count - 1} timers' : ''}",
+//       notificationText:
+//           TimeDuration.fromSeconds(timer.remainingSeconds).toTimeString(),
+//       callback: startCallback,
+//     );
+//   } else {
+//     return FlutterForegroundTask.startService(
+//       notificationTitle:
+//           "${timer.label.isEmpty ? 'Timer' : timer.label}${count > 1 ? ' + ${count - 1} timers' : ''}",
+//       notificationText:
+//           TimeDuration.fromSeconds(timer.remainingSeconds).toTimeString(),
+//       callback: startCallback,
+//     );
+//   }
+// }
+//
+// // The callback function should always be a top-level function.
+// @pragma('vm:entry-point')
+// void startCallback() async {
+//   await initializeIsolate();
+//   // The setTaskHandler function must be called to handle the task in the background.
+//   FlutterForegroundTask.setTaskHandler(FirstTaskHandler());
+// }
+//
+// class FirstTaskHandler extends TaskHandler {
+//   // SendPort? _sendPort;
+//
+//   // Called when the task is started.
+//   @override
+//   void onStart(DateTime timestamp, SendPort? sendPort) async {}
+//
+//   // Called every [interval] milliseconds in [ForegroundTaskOptions].
+//   @override
+//   void onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
+//     // Send data to the main isolate.
+//     // sendPort?.send(timestamp);
+//     final timers = await loadList<ClockTimer>('timers');
+//     updateForegroundTask(timers);
+//   }
+//
+//   // Called when the notification button on the Android platform is pressed.
+//   @override
+//   void onDestroy(DateTime timestamp, SendPort? sendPort) async {}
+//
+//   // Called when the notification button on the Android platform is pressed.
+//   @override
+//   void onNotificationButtonPressed(String id) {
+//     // print('onNotificationButtonPressed >> $id');
+//   }
+//
+//   // Called when the notification itself on the Android platform is pressed.
+//   //
+//   // "android.permission.SYSTEM_ALERT_WINDOW" permission must be granted for
+//   // this function to be called.
+//   @override
+//   void onNotificationPressed() {
+//     // Note that the app will only route to "/resume-route" when it is exited so
+//     // it will usually be necessary to send a message through the send port to
+//     // signal it to restore state when the app is already started.
+//     FlutterForegroundTask.launchApp("/");
+//     // _sendPort?.send('onNotificationPressed');
+//   }
+// }
 
 typedef TimerCardBuilder = Widget Function(
   BuildContext context,
@@ -42,10 +126,38 @@ class _TimerScreenState extends State<TimerScreen> {
   late Setting _showFilters;
   late Setting _showSort;
   late Setting _showNotification;
+  ReceivePort? _receivePort;
 
   void update(value) {
     setState(() {});
     _listController.changeItems((timers) => {});
+  }
+
+  void _updateTimerNotification() {
+    // updateForegroundTask(_listController.getItems());
+    if (!_showNotification.value) {
+      AwesomeNotifications()
+          .cancelNotificationsByChannelKey(timerNotificationChannelKey);
+      timerNotificationInterval?.cancel();
+      return;
+    }
+    final runningTimers =
+        _listController.getItems().where((timer) => !timer.isStopped).toList();
+    if (runningTimers.isEmpty) {
+      AwesomeNotifications()
+          .cancelNotificationsByChannelKey(timerNotificationChannelKey);
+      timerNotificationInterval?.cancel();
+      return;
+    }
+    // Get timer with lowest remaining time
+    final timer = runningTimers
+        .reduce((a, b) => a.remainingSeconds < b.remainingSeconds ? a : b);
+
+    updateTimerNotification(timer, runningTimers.length);
+    timerNotificationInterval?.cancel();
+    timerNotificationInterval = Timer.periodic(const Duration(seconds: 1), (t) {
+      updateTimerNotification(timer, runningTimers.length);
+    });
   }
 
   void onTimerUpdate() async {
@@ -54,7 +166,37 @@ class _TimerScreenState extends State<TimerScreen> {
       setState(() {});
       // _listController.changeItems((timers) => {});
     }
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
+  }
+
+  bool _registerReceivePort(ReceivePort? newReceivePort) {
+    if (newReceivePort == null) {
+      return false;
+    }
+
+    _closeReceivePort();
+
+    _receivePort = newReceivePort;
+    _receivePort?.listen((data) {
+      // if (data is int) {
+      //   print('eventCount: $data');
+      // } else if (data is String) {
+      //   if (data == 'onNotificationPressed') {
+      //     Navigator.of(context).pushNamed('/resume-route');
+      //   }
+      // } else if (data is DateTime) {
+      //   print('timestamp: ${data.toString()}');
+      // }
+    });
+
+    return _receivePort != null;
+  }
+
+  void _closeReceivePort() {
+    _receivePort?.close();
+    _receivePort = null;
   }
 
   @override
@@ -75,7 +217,17 @@ class _TimerScreenState extends State<TimerScreen> {
     _showSort.addListener(update);
     _showNotification.addListener(update);
     ListenerManager.addOnChangeListener("timers", onTimerUpdate);
-    showProgressNotification();
+    // showProgressNotification();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // await _requestPermissionForAndroid();
+
+      // You can get the previous ReceivePort without restarting the service.
+      if (await FlutterForegroundTask.isRunningService) {
+        final newReceivePort = FlutterForegroundTask.receivePort;
+        _registerReceivePort(newReceivePort);
+      }
+    });
   }
 
   @override
@@ -83,6 +235,7 @@ class _TimerScreenState extends State<TimerScreen> {
     _showFilters.removeListener(update);
     _showSort.removeListener(update);
     _showNotification.removeListener(update);
+    _closeReceivePort();
 
     // ListenerManager.removeOnChangeListener("timers", onTimerUpdate);
     super.dispose();
@@ -90,21 +243,27 @@ class _TimerScreenState extends State<TimerScreen> {
 
   Future<void> _onDeleteTimer(ClockTimer deletedTimer) async {
     await deletedTimer.reset();
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
     // _listController.deleteItem(deletedTimer);
   }
 
   Future<void> _handleToggleState(ClockTimer timer) async {
     await timer.toggleState();
     _listController.changeItems((timers) {});
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
   }
 
   Future<void> _handleStartTimer(ClockTimer timer) async {
     if (timer.isRunning) return;
     await timer.start();
     _listController.changeItems((timers) {});
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
   }
 
   Future<void> _handleStartMultipleTimers(List<ClockTimer> timers) async {
@@ -113,14 +272,17 @@ class _TimerScreenState extends State<TimerScreen> {
       await timer.start();
     }
     _listController.changeItems((timers) {});
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
   }
 
   Future<void> _handlePauseTimer(ClockTimer timer) async {
     if (timer.isPaused) return;
     await timer.pause();
     _listController.changeItems((timers) {});
-    showProgressNotification();
+    _updateTimerNotification();
+    // showProgressNotification();
   }
 
   Future<void> _handlePauseMultipleTimers(List<ClockTimer> timers) async {
@@ -129,13 +291,17 @@ class _TimerScreenState extends State<TimerScreen> {
       await timer.pause();
     }
     _listController.changeItems((timers) {});
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
   }
 
   Future<void> _handleResetTimer(ClockTimer timer) async {
     await timer.reset();
     _listController.changeItems((timers) {});
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
   }
 
   Future<void> _handleResetMultipleTimers(List<ClockTimer> timers) async {
@@ -143,13 +309,17 @@ class _TimerScreenState extends State<TimerScreen> {
       await timer.reset();
     }
     _listController.changeItems((timers) {});
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
   }
 
   Future<void> _handleAddTimeToTimer(ClockTimer timer) async {
     await timer.addTime();
     _listController.changeItems((timers) {});
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
   }
 
   Future<ClockTimer?> _openCustomizeTimerScreen(
@@ -178,34 +348,10 @@ class _TimerScreenState extends State<TimerScreen> {
       await timer.start();
       _listController.changeItems((timers) {});
     });
-    showProgressNotification();
+    _updateTimerNotification();
+
+    // showProgressNotification();
     return timer;
-  }
-
-  Future<void> showProgressNotification() async {
-    if (!_showNotification.value) {
-      AwesomeNotifications()
-          .cancelNotificationsByChannelKey(timerNotificationChannelKey);
-      timerNotificationInterval?.cancel();
-      return;
-    }
-    final runningTimers =
-        _listController.getItems().where((timer) => !timer.isStopped).toList();
-    if (runningTimers.isEmpty) {
-      AwesomeNotifications()
-          .cancelNotificationsByChannelKey(timerNotificationChannelKey);
-      timerNotificationInterval?.cancel();
-      return;
-    }
-    // Get timer with lowest remaining time
-    final timer = runningTimers
-        .reduce((a, b) => a.remainingSeconds < b.remainingSeconds ? a : b);
-
-    updateTimerNotification(timer, runningTimers.length);
-    timerNotificationInterval?.cancel();
-    timerNotificationInterval = Timer.periodic(const Duration(seconds: 1), (t) {
-      updateTimerNotification(timer, runningTimers.length);
-    });
   }
 
   @override
@@ -223,8 +369,8 @@ class _TimerScreenState extends State<TimerScreen> {
                 onToggleState: () => _handleToggleState(timer),
                 onPressDelete: () => _listController.deleteItem(timer),
                 onPressDuplicate: () => _listController.duplicateItem(timer),
-                onPressReset: ()=> _handleResetTimer(timer),
-                onPressAddTime: ()=> _handleAddTimeToTimer(timer),
+                onPressReset: () => _handleResetTimer(timer),
+                onPressAddTime: () => _handleAddTimeToTimer(timer),
               ),
               onTapItem: (timer, index) async {
                 await Navigator.push(
@@ -289,7 +435,8 @@ class _TimerScreenState extends State<TimerScreen> {
               await timer.start();
               _listController.addItem(timer);
             }
-            showProgressNotification();
+            _updateTimerNotification();
+            // showProgressNotification();
           }
         },
       )
