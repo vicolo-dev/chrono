@@ -163,7 +163,7 @@ class ClockStopwatch extends JsonSerializable {
         orElse: () => TimerState.stopped);
     _id = json['id'] ?? UniqueKey().hashCode;
     // _finishedLaps = [];
-    _laps = listFromString(json['laps'] ?? '');
+    _laps = listFromString(json['laps'] ?? '[]');
     updateFastestAndSlowestLap();
   }
 }
