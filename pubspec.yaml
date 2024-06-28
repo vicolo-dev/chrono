@@ -81,7 +81,9 @@ dependencies:
   permission_handler: ^11.3.1
   device_info_plus: ^10.1.0
   flutter_foreground_task:
-    path: "../flutter_foreground_task"
+    git:
+      url: https://github.com/vicolo-dev/flutter_foreground_task
+      ref: master
 
 
 dev_dependencies:

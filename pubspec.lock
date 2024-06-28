@@ -323,9 +323,11 @@ packages:
   flutter_foreground_task:
     dependency: "direct main"
     description:
-      path: "../flutter_foreground_task"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: "00ec90a97fd240029f4ee2c3ef1c1cb97177d621"
+      url: "https://github.com/vicolo-dev/flutter_foreground_task"
+    source: git
     version: "6.5.0"
   flutter_html:
     dependency: "direct main"
