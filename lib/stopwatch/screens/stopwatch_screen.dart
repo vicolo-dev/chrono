@@ -39,8 +39,16 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   @override
   void initState() {
     super.initState();
-    _stopwatch = loadListSync<ClockStopwatch>('stopwatches').first;
+    final stopwatches = loadListSync<ClockStopwatch>('stopwatches');
+    if(stopwatches.isEmpty){
+      _stopwatch =  ClockStopwatch();
+      saveList('stopwatches', [_stopwatch]);
+    }
+    else{
+       _stopwatch = stopwatches.first;
 
+    }
+   
     _showNotificationSetting =
         appSettings.getGroup("Stopwatch").getSetting("Show Notification");
 
