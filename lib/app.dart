@@ -26,39 +26,6 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void _initForegroundTask() {
-  FlutterForegroundTask.init(
-    androidNotificationOptions: AndroidNotificationOptions(
-      channelId: 'foreground_service',
-      channelName: 'Foreground Service Notification',
-      channelDescription:
-          'This notification appears when the foreground service is running.',
-      channelImportance: NotificationChannelImportance.LOW,
-      priority: NotificationPriority.LOW,
-      iconData: const NotificationIconData(
-        resType: ResourceType.drawable,
-        resPrefix: ResourcePrefix.ic,
-        name: 'alarm_icon',
-      ),
-      // buttons: [
-      //   const NotificationButton(id: 'sendButton', text: 'Send'),
-      //   const NotificationButton(id: 'testButton', text: 'Test'),
-      // ],
-    ),
-    iosNotificationOptions: const IOSNotificationOptions(
-      showNotification: true,
-      playSound: false,
-    ),
-    foregroundTaskOptions: const ForegroundTaskOptions(
-      interval: 5000,
-      isOnceEvent: false,
-      autoRunOnBoot: true,
-      allowWakeLock: true,
-      // allowWifiLock: true,
-    ),
-  );
-}
-
 class App extends StatefulWidget {
   const App({super.key});
 
@@ -92,8 +59,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-
-    _initForegroundTask();
 
     setDigitalClockWidgetData(context);
 
@@ -246,12 +211,11 @@ class _AppState extends State<App> {
               return MaterialPageRoute(
                 builder: (context) {
                   final args = settings.arguments as AlarmNotificationArguments;
-                  return WithForegroundTask(
-                      child: AlarmNotificationScreen(
+                  return AlarmNotificationScreen(
                     scheduleId: args.scheduleIds[0],
                     initialIndex: args.tasksOnly ? 0 : -1,
                     dismissType: args.dismissType,
-                  ));
+                  );
                 },
               );
 

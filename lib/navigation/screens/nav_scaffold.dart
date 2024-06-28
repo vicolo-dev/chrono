@@ -128,13 +128,13 @@ class _NavScaffoldState extends State<NavScaffold> {
     }
     if (await FlutterForegroundTask.isRunningService) {
       return FlutterForegroundTask.updateService(
-        notificationTitle: 'Foreground Service is running',
+        notificationTitle: 'Foreground service is running',
         notificationText: '',
         callback: startCallback,
       );
     } else {
       return FlutterForegroundTask.startService(
-        notificationTitle: 'Foreground Service is running',
+        notificationTitle: 'Foreground service is running',
         notificationText: '',
         callback: startCallback,
       );
@@ -178,7 +178,8 @@ class _NavScaffoldState extends State<NavScaffold> {
   Widget build(BuildContext context) {
     Orientation orientation = MediaQuery.of(context).orientation;
     final tabs = getTabs(context);
-    return Scaffold(
+    return WithForegroundTask(
+        child: Scaffold(
       appBar: orientation == Orientation.portrait
           ? AppTopBar(
               title: Text(
@@ -281,6 +282,6 @@ class _NavScaffoldState extends State<NavScaffold> {
                   onTabSelected: _onTabSelected,
                 )
           : null,
-    );
+    ));
   }
 }

@@ -323,10 +323,9 @@ packages:
   flutter_foreground_task:
     dependency: "direct main"
     description:
-      name: flutter_foreground_task
-      sha256: "6cf10a27f5e344cd2ecad0752d3a5f4ec32846d82fda8753b3fe2480ebb832a3"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../flutter_foreground_task"
+      relative: true
+    source: path
     version: "6.5.0"
   flutter_html:
     dependency: "direct main"

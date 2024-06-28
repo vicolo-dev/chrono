@@ -25,7 +25,8 @@ Future<void> initializeNotifications() async {
       alarmNotificationChannel,
       reminderNotificationChannel,
       stopwatchNotificationChannel,
-      timerNotificationChannel
+      timerNotificationChannel,
+      // foregroundNotificationChannel,
     ],
     // channelGroups: [alarmNotificationChannelGroup],
     debug: false,

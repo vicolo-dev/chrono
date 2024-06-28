@@ -111,9 +111,9 @@
      <!-- <service android:name="me.carda.awesome_notifications.core.services.ForegroundService" -->
      <!--      android:enabled="true"             -->
      <!--      android:exported="false" -->
-     <!--      android:stopWithTask="true" -->
-     <!--  android:foregroundServiceType="phoneCall" -->
-     <!--  tools:replace="android:foregroundServiceType" -->
+     <!--  android:stopWithTask="false" -->
+     <!--  android:foregroundServiceType="systemExempted" -->
+     <!--  tools:replace="android:foregroundServiceType, android:stopWithTask" -->
      <!--  ></service> -->
     <receiver
       android:enabled="true"

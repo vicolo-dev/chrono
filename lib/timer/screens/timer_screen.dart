@@ -5,23 +5,20 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/data/update_notification_intervals.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/data/timer_list_filters.dart';
 import 'package:clock_app/timer/data/timer_sort_options.dart';
 import 'package:clock_app/timer/logic/timer_notification.dart';
 import 'package:clock_app/timer/screens/timer_fullscreen.dart';
-import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
 import 'package:clock_app/timer/widgets/timer_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+// import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:great_list_view/great_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
@@ -171,34 +168,6 @@ class _TimerScreenState extends State<TimerScreen> {
     // showProgressNotification();
   }
 
-  bool _registerReceivePort(ReceivePort? newReceivePort) {
-    if (newReceivePort == null) {
-      return false;
-    }
-
-    _closeReceivePort();
-
-    _receivePort = newReceivePort;
-    _receivePort?.listen((data) {
-      // if (data is int) {
-      //   print('eventCount: $data');
-      // } else if (data is String) {
-      //   if (data == 'onNotificationPressed') {
-      //     Navigator.of(context).pushNamed('/resume-route');
-      //   }
-      // } else if (data is DateTime) {
-      //   print('timestamp: ${data.toString()}');
-      // }
-    });
-
-    return _receivePort != null;
-  }
-
-  void _closeReceivePort() {
-    _receivePort?.close();
-    _receivePort = null;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -218,16 +187,6 @@ class _TimerScreenState extends State<TimerScreen> {
     _showNotification.addListener(update);
     ListenerManager.addOnChangeListener("timers", onTimerUpdate);
     // showProgressNotification();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // await _requestPermissionForAndroid();
-
-      // You can get the previous ReceivePort without restarting the service.
-      if (await FlutterForegroundTask.isRunningService) {
-        final newReceivePort = FlutterForegroundTask.receivePort;
-        _registerReceivePort(newReceivePort);
-      }
-    });
   }
 
   @override
@@ -235,7 +194,6 @@ class _TimerScreenState extends State<TimerScreen> {
     _showFilters.removeListener(update);
     _showSort.removeListener(update);
     _showNotification.removeListener(update);
-    _closeReceivePort();
 
     // ListenerManager.removeOnChangeListener("timers", onTimerUpdate);
     super.dispose();
