@@ -3,14 +3,12 @@
 * Added option to turn on foreground notification to keep app alive. Go to General > Display > Reliability > Show Foreground Notification
 * Added current lap card for stopwatch. Now you can view the current lap time in real time.
 * Added option to show next alarm in filters
-* Updated translations
 * Changed timer and stopwatch notification so time appears in title
+* Updated translations
 
 🐛 Fixes
 
 * Fixed range schedule automatically getting disabled
 * Fixed timer dismiss actions being mapped incorrectly
 * Fixed timer add length not working correctly after timer rings
-
-
 
