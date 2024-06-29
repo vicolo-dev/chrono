@@ -2,6 +2,7 @@ import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/timer_state.dart';
 import 'package:clock_app/common/utils/duration.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:clock_app/common/utils/logger.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
@@ -118,6 +119,7 @@ class ClockStopwatch extends JsonSerializable {
   }
 
   void addLap() {
+    logInfo("${laps}");
     if (_laps.isNotEmpty) {
       if (currentLapTime.inMilliseconds == 0) return;
       finishLap(_laps.first);

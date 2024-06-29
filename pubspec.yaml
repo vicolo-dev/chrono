@@ -85,6 +85,7 @@ dependencies:
     git:
       url: https://github.com/vicolo-dev/flutter_foreground_task
       ref: master
+  logger: ^2.3.0
     #
 
 dev_dependencies:
