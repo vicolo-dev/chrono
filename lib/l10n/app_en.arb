@@ -706,5 +706,11 @@
   "showNextAlarm": "Show Next Alarm",
   "@showNextAlarm": {},
   "showForegroundNotification": "Show Foreground Notification",
-  "@showForegroundNotification": {}
+  "@showForegroundNotification": {},
+  "showForegroundNotificationDescription": "Show a persistent notification to keep app alive",
+  "@showForegroundNotificationDescription": {},
+  "notificationPermissionDescription": "Allow notifications to be showed",
+  "@notificationPermissionDescription": {},
+  "extraAnimationSettingDescription": "Show animations that are notpolished and might cause frame drops in low-end devices",
+  "@extraAnimationSettingDescription": {}
 }

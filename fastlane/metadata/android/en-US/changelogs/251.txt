@@ -1,2 +1,4 @@
+* Added option to turn on foreground notification to keep app alive
 * Added current lap card for stopwatch. Now you can view the current lap time in real time.
-* Removed support for Android 5 (min api level now is 23/Android 6)
+* Added option to show next alarm in filters
+

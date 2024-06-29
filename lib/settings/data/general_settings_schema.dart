@@ -107,7 +107,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           "Date Format",
           (context) => AppLocalizations.of(context)!.dateFormatSetting,
           dateFormatOptions,
-          getDescription: (context) => "How to display the dates",
           onChange: (context, index) async {
             // await HomeWidget.saveWidgetData(
             //     "dateFormat", dateFormatOptions[index].value);
@@ -118,7 +117,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           "Long Date Format",
           (context) => AppLocalizations.of(context)!.longDateFormatSetting,
           longDateFormatOptions,
-          getDescription: (context) => "How to display the dates",
           onChange: (context, index) async {
             setDigitalClockWidgetData(context);
 
@@ -131,7 +129,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           "Time Format",
           (context) => AppLocalizations.of(context)!.timeFormatSetting,
           timeFormatOptions,
-          getDescription: (context) => "12 or 24 hour time",
           onChange: (context, index) async {
             String timeFormat =
                 getTimeFormatString(context, timeFormatOptions[index].value);
@@ -231,7 +228,13 @@ SettingGroup generalSettingsSchema = SettingGroup(
     ),
     SettingGroup("Reliability",
         (context) => AppLocalizations.of(context)!.reliabilitySettingGroup, [
-        SwitchSetting("Show Foreground Notification", (context) => AppLocalizations.of(context)!.showForegroundNotification, false),
+      SwitchSetting(
+        "Show Foreground Notification",
+        (context) => AppLocalizations.of(context)!.showForegroundNotification,
+        false,
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.showForegroundNotificationDescription,
+      ),
       SettingAction(
         "Ignore Battery Optimizations",
         (context) =>
@@ -261,6 +264,8 @@ SettingGroup generalSettingsSchema = SettingGroup(
                             .notificationPermissionAlreadyGranted)
                   });
         },
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.notificationPermissionDescription,
       ),
       SettingAction(
         "Vendor Specific",
@@ -351,9 +356,12 @@ SettingGroup generalSettingsSchema = SettingGroup(
         // ],
       ),
       SwitchSetting(
-          "Extra Animations",
-          (context) => AppLocalizations.of(context)!.extraAnimationSetting,
-          false),
+        "Extra Animations",
+        (context) => AppLocalizations.of(context)!.extraAnimationSetting,
+        false,
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.extraAnimationSettingDescription,
+      ),
     ])
   ],
   icon: FluxIcons.settings,
