@@ -46,9 +46,8 @@ Future<void> updateTimerNotification(ClockTimer timer, int count) async {
     content: NotificationContent(
       id: 2,
       channelKey: timerNotificationChannelKey,
-      title:
-          "${timer.label.isEmpty ? 'Timer' : timer.label}${count > 1 ? ' + ${count-1} timers' : ''}",
-      body: TimeDuration.fromSeconds(timer.remainingSeconds).toTimeString(),
+      title: "${TimeDuration.fromSeconds(timer.remainingSeconds).toTimeString()} - ${timer.label.isEmpty ? 'Timer' : timer.label}${count > 1 ? ' + ${count-1} timers' : ''}",
+      // body: "${timer.label.isEmpty ? 'Timer' : timer.label}${count > 1 ? ' + ${count-1} timers' : ''}" ,
       category: NotificationCategory.Progress,
       notificationLayout: NotificationLayout.ProgressBar,
       payload: {

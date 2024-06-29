@@ -8,5 +8,7 @@
 🐛 Fixes
 
 * Fixed range schedule automatically gettting disabled
+* Fixed timer dismiss actions being mapped incorrectly
+* Fixed timer add length not working correctly after timer rings
 
 
