@@ -68,7 +68,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _showNextAlarm.addListener(update);
     _showSort.addListener(update);
 
-    ListenerManager.addOnChangeListener("alarms", update);
+    // ListenerManager.addOnChangeListener("alarms", update);
 
     nextAlarm = getNextAlarm();
 
@@ -81,7 +81,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _showFilters.removeListener(update);
     _showSort.removeListener(update);
     _showNextAlarm.removeListener(update);
-    ListenerManager.removeOnChangeListener("alarms", update);
+    // ListenerManager.removeOnChangeListener("alarms", update);
     super.dispose();
   }
 
