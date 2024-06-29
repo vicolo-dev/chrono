@@ -23,8 +23,6 @@ class _SwitchFieldState extends State<SwitchField> {
     ThemeData theme = Theme.of(context);
     TextTheme textTheme = theme.textTheme;
 
-
-
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -38,14 +36,16 @@ class _SwitchFieldState extends State<SwitchField> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
                   child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         widget.name,
                         style: textTheme.headlineMedium,
                       ),
-                      if (widget.description.isNotEmpty)
+                      if (widget.description.isNotEmpty) ...[
+                        const SizedBox(height: 4),
                         Text(widget.description, style: textTheme.bodyMedium)
+                      ],
                     ],
                   ),
                 ),

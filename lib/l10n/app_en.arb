@@ -711,6 +711,6 @@
   "@showForegroundNotificationDescription": {},
   "notificationPermissionDescription": "Allow notifications to be showed",
   "@notificationPermissionDescription": {},
-  "extraAnimationSettingDescription": "Show animations that are notpolished and might cause frame drops in low-end devices",
+  "extraAnimationSettingDescription": "Show animations that are not polished and might cause frame drops in low-end devices",
   "@extraAnimationSettingDescription": {}
 }
