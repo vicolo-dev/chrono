@@ -60,7 +60,10 @@ class ClockTimer extends CustomizableListItem {
     if (isRunning) {
       return math.max(
           _milliSecondsRemainingOnPause -
-              DateTime.now().difference(_startTime).toTimeDuration().inMilliseconds,
+              DateTime.now()
+                  .difference(_startTime)
+                  .toTimeDuration()
+                  .inMilliseconds,
           0);
     } else {
       return _milliSecondsRemainingOnPause;
@@ -146,6 +149,13 @@ class ClockTimer extends CustomizableListItem {
         alarmClock: false,
       );
     }
+  }
+
+  Future<void> snooze() async {
+     TimeDuration addedDuration = TimeDuration(minutes: addLength.floor());
+    _currentDuration = addedDuration;
+    _milliSecondsRemainingOnPause = addedDuration.inSeconds * 1000;
+    await start();
   }
 
   Future<void> pause() async {
@@ -245,7 +255,6 @@ class ClockTimer extends CustomizableListItem {
     _state = other._state;
     _settings = other._settings.copy();
     _id = other._id;
-      
   }
 
   @override

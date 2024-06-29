@@ -197,15 +197,8 @@ void stopTimer(int scheduleId, AlarmStopAction action) async {
   ClockTimer? timer = getTimerById(scheduleId);
   if (timer == null) return;
   if (action == AlarmStopAction.snooze) {
-    await scheduleSnoozeAlarm(
-      scheduleId,
-      Duration(minutes: timer.addLength.floor()),
-      ScheduledNotificationType.timer,
-      "stopTimer(): ${timer.addLength.floor()} added to timer",
-    );
     updateTimerById(scheduleId, (timer) async {
-      timer.setTime(const TimeDuration(minutes: 1));
-      await timer.start();
+      await timer.snooze();
     });
   } else if (action == AlarmStopAction.dismiss) {
     // If there was an alarm already ringing when the timer was triggered, we
