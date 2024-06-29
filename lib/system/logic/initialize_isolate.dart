@@ -7,9 +7,12 @@ import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/notifications/logic/notifications.dart';
 import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:clock_app/system/data/device_info.dart';
+import 'package:flutter/widgets.dart';
 
 Future<void> initializeIsolate() async {
   DartPluginRegistrant.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+
   await initializeAndroidInfo();
   await initializeAppDataDirectory();
   await initializeStorage(false);

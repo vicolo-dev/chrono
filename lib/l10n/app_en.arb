@@ -704,5 +704,13 @@
   "shortSecondsString": "{seconds}s",
   "@shortSecondsString": {},
   "showNextAlarm": "Show Next Alarm",
-  "@showNextAlarm": {}
+  "@showNextAlarm": {},
+  "showForegroundNotification": "Show Foreground Notification",
+  "@showForegroundNotification": {},
+  "showForegroundNotificationDescription": "Show a persistent notification to keep app alive",
+  "@showForegroundNotificationDescription": {},
+  "notificationPermissionDescription": "Allow notifications to be showed",
+  "@notificationPermissionDescription": {},
+  "extraAnimationSettingDescription": "Show animations that are not polished and might cause frame drops in low-end devices",
+  "@extraAnimationSettingDescription": {}
 }

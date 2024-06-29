@@ -7,13 +7,13 @@ import 'package:intl/intl.dart';
 
 class DatePickerField<T> extends StatefulWidget {
   const DatePickerField({
-    Key? key,
+    super.key,
     required this.title,
     this.description,
     required this.onChanged,
     required this.value,
     this.rangeOnly = false,
-  }) : super(key: key);
+  });
 
   final List<DateTime> value;
   final String title;
