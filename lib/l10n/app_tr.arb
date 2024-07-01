@@ -674,5 +674,17 @@
   "noLapsMessage": "Henüz hiç tur yok",
   "@noLapsMessage": {},
   "searchSettingPlaceholder": "Bir ayar ara",
-  "@searchSettingPlaceholder": {}
+  "@searchSettingPlaceholder": {},
+  "notificationPermissionDescription": "Bildirimlerin görüntülenmesine izin ver",
+  "@notificationPermissionDescription": {},
+  "lessThanOneMinute": "1 dakikadan daha az",
+  "@lessThanOneMinute": {},
+  "alarmRingInMessage": "Alarm {duration} içerisinde çalacak",
+  "@alarmRingInMessage": {},
+  "nextAlarmIn": "Sıradaki:{duration}",
+  "@nextAlarmIn": {},
+  "combinedTime": "{hours} ve {minutes}",
+  "@combinedTime": {},
+  "showNextAlarm": "Sıradaki Alarmı Göster",
+  "@showNextAlarm": {}
 }
