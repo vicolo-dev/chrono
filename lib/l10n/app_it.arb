@@ -696,5 +696,7 @@
   "nextAlarmIn": "Prossimo: {duration}",
   "@nextAlarmIn": {},
   "showNextAlarm": "Mostra il Prossimo Allarme",
-  "@showNextAlarm": {}
+  "@showNextAlarm": {},
+  "comparisonLapBarsSettingGroup": "Barre di confronto dei giri",
+  "@comparisonLapBarsSettingGroup": {}
 }
