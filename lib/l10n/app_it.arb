@@ -698,5 +698,13 @@
   "showNextAlarm": "Mostra il Prossimo Allarme",
   "@showNextAlarm": {},
   "comparisonLapBarsSettingGroup": "Barre di confronto dei giri",
-  "@comparisonLapBarsSettingGroup": {}
+  "@comparisonLapBarsSettingGroup": {},
+  "lessThanOneMinute": "meno di 1 minuto",
+  "@lessThanOneMinute": {},
+  "shortHoursString": "{hours}h",
+  "@shortHoursString": {},
+  "shortMinutesString": "{minutes}min",
+  "@shortMinutesString": {},
+  "shortSecondsString": "{seconds}s",
+  "@shortSecondsString": {}
 }
