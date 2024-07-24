@@ -674,5 +674,17 @@
   "relativeTime": "{hours} г. {relative, select, ahead{попереду} behind{позаду} other{Other}}",
   "@relativeTime": {},
   "alignmentJustify": "Вирівняти по ширині",
-  "@alignmentJustify": {}
+  "@alignmentJustify": {},
+  "hoursString": "{count, plural, =0{} =1{1 година} other{{count} години}}",
+  "@hoursString": {},
+  "minutesString": "{count, plural, =0{} =1{1 хвилина} other{{count} хвилини}}",
+  "@minutesString": {},
+  "secondsString": "{count, plural, =0{} =1{1 секунда} other{{count} секунди}}",
+  "@secondsString": {},
+  "daysString": "{count, plural, =0{} =1{1 день} other{{count} дні}}",
+  "@daysString": {},
+  "weeksString": "{count, plural, =0{} =1{1 тиждень} other{{count} тижнів}}",
+  "@weeksString": {},
+  "monthsString": "{count, plural, =0{} =1{1 місяць} other{{count} місяці}}",
+  "@monthsString": {}
 }
