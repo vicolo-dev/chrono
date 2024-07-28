@@ -686,5 +686,11 @@
   "combinedTime": "{hours} ve {minutes}",
   "@combinedTime": {},
   "showNextAlarm": "Sıradaki Alarmı Göster",
-  "@showNextAlarm": {}
+  "@showNextAlarm": {},
+  "showForegroundNotification": "Ön Plan Bildirimini Göster",
+  "@showForegroundNotification": {},
+  "showForegroundNotificationDescription": "Uygulamayı aktif tutmak için kalıcı bir bildirim gösterin",
+  "@showForegroundNotificationDescription": {},
+  "extraAnimationSettingDescription": "Düşük kaliteli cihazlarda kare düşüşlerine neden olabilecek animasyonlar gösterin",
+  "@extraAnimationSettingDescription": {}
 }
