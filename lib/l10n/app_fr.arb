@@ -674,5 +674,17 @@
   "noTagsMessage": "Aucun tag créé",
   "@noTagsMessage": {},
   "separatorSetting": "Séparateur",
-  "@separatorSetting": {}
+  "@separatorSetting": {},
+  "combinedTime": "{hours} et {minutes}",
+  "@combinedTime": {},
+  "lessThanOneMinute": "moins de 1 minute",
+  "@lessThanOneMinute": {},
+  "nextAlarmIn": "Suivant : {duration}",
+  "@nextAlarmIn": {},
+  "shortHoursString": "{hours}h",
+  "@shortHoursString": {},
+  "shortMinutesString": "{minutes}m",
+  "@shortMinutesString": {},
+  "shortSecondsString": "{seconds}s",
+  "@shortSecondsString": {}
 }
