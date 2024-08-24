@@ -38,7 +38,7 @@ class CardContainer extends StatelessWidget {
     this.onTap,
     this.alignment,
     this.showShadow = true,
-
+    this.isSelected = false,
     this.showLightBorder = false,
     this.blurStyle = BlurStyle.normal,
   });
@@ -52,6 +52,7 @@ class CardContainer extends StatelessWidget {
   final bool showShadow;
   final BlurStyle blurStyle;
   final bool showLightBorder;
+  final bool isSelected;
 
   // TonalPalette primaryTonalP = toTonalPalette(_primaryColor);
   //  primaryTonalP.get(50); // Getting the specific color
@@ -74,6 +75,7 @@ class CardContainer extends StatelessWidget {
       decoration: getCardDecoration(
         context,
         color: cardColor,
+        isSelected: isSelected,
         showLightBorder: showLightBorder,
         showShadow: showShadow,
         elevationMultiplier: elevationMultiplier,

@@ -13,7 +13,9 @@ import 'package:clock_app/settings/types/setting_link.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-const int settingsSchemaVersion = 5;
+
+// Increment this after every schema change
+const int settingsSchemaVersion = 6;
 
 SettingGroup appSettings = SettingGroup(
   "Settings",
@@ -39,5 +41,3 @@ SettingGroup appSettings = SettingGroup(
   ],
 );
 
-
-// Settings appSettings = Settings(settingsItems);

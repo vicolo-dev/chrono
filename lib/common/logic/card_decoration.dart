@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 BoxDecoration getCardDecoration(BuildContext context,
     {Color? color,
     bool showLightBorder = false,
+    bool isSelected = false,
     showShadow = true,
     elevationMultiplier = 1,
     blurStyle = BlurStyle.normal}) {
@@ -12,7 +13,11 @@ BoxDecoration getCardDecoration(BuildContext context,
   ThemeStyleExtension? themeStyle = theme.extension<ThemeStyleExtension>();
 
   return BoxDecoration(
-    border: showLightBorder
+    border: isSelected ? Border.all(
+            color: colorScheme.primary,
+            width: 2,
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ) : showLightBorder
         ? Border.all(
             color: colorScheme.outline.withOpacity(0.2),
             width: 0.5,

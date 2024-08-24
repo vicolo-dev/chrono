@@ -16,6 +16,7 @@ class ListItemCard<T> extends StatefulWidget {
     this.onInit,
     this.isDeleteEnabled = true,
     this.isDuplicateEnabled = true,
+    this.isSelected = false,
   });
 
   final VoidCallback? onDelete;
@@ -25,6 +26,7 @@ class ListItemCard<T> extends StatefulWidget {
   final VoidCallback? onInit;
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
+  final bool isSelected;
 
   @override
   State<StatefulWidget> createState() => _ListItemCardState<T>();
@@ -32,6 +34,7 @@ class ListItemCard<T> extends StatefulWidget {
 
 class _ListItemCardState<T> extends State<ListItemCard<T>> {
   late Setting swipeActionSetting;
+  late Setting longPressActionSetting;
 
   void update(dynamic value) {
     setState(() {});
@@ -41,8 +44,11 @@ class _ListItemCardState<T> extends State<ListItemCard<T>> {
   void initState() {
     super.initState();
     widget.onInit?.call();
-    swipeActionSetting =
-        appSettings.getGroup("General").getSetting("Swipe Action");
+    final interactionSettingsGroup =
+        appSettings.getGroup("General").getGroup("Interactions");
+    swipeActionSetting = interactionSettingsGroup.getSetting("Swipe Action");
+    longPressActionSetting =
+        interactionSettingsGroup.getSetting("Long Press Action");
     swipeActionSetting.addListener(update);
   }
 
@@ -55,8 +61,11 @@ class _ListItemCardState<T> extends State<ListItemCard<T>> {
   @override
   Widget build(BuildContext context) {
     Widget innerWidget = widget.child;
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
 
-    if ((widget.isDeleteEnabled || widget.isDuplicateEnabled) && swipeActionSetting.value == SwipeAction.cardActions) {
+    if ((widget.isDeleteEnabled || widget.isDuplicateEnabled) &&
+        swipeActionSetting.value == SwipeAction.cardActions) {
       ActionPane startActionPane = widget.isDuplicateEnabled
           ? getDuplicateActionPane(widget.onDuplicate ?? () {}, context)
           : getDeleteActionPane(widget.onDelete ?? () {}, context);
@@ -76,6 +85,7 @@ class _ListItemCardState<T> extends State<ListItemCard<T>> {
       width: double.infinity,
       child: CardContainer(
         onTap: widget.onTap,
+        isSelected: widget.isSelected,
         child: innerWidget,
       ),
     );

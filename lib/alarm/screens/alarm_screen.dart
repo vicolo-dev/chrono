@@ -257,6 +257,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             nextAlarm = getNextAlarm();
             setState(() {});
           },
+          isSelectable: true,
           // header: getNextAlarmWidget(),
           listFilters: getListFilterItems(),
           customActions: _showFilters.value

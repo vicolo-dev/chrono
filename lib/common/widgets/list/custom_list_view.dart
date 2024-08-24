@@ -6,6 +6,9 @@ import 'package:clock_app/common/utils/reorderable_list_decorator.dart';
 import 'package:clock_app/common/widgets/list/delete_alert_dialogue.dart';
 import 'package:clock_app/common/widgets/list/list_filter_chip.dart';
 import 'package:clock_app/common/widgets/list/list_item_card.dart';
+import 'package:clock_app/settings/data/general_settings_schema.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:great_list_view/great_list_view.dart';
@@ -34,13 +37,13 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
     this.isDeleteEnabled = true,
     this.isDuplicateEnabled = true,
     this.shouldInsertOnTop = true,
+    this.isSelectable = false,
     this.listFilters = const [],
     this.customActions = const [],
     this.sortOptions = const [],
     this.initialSortIndex = 0,
     this.onChangeSortIndex,
     this.header,
-      
   });
 
   final List<Item> items;
@@ -63,6 +66,7 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   final List<ListSortOption<Item>> sortOptions;
   final Function(int index)? onChangeSortIndex;
   final Widget? header;
+  final bool isSelectable;
 
   @override
   State<CustomListView> createState() => _CustomListViewState<Item>();
@@ -74,11 +78,20 @@ class _CustomListViewState<Item extends ListItem>
   double _itemCardHeight = 0;
   final _scrollController = ScrollController();
   final _controller = AnimatedListController();
-  late int selectedSortIndex = widget.initialSortIndex;
+  late int _selectedSortIndex = widget.initialSortIndex;
+  late Setting _longPressActionSetting;
+  List<int> _selectedIndices = [];
+  bool _isSelecting = false;
 
   @override
   void initState() {
     super.initState();
+
+    _longPressActionSetting = appSettings
+        .getGroup("General")
+        .getGroup("Interactions")
+        .getSetting("Long Press Action");
+
     widget.listController.setChangeItems(_handleChangeItems);
     widget.listController.setAddItem(_handleAddItem);
     widget.listController.setDeleteItem(_handleDeleteItem);
@@ -87,7 +100,7 @@ class _CustomListViewState<Item extends ListItem>
     widget.listController.setReloadItems(_handleReloadItems);
     widget.listController.setClearItems(_handleClear);
     widget.listController.setGetItems(() => widget.items);
-    updateCurrentList();
+    _updateCurrentList();
     // widget.listController.setChangeItemWithId(_handleChangeItemWithId);
   }
 
@@ -96,7 +109,7 @@ class _CustomListViewState<Item extends ListItem>
       widget.items.clear();
       widget.items.addAll(items);
 
-      updateCurrentList();
+      _updateCurrentList();
     });
     // TODO: MAN THIS SUCKS, WHY YOU GOTTA DO THIS
     _controller.notifyRemovedRange(
@@ -104,14 +117,14 @@ class _CustomListViewState<Item extends ListItem>
     _controller.notifyInsertedRange(0, widget.items.length);
   }
 
-  void updateCurrentList() {
-    if (selectedSortIndex > widget.sortOptions.length) {
-      selectedSortIndex = 0;
+  void _updateCurrentList() {
+    if (_selectedSortIndex > widget.sortOptions.length) {
+      _selectedSortIndex = 0;
     }
     currentList.clear();
-    if (selectedSortIndex != 0) {
+    if (_selectedSortIndex != 0) {
       final temp = [...widget.items];
-      temp.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
+      temp.sort(widget.sortOptions[_selectedSortIndex - 1].sortFunction);
       currentList.addAll(temp);
     } else {
       currentList.addAll(widget.items);
@@ -152,10 +165,11 @@ class _CustomListViewState<Item extends ListItem>
       _getChangeWidgetBuilder(widget.items[index])(context, index, data);
 
   bool _handleReorderItems(int oldIndex, int newIndex, Object? slot) {
-    if (newIndex >= widget.items.length || selectedSortIndex != 0) return false;
+    if (newIndex >= widget.items.length || _selectedSortIndex != 0)
+      return false;
     widget.onReorderItem?.call(widget.items[oldIndex]);
     widget.items.insert(newIndex, widget.items.removeAt(oldIndex));
-    updateCurrentList();
+    _updateCurrentList();
     widget.onModifyList?.call();
 
     return true;
@@ -168,7 +182,7 @@ class _CustomListViewState<Item extends ListItem>
     callback(widget.items);
 
     setState(() {
-      updateCurrentList();
+      _updateCurrentList();
     });
 
     final deletedItems = List.from(initialList
@@ -208,7 +222,7 @@ class _CustomListViewState<Item extends ListItem>
 
     setState(() {
       widget.items.removeWhere((element) => element.id == deletedItem.id);
-      updateCurrentList();
+      _updateCurrentList();
     });
 
     _controller.notifyRemovedRange(
@@ -226,7 +240,7 @@ class _CustomListViewState<Item extends ListItem>
 
       setState(() {
         widget.items.removeWhere((element) => element.id == item.id);
-        updateCurrentList();
+        _updateCurrentList();
       });
 
       _controller.notifyRemovedRange(
@@ -253,7 +267,7 @@ class _CustomListViewState<Item extends ListItem>
     widget.items.insert(index, item);
     await widget.onAddItem?.call(item);
     setState(() {
-      updateCurrentList();
+      _updateCurrentList();
     });
 
     int currentListIndex = _getItemIndex(item);
@@ -280,6 +294,36 @@ class _CustomListViewState<Item extends ListItem>
         duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
   }
 
+  void _endSelection() {
+    setState(() {
+      _isSelecting = false;
+      _selectedIndices.clear();
+    });
+    _notifyChangeList();
+  }
+
+  void _startSelection(int index) {
+    setState(() {
+      _isSelecting = true;
+      _selectedIndices = [index];
+    });
+    _notifyChangeList();
+  }
+
+  void _handleSelect(int index) {
+    setState(() {
+      if (_selectedIndices.contains(index)) {
+        _selectedIndices.remove(index);
+      } else {
+        _selectedIndices.add(index);
+      }
+    });
+    if (_selectedIndices.isEmpty) {
+      _endSelection();
+    }
+    _notifyChangeList();
+  }
+
   _getItemBuilder() {
     return (BuildContext context, Item item, data) {
       for (var filter in widget.listFilters) {
@@ -288,24 +332,46 @@ class _CustomListViewState<Item extends ListItem>
           return Container();
         }
       }
-      return data.measuring
+      int index = _getItemIndex(item);
+      var itemWidget = data.measuring
           ? SizedBox(height: _itemCardHeight)
           : ListItemCard<Item>(
               key: ValueKey(item),
               onTap: () {
-                return widget.onTapItem?.call(item, _getItemIndex(item));
+                return widget.onTapItem?.call(item, index);
               },
               onDelete:
                   widget.isDeleteEnabled ? () => _handleDeleteItem(item) : null,
               onDuplicate: () => _handleDuplicateItem(item),
               isDeleteEnabled: item.isDeletable && widget.isDeleteEnabled,
               isDuplicateEnabled: widget.isDuplicateEnabled,
+              isSelected: _selectedIndices.contains(index),
               child: widget.itemBuilder(item),
             );
+      if (widget.isSelectable &&
+          _longPressActionSetting.value == LongPressAction.multiSelect) {
+        itemWidget = GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onLongPress: () {
+            if (!_isSelecting) {
+              _startSelection(index);
+            } else {
+              _handleSelect(index);
+            }
+          },
+          onTap: () {
+            if (_isSelecting) {
+              _handleSelect(index);
+            }
+          },
+          child: AbsorbPointer(absorbing: _isSelecting, child: itemWidget),
+        );
+      }
+      return itemWidget;
     };
   }
 
-  void onFilterChange() {
+  void _onFilterChange() {
     setState(() {
       _notifyChangeList();
     });
@@ -314,8 +380,8 @@ class _CustomListViewState<Item extends ListItem>
   List<Item> getCurrentList() {
     final List<Item> items = List.from(widget.items);
 
-    if (selectedSortIndex != 0) {
-      items.sort(widget.sortOptions[selectedSortIndex - 1].sortFunction);
+    if (_selectedSortIndex != 0) {
+      items.sort(widget.sortOptions[_selectedSortIndex - 1].sortFunction);
     }
 
     return items;
@@ -325,16 +391,19 @@ class _CustomListViewState<Item extends ListItem>
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
+    final isReorderable =
+        _longPressActionSetting.value == LongPressAction.reorder &&
+            widget.isReorderable;
 
-    if (selectedSortIndex > widget.sortOptions.length) {
-      updateCurrentList();
+    if (_selectedSortIndex > widget.sortOptions.length) {
+      _updateCurrentList();
     }
 
     List<Widget> getFilterChips() {
       List<Widget> widgets = [];
       int activeFilterCount =
           widget.listFilters.where((filter) => filter.isActive).length;
-      if (activeFilterCount > 0) {
+      if (activeFilterCount > 0 || _selectedIndices.isNotEmpty) {
         widgets.add(ListFilterActionChip(
           actions: [
             ListFilterAction(
@@ -344,16 +413,26 @@ class _CustomListViewState<Item extends ListItem>
                 for (var filter in widget.listFilters) {
                   filter.reset();
                 }
-                onFilterChange();
+                _selectedIndices.clear();
+                _onFilterChange();
               },
             ),
             ...widget.customActions.map((action) => ListFilterAction(
                   name: action.name,
                   icon: action.icon,
-                  action: () => action.action(widget.items
-                      .where((item) => widget.listFilters
-                          .every((filter) => filter.filterFunction(item)))
-                      .toList()),
+                  action: () {
+                    final list = _selectedIndices.isNotEmpty
+                        ? _selectedIndices
+                            .map((index) => widget.items[index])
+                            .toList()
+                        : widget.items;
+
+                    action.action(list
+                        .where((item) => widget.listFilters
+                            .every((filter) => filter.filterFunction(item)))
+                        .toList());
+                    _endSelection();
+                  },
                 )),
             ListFilterAction(
               name: AppLocalizations.of(context)!.deleteAllFilteredAction,
@@ -364,24 +443,31 @@ class _CustomListViewState<Item extends ListItem>
                 final result = await showDeleteAlertDialogue(context);
                 if (result == null || result == false) return;
 
-                final toRemove = List<Item>.from(widget.items.where((item) =>
-                    widget.listFilters
-                        .every((filter) => filter.filterFunction(item))));
+                final list = _selectedIndices.isNotEmpty
+                    ? _selectedIndices
+                        .map((index) => widget.items[index])
+                        .toList()
+                    : widget.items;
+                final toRemove = List<Item>.from(list.where((item) => widget
+                    .listFilters
+                    .every((filter) => filter.filterFunction(item))));
+                _endSelection();
                 await _handleDeleteItemList(toRemove);
 
                 widget.onModifyList?.call();
               },
             )
           ],
-          activeFilterCount: activeFilterCount,
+          activeFilterCount:
+              activeFilterCount + (_selectedIndices.isNotEmpty ? 1 : 0),
         ));
       }
       widgets.addAll(widget.listFilters
-          .map((filter) => getListFilterChip(filter, onFilterChange)));
+          .map((filter) => getListFilterChip(filter, _onFilterChange)));
       if (widget.sortOptions.isNotEmpty) {
         widgets.add(
           ListSortChip(
-            selectedIndex: selectedSortIndex,
+            selectedIndex: _selectedSortIndex,
             sortOptions: [
               ListSortOption(
                   (context) => AppLocalizations.of(context)!.defaultLabel,
@@ -389,9 +475,9 @@ class _CustomListViewState<Item extends ListItem>
               ...widget.sortOptions,
             ],
             onChange: (index) => setState(() {
-              selectedSortIndex = index;
+              _selectedSortIndex = index;
               widget.onChangeSortIndex?.call(index);
-              updateCurrentList();
+              _updateCurrentList();
               _notifyChangeList();
             }),
           ),
@@ -417,7 +503,7 @@ class _CustomListViewState<Item extends ListItem>
             ),
           ),
         ),
-        if(widget.header != null) widget.header!,
+        if (widget.header != null) widget.header!,
         Expanded(
           flex: 1,
           child: Stack(children: [
@@ -452,8 +538,8 @@ class _CustomListViewState<Item extends ListItem>
                 // animator: DefaultAnimatedListAnimator,
                 listController: _controller,
                 scrollController: _scrollController,
-                addLongPressReorderable: widget.isReorderable,
-                reorderModel: widget.isReorderable && selectedSortIndex == 0
+                addLongPressReorderable: isReorderable,
+                reorderModel: isReorderable && _selectedSortIndex == 0
                     ? AnimatedListReorderModel(
                         onReorderStart: (index, dx, dy) => true,
                         onReorderFeedback: (int index, int dropIndex,
@@ -464,7 +550,7 @@ class _CustomListViewState<Item extends ListItem>
                       )
                     : null,
                 reorderDecorationBuilder:
-                    widget.isReorderable ? reorderableListDecorator : null,
+                    isReorderable ? reorderableListDecorator : null,
                 footer: const SizedBox(height: 64 + 80),
                 // header: widget.header,
 

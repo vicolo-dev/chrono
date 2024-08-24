@@ -73,6 +73,11 @@ enum SwipeAction {
   switchTabs,
 }
 
+enum LongPressAction {
+  reorder,
+  multiSelect,
+}
+
 final timeFormatOptions = [
   SelectSettingOption(
       (context) => AppLocalizations.of(context)!.timeFormat12, TimeFormat.h12),
@@ -194,24 +199,41 @@ SettingGroup generalSettingsSchema = SettingGroup(
             ]),
       ],
     ),
-    SelectSetting(
-      "Swipe Action",
-      (context) => AppLocalizations.of(context)!.swipeActionSetting,
-      [
-        SelectSettingOption(
-          (context) => AppLocalizations.of(context)!.swipActionCardAction,
-          SwipeAction.cardActions,
-          getDescription: (context) =>
-              AppLocalizations.of(context)!.swipeActionCardActionDescription,
-        ),
-        SelectSettingOption(
-          (context) => AppLocalizations.of(context)!.swipActionSwitchTabs,
-          SwipeAction.switchTabs,
-          getDescription: (context) =>
-              AppLocalizations.of(context)!.swipeActionSwitchTabsDescription,
-        )
-      ],
-    ),
+    SettingGroup("Interactions",
+        (context) => AppLocalizations.of(context)!.interactionsSettingGroup, [
+      SelectSetting(
+        "Swipe Action",
+        (context) => AppLocalizations.of(context)!.swipeActionSetting,
+        [
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.swipActionCardAction,
+            SwipeAction.cardActions,
+            getDescription: (context) =>
+                AppLocalizations.of(context)!.swipeActionCardActionDescription,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.swipActionSwitchTabs,
+            SwipeAction.switchTabs,
+            getDescription: (context) =>
+                AppLocalizations.of(context)!.swipeActionSwitchTabsDescription,
+          )
+        ],
+      ),
+      SelectSetting(
+        "Long Press Action",
+        (context) => AppLocalizations.of(context)!.longPressActionSetting,
+        [
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.longPressReorderAction,
+            LongPressAction.reorder,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.longPressSelectAction,
+            LongPressAction.multiSelect,
+          )
+        ],
+      ),
+    ]),
     SettingPageLink(
       "Melodies",
       (context) => AppLocalizations.of(context)!.melodiesSetting,

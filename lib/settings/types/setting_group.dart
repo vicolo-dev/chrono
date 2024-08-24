@@ -100,7 +100,12 @@ class SettingGroup extends SettingItem {
   }
 
   SettingGroup getGroup(String name) {
-    return _settingGroups.firstWhere((item) => item.name == name);
+    try {
+      return _settingGroups.firstWhere((item) => item.name == name);
+    } catch (e) {
+      debugPrint("Could not find setting group $name: $e");
+      rethrow;
+    }
   }
 
   Setting getSettingFromPath(List<String> path) {
