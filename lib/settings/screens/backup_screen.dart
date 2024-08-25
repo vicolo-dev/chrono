@@ -16,14 +16,12 @@ import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SettingCheckBox extends StatelessWidget {
-  const SettingCheckBox(
+class BackupOptionCheckBox extends StatelessWidget {
+  const BackupOptionCheckBox(
       {super.key,
-      required this.settingItem,
-      required this.isChecked,
-      required this.onChanged});
+      required this.option, required this.onChanged});
 
-  final bool isChecked;
+  final BackupOption option;
   final void Function(bool?) onChanged;
 
   @override
@@ -33,11 +31,11 @@ class SettingCheckBox extends StatelessWidget {
         Checkbox(
           // checkColor: Colors.white,
           // fillColor: MaterialStateProperty.resolveWith(getColor),
-          value: isChecked,
+          value: option.selected,
           onChanged: onChanged,
         ),
         Text(
-          settingItem.displayName(context),
+          option.getName(context),
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ],
@@ -195,13 +193,12 @@ class _BackupExportScreenState extends State<BackupExportScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              ...widget.settingGroup.settingItems.map(
-                (settingItem) => SettingCheckBox(
-                  settingItem: settingItem,
-                  isChecked: _settingsToRestore[settingItem.id] ?? false,
+              ...backupOptions.map(
+                (option) => BackupOptionCheckBox(
+                  option: option,
                   onChanged: (bool? value) {
                     setState(() {
-                      _settingsToRestore[settingItem.id] = value!;
+                      option.selected = value ?? false;
                     });
                   },
                 ),

@@ -1,5 +1,6 @@
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/debug.dart';
+import 'package:clock_app/common/utils/id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -37,7 +38,7 @@ class ListFilter<Item extends ListItem> extends ListFilterItem<Item> {
 
   ListFilter(this.getLocalizedName, bool Function(Item) filterFunction,
       {int? id})
-      : _id = id ?? UniqueKey().hashCode,
+      : _id = id ?? getId(),
         _filterFunction = filterFunction;
 
   int get id => _id;

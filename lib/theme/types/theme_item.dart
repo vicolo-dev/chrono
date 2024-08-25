@@ -1,7 +1,7 @@
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/id.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
-import 'package:flutter/material.dart';
 
 abstract class ThemeItem extends CustomizableListItem {
   late int _id;
@@ -9,12 +9,12 @@ abstract class ThemeItem extends CustomizableListItem {
   bool _isDefault = false;
 
   ThemeItem(SettingGroup defaultSettings, bool isDefault, [int? id])
-      : _id = id ?? UniqueKey().hashCode,
+      : _id = id ?? getId(),
         _settings = defaultSettings,
         _isDefault = isDefault;
 
   ThemeItem.from(ThemeItem themeItem)
-      : _id = UniqueKey().hashCode,
+      : _id = getId(),
         _isDefault = false,
         _settings = themeItem.settings.copy();
 
@@ -45,10 +45,10 @@ abstract class ThemeItem extends CustomizableListItem {
 
   ThemeItem.fromJson(Json json, SettingGroup settings) : _settings = settings {
     if (json == null) {
-      _id = UniqueKey().hashCode;
+      _id = getId();
       return;
     }
-    _id = json['id'] ?? UniqueKey().hashCode;
+    _id = json['id'] ?? getId();
     _isDefault = json['isDefault'] ?? false;
     settings.loadValueFromJson(json['settings']);
   }

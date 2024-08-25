@@ -24,36 +24,36 @@ SettingGroup backupSettingsSchema = SettingGroup(
       "Settings",
       (context) => AppLocalizations.of(context)!.settingsTitle,
       [
-      SettingPageLink("Export", (context) => AppLocalizations.of(context)!.exportSettingsSetting, BackupScreen()),
-      SettingPageLink("Import", (context) => AppLocalizations.of(context)!.importSettingsSetting, BackupScreen()),
-        // SettingAction(
-        //   "Export",
-        //   (context) => AppLocalizations.of(context)!.exportSettingsSetting,
-        //   (context) async {
-        //     saveBackupFile(json.encode(appSettings.valueToJson()), "settings");
-        //   },
-        //   searchTags: ["settings", "export", "backup", "save"],
-        //   getDescription: (context) =>
-        //       AppLocalizations.of(context)!.exportSettingsSettingDescription,
-        // ),
-        // SettingAction(
-        //   "Import",
-        //   (context) => AppLocalizations.of(context)!.importSettingsSetting,
-        //   (context) async {
-        //     loadBackupFile(
-        //       (data) async {
-        //         appSettings.loadValueFromJson(json.decode(data));
-        //         appSettings.callAllListeners();
-        //         App.refreshTheme(context);
-        //         await appSettings.save();
-        //         if (context.mounted) setDigitalClockWidgetData(context);
-        //       },
-        //     );
-        //   },
-        //   searchTags: ["settings", "import", "backup", "load"],
-        //   getDescription: (context) =>
-        //       AppLocalizations.of(context)!.importSettingsSettingDescription,
-        // ),
+      // SettingPageLink("Export", (context) => AppLocalizations.of(context)!.exportSettingsSetting, BackupScreen()),
+      // SettingPageLink("Import", (context) => AppLocalizations.of(context)!.importSettingsSetting, BackupScreen()),
+        SettingAction(
+          "Export",
+          (context) => AppLocalizations.of(context)!.exportSettingsSetting,
+          (context) async {
+            saveBackupFile(json.encode(appSettings.valueToJson()), "settings");
+          },
+          searchTags: ["settings", "export", "backup", "save"],
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.exportSettingsSettingDescription,
+        ),
+        SettingAction(
+          "Import",
+          (context) => AppLocalizations.of(context)!.importSettingsSetting,
+          (context) async {
+            loadBackupFile(
+              (data) async {
+                appSettings.loadValueFromJson(json.decode(data));
+                appSettings.callAllListeners();
+                App.refreshTheme(context);
+                await appSettings.save();
+                if (context.mounted) setDigitalClockWidgetData(context);
+              },
+            );
+          },
+          searchTags: ["settings", "import", "backup", "load"],
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.importSettingsSettingDescription,
+        ),
       ],
     ),
   ],

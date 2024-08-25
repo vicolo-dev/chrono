@@ -1,11 +1,11 @@
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/timer_state.dart';
 import 'package:clock_app/common/utils/duration.dart';
+import 'package:clock_app/common/utils/id.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/logger.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
-import 'package:flutter/material.dart';
 
 // All time units are in milliseconds
 class ClockStopwatch extends JsonSerializable {
@@ -54,7 +54,7 @@ class ClockStopwatch extends JsonSerializable {
   }
 
   ClockStopwatch()
-      : _id = UniqueKey().hashCode,
+      : _id = getId(),
         _elapsedMillisecondsOnPause = 0,
         _startTime = DateTime(0),
         _state = TimerState.stopped;
@@ -63,7 +63,7 @@ class ClockStopwatch extends JsonSerializable {
       : _elapsedMillisecondsOnPause = 0,
         _startTime = DateTime(0),
         _state = TimerState.stopped,
-        _id = UniqueKey().hashCode;
+        _id = getId();
 
   copyFrom(ClockStopwatch stopwatch) {
     _elapsedMillisecondsOnPause = stopwatch._elapsedMillisecondsOnPause;
@@ -153,7 +153,7 @@ class ClockStopwatch extends JsonSerializable {
 
   ClockStopwatch.fromJson(Json json) {
     if (json == null) {
-      _id = UniqueKey().hashCode;
+      _id = getId();
       return;
     }
     _elapsedMillisecondsOnPause = json['elapsedMillisecondsOnPause'] ?? 0;
@@ -163,7 +163,7 @@ class ClockStopwatch extends JsonSerializable {
     _state = TimerState.values.firstWhere(
         (e) => e.toString() == (json['state'] ?? ''),
         orElse: () => TimerState.stopped);
-    _id = json['id'] ?? UniqueKey().hashCode;
+    _id = json['id'] ?? getId();
     // _finishedLaps = [];
     _laps = listFromString(json['laps'] ?? '[]');
     updateFastestAndSlowestLap();
