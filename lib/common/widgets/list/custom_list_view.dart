@@ -113,7 +113,7 @@ class _CustomListViewState<Item extends ListItem>
   }
 
   void _handleUpdateSettings(dynamic value) {
-    setState(() {});
+    _endSelection();
   }
 
   void _handleReloadItems(List<Item> items) {
@@ -177,8 +177,9 @@ class _CustomListViewState<Item extends ListItem>
       _getChangeWidgetBuilder(widget.items[index])(context, index, data);
 
   bool _handleReorderItems(int oldIndex, int newIndex, Object? slot) {
-    if (newIndex >= widget.items.length || _selectedSortIndex != 0)
+    if (newIndex >= widget.items.length || _selectedSortIndex != 0) {
       return false;
+    }
     widget.onReorderItem?.call(widget.items[oldIndex]);
     widget.items.insert(newIndex, widget.items.removeAt(oldIndex));
     _updateCurrentList();
