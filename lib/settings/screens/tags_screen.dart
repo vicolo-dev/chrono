@@ -72,6 +72,7 @@ class _TagsScreenState extends State<TagsScreen> {
                   // onDeleteItem: _handleDeleteTimer,
                   placeholderText: "No tags created",
                   reloadOnPop: true,
+                  isSelectable: true,
                 ),
               ),
             ],

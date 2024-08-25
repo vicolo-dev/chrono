@@ -75,6 +75,7 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
                   isDuplicateEnabled: false,
                   placeholderText: "No melodies",
                   reloadOnPop: true,
+                  isSelectable: true,
                 ),
               ),
             ],

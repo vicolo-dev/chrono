@@ -347,6 +347,7 @@ class _TimerScreenState extends State<TimerScreen> {
                 // _listController.changeItems((item) {});
               },
               onDeleteItem: _onDeleteTimer,
+              isSelectable: true,
               placeholderText: AppLocalizations.of(context)!.noTimerMessage,
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],
