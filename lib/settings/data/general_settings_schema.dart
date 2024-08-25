@@ -223,15 +223,15 @@ SettingGroup generalSettingsSchema = SettingGroup(
         "Long Press Action",
         (context) => AppLocalizations.of(context)!.longPressActionSetting,
         [
+        SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.longPressSelectAction,
+            LongPressAction.multiSelect,
+          ),
           SelectSettingOption(
             (context) => AppLocalizations.of(context)!.longPressReorderAction,
             LongPressAction.reorder,
           ),
-          SelectSettingOption(
-            (context) => AppLocalizations.of(context)!.longPressSelectAction,
-            LongPressAction.multiSelect,
-          )
-        ],
+                  ],
       ),
     ]),
     SettingPageLink(

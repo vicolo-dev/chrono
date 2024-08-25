@@ -92,6 +92,8 @@ class _CustomListViewState<Item extends ListItem>
         .getGroup("Interactions")
         .getSetting("Long Press Action");
 
+    _longPressActionSetting.addListener(_handleUpdateSettings);
+
     widget.listController.setChangeItems(_handleChangeItems);
     widget.listController.setAddItem(_handleAddItem);
     widget.listController.setDeleteItem(_handleDeleteItem);
@@ -102,6 +104,16 @@ class _CustomListViewState<Item extends ListItem>
     widget.listController.setGetItems(() => widget.items);
     _updateCurrentList();
     // widget.listController.setChangeItemWithId(_handleChangeItemWithId);
+  }
+
+  @override
+  void dispose() {
+    _longPressActionSetting.removeListener(_handleUpdateSettings);
+    super.dispose();
+  }
+
+  void _handleUpdateSettings(dynamic value) {
+    setState(() {});
   }
 
   void _handleReloadItems(List<Item> items) {

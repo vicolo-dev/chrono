@@ -63,7 +63,6 @@ class ListButtonChip<Item extends ListItem> extends StatelessWidget {
     TextTheme textTheme = theme.textTheme;
 
     return CardContainer(
-      color: colorScheme.surface,
       onTap: onTap,
       child: Row(
         children: [
