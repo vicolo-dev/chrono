@@ -44,6 +44,53 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
   }
 }
 
+class ListButtonChip<Item extends ListItem> extends StatelessWidget {
+  const ListButtonChip({
+    super.key,
+    required this.label,
+    this.onTap,
+    required this.icon,
+  });
+
+  final String label;
+  final IconData icon;
+  final Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
+    TextTheme textTheme = theme.textTheme;
+
+    return CardContainer(
+      color: colorScheme.surface,
+      onTap: onTap,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 10.0, right: 6.0, top: 6.0, bottom: 6.0),
+            child: Icon(
+              icon,
+              color: colorScheme.onSurface,
+              size: 20,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Text(
+              label,
+              style: textTheme.headlineSmall?.copyWith(
+                color: colorScheme.onSurface,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ListFilterActionChip<Item extends ListItem> extends StatelessWidget {
   const ListFilterActionChip({
     super.key,

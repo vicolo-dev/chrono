@@ -80,7 +80,7 @@ class _CustomListViewState<Item extends ListItem>
   final _controller = AnimatedListController();
   late int _selectedSortIndex = widget.initialSortIndex;
   late Setting _longPressActionSetting;
-  List<int> _selectedIndices = [];
+  List<int> _selectedIds = [];
   bool _isSelecting = false;
 
   @override
@@ -297,30 +297,37 @@ class _CustomListViewState<Item extends ListItem>
   void _endSelection() {
     setState(() {
       _isSelecting = false;
-      _selectedIndices.clear();
+      _selectedIds.clear();
     });
     _notifyChangeList();
   }
 
-  void _startSelection(int index) {
+  void _startSelection(Item item) {
     setState(() {
       _isSelecting = true;
-      _selectedIndices = [index];
+      _selectedIds = [item.id];
     });
     _notifyChangeList();
   }
 
-  void _handleSelect(int index) {
+  void _handleSelect(Item item) {
     setState(() {
-      if (_selectedIndices.contains(index)) {
-        _selectedIndices.remove(index);
+      if (_selectedIds.contains(item.id)) {
+        _selectedIds.remove(item.id);
       } else {
-        _selectedIndices.add(index);
+        _selectedIds.add(item.id);
       }
     });
-    if (_selectedIndices.isEmpty) {
+    if (_selectedIds.isEmpty) {
       _endSelection();
     }
+    _notifyChangeList();
+  }
+
+  void _handleSelectAll() {
+    setState(() {
+      _selectedIds = widget.items.map((e) => e.id).toList();
+    });
     _notifyChangeList();
   }
 
@@ -345,7 +352,7 @@ class _CustomListViewState<Item extends ListItem>
               onDuplicate: () => _handleDuplicateItem(item),
               isDeleteEnabled: item.isDeletable && widget.isDeleteEnabled,
               isDuplicateEnabled: widget.isDuplicateEnabled,
-              isSelected: _selectedIndices.contains(index),
+              isSelected: _selectedIds.contains(item.id),
               child: widget.itemBuilder(item),
             );
       if (widget.isSelectable &&
@@ -354,14 +361,14 @@ class _CustomListViewState<Item extends ListItem>
           behavior: HitTestBehavior.opaque,
           onLongPress: () {
             if (!_isSelecting) {
-              _startSelection(index);
+              _startSelection(item);
             } else {
-              _handleSelect(index);
+              _handleSelect(item);
             }
           },
           onTap: () {
             if (_isSelecting) {
-              _handleSelect(index);
+              _handleSelect(item);
             }
           },
           child: AbsorbPointer(absorbing: _isSelecting, child: itemWidget),
@@ -377,7 +384,7 @@ class _CustomListViewState<Item extends ListItem>
     });
   }
 
-  List<Item> getCurrentList() {
+  List<Item> _getCurrentList() {
     final List<Item> items = List.from(widget.items);
 
     if (_selectedSortIndex != 0) {
@@ -385,6 +392,12 @@ class _CustomListViewState<Item extends ListItem>
     }
 
     return items;
+  }
+
+  List<Item> _getActionableItems() {
+    return _isSelecting
+        ? widget.items.where((item) => _selectedIds.contains(item.id)).toList()
+        : widget.items;
   }
 
   @override
@@ -403,64 +416,74 @@ class _CustomListViewState<Item extends ListItem>
       List<Widget> widgets = [];
       int activeFilterCount =
           widget.listFilters.where((filter) => filter.isActive).length;
-      if (activeFilterCount > 0 || _selectedIndices.isNotEmpty) {
-        widgets.add(ListFilterActionChip(
-          actions: [
-            ListFilterAction(
-              name: AppLocalizations.of(context)!.clearFiltersAction,
-              icon: Icons.clear_rounded,
-              action: () {
-                for (var filter in widget.listFilters) {
-                  filter.reset();
-                }
-                _selectedIndices.clear();
-                _onFilterChange();
-              },
-            ),
-            ...widget.customActions.map((action) => ListFilterAction(
-                  name: action.name,
-                  icon: action.icon,
-                  action: () {
-                    final list = _selectedIndices.isNotEmpty
-                        ? _selectedIndices
-                            .map((index) => widget.items[index])
-                            .toList()
-                        : widget.items;
+      if (activeFilterCount > 0 || _isSelecting) {
+        widgets.add(
+          ListFilterActionChip(
+            actions: [
+              ListFilterAction(
+                name: AppLocalizations.of(context)!.clearFiltersAction,
+                icon: Icons.clear_rounded,
+                action: () {
+                  for (var filter in widget.listFilters) {
+                    filter.reset();
+                  }
+                  _endSelection();
+                  _onFilterChange();
+                },
+              ),
+              ...widget.customActions.map((action) => ListFilterAction(
+                    name: action.name,
+                    icon: action.icon,
+                    action: () {
+                      final list = _getActionableItems();
 
-                    action.action(list
-                        .where((item) => widget.listFilters
-                            .every((filter) => filter.filterFunction(item)))
-                        .toList());
-                    _endSelection();
-                  },
-                )),
-            ListFilterAction(
-              name: AppLocalizations.of(context)!.deleteAllFilteredAction,
-              icon: Icons.delete_rounded,
-              color: colorScheme.error,
-              action: () async {
-                Navigator.pop(context);
-                final result = await showDeleteAlertDialogue(context);
-                if (result == null || result == false) return;
+                      action.action(list
+                          .where((item) => widget.listFilters
+                              .every((filter) => filter.filterFunction(item)))
+                          .toList());
+                      _endSelection();
+                    },
+                  )),
+              ListFilterAction(
+                name: AppLocalizations.of(context)!.deleteAllFilteredAction,
+                icon: Icons.delete_rounded,
+                color: colorScheme.error,
+                action: () async {
+                  Navigator.pop(context);
+                  final result = await showDeleteAlertDialogue(context);
+                  if (result == null || result == false) return;
 
-                final list = _selectedIndices.isNotEmpty
-                    ? _selectedIndices
-                        .map((index) => widget.items[index])
-                        .toList()
-                    : widget.items;
-                final toRemove = List<Item>.from(list.where((item) => widget
-                    .listFilters
-                    .every((filter) => filter.filterFunction(item))));
-                _endSelection();
-                await _handleDeleteItemList(toRemove);
+                  final list = _getActionableItems();
+                  final toRemove = List<Item>.from(list.where((item) => widget
+                      .listFilters
+                      .every((filter) => filter.filterFunction(item))));
+                  _endSelection();
+                  await _handleDeleteItemList(toRemove);
 
-                widget.onModifyList?.call();
-              },
-            )
-          ],
-          activeFilterCount:
-              activeFilterCount + (_selectedIndices.isNotEmpty ? 1 : 0),
-        ));
+                  widget.onModifyList?.call();
+                },
+              )
+            ],
+            activeFilterCount: activeFilterCount + (_isSelecting ? 1 : 0),
+          ),
+        );
+      }
+      if (_isSelecting) {
+        widgets.add(
+          ListButtonChip(
+            label: AppLocalizations.of(context)!
+                .selectionStatus(_selectedIds.length),
+            icon: Icons.clear_rounded,
+            onTap: _endSelection,
+          ),
+        );
+        widgets.add(
+          ListButtonChip(
+            label: AppLocalizations.of(context)!.selectAll,
+            icon: Icons.select_all,
+            onTap: _handleSelectAll,
+          ),
+        );
       }
       widgets.addAll(widget.listFilters
           .map((filter) => getListFilterChip(filter, _onFilterChange)));
