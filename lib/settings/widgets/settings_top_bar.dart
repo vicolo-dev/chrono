@@ -13,10 +13,11 @@ class SettingsTopBar extends StatefulWidget implements PreferredSizeWidget {
       {super.key,
       this.onSearch,
       this.showSearch = false,
-      required this.title});
+      this.title, this.actions});
 
   final void Function(List<SettingItem> settings)? onSearch;
-  final String title;
+  final List<Widget>? actions;
+  final String? title;
   final bool showSearch;
 
   @override
@@ -86,14 +87,15 @@ class _SettingsTopBarState extends State<SettingsTopBar> {
       );
     } else {
       return AppTopBar(
-        title: Text(
-          widget.title,
+        title: widget.title != null ? Text(
+          widget.title!,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color:
                     Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
               ),
-        ),
+        ): null,
         actions: [
+        ...?widget.actions,
           if (widget.showSearch)
             IconButton(
               onPressed: () {

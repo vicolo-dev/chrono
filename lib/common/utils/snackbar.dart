@@ -2,13 +2,16 @@ import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:flutter/material.dart';
 
 void showSnackBar(BuildContext context, String text,
-    {bool fab = false, bool navBar = false}) {
+    {bool fab = false, bool navBar = false, bool error = false}) {
+  ThemeData theme = Theme.of(context);
+  ColorScheme colorScheme = theme.colorScheme;
+  Color? color = error ? colorScheme.error : null;
   ScaffoldMessenger.of(context).removeCurrentSnackBar();
   ScaffoldMessenger.of(context)
-      .showSnackBar(getSnackbar(text, fab: fab, navBar: navBar));
+      .showSnackBar(getSnackbar(text, fab: fab, navBar: navBar, color:color));
 }
 
-SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false}) {
+SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false, Color? color}) {
   double left = 20;
   double right = 20;
   double bottom = 12;
@@ -44,6 +47,7 @@ SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false}) {
       constraints: const BoxConstraints(minHeight: 28),
       child: Container(
         alignment: Alignment.centerLeft,
+        color: color, 
         // height: 28,
         child: Text(text),
       ),
@@ -53,6 +57,7 @@ SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false}) {
       right: right,
       bottom: bottom,
     ),
+    
     elevation: 2,
     dismissDirection: DismissDirection.none,
   );

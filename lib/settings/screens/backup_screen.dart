@@ -1,25 +1,17 @@
 import 'dart:convert';
 
-import 'package:clock_app/alarm/logic/update_alarms.dart';
-import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/app.dart';
-import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/settings/types/setting_group.dart';
+import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/common/utils/snackbar.dart';
+import 'package:clock_app/settings/data/backup_options.dart';
+import 'package:clock_app/settings/logic/backup.dart';
+import 'package:clock_app/settings/types/backup_option.dart';
 import 'package:clock_app/settings/widgets/settings_top_bar.dart';
-import 'package:clock_app/theme/types/color_scheme.dart';
-import 'package:clock_app/theme/types/style_theme.dart';
-import 'package:clock_app/timer/logic/update_timers.dart';
-import 'package:clock_app/timer/types/timer.dart';
-import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BackupOptionCheckBox extends StatelessWidget {
   const BackupOptionCheckBox(
-      {super.key,
-      required this.option, required this.onChanged});
+      {super.key, required this.option, required this.onChanged});
 
   final BackupOption option;
   final void Function(bool?) onChanged;
@@ -46,114 +38,18 @@ class BackupOptionCheckBox extends StatelessWidget {
 class BackupExportScreen extends StatefulWidget {
   const BackupExportScreen({
     super.key,
-    required this.settingGroup,
-    required this.onRestore,
   });
-
-  final SettingGroup settingGroup;
-  final void Function() onRestore;
 
   @override
   State<BackupExportScreen> createState() => _BackupExportScreenState();
 }
 
-class BackupOption {
-  final String Function(BuildContext context) getName;
-  final String key;
-  final dynamic Function() encode;
-  final Function(BuildContext context, dynamic value) decode;
-  bool selected = true;
-
-  BackupOption(this.key, this.getName,
-      {required this.encode, required this.decode});
-}
-
-final backupOptions = [
-  BackupOption(
-    "settings",
-    (context) => AppLocalizations.of(context)!.settings,
-    encode: () async {
-      return json.encode(appSettings.valueToJson());
-    },
-    decode: (context, value) async {
-      appSettings.loadValueFromJson(json.decode(value));
-      appSettings.callAllListeners();
-      App.refreshTheme(context);
-      await appSettings.save();
-      if (context.mounted) {
-        setDigitalClockWidgetData(context);
-      }
-    },
-  ),
-  BackupOption(
-    "color_schemes",
-    (context) => AppLocalizations.of(context)!.colorSchemeSetting,
-    encode: () async {
-      List<ColorSchemeData> colorSchemes = await loadList("color_schemes");
-      List<ColorSchemeData> customColorSchemes =
-          colorSchemes.where((scheme) => !scheme.isDefault).toList();
-      return json.encode(customColorSchemes);
-    },
-    decode: (context, value) async {
-      List<ColorSchemeData> colorSchemes =
-          await loadList<ColorSchemeData>("color_schemes");
-      await saveList<ColorSchemeData>(
-          "color_schemes", [...json.decode(value), ...colorSchemes]);
-      if (context.mounted) App.refreshTheme(context);
-    },
-  ),
-  BackupOption(
-    "style_themes",
-    (context) => AppLocalizations.of(context)!.styleThemeSetting,
-    encode: () async {
-      List<StyleTheme> styleThemes = await loadList("style_themes");
-      List<StyleTheme> customThemes =
-          styleThemes.where((scheme) => !scheme.isDefault).toList();
-      return json.encode(customThemes);
-    },
-    decode: (context, value) async {
-      List<ColorSchemeData> styleThemes =
-          await loadList<ColorSchemeData>("style_themes");
-      await saveList<ColorSchemeData>(
-          "style_themes", [...json.decode(value), ...styleThemes]);
-      if (context.mounted) App.refreshTheme(context);
-    },
-  ),
-  BackupOption(
-    "alarms",
-    (context) => AppLocalizations.of(context)!.alarmTitle,
-    encode: () async {
-      return json.encode(await loadList("alarms"));
-    },
-    decode: (context, value) async {
-      await saveList<Alarm>("alarms", [...json.decode(value), ...await loadList("alarms")]);
-      await updateAlarms("Updated alarms on importing backup");
-      if (context.mounted) App.refreshTheme(context);
-    },
-  ),
-  BackupOption(
-    "timers",
-    (context) => AppLocalizations.of(context)!.alarmTitle,
-    encode: () async {
-      return json.encode(await loadList("timers"));
-    },
-    decode: (context, value) async {
-      await saveList<ClockTimer>("timers", [...json.decode(value), ...await loadList("timers")]);
-      await updateTimers("Updated timers on importing backup");
-      if (context.mounted) App.refreshTheme(context);
-    },
-  ),
- ];
-
 class _BackupExportScreenState extends State<BackupExportScreen> {
-  bool settings = false;
-  late final Map<String, bool> _settingsToRestore = {
-    for (var settingItem in widget.settingGroup.settingItems)
-      settingItem.id: true
-  };
-
   @override
   void initState() {
+    for (var option in backupOptions) {
+      option.selected = true;
+    }
     super.initState();
   }
 
@@ -161,39 +57,123 @@ class _BackupExportScreenState extends State<BackupExportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SettingsTopBar(
-        title: AppLocalizations.of(context)!.restoreSettingGroup,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextButton(
+                onPressed: () async {
+                  try {
+                    final backupData = {};
+                    for (var option in backupOptions) {
+                      if (option.selected) {
+                        backupData[option.key] = await option.encode();
+                      }
+                    }
+                    saveBackupFile(json.encode(backupData));
+                  } catch (e) {
+                    debugPrint(e.toString());
+                    if (context.mounted) {
+                      showSnackBar(context, "Error exporting: ${e.toString()}",
+                          error: true);
+                    }
+                  }
+                },
+                child:
+                    Text(AppLocalizations.of(context)!.exportSettingsSetting)),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
-              CardContainer(
-                color: Theme.of(context).colorScheme.primary,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(AppLocalizations.of(context)!.resetButton,
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              )),
-                    ],
-                  ),
+              ...backupOptions.map(
+                (option) => BackupOptionCheckBox(
+                  option: option,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      option.selected = value ?? false;
+                    });
+                  },
                 ),
-                onTap: () {
-                  widget.settingGroup
-                      .restoreDefaults(context, _settingsToRestore);
-                  widget.onRestore();
-                  Navigator.pop(context);
-                },
               ),
               const SizedBox(height: 16),
-              ...backupOptions.map(
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class BackupImportScreen extends StatefulWidget {
+  const BackupImportScreen({
+    super.key,
+    required this.data,
+  });
+
+  final String data;
+
+  @override
+  State<BackupImportScreen> createState() => _BackupImportScreenState();
+}
+
+class _BackupImportScreenState extends State<BackupImportScreen> {
+  late final List<BackupOption> importOptions = [];
+  late final Json dataJson;
+
+  @override
+  void initState() {
+    dataJson = json.decode(widget.data);
+
+    if (dataJson != null) {
+      for (var option in backupOptions) {
+        option.selected = true;
+        if (dataJson!.keys.contains(option.key)) {
+          importOptions.add(option);
+        }
+      }
+    }
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: SettingsTopBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextButton(
+                onPressed: () async {
+                  try {
+                    if (dataJson == null) return;
+                    for (var option in importOptions) {
+                      if (option.selected && context.mounted) {
+                        option.decode(context, dataJson![option.key]);
+                      }
+                    }
+                  } catch (e) {
+                    debugPrint(e.toString());
+                    if (context.mounted) {
+                      showSnackBar(context, "Error importing: ${e.toString()}",
+                          error: true);
+                    }
+                  }
+                },
+                child:
+                    Text(AppLocalizations.of(context)!.importSettingsSetting)),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              ...importOptions.map(
                 (option) => BackupOptionCheckBox(
                   option: option,
                   onChanged: (bool? value) {
