@@ -69,7 +69,12 @@ class _BackupExportScreenState extends State<BackupExportScreen> {
                         backupData[option.key] = await option.encode();
                       }
                     }
-                    saveBackupFile(json.encode(backupData));
+                    final result =
+                        await saveBackupFile(json.encode(backupData));
+                    if (result == null) return;
+                    if (context.mounted) {
+                      showSnackBar(context, "Export successful!");
+                    }
                   } catch (e) {
                     debugPrint(e.toString());
                     if (context.mounted) {
@@ -152,8 +157,11 @@ class _BackupImportScreenState extends State<BackupImportScreen> {
                     if (dataJson == null) return;
                     for (var option in importOptions) {
                       if (option.selected && context.mounted) {
-                        option.decode(context, dataJson![option.key]);
+                        await option.decode(context, dataJson![option.key]);
                       }
+                    }
+                    if (context.mounted) {
+                      showSnackBar(context, "Import successful!");
                     }
                   } catch (e) {
                     debugPrint(e.toString());

@@ -20,15 +20,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // tags should be before alarms and timers
 // color_schemes and style_themes should be before settings
 final backupOptions = [
-   BackupOption(
+  BackupOption(
     "tags",
-    (context) => AppLocalizations.of(context)!.presetsSetting,
+    (context) => AppLocalizations.of(context)!.tagsSetting,
     encode: () async {
       return await loadTextFile("tags");
     },
     decode: (context, value) async {
       await saveList<TimerPreset>("tags", [
-        ...listFromString<TimerPreset>(value),
+        ...listFromString<TimerPreset>(value)
+            .map((tag) => TimerPreset.from(tag)),
         ...await loadList<TimerPreset>("tags")
       ]);
     },
@@ -45,7 +46,8 @@ final backupOptions = [
     },
     decode: (context, value) async {
       await saveList<ColorSchemeData>("color_schemes", [
-        ...listFromString<ColorSchemeData>(value),
+        ...listFromString<ColorSchemeData>(value)
+            .map((scheme) => ColorSchemeData.from(scheme)),
         ...await loadList<ColorSchemeData>("color_schemes")
       ]);
       if (context.mounted) App.refreshTheme(context);
@@ -62,7 +64,8 @@ final backupOptions = [
     },
     decode: (context, value) async {
       await saveList<StyleTheme>("style_themes", [
-        ...listFromString<StyleTheme>(value),
+        ...listFromString<StyleTheme>(value)
+            .map((theme) => StyleTheme.from(theme)),
         ...await loadList<StyleTheme>("style_themes")
       ]);
       if (context.mounted) App.refreshTheme(context);
@@ -92,7 +95,7 @@ final backupOptions = [
     },
     decode: (context, value) async {
       await saveList<Alarm>("alarms", [
-        ...listFromString<Alarm>(value),
+        ...listFromString<Alarm>(value).map((alarm) => Alarm.fromAlarm(alarm)),
         ...await loadList<Alarm>("alarms")
       ]);
       await updateAlarms("Updated alarms on importing backup");
@@ -106,7 +109,8 @@ final backupOptions = [
     },
     decode: (context, value) async {
       await saveList<ClockTimer>("timers", [
-        ...listFromString<ClockTimer>(value),
+        ...listFromString<ClockTimer>(value)
+            .map((timer) => ClockTimer.from(timer)),
         ...await loadList<ClockTimer>("timers")
       ]);
       await updateTimers("Updated timers on importing backup");
@@ -140,7 +144,7 @@ final backupOptions = [
   //   },
   // ),
 
-   BackupOption(
+  BackupOption(
     "timer_presets",
     (context) => AppLocalizations.of(context)!.presetsSetting,
     encode: () async {
@@ -148,10 +152,10 @@ final backupOptions = [
     },
     decode: (context, value) async {
       await saveList<TimerPreset>("timer_presets", [
-        ...listFromString<TimerPreset>(value),
+        ...listFromString<TimerPreset>(value)
+            .map((preset) => TimerPreset.from(preset)),
         ...await loadList<TimerPreset>("timer_presets")
       ]);
     },
   ),
-
 ];

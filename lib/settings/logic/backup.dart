@@ -4,8 +4,8 @@ import 'dart:typed_data';
 
 import 'package:pick_or_save/pick_or_save.dart';
 
-void saveBackupFile(String data) async {
-  await PickOrSave().fileSaver(
+Future<List<String>?> saveBackupFile(String data) async {
+  return await PickOrSave().fileSaver(
       params: FileSaverParams(
     saveFiles: [
       SaveFileInfo(

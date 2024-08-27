@@ -135,7 +135,6 @@ class Alarm extends CustomizableListItem {
 
   Alarm.fromAlarm(Alarm alarm)
       : _isEnabled = alarm._isEnabled,
-        // _isFinished = alarm._isFinished,
         _time = alarm._time,
         _snoozeCount = alarm._snoozeCount,
         _snoozeTime = alarm._snoozeTime,
@@ -148,7 +147,6 @@ class Alarm extends CustomizableListItem {
   @override
   void copyFrom(dynamic other) {
     _isEnabled = other._isEnabled;
-    // _isFinished = other._isFinished;
     _time = other._time;
     _snoozeCount = other._snoozeCount;
     _snoozeTime = other._snoozeTime;
