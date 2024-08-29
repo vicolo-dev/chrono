@@ -287,6 +287,7 @@ class _CustomListViewState<Item extends ListItem>
 
     final list = _getActionableItems();
     final toRemove = List<Item>.from(list.where((item) =>
+        item.isDeletable &&
         widget.listFilters.every((filter) => filter.filterFunction(item))));
     _endSelection();
     await _handleDeleteItemList(toRemove);
@@ -336,7 +337,7 @@ class _CustomListViewState<Item extends ListItem>
             _isSelecting && widget.isReorderable && _selectedSortIndex == 0,
         index: index,
         child: widget.itemBuilder(item),
-      ).animateCard(ValueKey(item));
+      );
       return itemWidget;
     };
   }

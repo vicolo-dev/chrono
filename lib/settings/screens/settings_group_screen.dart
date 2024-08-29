@@ -83,7 +83,7 @@ class _SettingGroupScreenState extends State<SettingGroupScreen> {
                 : [
                     ...getSearchItemWidgets(),
                     const SizedBox(height: 16),
-                  ].animateCardList(),
+                  ],
           ),
         ),
       ),

@@ -57,6 +57,7 @@ class _PresetsScreenState extends State<PresetsScreen> {
                   // onDeleteItem: _handleDeleteTimer,
                   placeholderText: "No presets created",
                   reloadOnPop: true,
+                  isSelectable: true,
                 ),
               ),
             ],
