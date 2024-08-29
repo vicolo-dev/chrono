@@ -421,6 +421,8 @@
   "@selectionStatus": {},
   "selectAll": "Select all",
   "@selectAll": {},
+  "reorder": "Reorder",
+  "@reorder": {},
   "sortGroup": "Sort",
   "@sortGroup": {},
   "defaultLabel": "Default",

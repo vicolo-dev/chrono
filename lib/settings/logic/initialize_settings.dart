@@ -6,6 +6,7 @@ import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/audio/logic/system_ringtones.dart';
 import 'package:clock_app/clock/data/default_favorite_cities.dart';
+import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/common/data/default_tags.dart';
 import 'package:clock_app/common/data/paths.dart';
@@ -25,7 +26,6 @@ import 'package:clock_app/timer/types/timer.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
-
 
 Future<void> _clearSettings() async {
   // List<ClockTimer> timers = await loadList<ClockTimer>('timers');
@@ -75,6 +75,8 @@ Future<void> initializeStorage([bool clearSettingsOnDebug = true]) async {
   await initList<TimerPreset>("timer_presets", defaultTimerPresets);
   await initList<FileItem>("ringtones", await getSystemRingtones());
   await initTextFile("time_format_string", "h:mm a");
+  await initializeDatabases();
+
   // await initTextFile("", "0");
   // await initTextFile("timers-sort-index", "0");
 }

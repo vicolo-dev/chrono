@@ -15,8 +15,9 @@ BoxDecoration getCardDecoration(BuildContext context,
   return BoxDecoration(
     border: isSelected ? Border.all(
             color: colorScheme.primary,
-            width: 2,
-            strokeAlign: BorderSide.strokeAlignOutside,
+            width: 1,
+            strokeAlign: BorderSide.strokeAlignOutside
+            
           ) : showLightBorder
         ? Border.all(
             color: colorScheme.outline.withOpacity(0.2),

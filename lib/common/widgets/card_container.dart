@@ -5,13 +5,12 @@ import 'package:clock_app/common/utils/color.dart';
 import 'package:material_color_utilities/hct/hct.dart';
 import 'package:material_color_utilities/palettes/tonal_palette.dart';
 
-
 TonalPalette toTonalPalette(int value) {
   final color = Hct.fromInt(value);
   return TonalPalette.of(color.hue, color.chroma);
 }
 
-Color getCardColor(BuildContext context, [Color? color]){
+Color getCardColor(BuildContext context, [Color? color]) {
   ColorScheme colorScheme = Theme.of(context).colorScheme;
   bool useMaterialYou = appSettings
       .getGroup("Appearance")
@@ -22,10 +21,10 @@ Color getCardColor(BuildContext context, [Color? color]){
   TonalPalette tonalPalette = toTonalPalette(colorScheme.surface.value);
 
   return color ??
-        (useMaterialYou
-            ? Color(tonalPalette.get(
-                Theme.of(context).brightness == Brightness.light ? 96 : 15))
-            : colorScheme.surface);
+      (useMaterialYou
+          ? Color(tonalPalette
+              .get(Theme.of(context).brightness == Brightness.light ? 96 : 15))
+          : colorScheme.surface);
 }
 
 class CardContainer extends StatelessWidget {
@@ -40,7 +39,7 @@ class CardContainer extends StatelessWidget {
     this.showShadow = true,
     this.isSelected = false,
     this.showLightBorder = false,
-    this.blurStyle = BlurStyle.normal,
+    this.blurStyle = BlurStyle.normal, this.onLongPress,
   });
 
   final Widget child;
@@ -48,6 +47,7 @@ class CardContainer extends StatelessWidget {
   final Color? color;
   final EdgeInsetsGeometry? margin;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final Alignment? alignment;
   final bool showShadow;
   final BlurStyle blurStyle;
@@ -69,6 +69,7 @@ class CardContainer extends StatelessWidget {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
     return Container(
+      // duration: const Duration(milliseconds: 100),
       alignment: alignment,
       margin: margin ?? const EdgeInsets.all(4),
       clipBehavior: Clip.hardEdge,
@@ -86,6 +87,7 @@ class CardContainer extends StatelessWidget {
           : Material(
               color: Colors.transparent,
               child: InkWell(
+              onLongPress: onLongPress,
                 onTap: onTap,
                 splashColor: cardColor.darken(0.075),
                 borderRadius: Theme.of(context).toggleButtonsTheme.borderRadius,

@@ -2,9 +2,11 @@ import 'package:clock_app/common/logic/show_select.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/types/select_choice.dart';
+import 'package:clock_app/common/widgets/animated_show_hide.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/list/action_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ListFilterChip<Item extends ListItem> extends StatelessWidget {
@@ -50,11 +52,13 @@ class ListButtonChip<Item extends ListItem> extends StatelessWidget {
     required this.label,
     this.onTap,
     required this.icon,
+    this.isActive = false,
   });
 
-  final String label;
-  final IconData icon;
+  final String? label;
+  final IconData? icon;
   final Function()? onTap;
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
@@ -62,29 +66,39 @@ class ListButtonChip<Item extends ListItem> extends StatelessWidget {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    return CardContainer(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 10.0, right: 6.0, top: 6.0, bottom: 6.0),
-            child: Icon(
-              icon,
-              color: colorScheme.onSurface,
-              size: 20,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: Text(
-              label,
-              style: textTheme.headlineSmall?.copyWith(
-                color: colorScheme.onSurface,
+    return AnimatedShowHide(
+      duration: 200.ms,
+      axis: Axis.horizontal,
+      child: CardContainer(
+        onTap: onTap,
+        color: isActive ? colorScheme.primary : null,
+        child: Row(
+          children: [
+            if (icon != null)
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 10.0, right: 6.0, top: 6.0, bottom: 6.0),
+                child: Icon(
+                  icon,
+                  color:
+                      isActive ? colorScheme.onPrimary : colorScheme.onSurface,
+                  size: 20,
+                ),
               ),
-            ),
-          ),
-        ],
+            if (label != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: Text(
+                  label!,
+                  style: textTheme.headlineSmall?.copyWith(
+                    color: isActive
+                        ? colorScheme.onPrimary
+                        : colorScheme.onSurface,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -121,34 +135,38 @@ class ListFilterActionChip<Item extends ListItem> extends StatelessWidget {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    return CardContainer(
-      color: colorScheme.primary,
-      onTap: () {
-        _showPopupMenu(context);
-        // listFilter.isSelected = !listFilter.isSelected;
-        // onChange();
-      },
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 8.0, right: 6.0, top: 6.0, bottom: 6.0),
-            child: Icon(
-              Icons.filter_list_rounded,
-              color: colorScheme.onPrimary,
-              size: 20,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: Text(
-              activeFilterCount.toString(),
-              style: textTheme.headlineSmall?.copyWith(
-                color: colorScheme.onPrimary.withOpacity(0.6),
+    return AnimatedShowHide(
+      duration: 200.ms,
+      axis: Axis.horizontal,
+      child: CardContainer(
+        color: colorScheme.primary,
+        onTap: () {
+          _showPopupMenu(context);
+          // listFilter.isSelected = !listFilter.isSelected;
+          // onChange();
+        },
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 8.0, right: 6.0, top: 6.0, bottom: 6.0),
+              child: Icon(
+                Icons.filter_list_rounded,
+                color: colorScheme.onPrimary,
+                size: 20,
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: Text(
+                activeFilterCount.toString(),
+                style: textTheme.headlineSmall?.copyWith(
+                  color: colorScheme.onPrimary.withOpacity(0.6),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

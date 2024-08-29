@@ -362,29 +362,7 @@ SettingGroup generalSettingsSchema = SettingGroup(
         ),
       ],
     ),
-    SettingGroup("Animations",
-        (context) => AppLocalizations.of(context)!.animationSettingGroup, [
-      SliderSetting(
-        "Animation Speed",
-        (context) => AppLocalizations.of(context)!.animationSpeedSetting,
-        0.5,
-        2,
-        1,
-        // unit: 'm',
-        snapLength: 0.1,
-        // enableConditions: [
-        //   ValueCondition(
-        //       ["Show Upcoming Alarm Notifications"], (value) => value),
-        // ],
-      ),
-      SwitchSetting(
-        "Extra Animations",
-        (context) => AppLocalizations.of(context)!.extraAnimationSetting,
-        false,
-        getDescription: (context) =>
-            AppLocalizations.of(context)!.extraAnimationSettingDescription,
-      ),
-    ])
+    
   ],
   icon: FluxIcons.settings,
   getDescription: (context) =>

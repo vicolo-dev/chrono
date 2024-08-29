@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:clock_app/common/data/paths.dart';
+import 'package:path/path.dart';
 // Database? database;
 
 Future<void> initializeDatabases() async {
@@ -12,10 +15,12 @@ Future<void> initializeDatabases() async {
   if (FileSystemEntity.typeSync(timezonesDatabasePath) ==
       FileSystemEntityType.notFound) {
     // Load database from asset and copy
-    ByteData data = await rootBundle.load('assets/timezones.db');
+    ByteData data = await rootBundle.load(join('assets', 'timezones.db'));
     List<int> bytes =
         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
+    debugPrint('Copying timzones.db to $timezonesDatabasePath');
+    // debugPrint(json.encode(bytes));
     // Save copied asset to documents
     await File(timezonesDatabasePath).writeAsBytes(bytes);
   }

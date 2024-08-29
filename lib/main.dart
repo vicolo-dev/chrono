@@ -3,13 +3,11 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:awesome_notifications/android_foreground_service.dart';
 import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
-import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/utils/debug.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
@@ -40,11 +38,13 @@ void main() async {
     RingtonePlayer.initialize(),
     initializeAudioSession(),
     FlutterShowWhenLocked().hide(),
-    initializeDatabases(),
   ];
   await Future.wait(initializeData);
+
+  // These rely on initializeAppDataDirectory
   await initializeStorage();
   await initializeSettings();
+
   await updateAlarms("Update Alarms on Start");
   await updateTimers("Update Timers on Start");
   AppVisibility.initialize();
