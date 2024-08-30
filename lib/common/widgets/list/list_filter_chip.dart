@@ -25,20 +25,24 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
     ColorScheme colorScheme = theme.colorScheme;
     TextTheme textTheme = theme.textTheme;
 
-    return CardContainer(
-      color: listFilter.isSelected ? colorScheme.primary : null,
-      onTap: () {
-        listFilter.isSelected = !listFilter.isSelected;
-        onChange();
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Text(
-          listFilter.displayName(context),
-          style: textTheme.headlineSmall?.copyWith(
-            color: listFilter.isSelected
-                ? colorScheme.onPrimary
-                : colorScheme.onSurface,
+    return AnimatedShowHide(
+      duration: 200.ms,
+      axis: Axis.horizontal,
+      child: CardContainer(
+        color: listFilter.isSelected ? colorScheme.primary : null,
+        onTap: () {
+          listFilter.isSelected = !listFilter.isSelected;
+          onChange();
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Text(
+            listFilter.displayName(context),
+            style: textTheme.headlineSmall?.copyWith(
+              color: listFilter.isSelected
+                  ? colorScheme.onPrimary
+                  : colorScheme.onSurface,
+            ),
           ),
         ),
       ),
@@ -205,34 +209,38 @@ class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
           multiSelect: false);
     }
 
-    return CardContainer(
-      color: isFirstSelected ? null : colorScheme.primary,
-      onTap: showSelect,
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
-            child: Text(
-              isFirstSelected
-                  ? listFilter.displayName(context)
-                  : listFilter.selectedFilter.displayName(context),
-              style: textTheme.headlineSmall?.copyWith(
-                  color: isFirstSelected
-                      ? colorScheme.onSurface
-                      : colorScheme.onPrimary),
+    return AnimatedShowHide(
+      duration: 200.ms,
+      axis: Axis.horizontal,
+      child: CardContainer(
+        color: isFirstSelected ? null : colorScheme.primary,
+        onTap: showSelect,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
+              child: Text(
+                isFirstSelected
+                    ? listFilter.displayName(context)
+                    : listFilter.selectedFilter.displayName(context),
+                style: textTheme.headlineSmall?.copyWith(
+                    color: isFirstSelected
+                        ? colorScheme.onSurface
+                        : colorScheme.onPrimary),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 2.0, right: 8.0),
-            child: Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: isFirstSelected
-                  ? colorScheme.onSurface.withOpacity(0.6)
-                  : colorScheme.onPrimary.withOpacity(0.6),
+            Padding(
+              padding: const EdgeInsets.only(left: 2.0, right: 8.0),
+              child: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: isFirstSelected
+                    ? colorScheme.onSurface.withOpacity(0.6)
+                    : colorScheme.onPrimary.withOpacity(0.6),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -272,36 +280,40 @@ class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
           multiSelect: true);
     }
 
-    return CardContainer(
-      color: isSelected ? colorScheme.primary : null,
-      onTap: showSelect,
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
-            child: Text(
-              !isSelected
-                  ? listFilter.displayName(context)
-                  : listFilter.selectedIndices.length == 1
-                      ? listFilter.selectedFilters[0].displayName(context)
-                      : "${listFilter.selectedIndices.length} selected",
-              style: textTheme.headlineSmall?.copyWith(
-                  color: isSelected
-                      ? colorScheme.onPrimary
-                      : colorScheme.onSurface),
+    return AnimatedShowHide(
+      duration: 200.ms,
+      axis: Axis.horizontal,
+      child: CardContainer(
+        color: isSelected ? colorScheme.primary : null,
+        onTap: showSelect,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
+              child: Text(
+                !isSelected
+                    ? listFilter.displayName(context)
+                    : listFilter.selectedIndices.length == 1
+                        ? listFilter.selectedFilters[0].displayName(context)
+                        : "${listFilter.selectedIndices.length} selected",
+                style: textTheme.headlineSmall?.copyWith(
+                    color: isSelected
+                        ? colorScheme.onPrimary
+                        : colorScheme.onSurface),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 2.0, right: 8.0),
-            child: Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: isSelected
-                  ? colorScheme.onPrimary.withOpacity(0.6)
-                  : colorScheme.onSurface.withOpacity(0.6),
+            Padding(
+              padding: const EdgeInsets.only(left: 2.0, right: 8.0),
+              child: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: isSelected
+                    ? colorScheme.onPrimary.withOpacity(0.6)
+                    : colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -340,26 +352,30 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
           multiSelect: false);
     }
 
-    return CardContainer(
-      // color: isFirstSelected ? null : colorScheme.primary,
-      onTap: showSelect,
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
-            child: Text(
-              "${AppLocalizations.of(context)!.sortGroup}${isFirstSelected ? "" : ": ${sortOptions[selectedIndex].displayName(context)}"}",
-              style: textTheme.headlineSmall
-                  ?.copyWith(color: colorScheme.onSurface),
+    return AnimatedShowHide(
+      duration: 200.ms,
+      axis: Axis.horizontal,
+      child: CardContainer(
+        // color: isFirstSelected ? null : colorScheme.primary,
+        onTap: showSelect,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
+              child: Text(
+                "${AppLocalizations.of(context)!.sortGroup}${isFirstSelected ? "" : ": ${sortOptions[selectedIndex].displayName(context)}"}",
+                style: textTheme.headlineSmall
+                    ?.copyWith(color: colorScheme.onSurface),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 2.0, right: 8.0),
-            child: Icon(Icons.keyboard_arrow_down_rounded,
-                color: colorScheme.onSurface.withOpacity(0.6)),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(left: 2.0, right: 8.0),
+              child: Icon(Icons.keyboard_arrow_down_rounded,
+                  color: colorScheme.onSurface.withOpacity(0.6)),
+            ),
+          ],
+        ),
       ),
     );
   }

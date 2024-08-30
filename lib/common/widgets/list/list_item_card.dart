@@ -100,7 +100,7 @@ class _ListItemCardState<T> extends State<ListItemCard<T>> {
         child: Row(
           children: [
             AnimatedContainer(
-            duration: 150.ms,
+              duration: 150.ms,
               width: widget.showReorderHandle ? 28 : 0,
               color: Colors.transparent,
               // decoration: const BoxDecoration(),
@@ -110,9 +110,10 @@ class _ListItemCardState<T> extends State<ListItemCard<T>> {
                   index: widget.index,
                   enabled: true,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, top:16.0, bottom:16.0),
-                    child: Icon(Icons.drag_indicator, color: colorScheme.onSurface.withOpacity(0.6))
-                  )).animate().scaleX(),
+                      padding: const EdgeInsets.only(
+                          left: 8.0, top: 16.0, bottom: 16.0),
+                      child: Icon(Icons.drag_indicator,
+                          color: colorScheme.onSurface.withOpacity(0.6)))),
             ),
             Expanded(child: innerWidget),
           ],
