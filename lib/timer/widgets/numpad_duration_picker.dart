@@ -1,6 +1,7 @@
 import 'package:clock_app/theme/text.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class NumpadDurationPicker extends StatefulWidget {
   const NumpadDurationPicker(
@@ -34,7 +35,7 @@ class _NumpadDurationPickerState extends State<NumpadDurationPicker> {
   void _addDigit(String digit, [int amount = 1]) {
     setState(() {
       final timeInput = getTimeInput();
-      for(int i = 0; i < amount; i++) {
+      for (int i = 0; i < amount; i++) {
         timeInput.removeAt(0);
         timeInput.add(digit);
       }
@@ -69,6 +70,8 @@ class _NumpadDurationPickerState extends State<NumpadDurationPicker> {
     final labelUnitStyle =
         textTheme.headlineMedium?.copyWith(color: colorScheme.onSurface);
 
+    double originalWidth = MediaQuery.of(context).size.width;
+
     final hours = widget.duration.hours.toString().padLeft(2, "0");
     final minutes = widget.duration.minutes.toString().padLeft(2, "0");
     final seconds = widget.duration.seconds.toString().padLeft(2, "0");
@@ -89,8 +92,8 @@ class _NumpadDurationPickerState extends State<NumpadDurationPicker> {
           ],
         ),
         SizedBox(
-          height: 250,
-          width: 200,
+          width: originalWidth * 0.8,
+          height: originalWidth * 1,
           child: GridView.builder(
             padding: const EdgeInsets.all(16),
             shrinkWrap: true,
@@ -119,7 +122,7 @@ class _NumpadDurationPickerState extends State<NumpadDurationPicker> {
                 );
               } else {
                 return TimerButton(
-                  label: "⌫",
+                icon: Icons.backspace_outlined,
                   onTap: _removeDigit,
                 );
               }
@@ -132,10 +135,12 @@ class _NumpadDurationPickerState extends State<NumpadDurationPicker> {
 }
 
 class TimerButton extends StatelessWidget {
-  final String label;
+  final String? label;
+  final IconData? icon;
   final VoidCallback onTap;
 
-  const TimerButton({super.key, required this.label, required this.onTap});
+  const TimerButton(
+      {super.key, this.label, required this.onTap, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -151,12 +156,15 @@ class TimerButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(50),
         ),
         child: Center(
-          child: Text(
-            label,
-            style: textTheme.headlineMedium
-                ?.copyWith(color: colorScheme.onSurface),
-          ),
-        ),
+            child: label != null
+                ? Text(
+                    label!,
+                    style: textTheme.headlineMedium
+                        ?.copyWith(color: colorScheme.onSurface),
+                  )
+                : icon != null
+                    ? Icon(icon, color: colorScheme.onSurface)
+                    : Container()),
       ),
     );
   }
