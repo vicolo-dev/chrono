@@ -45,6 +45,8 @@
   "@pickerInput": {},
   "pickerSpinner": "Spinner",
   "@pickerSpinner": {},
+  "pickerNumpad": "Numpad",
+  "@pickerNumpad": {},
   "durationPickerSetting": "Duration Picker",
   "@durationPickerSetting": {},
   "pickerRings": "Rings",

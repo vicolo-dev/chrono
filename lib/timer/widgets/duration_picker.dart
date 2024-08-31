@@ -1,10 +1,11 @@
 import 'package:clock_app/common/widgets/modal.dart';
+import 'package:clock_app/settings/data/general_settings_schema.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/logic/edit_duration_picker_mode.dart';
 import 'package:clock_app/timer/logic/get_duration_picker.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 Future<TimeDuration?> showDurationPicker(
   BuildContext context, {
@@ -14,6 +15,7 @@ Future<TimeDuration?> showDurationPicker(
 }) async {
   final theme = Theme.of(context);
   final textTheme = theme.textTheme;
+  final colorScheme = theme.colorScheme;
 
   return showDialog<TimeDuration>(
     context: context,
@@ -30,13 +32,19 @@ Future<TimeDuration?> showDurationPicker(
                 // Get available height and width of the build area of this widget. Make a choice depending on the size.
                 Orientation orientation = MediaQuery.of(context).orientation;
 
+                DurationPickerType type = appSettings
+                    .getGroup("General")
+                    .getGroup("Display")
+                    .getSetting("Duration Picker")
+                    .value;
+
                 Widget title() => Row(
                       children: [
                         // const SizedBox(width: 8),
                         Text(
                           AppLocalizations.of(context)!.durationPickerTitle,
                           style: TimePickerTheme.of(context).helpTextStyle ??
-                              Theme.of(context).textTheme.labelSmall,
+                              textTheme.labelSmall,
                         ),
                         const Spacer(),
                         TextButton(
@@ -44,24 +52,22 @@ Future<TimeDuration?> showDurationPicker(
                               context, () => setState(() {})),
                           child: Text(
                             AppLocalizations.of(context)!.timePickerModeButton,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                            style: textTheme.titleSmall?.copyWith(
+                              color: colorScheme.primary,
+                            ),
                           ),
                         )
                       ],
                     );
 
-                Widget label() => Text(
+                Widget label() => type == DurationPickerType.numpad ? Container() : Text(
                       timeDuration.toString(),
                       style: textTheme.displayMedium,
                     );
 
                 Widget durationPicker() => getDurationPicker(
                       context,
+                      type,
                       timeDuration,
                       (TimeDuration newDuration) {
                         setState(() {
