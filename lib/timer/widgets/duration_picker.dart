@@ -60,7 +60,7 @@ Future<TimeDuration?> showDurationPicker(
                       ],
                     );
 
-                Widget label() => type == DurationPickerType.numpad ? Container() : Text(
+                Widget label() => Text(
                       timeDuration.toString(),
                       style: textTheme.displayMedium,
                     );
@@ -80,8 +80,9 @@ Future<TimeDuration?> showDurationPicker(
                     ? Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(height: 8),
-                          title(),
+                          if (type != DurationPickerType.numpad)
+                            const SizedBox(height: 8),
+                          if (type != DurationPickerType.numpad) title(),
                           const SizedBox(height: 16),
                           label(),
                           const SizedBox(height: 16),
@@ -95,8 +96,9 @@ Future<TimeDuration?> showDurationPicker(
                             // mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 16),
-                              title(),
+                              if (type != DurationPickerType.numpad)
+                                const SizedBox(height: 16),
+                              if (type != DurationPickerType.numpad) title(),
                               const SizedBox(height: 16),
                               label(),
                             ],

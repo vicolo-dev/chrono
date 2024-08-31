@@ -91,17 +91,18 @@ class _NumpadDurationPickerState extends State<NumpadDurationPicker> {
             Text("s", style: labelUnitStyle),
           ],
         ),
+        const SizedBox(height: 4),
         SizedBox(
-          width: originalWidth * 0.8,
-          height: originalWidth * 1,
+          width: originalWidth * 0.76,
+          height: originalWidth * 1.1,
           child: GridView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             shrinkWrap: true,
             itemCount: 12,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+              crossAxisSpacing: 6,
+              mainAxisSpacing: 6,
             ),
             itemBuilder: (context, index) {
               if (index < 9) {
@@ -149,17 +150,17 @@ class TimerButton extends StatelessWidget {
     TextTheme textTheme = theme.textTheme;
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.circular(100),
       child: Container(
         decoration: BoxDecoration(
           color: colorScheme.onBackground.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(100),
         ),
         child: Center(
             child: label != null
                 ? Text(
                     label!,
-                    style: textTheme.headlineMedium
+                    style: textTheme.titleMedium
                         ?.copyWith(color: colorScheme.onSurface),
                   )
                 : icon != null

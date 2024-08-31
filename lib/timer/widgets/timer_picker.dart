@@ -135,12 +135,10 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                         },
                         preset: selectedPreset,
                       );
-                  Widget label() => type == DurationPickerType.numpad
-                      ? Container()
-                      : Text(
-                          timer.duration.toString(),
-                          style: textTheme.displayMedium,
-                        );
+                  Widget label() => Text(
+                        timer.duration.toString(),
+                        style: textTheme.displayMedium,
+                      );
 
                   Widget title() => Row(
                         children: [
@@ -173,8 +171,9 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             title(),
-                            const SizedBox(height: 16),
-                            label(),
+                            if (type != DurationPickerType.numpad)
+                              const SizedBox(height: 16),
+                            if (type != DurationPickerType.numpad) label(),
                             const SizedBox(height: 16),
                             durationPicker(width),
                             const SizedBox(height: 16),
@@ -188,8 +187,9 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                               // mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 16),
-                                title(),
+                                if (type != DurationPickerType.numpad)
+                                  const SizedBox(height: 16),
+                                if (type != DurationPickerType.numpad) title(),
                                 const SizedBox(height: 16),
                                 label(),
                                 const SizedBox(height: 16),
