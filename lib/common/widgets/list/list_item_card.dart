@@ -106,14 +106,19 @@ class _ListItemCardState<T> extends State<ListItemCard<T>> {
               // decoration: const BoxDecoration(),
               clipBehavior: Clip.hardEdge,
               child: ReorderableGridDragStartListener(
-                  key: widget.key,
-                  index: widget.index,
-                  enabled: true,
-                  child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8.0, top: 16.0, bottom: 16.0),
-                      child: Icon(Icons.drag_indicator,
-                          color: colorScheme.onSurface.withOpacity(0.6)))),
+
+                key: widget.key,
+                index: widget.index,
+                enabled: true,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 8.0, top: 16.0, bottom: 16.0),
+                  child: Icon(
+                    Icons.drag_indicator,
+                    color: colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
+              ),
             ),
             Expanded(child: innerWidget),
           ],

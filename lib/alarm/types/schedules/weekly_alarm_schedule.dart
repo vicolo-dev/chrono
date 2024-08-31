@@ -89,6 +89,9 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
       weekdaySchedule.alarmRunner.cancel();
     }
 
+    // We schedule the next occurence for each weekday. 
+    // Subsequent occurences will be scheduled after the first one passes.
+
     List<int> weekdays = _weekdaySetting.selected.toList();
     List<int> existingWeekdays =
         _weekdaySchedules.map((schedule) => schedule.weekday).toList();

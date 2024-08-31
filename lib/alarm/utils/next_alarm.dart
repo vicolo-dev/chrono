@@ -1,10 +1,7 @@
-
-
 import 'package:clock_app/alarm/types/alarm.dart';
-import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 
-Alarm? getNextAlarm () {
+Alarm? getNextAlarm() {
   List<Alarm> alarms = loadListSync('alarms');
   if (alarms.isEmpty) return null;
   alarms.sort((a, b) {
