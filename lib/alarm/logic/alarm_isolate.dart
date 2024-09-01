@@ -5,7 +5,6 @@ import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
-import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -21,6 +20,7 @@ import 'package:clock_app/timer/utils/timer_id.dart';
 
 const String stopAlarmPortName = "stopAlarmPort";
 const String updatePortName = "updatePort";
+const String setAlarmVolumePortName = "setAlarmVolumePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
@@ -117,6 +117,15 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   RingtonePlayer.playAlarm(alarm);
   RingingManager.ringAlarm(scheduleId);
+
+  ReceivePort receivePort = ReceivePort();
+  IsolateNameServer.removePortNameMapping(setAlarmVolumePortName);
+  IsolateNameServer.registerPortWithName(
+      receivePort.sendPort, setAlarmVolumePortName);
+  receivePort.listen((message) {
+    print("recieve message: $message");
+    setVolume(message[0]);
+  });
 
   String timeFormatString = await loadTextFile("time_format_string");
   String title = alarm.label.isEmpty ? "Alarm Ringing..." : alarm.label;

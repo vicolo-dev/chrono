@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
@@ -47,6 +50,9 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
               widget.dismissType, ScheduledNotificationType.alarm);
         }
       } else {
+        IsolateNameServer.lookupPortByName(setAlarmVolumePortName)?.send([0.0]);
+        print("sending volume 0");
+
         // RingtonePlayer.setVolume(0);
         _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
       }
