@@ -1,5 +1,3 @@
-import 'package:clock_app/common/data/animations.dart';
-import 'package:clock_app/common/logic/get_list_filter_chips.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
@@ -8,14 +6,11 @@ import 'package:clock_app/common/widgets/list/animated_reorderable_list/animated
 import 'package:clock_app/common/widgets/list/animated_reorderable_list/animation/fade_in.dart';
 import 'package:clock_app/common/widgets/list/delete_alert_dialogue.dart';
 import 'package:clock_app/common/widgets/list/list_filter_bar.dart';
-import 'package:clock_app/common/widgets/list/list_filter_chip.dart';
 import 'package:clock_app/common/widgets/list/list_item_card.dart';
 import 'package:clock_app/settings/data/general_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomListView<Item extends ListItem> extends StatefulWidget {
   const CustomListView({
@@ -270,13 +265,12 @@ class _CustomListViewState<Item extends ListItem>
     });
   }
 
-  void _handleCustomAction(ListFilterCustomAction action) {
+  void _handleCustomAction(ListFilterCustomAction<Item> action) {
     final list = _getActionableItems();
+    List<Item> items = list.where((item) =>
+        widget.listFilters.every((filter) => filter.filterFunction(item))).toList();
 
-    action.action(list
-        .where((item) =>
-            widget.listFilters.every((filter) => filter.filterFunction(item)))
-        .toList());
+    action.action(items);
     _endSelection();
   }
 
@@ -286,11 +280,11 @@ class _CustomListViewState<Item extends ListItem>
     if (result == null || result == false) return;
 
     final list = _getActionableItems();
-    final toRemove = List<Item>.from(list.where((item) =>
+    final itemsToRemove = List<Item>.from(list.where((item) =>
         item.isDeletable &&
         widget.listFilters.every((filter) => filter.filterFunction(item))));
     _endSelection();
-    await _handleDeleteItemList(toRemove);
+    await _handleDeleteItemList(itemsToRemove);
 
     widget.onModifyList?.call();
   }

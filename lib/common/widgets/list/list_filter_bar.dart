@@ -27,7 +27,7 @@ class ListFilterBar<Item extends ListItem> extends StatelessWidget {
   final List<ListFilterCustomAction<Item>> customActions;
   final List<ListSortOption<Item>> sortOptions;
   final bool isSelecting;
-  final Function(ListFilterCustomAction) handleCustomAction;
+  final Function(ListFilterCustomAction<Item>) handleCustomAction;
   final Function handleEndSelection;
   final void Function() handleFilterChange;
   final Function handleSelectAll;
