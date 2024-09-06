@@ -146,7 +146,7 @@ void triggerAlarm(int scheduleId, Json params) async {
 }
 
 void setVolume(double volume) {
-  RingtonePlayer.setVolume(volume);
+  RingtonePlayer.setVolume(volume/100);
 }
 
 void stopAlarm(int scheduleId, AlarmStopAction action) async {

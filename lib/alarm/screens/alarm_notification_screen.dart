@@ -40,6 +40,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   void _setNextWidget() {
     setState(() {
       if (_currentIndex < 0) {
+        IsolateNameServer.lookupPortByName(setAlarmVolumePortName)
+            ?.send([alarm.volume]);
         _currentWidget = actionWidget;
       } else if (_currentIndex >= alarm.tasks.length) {
         if (widget.onPop != null) {
@@ -50,9 +52,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
               widget.dismissType, ScheduledNotificationType.alarm);
         }
       } else {
-        IsolateNameServer.lookupPortByName(setAlarmVolumePortName)?.send([0.0]);
-        print("sending volume 0");
-
+        IsolateNameServer.lookupPortByName(setAlarmVolumePortName)
+            ?.send([alarm.volume * alarm.volumeDuringTasks / 100]);
         // RingtonePlayer.setVolume(0);
         _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
       }

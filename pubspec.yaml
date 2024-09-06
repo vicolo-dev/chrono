@@ -78,6 +78,7 @@ dependencies:
      git:
       url: https://github.com/AhsanSarwar45/home_widget
       ref: main
+      path: packages/home_widget/
   permission_handler: ^11.3.1
   device_info_plus: ^10.1.0
   flutter_foreground_task:

@@ -81,6 +81,7 @@ class Alarm extends CustomizableListItem {
   FileItem get ringtone => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
   double get volume => _settings.getSetting("Volume").value;
+  double get volumeDuringTasks => _settings.getSetting("task_volume").value;
   double get snoozeLength => _settings.getSetting("Length").value;
   List<AlarmTask> get tasks => _settings.getSetting("Tasks").value;
   List<Tag> get tags => _settings.getSetting("Tags").value;

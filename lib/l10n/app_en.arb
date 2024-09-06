@@ -301,6 +301,8 @@
   "@audioChannelMedia": {},
   "volumeSetting": "Volume",
   "@volumeSetting": {},
+  "volumeWhileTasks": "Volume while solving Tasks",
+  "@volumeWhileTasks": {},
   "risingVolumeSetting": "Rising Volume",
   "@risingVolumeSetting": {},
   "timeToFullVolumeSetting": "Time to Full Volume",
