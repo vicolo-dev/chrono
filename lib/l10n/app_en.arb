@@ -169,6 +169,8 @@
   "@maxLogsSetting": {},
   "alarmLogSetting": "Alarm Logs",
   "@alarmLogSetting": {},
+  "saveLogs": "Save Logs",
+  "@saveLogs": {},
   "aboutSettingGroup": "About",
   "@aboutSettingGroup": {},
   "restoreSettingGroup": "Restore default values",

@@ -9,7 +9,7 @@ import 'package:clock_app/app.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/data/paths.dart';
-import 'package:clock_app/common/utils/debug.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/notifications/logic/foreground_task.dart';
 import 'package:clock_app/notifications/logic/notifications.dart';
@@ -25,6 +25,10 @@ import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
 import 'package:timezone/data/latest_all.dart';
 
 void main() async {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    logger.e(details.exception.toString());
+  };
+
   WidgetsFlutterBinding.ensureInitialized();
 
   initializeTimeZones();

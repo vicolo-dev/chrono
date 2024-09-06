@@ -1,6 +1,7 @@
 import 'package:clock_app/common/types/popup_action.dart';
 import 'package:clock_app/common/types/select_choice.dart';
 import 'package:clock_app/common/widgets/fields/select_field/select_bottom_sheet.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showSelectBottomSheet(
@@ -40,7 +41,7 @@ Future<void> showSelectBottomSheet(
                 if (indices.length == 1) {
                   currentSelectedIndices = [indices[0]];
                 } else {
-                  debugPrint("Too many indices");
+                  logger.e("Too many indices in select bottom sheet");
                 }
               }
             });

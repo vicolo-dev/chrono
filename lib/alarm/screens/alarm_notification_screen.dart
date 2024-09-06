@@ -6,6 +6,7 @@ import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/widgets/clock/clock.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
@@ -88,7 +89,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
         snoozeLabel: "Snooze",
       );
 
-      debugPrint(e.toString());
+      logger.e(e.toString());
     }
 
     _setNextWidget();

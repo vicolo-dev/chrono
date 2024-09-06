@@ -1,6 +1,7 @@
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/notifications/widgets/notification_actions/slide_notification_action.dart';
@@ -67,7 +68,7 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
             '+${getTimerById(widget.scheduleIds.last)?.addLength.floor()}:00',
       );
 
-      debugPrint(e.toString());
+      logger.e(e.toString());
     }
 
     super.initState();

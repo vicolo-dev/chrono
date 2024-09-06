@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,8 +20,7 @@ Future<void> initializeDatabases() async {
     List<int> bytes =
         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
-    debugPrint('Copying timzones.db to $timezonesDatabasePath');
-    // debugPrint(json.encode(bytes));
+    logger.i('Copying timzones.db to $timezonesDatabasePath');
     // Save copied asset to documents
     await File(timezonesDatabasePath).writeAsBytes(bytes);
   }

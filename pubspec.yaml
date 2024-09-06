@@ -86,7 +86,7 @@ dependencies:
     git:
       url: https://github.com/vicolo-dev/flutter_foreground_task
       ref: master
-  logger: ^2.3.0
+  logger: ^2.4.0
   flutter_animate: ^4.5.0
   # animated_reorderable_list: ^1.1.1
   # animated_reorderable_list:

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/settings/data/backup_options.dart';
 import 'package:clock_app/settings/logic/backup.dart';
 import 'package:clock_app/settings/types/backup_option.dart';
@@ -76,7 +77,7 @@ class _BackupExportScreenState extends State<BackupExportScreen> {
                       showSnackBar(context, "Export successful!");
                     }
                   } catch (e) {
-                    debugPrint(e.toString());
+                    logger.e(e.toString());
                     if (context.mounted) {
                       showSnackBar(context, "Error exporting: ${e.toString()}",
                           error: true);
@@ -164,7 +165,7 @@ class _BackupImportScreenState extends State<BackupImportScreen> {
                       showSnackBar(context, "Import successful!");
                     }
                   } catch (e) {
-                    debugPrint(e.toString());
+                    logger.e(e.toString());
                     if (context.mounted) {
                       showSnackBar(context, "Error importing: ${e.toString()}",
                           error: true);
