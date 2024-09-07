@@ -29,7 +29,7 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
     logger.f(details.exception.toString());
   };
 
-  logger.i("Alarm triggered: $scheduleId");
+  logger.i("Alarm isolate triggered $scheduleId");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
     logger.e("Params was null when triggering alarm");

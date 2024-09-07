@@ -47,7 +47,7 @@ SnackBar getSnackbar(String text,
     content: ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 28),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         alignment: Alignment.centerLeft,
         color: color,
         // height: 28,
