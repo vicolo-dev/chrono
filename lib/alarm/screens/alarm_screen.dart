@@ -185,7 +185,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _listController.changeItems((alarms) {});
   }
 
-  List<ListFilterItem<Alarm>> getListFilterItems() {
+  List<ListFilterItem<Alarm>> _getListFilterItems() {
     List<ListFilterItem<Alarm>> listFilterItems =
         _showFilters.value ? [...alarmListFilters] : [];
 
@@ -257,7 +257,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
           },
           isSelectable: true,
           // header: getNextAlarmWidget(),
-          listFilters: getListFilterItems(),
+          listFilters: _getListFilterItems(),
           customActions: _showFilters.value
               ? [
                   ListFilterCustomAction(

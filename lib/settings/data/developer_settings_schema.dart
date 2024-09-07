@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:clock_app/alarm/screens/alarm_events_screen.dart';
 import 'package:clock_app/common/data/paths.dart';
+import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -36,13 +37,17 @@ SettingGroup developerSettingsSchema = SettingGroup(
         snapLength: 1,
       ),
       SettingPageLink(
-          "Alarm Logs",
+          "alarm_logs",
           (context) => AppLocalizations.of(context)!.alarmLogSetting,
           const AlarmEventsScreen()),
       SettingAction(
           "save_logs", (context) => AppLocalizations.of(context)!.saveLogs,
           (context) async {
         final File file = File(await getLogsFilePath());
+
+        if(!(await file.exists())) {
+          await file.create(recursive: true);
+        }
 
         await PickOrSave().fileSaver(
             params: FileSaverParams(
@@ -54,6 +59,15 @@ SettingGroup developerSettingsSchema = SettingGroup(
             )
           ],
         ));
+      }),
+      SettingAction(
+          "clear_logs", (context) => AppLocalizations.of(context)!.clearLogs,
+          (context) async {
+        final File file = File(await getLogsFilePath());
+
+        await file.writeAsString("");
+
+        if(context.mounted) showSnackBar(context, "Logs cleared");
       })
     ]),
   ],

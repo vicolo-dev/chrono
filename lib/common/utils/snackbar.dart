@@ -8,10 +8,11 @@ void showSnackBar(BuildContext context, String text,
   Color? color = error ? colorScheme.error : null;
   ScaffoldMessenger.of(context).removeCurrentSnackBar();
   ScaffoldMessenger.of(context)
-      .showSnackBar(getSnackbar(text, fab: fab, navBar: navBar, color:color));
+      .showSnackBar(getSnackbar(text, fab: fab, navBar: navBar, color: color));
 }
 
-SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false, Color? color}) {
+SnackBar getSnackbar(String text,
+    {bool fab = false, bool navBar = false, Color? color}) {
   double left = 20;
   double right = 20;
   double bottom = 12;
@@ -46,8 +47,9 @@ SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false, Color?
     content: ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 28),
       child: Container(
+        padding: const EdgeInsets.all(12),
         alignment: Alignment.centerLeft,
-        color: color, 
+        color: color,
         // height: 28,
         child: Text(text),
       ),
@@ -57,7 +59,7 @@ SnackBar getSnackbar(String text, {bool fab = false, bool navBar = false, Color?
       right: right,
       bottom: bottom,
     ),
-    
+    padding:  EdgeInsets.zero,
     elevation: 2,
     dismissDirection: DismissDirection.none,
   );
