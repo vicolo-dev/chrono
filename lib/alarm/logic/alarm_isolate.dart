@@ -25,6 +25,10 @@ const String setAlarmVolumePortName = "setAlarmVolumePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    logger.f(details.exception.toString());
+  };
+
   logger.i("Alarm triggered: $scheduleId");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
@@ -74,10 +78,9 @@ void stopScheduledNotification(List<dynamic> message) {
 }
 
 void triggerAlarm(int scheduleId, Json params) async {
+  logger.i("Alarm triggered $scheduleId");
   if (params == null) {
-    if (kDebugMode) {
-      print("Params was null when triggering alarm");
-    }
+      logger.e("Params was null when triggering alarm");
     return;
   }
 
@@ -101,6 +104,7 @@ void triggerAlarm(int scheduleId, Json params) async {
       now.millisecondsSinceEpoch >
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
               1000 * 60 * 60) {
+    logger.i("Skipping alarm $scheduleId");
     return;
   }
 
@@ -124,7 +128,6 @@ void triggerAlarm(int scheduleId, Json params) async {
   IsolateNameServer.registerPortWithName(
       receivePort.sendPort, setAlarmVolumePortName);
   receivePort.listen((message) {
-    print("recieve message: $message");
     setVolume(message[0]);
   });
 
@@ -147,10 +150,11 @@ void triggerAlarm(int scheduleId, Json params) async {
 }
 
 void setVolume(double volume) {
-  RingtonePlayer.setVolume(volume/100);
+  RingtonePlayer.setVolume(volume / 100);
 }
 
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
+  logger.i("Stopping alarm $scheduleId with action: ${action.name}");
   if (action == AlarmStopAction.snooze) {
     await updateAlarmById(scheduleId, (alarm) async => await alarm.snooze());
     // await createSnoozeNotification(scheduleId);
@@ -168,6 +172,7 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
 }
 
 void triggerTimer(int scheduleId, Json params) async {
+  logger.i("Timer triggered $scheduleId");
   ClockTimer? timer = getTimerById(scheduleId);
 
   if (timer == null || !timer.isRunning) {
@@ -204,6 +209,7 @@ void triggerTimer(int scheduleId, Json params) async {
 }
 
 void stopTimer(int scheduleId, AlarmStopAction action) async {
+  logger.i("Stopping timer $scheduleId with action: ${action.name}");
   ClockTimer? timer = getTimerById(scheduleId);
   if (timer == null) return;
   if (action == AlarmStopAction.snooze) {

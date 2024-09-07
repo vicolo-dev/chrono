@@ -18,12 +18,10 @@ import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/system/data/app_info.dart';
 import 'package:clock_app/system/data/device_info.dart';
 import 'package:clock_app/system/logic/handle_boot.dart';
-import 'package:clock_app/system/logic/quick_actions.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boot_receiver/flutter_boot_receiver.dart';
 import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
-import 'package:quick_actions/quick_actions.dart';
 import 'package:timezone/data/latest_all.dart';
 
 void main() async {
