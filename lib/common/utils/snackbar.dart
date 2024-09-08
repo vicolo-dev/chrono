@@ -44,15 +44,13 @@ SnackBar getSnackbar(String text,
   }
 
   return SnackBar(
-    content: ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 28),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        alignment: Alignment.centerLeft,
-        color: color,
-        // height: 28,
-        child: Text(text),
-      ),
+    content: Container(
+      constraints: const BoxConstraints(minHeight: 56),
+      padding: const EdgeInsets.all(16),
+      alignment: Alignment.centerLeft,
+      color: color,
+      // height: 28,
+      child: Text(text),
     ),
     margin: EdgeInsets.only(
       left: left,
@@ -61,6 +59,6 @@ SnackBar getSnackbar(String text,
     ),
     padding:  EdgeInsets.zero,
     elevation: 2,
-    dismissDirection: DismissDirection.none,
+    dismissDirection: DismissDirection.vertical,
   );
 }

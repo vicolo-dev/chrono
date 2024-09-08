@@ -3,9 +3,12 @@ import 'dart:math';
 import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
+import 'package:clock_app/common/types/file_item.dart';
+import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:pick_or_save/pick_or_save.dart';
 import 'package:vibration/vibration.dart';
 
 Random random = Random();
@@ -39,6 +42,53 @@ class RingtonePlayer {
     await _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
   }
 
+  static Future<String> getDefaultRingtoneUri() async {
+    return (await loadList<FileItem>("ringtones"))
+        .firstWhere((ringtone) => ringtone.type == FileItemType.audio)
+        .uri;
+  }
+
+  static Future<String> getRingtoneUri(Alarm alarm) async {
+    switch (alarm.ringtone.type) {
+      case FileItemType.directory:
+        try {
+          logger.t(alarm.ringtone.uri);
+          // logger.t(
+          //     await Directory(alarm.ringtone.uri).list(recursive: true).toList());
+          List<DocumentFile>? documentFiles =
+              await PickOrSave().directoryDocumentsPicker(
+            params: DirectoryDocumentsPickerParams(
+              directoryUri: alarm.ringtone.uri,
+              // recurseDirectories: true,
+              mimeTypesFilter: ["audio/*"],
+            ),
+          );
+          if (documentFiles != null && documentFiles.isNotEmpty) {
+            logger.t("Audio files found in directory ${alarm.ringtone.uri}");
+            Random random = Random();
+            int index = random.nextInt(documentFiles.length);
+            DocumentFile documentFile = documentFiles[index];
+            logger.t("${documentFile.name} ${documentFile.uri}");
+            return documentFile.uri;
+          } else {
+            logger.t(
+                "No audio files found in directory ${alarm.ringtone.uri}, using default");
+            // Choose a default ringtone if directory doesn't have any audio
+            return await getDefaultRingtoneUri();
+          }
+        } catch (e) {
+          logger.e("Error loading melody from directory: $e");
+          return await getDefaultRingtoneUri();
+        }
+
+      case FileItemType.audio:
+        return alarm.ringtone.uri;
+
+      default:
+        return await getDefaultRingtoneUri();
+    }
+  }
+
   static Future<void> playAlarm(Alarm alarm,
       {LoopMode loopMode = LoopMode.one}) async {
     await activePlayer?.stop();
@@ -48,36 +98,10 @@ class RingtonePlayer {
       contentType: AndroidAudioContentType.music,
     ));
     activePlayer = _alarmPlayer;
-    String uri = alarm.ringtone.uri;
-    // if (alarm.ringtone.type == FileItemType.directory) {
-    //   print(alarm.ringtone.uri);
-    //   List<String>? persistentPermUris =
-    //       await PickOrSave().urisWithPersistedPermission();
-    //   print(persistentPermUris);
-    // print(await Directory(alarm.ringtone.uri).list(recursive: true).toList());
-    // List<DocumentFile>? documentFiles =
-    //     await PickOrSave().directoryDocumentsPicker(
-    //   params: DirectoryDocumentsPickerParams(
-    //     directoryUri: alarm.ringtone.uri,
-    //     // recurseDirectories: true,
-    //     mimeTypesFilter: ["audio/*"],
-    //   ),
-    // );
-    // if (documentFiles != null && documentFiles.isNotEmpty) {
-    //   Random random = Random();
-    //   int index = random.nextInt(documentFiles.length);
-    //   DocumentFile documentFile = documentFiles[index];
-    //   print("${documentFile.name} ${documentFile.uri}");
-    //   uri = documentFile.uri;
-    // } else {
-    //   // Choose a default ringtone if directory doesn't have any audio
-    //   uri = (await loadList<FileItem>("ringtones"))
-    //       .where((ringtone) => ringtone.type == FileItemType.audio)
-    //       .toList()
-    //       .first
-    //       .uri;
-    // }
-    // }
+    String uri = await getRingtoneUri(alarm);
+
+    logger.t("Playing alarm with uri: $uri");
+
     await _play(uri,
         vibrate: alarm.vibrate,
         loopMode: LoopMode.one,
@@ -117,48 +141,52 @@ class RingtonePlayer {
     bool startAtRandomPos = false,
     // double duration = double.infinity,
   }) async {
-    _stopRisingVolume = false;
+    try {
+      _stopRisingVolume = false;
 
-    RingtoneManager.lastPlayedRingtoneUri = ringtoneUri;
-    if (_vibratorIsAvailable && vibrate) {
-      Vibration.vibrate(pattern: [500, 1000], repeat: 0);
-    }
-    // activePlayer?.
-    await activePlayer?.stop();
-    await activePlayer?.setLoopMode(loopMode);
-    Duration? duration = await activePlayer
-        ?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
-        logger.t("Duration: $duration");
-            
-    if (duration != null && startAtRandomPos) {
-      double randomNumber = random.nextInt(100) / 100.0;
-      logger.t("Starting at random position: $randomNumber");
-      activePlayer?.seek(duration * randomNumber);
-    }
-    await setVolume(volume);
-
-    // Gradually increase the volume
-    if (secondsToMaxVolume > 0) {
-      for (int i = 0; i <= 10; i++) {
-        Future.delayed(
-          Duration(milliseconds: i * (secondsToMaxVolume * 100)),
-          () {
-            if (!_stopRisingVolume) {
-              setVolume((i / 10) * volume);
-            }
-          },
-        );
+      RingtoneManager.lastPlayedRingtoneUri = ringtoneUri;
+      if (_vibratorIsAvailable && vibrate) {
+        Vibration.vibrate(pattern: [500, 1000], repeat: 0);
       }
-    }
-    // Future.delayed(
-    //   Duration(seconds: duration.toInt()),
-    //   () async {
-    //     await stop();
-    //   },
-    // );
+      // activePlayer?.
+      await activePlayer?.stop();
+      await activePlayer?.setLoopMode(loopMode);
+      Duration? duration = await activePlayer
+          ?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
+      logger.t("Duration: $duration");
 
-    // Don't use await here as this will only return after the audio is done
-    activePlayer?.play();
+      if (duration != null && startAtRandomPos) {
+        double randomNumber = random.nextInt(100) / 100.0;
+        logger.t("Starting at random position: $randomNumber");
+        activePlayer?.seek(duration * randomNumber);
+      }
+      await setVolume(volume);
+
+      // Gradually increase the volume
+      if (secondsToMaxVolume > 0) {
+        for (int i = 0; i <= 10; i++) {
+          Future.delayed(
+            Duration(milliseconds: i * (secondsToMaxVolume * 100)),
+            () {
+              if (!_stopRisingVolume) {
+                setVolume((i / 10) * volume);
+              }
+            },
+          );
+        }
+      }
+      // Future.delayed(
+      //   Duration(seconds: duration.toInt()),
+      //   () async {
+      //     await stop();
+      //   },
+      // );
+
+      // Don't use await here as this will only return after the audio is done
+      activePlayer?.play();
+    } catch (e) {
+      logger.e("Error playing $ringtoneUri: $e");
+    }
   }
 
   static Future<void> pause() async {

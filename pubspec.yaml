@@ -89,6 +89,7 @@ dependencies:
   logger: ^2.4.0
   flutter_animate: ^4.5.0
   quick_actions: ^1.0.7
+  file_picker: ^8.0.7
   # animated_reorderable_list: ^1.1.1
   # animated_reorderable_list:
     # path: "../animated_reorderable_list"

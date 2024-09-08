@@ -14,13 +14,19 @@ class FileLoggerOutput extends LogOutput {
       print(line);
     }
 
-    _writeLog(event.origin.message as String, event.level);
+    String message = switch (event.origin.message.runtimeType) {
+      String => event.origin.message as String,
+      Exception => (event.origin.message as Exception).toString(),
+      _ => "Unknown error",
+    };
+
+    _writeLog(message, event.level);
 
     Future(() {
       if (event.level == Level.error &&
           App.navigatorKey.currentContext != null) {
         showSnackBar(
-            App.navigatorKey.currentContext!, event.origin.message as String,
+            App.navigatorKey.currentContext!, message,
             error: true, navBar: false, fab: false);
       }
     });

@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/debug/logic/logger.dart';
-import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path/path.dart' as path;
-import 'package:path/path.dart';
 import 'package:queue/queue.dart';
 import 'package:watcher/watcher.dart';
 
@@ -48,9 +47,9 @@ void unwatchList(String key) {
 }
 
 List<T> loadListSync<T extends JsonSerializable>(String key) {
-  try{
-  return listFromString<T>(loadTextFileSync(key));
-  }catch(e){
+  try {
+    return listFromString<T>(loadTextFileSync(key));
+  } catch (e) {
     logger.e("Error loading list ($key): $e");
     return [];
   }
@@ -62,19 +61,18 @@ Future<List<T>> loadList<T extends JsonSerializable>(String key) async {
 
 Future<void> saveList<T extends JsonSerializable>(
     String key, List<T> list) async {
-       await saveTextFile(key, listToString(list));
+  await saveTextFile(key, listToString(list));
 }
 
 Future<void> initList<T extends JsonSerializable>(
     String key, List<T> list) async {
-
   await initTextFile(key, listToString(list));
 }
 
 Future<void> initTextFile(String key, String value) async {
   if (GetStorage().read('init_$key') == null) {
     GetStorage().write('init_$key', true);
-    if(!textFileExistsSync(key)){
+    if (!textFileExistsSync(key)) {
       logger.i("Initializing $key");
       await saveTextFile(key, value);
     }
@@ -92,13 +90,20 @@ Future<void> saveTextFile(String key, String content) async {
   });
 }
 
-Future<String> saveRingtone(String id, String sourceUri) async {
+Future<String> saveRingtone(String id, Uint8List data) async {
   String ringtonesDirectory = getRingtonesDirectoryPathSync();
-  File source = File(sourceUri);
   String newPath = path.join(ringtonesDirectory, id);
+
+  File file = File(newPath);
+
   await queue.add(() async {
-    await source.copy(newPath);
+    if (!file.existsSync()) {
+      file.createSync(recursive: true);
+    }
+
+    await file.writeAsBytes(data, mode: FileMode.writeOnly);
   });
+
   return newPath;
 }
 
@@ -125,7 +130,6 @@ Future<String> loadTextFile(String key) async {
       return file.readAsString();
     } else {
       return '[]';
-
     }
   });
   return content;

@@ -7,7 +7,7 @@ var logger = Logger(
   filter: FileLogFilter(),
   output: FileLoggerOutput(),
   printer: PrettyPrinter(
-    methodCount: 0, // Number of method calls to be displayed
+    methodCount: 5, // Number of method calls to be displayed
     errorMethodCount: 8, // Number of method calls if stacktrace is provided
     lineLength: 80, // Width of the output
     colors: true, // Colorful log messages
