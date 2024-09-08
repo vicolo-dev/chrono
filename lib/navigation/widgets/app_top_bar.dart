@@ -20,17 +20,22 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
+    Brightness iconBrightness =
+        colorScheme.background.computeLuminance() > 0.179
+            ? Brightness.dark
+            : Brightness.light;
+
     return PreferredSize(
       preferredSize: preferredSize,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle(
+            systemNavigationBarColor: colorScheme.background,
+            systemNavigationBarDividerColor: Colors.transparent,
+            systemNavigationBarIconBrightness: iconBrightness,
             statusBarColor: colorScheme.background,
-            statusBarIconBrightness:
-                colorScheme.background.computeLuminance() > 0.179
-                    ? Brightness.dark
-                    : Brightness.light, // For Android (dark icons)
+            statusBarIconBrightness: iconBrightness, // For Android (dark icons)
           ),
           scrolledUnderElevation: 0,
           toolbarHeight: preferredSize.height,
