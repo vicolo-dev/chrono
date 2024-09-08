@@ -121,6 +121,12 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
                     child: Column(
                       children: [
                         const Spacer(),
+                        if (alarm.label.isNotEmpty)
+                          Text(
+                            alarm.label,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        const SizedBox(height: 8),
                         const Clock(
                           // dateTime: Date,
                           horizontalAlignment: ElementAlignment.center,

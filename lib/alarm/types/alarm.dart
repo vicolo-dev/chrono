@@ -262,7 +262,7 @@ class Alarm extends CustomizableListItem {
         currentScheduleDateTime != null &&
         !shouldSkipNextAlarm) {
       await createAlarmReminderNotification(
-          id, currentScheduleDateTime!, tasks.isNotEmpty);
+          id, label, currentScheduleDateTime!, tasks.isNotEmpty);
     } else {
       for (var schedule in _schedules) {
         cancelAlarmReminderNotification(schedule.currentAlarmRunnerId);
