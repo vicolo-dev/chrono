@@ -1,13 +1,16 @@
+import 'package:clock_app/navigation/data/tabs.dart';
+import 'package:flutter/material.dart';
 import 'package:quick_actions/quick_actions.dart';
 
-Future<void> initializeQuickActions ( Function(int) setTab)  async {
+Future<void> initializeQuickActions(
+    BuildContext context, Function(int, [String?]) setTab) async {
   const QuickActions quickActions = QuickActions();
   await quickActions.initialize((shortcutType) {
     if (shortcutType == 'action_add_alarm') {
-      setTab(0);
+      setTab(getTabs(context).indexWhere((tab) => tab.id == "alarm"), "add_alarm");
     }
     if (shortcutType == 'action_add_timer') {
-      setTab(1);
+      setTab(getTabs(context).indexWhere((tab) => tab.id == "timer"), "add_timer");
     }
     // More handling code...
   });

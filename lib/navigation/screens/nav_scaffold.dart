@@ -6,6 +6,7 @@ import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/navigation/data/tabs.dart';
+import 'package:clock_app/navigation/types/quick_action_controller.dart';
 import 'package:clock_app/navigation/widgets/app_navigation_bar.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/general_settings_schema.dart';
@@ -15,6 +16,7 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/system/logic/handle_intents.dart';
 import 'package:clock_app/system/logic/quick_actions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:receive_intent/receive_intent.dart' as intent_handler;
@@ -66,14 +68,21 @@ class _NavScaffoldState extends State<NavScaffold> {
   late Setting showForegroundSetting;
   late StreamSubscription _sub;
   late PageController _controller;
+  QuickActionController quickActionController = QuickActionController();
 
-  void _onTabSelected(int index) {
+  void _onTabSelected(int index, [String? tabInitAction]) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
     setState(() {
       _controller.jumpToPage(index);
       _selectedTabIndex = index;
     });
+
+    if (tabInitAction != null) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        quickActionController.callAction(tabInitAction);
+      });
+    }
   }
 
   void _handlePageViewChanged(int currentPageIndex) {
@@ -145,7 +154,7 @@ class _NavScaffoldState extends State<NavScaffold> {
   @override
   void initState() {
     super.initState();
-    initializeQuickActions(_onTabSelected);
+    initializeQuickActions(context, _onTabSelected);
     initReceiveIntent();
     useMaterialNavBarSetting = appSettings
         .getGroup("Appearance")
@@ -179,7 +188,7 @@ class _NavScaffoldState extends State<NavScaffold> {
   @override
   Widget build(BuildContext context) {
     Orientation orientation = MediaQuery.of(context).orientation;
-    final tabs = getTabs(context);
+    final tabs = getTabs(context, quickActionController);
     return WithForegroundTask(
       child: Scaffold(
         appBar: orientation == Orientation.portrait
