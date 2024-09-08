@@ -4,10 +4,10 @@
 </ul>
 <h3>Alarms</h3>
 <ul>
-<li>Customizable schedules (Daily, Weekly, Specific week days, Specific dates, Date range)</li>
-<li>Configure Melody, rising volume and vibrations</li>
-<li>Configure Snooze length and max snoozes</li>
-<li>Alarm tasks (Math problems, Retype text, Sequence, more to come)</li>
+<li>Customizable schedules (daily, weekly, specific week days, specific dates, date range)</li>
+<li>Configure melody, rising volume and vibrations</li>
+<li>Configure snooze length and max snoozes</li>
+<li>Alarm tasks (math problems, retype text, sequence, more to come)</li>
 <li>Filter alarms (all, today, tomorrow, snoozed, disabled, completed)</li>
 </ul>
 <h3>Clock</h3>
@@ -18,7 +18,7 @@
 </ul>
 <h3>Timer</h3>
 <ul>
-<li>Configure Melody, rising volume and vibrations</li>
+<li>Configure melody, rising volume and vibrations</li>
 <li>Timer presets</li>
 <li>Filter timers (all, running, paused, stopped)</li>
 </ul>
