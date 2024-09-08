@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:clock_app/audio/logic/ringtones.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
+import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
@@ -343,6 +345,36 @@ class _TimerScreenState extends State<TimerScreen> {
     return timer;
   }
 
+  List<ListFilterCustomAction<ClockTimer>> _getCustomActions() {
+    if (!_showFilters.value) return [];
+    return [
+      ListFilterCustomAction<ClockTimer>(
+          name: "Reset all filtered timers",
+          icon: Icons.timer_off_rounded,
+          action: (timers) => _handleResetMultipleTimers(timers)),
+      ListFilterCustomAction<ClockTimer>(
+          name: "Play all filtered timers",
+          icon: Icons.play_arrow_rounded,
+          action: (timers) => _handleStartMultipleTimers(timers)),
+      ListFilterCustomAction<ClockTimer>(
+          name: "Pause all filtered timers",
+          icon: Icons.pause_rounded,
+          action: (timers) => _handlePauseMultipleTimers(timers)),
+      ListFilterCustomAction(
+          name: AppLocalizations.of(context)!.shuffleAlarmMelodiesAction,
+          icon: Icons.shuffle_rounded,
+          action: (timers) async {
+            List<int> randomIndices =
+                await getNRandomRingtoneIndices(timers.length);
+            for (var timer in timers) {
+              final setting = timer.settings.getSetting("Melody")
+                  as DynamicSelectSetting<FileItem>;
+              setting.setIndex(context, randomIndices.removeAt(0));
+            }
+          }),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -383,25 +415,7 @@ class _TimerScreenState extends State<TimerScreen> {
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],
               sortOptions: _showSort.value ? timerSortOptions : [],
-              customActions: _showFilters.value
-                  ? [
-                      ListFilterCustomAction<ClockTimer>(
-                          name: "Reset all filtered timers",
-                          icon: Icons.timer_off_rounded,
-                          action: (timers) =>
-                              _handleResetMultipleTimers(timers)),
-                      ListFilterCustomAction<ClockTimer>(
-                          name: "Play all filtered timers",
-                          icon: Icons.play_arrow_rounded,
-                          action: (timers) =>
-                              _handleStartMultipleTimers(timers)),
-                      ListFilterCustomAction<ClockTimer>(
-                          name: "Pause all filtered timers",
-                          icon: Icons.pause_rounded,
-                          action: (timers) =>
-                              _handlePauseMultipleTimers(timers)),
-                    ]
-                  : [],
+              customActions: _getCustomActions(),
             ),
           ),
         ],

@@ -4,7 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/alarm_event.dart';
-import 'package:clock_app/audio/logic/system_ringtones.dart';
+import 'package:clock_app/audio/logic/ringtones.dart';
 import 'package:clock_app/clock/data/default_favorite_cities.dart';
 import 'package:clock_app/clock/logic/timezone_database.dart';
 import 'package:clock_app/clock/types/city.dart';

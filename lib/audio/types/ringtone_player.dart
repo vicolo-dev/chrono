@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
+import 'package:clock_app/audio/logic/ringtones.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
@@ -42,53 +43,8 @@ class RingtonePlayer {
     await _play(ringtoneUri, vibrate: vibrate, loopMode: LoopMode.one);
   }
 
-  static Future<String> getDefaultRingtoneUri() async {
-    return (await loadList<FileItem>("ringtones"))
-        .firstWhere((ringtone) => ringtone.type == FileItemType.audio)
-        .uri;
-  }
 
-  static Future<String> getRingtoneUri(Alarm alarm) async {
-    switch (alarm.ringtone.type) {
-      case FileItemType.directory:
-        try {
-          logger.t(alarm.ringtone.uri);
-          // logger.t(
-          //     await Directory(alarm.ringtone.uri).list(recursive: true).toList());
-          List<DocumentFile>? documentFiles =
-              await PickOrSave().directoryDocumentsPicker(
-            params: DirectoryDocumentsPickerParams(
-              directoryUri: alarm.ringtone.uri,
-              // recurseDirectories: true,
-              mimeTypesFilter: ["audio/*"],
-            ),
-          );
-          if (documentFiles != null && documentFiles.isNotEmpty) {
-            logger.t("Audio files found in directory ${alarm.ringtone.uri}");
-            Random random = Random();
-            int index = random.nextInt(documentFiles.length);
-            DocumentFile documentFile = documentFiles[index];
-            logger.t("${documentFile.name} ${documentFile.uri}");
-            return documentFile.uri;
-          } else {
-            logger.t(
-                "No audio files found in directory ${alarm.ringtone.uri}, using default");
-            // Choose a default ringtone if directory doesn't have any audio
-            return await getDefaultRingtoneUri();
-          }
-        } catch (e) {
-          logger.e("Error loading melody from directory: $e");
-          return await getDefaultRingtoneUri();
-        }
-
-      case FileItemType.audio:
-        return alarm.ringtone.uri;
-
-      default:
-        return await getDefaultRingtoneUri();
-    }
-  }
-
+ 
   static Future<void> playAlarm(Alarm alarm,
       {LoopMode loopMode = LoopMode.one}) async {
     await activePlayer?.stop();
@@ -98,7 +54,7 @@ class RingtonePlayer {
       contentType: AndroidAudioContentType.music,
     ));
     activePlayer = _alarmPlayer;
-    String uri = await getRingtoneUri(alarm);
+    String uri = await getRingtoneUri(alarm.ringtone);
 
     logger.t("Playing alarm with uri: $uri");
 

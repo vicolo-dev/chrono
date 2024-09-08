@@ -346,9 +346,9 @@ class Alarm extends CustomizableListItem {
     }
   }
 
-  // void _delete() {
-  //   _markedForDeletion = true;
-  // }
+  void setRingtone(BuildContext context, int index) {
+    ;
+  }
 
   void setTime(Time time) {
     _time = time;
