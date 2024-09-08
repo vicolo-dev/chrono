@@ -195,14 +195,14 @@ SettingGroup alarmSettingsSchema = SettingGroup(
               ],
               // shouldCloseOnSelect: false,
             ),
-            SelectSetting<AndroidAudioUsage>(
-              "Audio Channel",
-              (context) => AppLocalizations.of(context)!.audioChannelSetting,
-              audioChannelOptions,
-              onChange: (context, index) {
-                RingtonePlayer.stop();
-              },
+             SwitchSetting(
+              "start_melody_at_random_pos",
+              (context) => AppLocalizations.of(context)!.startMelodyAtRandomPos,
+              false,
+              getDescription: (context) => AppLocalizations.of(context)!.startMelodyAtRandomPosDescription,
+
             ),
+
             SliderSetting(
                 "Volume",
                 (context) => AppLocalizations.of(context)!.volumeSetting,
@@ -234,6 +234,14 @@ SettingGroup alarmSettingsSchema = SettingGroup(
                 enableConditions: [
                   ValueCondition(["Rising Volume"], (value) => value == true)
                 ]),
+            SelectSetting<AndroidAudioUsage>(
+              "Audio Channel",
+              (context) => AppLocalizations.of(context)!.audioChannelSetting,
+              audioChannelOptions,
+              onChange: (context, index) {
+                RingtonePlayer.stop();
+              },
+            ),
           ],
         ),
         SwitchSetting("Vibration",

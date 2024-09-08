@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
@@ -6,12 +8,15 @@ import 'package:clock_app/timer/types/timer.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
 
+Random random = Random();
+
 class RingtonePlayer {
   static AudioPlayer? _alarmPlayer;
   static AudioPlayer? _timerPlayer;
   static AudioPlayer? _mediaPlayer;
   static AudioPlayer? activePlayer;
   static bool _vibratorIsAvailable = false;
+  static bool _stopRisingVolume = false;
 
   static Future<void> initialize() async {
     _alarmPlayer ??= AudioPlayer(handleInterruptions: true);
@@ -73,13 +78,12 @@ class RingtonePlayer {
     //       .uri;
     // }
     // }
-    await _play(
-      uri,
-      vibrate: alarm.vibrate,
-      loopMode: LoopMode.one,
-      volume: alarm.volume / 100,
-      secondsToMaxVolume: alarm.risingVolumeDuration.inSeconds,
-    );
+    await _play(uri,
+        vibrate: alarm.vibrate,
+        loopMode: LoopMode.one,
+        volume: alarm.volume / 100,
+        secondsToMaxVolume: alarm.risingVolumeDuration.inSeconds,
+        startAtRandomPos: alarm.shouldStartMelodyAtRandomPos);
   }
 
   static Future<void> playTimer(ClockTimer timer,
@@ -100,6 +104,7 @@ class RingtonePlayer {
 
   static Future<void> setVolume(double volume) async {
     logger.t("Setting volume to $volume");
+    _stopRisingVolume = true;
     await activePlayer?.setVolume(volume);
   }
 
@@ -109,8 +114,11 @@ class RingtonePlayer {
     LoopMode loopMode = LoopMode.one,
     double volume = 1.0,
     int secondsToMaxVolume = 0,
+    bool startAtRandomPos = false,
     // double duration = double.infinity,
   }) async {
+    _stopRisingVolume = false;
+
     RingtoneManager.lastPlayedRingtoneUri = ringtoneUri;
     if (_vibratorIsAvailable && vibrate) {
       Vibration.vibrate(pattern: [500, 1000], repeat: 0);
@@ -118,7 +126,15 @@ class RingtonePlayer {
     // activePlayer?.
     await activePlayer?.stop();
     await activePlayer?.setLoopMode(loopMode);
-    await activePlayer?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
+    Duration? duration = await activePlayer
+        ?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
+        logger.t("Duration: $duration");
+            
+    if (duration != null && startAtRandomPos) {
+      double randomNumber = random.nextInt(100) / 100.0;
+      logger.t("Starting at random position: $randomNumber");
+      activePlayer?.seek(duration * randomNumber);
+    }
     await setVolume(volume);
 
     // Gradually increase the volume
@@ -127,7 +143,9 @@ class RingtonePlayer {
         Future.delayed(
           Duration(milliseconds: i * (secondsToMaxVolume * 100)),
           () {
-            setVolume((i / 10) * volume);
+            if (!_stopRisingVolume) {
+              setVolume((i / 10) * volume);
+            }
           },
         );
       }
@@ -158,5 +176,6 @@ class RingtonePlayer {
       await Vibration.cancel();
     }
     RingtoneManager.lastPlayedRingtoneUri = "";
+    _stopRisingVolume = false;
   }
 }

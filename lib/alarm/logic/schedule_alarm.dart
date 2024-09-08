@@ -90,7 +90,7 @@ Future<void> scheduleAlarm(
       },
     );
 
-    logger.i('Scheduled alarm $scheduleId for $startDate of type ${type.name}:  $description');
+    logger.i('Scheduled alarm $scheduleId for $startDate of type ${type.name}: $description');
   }
 }
 
