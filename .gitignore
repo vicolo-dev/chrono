@@ -33,8 +33,6 @@ migrate_working_dir/
 /build/
 coverage/
 
-!/android/gradle/wrapper/gradle-wrapper.jar
-
 # Symbolication related
 app.*.symbols
 
