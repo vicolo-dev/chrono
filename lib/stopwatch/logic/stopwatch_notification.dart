@@ -8,9 +8,9 @@ Future<void> updateStopwatchNotification(ClockStopwatch stopwatch) async {
       content: NotificationContent(
         id: stopwatch.id,
         channelKey: stopwatchNotificationChannelKey,
-        title: 'Stopwatch',
-        body:
-            "${TimeDuration.fromMilliseconds(stopwatch.elapsedMilliseconds).toTimeString(showMilliseconds: false)} - LAP ${stopwatch.laps.length + 1}",
+        title:
+            "${TimeDuration.fromMilliseconds(stopwatch.elapsedMilliseconds).toTimeString(showMilliseconds: false)} - LAP ${stopwatch.laps.length}",
+        body: "Stopwatch",
         category: NotificationCategory.StopWatch,
       ),
       actionButtons: [

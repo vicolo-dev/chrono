@@ -12,7 +12,6 @@ import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
 import 'package:move_to_background/move_to_background.dart';
@@ -161,8 +160,9 @@ class AlarmNotificationManager {
   static Future<void> stopAlarm(int scheduleId, ScheduledNotificationType type,
       AlarmStopAction action) async {
     // Send a message to tell the alarm isolate to run the code to stop alarm
-    SendPort? sendPort = IsolateNameServer.lookupPortByName(stopAlarmPortName);
-    sendPort?.send([scheduleId, type.name, action.name]);
+    // See stopScheduledNotification in lib/alarm/logic/alarm_isolate.dart
+    IsolateNameServer.lookupPortByName(stopAlarmPortName)
+        ?.send([scheduleId, type.name, action.name]);
 
     // await closeNotification(type);
   }

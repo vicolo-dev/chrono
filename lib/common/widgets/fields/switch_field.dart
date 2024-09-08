@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class SwitchField extends StatefulWidget {
   const SwitchField(
-      {Key? key,
+      {super.key,
       required this.value,
       required this.onChanged,
-      required this.name})
-      : super(key: key);
+      required this.name,
+      this.description = ""});
 
   final String name;
+  final String description;
   final bool value;
   final void Function(bool value)? onChanged;
 
@@ -19,6 +20,9 @@ class SwitchField extends StatefulWidget {
 class _SwitchFieldState extends State<SwitchField> {
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    TextTheme textTheme = theme.textTheme;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -29,9 +33,21 @@ class _SwitchFieldState extends State<SwitchField> {
             children: [
               Expanded(
                 flex: 100,
-                child: Text(
-                  widget.name,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.name,
+                        style: textTheme.headlineMedium,
+                      ),
+                      if (widget.description.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(widget.description, style: textTheme.bodyMedium)
+                      ],
+                    ],
+                  ),
                 ),
               ),
               const Spacer(),

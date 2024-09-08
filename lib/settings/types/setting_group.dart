@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
@@ -100,7 +101,12 @@ class SettingGroup extends SettingItem {
   }
 
   SettingGroup getGroup(String name) {
-    return _settingGroups.firstWhere((item) => item.name == name);
+    try {
+      return _settingGroups.firstWhere((item) => item.name == name);
+    } catch (e) {
+      logger.e("Could not find setting group $name: $e");
+      rethrow;
+    }
   }
 
   Setting getSettingFromPath(List<String> path) {
@@ -130,7 +136,7 @@ class SettingGroup extends SettingItem {
     try {
       return _settingItems.firstWhere((item) => item.name == name);
     } catch (e) {
-      debugPrint("Could not find setting item $name: $e");
+      logger.e("Could not find setting item $name: $e");
       rethrow;
     }
   }
@@ -139,7 +145,7 @@ class SettingGroup extends SettingItem {
     try {
       return _settings.firstWhere((item) => item.name == name);
     } catch (e) {
-      debugPrint("Could not find setting $name: $e");
+      logger.e("Could not find setting $name: $e");
       rethrow;
     }
   }
@@ -226,7 +232,7 @@ class SettingGroup extends SettingItem {
             }
           }
         } catch (e) {
-          debugPrint(
+          logger.e(
               "Error migrating value in setting group ($name): ${e.toString()}");
         }
       }
@@ -234,7 +240,7 @@ class SettingGroup extends SettingItem {
         if (value != null) setting.loadValueFromJson(value[setting.name]);
       }
     } catch (e) {
-      debugPrint(
+      logger.e(
           "Error loading value from json in setting group ($name): ${e.toString()}");
     }
   }
@@ -249,7 +255,7 @@ class SettingGroup extends SettingItem {
     try {
       value = loadTextFileSync(id);
     } catch (e) {
-      debugPrint("Error loading $id: $e");
+      logger.e("Error loading $id: $e");
       value = GetStorage().read(id);
     }
     loadValueFromJson(json.decode(value));

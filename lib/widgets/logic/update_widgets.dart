@@ -1,4 +1,5 @@
 import 'package:clock_app/common/utils/time_format.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
@@ -58,7 +59,7 @@ void setDigitalClockWidgetData(BuildContext context) async {
 
     updateDigitalClockWidget();
   } catch (e) {
-    debugPrint("Couldn't update Digital Clock Widget: $e");
+    logger.e("Couldn't update Digital Clock Widget: $e");
   }
 }
 

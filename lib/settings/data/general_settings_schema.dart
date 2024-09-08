@@ -29,7 +29,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum TimePickerType { dial, input, spinner }
 
-enum DurationPickerType { rings, spinner }
+enum DurationPickerType { rings, spinner, numpad }
 
 SelectSettingOption<String> _getDateSettingOption(String format) {
   return SelectSettingOption((context) {
@@ -73,6 +73,11 @@ enum SwipeAction {
   switchTabs,
 }
 
+enum LongPressAction {
+  reorder,
+  multiSelect,
+}
+
 final timeFormatOptions = [
   SelectSettingOption(
       (context) => AppLocalizations.of(context)!.timeFormat12, TimeFormat.h12),
@@ -107,7 +112,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           "Date Format",
           (context) => AppLocalizations.of(context)!.dateFormatSetting,
           dateFormatOptions,
-          getDescription: (context) => "How to display the dates",
           onChange: (context, index) async {
             // await HomeWidget.saveWidgetData(
             //     "dateFormat", dateFormatOptions[index].value);
@@ -118,7 +122,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           "Long Date Format",
           (context) => AppLocalizations.of(context)!.longDateFormatSetting,
           longDateFormatOptions,
-          getDescription: (context) => "How to display the dates",
           onChange: (context, index) async {
             setDigitalClockWidgetData(context);
 
@@ -131,7 +134,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           "Time Format",
           (context) => AppLocalizations.of(context)!.timeFormatSetting,
           timeFormatOptions,
-          getDescription: (context) => "12 or 24 hour time",
           onChange: (context, index) async {
             String timeFormat =
                 getTimeFormatString(context, timeFormatOptions[index].value);
@@ -185,11 +187,17 @@ SettingGroup generalSettingsSchema = SettingGroup(
             (context) => AppLocalizations.of(context)!.pickerSpinner,
             DurationPickerType.spinner,
           ),
+           SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.pickerNumpad,
+            DurationPickerType.numpad,
+          ),
+
         ],
             searchTags: [
               "duration",
               "rings",
               "time",
+              "numpad"
               "picker",
               "dial",
               "input",
@@ -197,24 +205,41 @@ SettingGroup generalSettingsSchema = SettingGroup(
             ]),
       ],
     ),
-    SelectSetting(
-      "Swipe Action",
-      (context) => AppLocalizations.of(context)!.swipeActionSetting,
-      [
+    SettingGroup("Interactions",
+        (context) => AppLocalizations.of(context)!.interactionsSettingGroup, [
+      SelectSetting(
+        "Swipe Action",
+        (context) => AppLocalizations.of(context)!.swipeActionSetting,
+        [
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.swipActionCardAction,
+            SwipeAction.cardActions,
+            getDescription: (context) =>
+                AppLocalizations.of(context)!.swipeActionCardActionDescription,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.swipActionSwitchTabs,
+            SwipeAction.switchTabs,
+            getDescription: (context) =>
+                AppLocalizations.of(context)!.swipeActionSwitchTabsDescription,
+          )
+        ],
+      ),
+      SelectSetting(
+        "Long Press Action",
+        (context) => AppLocalizations.of(context)!.longPressActionSetting,
+        [
         SelectSettingOption(
-          (context) => AppLocalizations.of(context)!.swipActionCardAction,
-          SwipeAction.cardActions,
-          getDescription: (context) =>
-              AppLocalizations.of(context)!.swipeActionCardActionDescription,
-        ),
-        SelectSettingOption(
-          (context) => AppLocalizations.of(context)!.swipActionSwitchTabs,
-          SwipeAction.switchTabs,
-          getDescription: (context) =>
-              AppLocalizations.of(context)!.swipeActionSwitchTabsDescription,
-        )
-      ],
-    ),
+            (context) => AppLocalizations.of(context)!.longPressSelectAction,
+            LongPressAction.multiSelect,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.longPressReorderAction,
+            LongPressAction.reorder,
+          ),
+                  ],
+      ),
+    ]),
     SettingPageLink(
       "Melodies",
       (context) => AppLocalizations.of(context)!.melodiesSetting,
@@ -231,6 +256,13 @@ SettingGroup generalSettingsSchema = SettingGroup(
     ),
     SettingGroup("Reliability",
         (context) => AppLocalizations.of(context)!.reliabilitySettingGroup, [
+      SwitchSetting(
+        "Show Foreground Notification",
+        (context) => AppLocalizations.of(context)!.showForegroundNotification,
+        false,
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.showForegroundNotificationDescription,
+      ),
       SettingAction(
         "Ignore Battery Optimizations",
         (context) =>
@@ -260,6 +292,8 @@ SettingGroup generalSettingsSchema = SettingGroup(
                             .notificationPermissionAlreadyGranted)
                   });
         },
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.notificationPermissionDescription,
       ),
       SettingAction(
         "Vendor Specific",
@@ -334,26 +368,7 @@ SettingGroup generalSettingsSchema = SettingGroup(
         ),
       ],
     ),
-    SettingGroup("Animations",
-        (context) => AppLocalizations.of(context)!.animationSettingGroup, [
-      SliderSetting(
-        "Animation Speed",
-        (context) => AppLocalizations.of(context)!.animationSpeedSetting,
-        0.5,
-        2,
-        1,
-        // unit: 'm',
-        snapLength: 0.1,
-        // enableConditions: [
-        //   ValueCondition(
-        //       ["Show Upcoming Alarm Notifications"], (value) => value),
-        // ],
-      ),
-      SwitchSetting(
-          "Extra Animations",
-          (context) => AppLocalizations.of(context)!.extraAnimationSetting,
-          false),
-    ])
+    
   ],
   icon: FluxIcons.settings,
   getDescription: (context) =>

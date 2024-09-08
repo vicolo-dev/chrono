@@ -24,6 +24,7 @@ class _SwitchSettingCardState extends State<SwitchSettingCard> {
     SwitchField switchCard = SwitchField(
       name: widget.setting.displayName(context),
       value: widget.setting.value,
+      description: widget.setting.displayDescription(context),
       onChanged: (value) {
         setState(() {
           widget.setting.setValue(context, value);

@@ -5,19 +5,13 @@ import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
 import 'package:clock_app/timer/widgets/dial_duration_picker.dart';
+import 'package:clock_app/timer/widgets/numpad_duration_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Widget getDurationPicker(BuildContext context, TimeDuration duration,
+Widget getDurationPicker(BuildContext context,DurationPickerType type, TimeDuration duration,
     void Function(TimeDuration) onDurationChange,
     {TimerPreset? preset}) {
-  Orientation orientation = MediaQuery.of(context).orientation;
-
-  DurationPickerType type = appSettings
-      .getGroup("General")
-      .getGroup("Display")
-      .getSetting("Duration Picker")
-      .value;
 
   Widget picker;
 
@@ -82,6 +76,15 @@ Widget getDurationPicker(BuildContext context, TimeDuration duration,
           },
         ),
       );
+
+      case DurationPickerType.numpad:
+        picker = NumpadDurationPicker(
+          duration: duration,
+          onChange: (TimeDuration newDuration) {
+            onDurationChange(newDuration);
+          },
+
+        );
 
       break;
   }

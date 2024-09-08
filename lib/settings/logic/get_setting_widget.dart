@@ -32,12 +32,12 @@ List<Widget> getSettingWidgets(
   bool isAppSettings = true,
 }) {
   bool showExtraAnimations = appSettings
-      .getGroup("General")
+      .getGroup("Appearance")
       .getGroup("Animations")
       .getSetting("Extra Animations")
       .value;
   double animationSpeed = appSettings
-      .getGroup("General")
+      .getGroup("Appearance")
       .getGroup("Animations")
       .getSetting("Animation Speed")
       .value;

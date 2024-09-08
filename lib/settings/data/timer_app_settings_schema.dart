@@ -39,7 +39,7 @@ SettingGroup timerAppSettingsSchema = SettingGroup(
         ],
         [
           SelectSettingOption(
-            (context) => AppLocalizations.of(context)!.dismissActionSlide,
+            (context) => AppLocalizations.of(context)!.dismissActionAreaButtons,
             NotificationAction(
               builder: (onDismiss, onSnooze, dismissLabel, snoozeLabel) =>
                   AreaNotificationAction(
@@ -51,7 +51,7 @@ SettingGroup timerAppSettingsSchema = SettingGroup(
             ),
           ),
           SelectSettingOption(
-            (context) => AppLocalizations.of(context)!.dismissActionButtons,
+            (context) => AppLocalizations.of(context)!.dismissActionSlide,
             NotificationAction(
               builder: (onDismiss, onSnooze, dismissLabel, snoozeLabel) =>
                   SlideNotificationAction(
@@ -63,7 +63,7 @@ SettingGroup timerAppSettingsSchema = SettingGroup(
             ),
           ),
           SelectSettingOption(
-            (context) => AppLocalizations.of(context)!.dismissActionAreaButtons,
+            (context) => AppLocalizations.of(context)!.dismissActionButtons,
             NotificationAction(
               builder: (onDismiss, onSnooze, dismissLabel, snoozeLabel) =>
                   ButtonsNotificationAction(

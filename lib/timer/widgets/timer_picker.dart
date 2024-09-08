@@ -2,6 +2,8 @@ import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/modal.dart';
+import 'package:clock_app/settings/data/general_settings_schema.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/logic/edit_duration_picker_mode.dart';
 import 'package:clock_app/timer/logic/get_duration_picker.dart';
 import 'package:clock_app/timer/screens/presets_screen.dart';
@@ -46,6 +48,12 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
               child: Builder(
                 builder: (context) {
                   var width = MediaQuery.of(context).size.width;
+
+                  DurationPickerType type = appSettings
+                      .getGroup("General")
+                      .getGroup("Display")
+                      .getSetting("Duration Picker")
+                      .value;
 
                   Widget presetChips(double width) => Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,6 +126,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
 
                   Widget durationPicker(double width) => getDurationPicker(
                         context,
+                        type,
                         timer.duration,
                         (TimeDuration newDuration) {
                           setState(() {
@@ -126,9 +135,10 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                         },
                         preset: selectedPreset,
                       );
-
-                  Widget label() => Text(timer.duration.toString(),
-                      style: textTheme.displayMedium);
+                  Widget label() => Text(
+                        timer.duration.toString(),
+                        style: textTheme.displayMedium,
+                      );
 
                   Widget title() => Row(
                         children: [
@@ -161,8 +171,9 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             title(),
-                            const SizedBox(height: 16),
-                            label(),
+                            if (type != DurationPickerType.numpad)
+                              const SizedBox(height: 16),
+                            if (type != DurationPickerType.numpad) label(),
                             const SizedBox(height: 16),
                             durationPicker(width),
                             const SizedBox(height: 16),
@@ -176,8 +187,9 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
                               // mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 16),
-                                title(),
+                                if (type != DurationPickerType.numpad)
+                                  const SizedBox(height: 16),
+                                if (type != DurationPickerType.numpad) title(),
                                 const SizedBox(height: 16),
                                 label(),
                                 const SizedBox(height: 16),

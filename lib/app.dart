@@ -22,6 +22,7 @@ import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -68,7 +69,7 @@ class _AppState extends State<App> {
     _styleSettings = _appearanceSettings.getGroup("Style");
     _generalSettings = appSettings.getGroup("General");
     _animationSpeedSetting =
-        _generalSettings.getGroup("Animations").getSetting("Animation Speed");
+        _appearanceSettings.getGroup("Animations").getSetting("Animation Speed");
     _animationSpeedSetting.addListener(setAnimationSpeed);
 
     setAnimationSpeed(_animationSpeedSetting.value);
