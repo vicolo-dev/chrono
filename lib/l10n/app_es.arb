@@ -696,5 +696,13 @@
   "lessThanOneMinute": "menos de 1 minuto",
   "@lessThanOneMinute": {},
   "showNextAlarm": "Mostrar la siguiente alarma",
-  "@showNextAlarm": {}
+  "@showNextAlarm": {},
+  "notificationPermissionDescription": "Permitir que se muestren notificaciones",
+  "@notificationPermissionDescription": {},
+  "showForegroundNotification": "Mostrar notificación en primer plano",
+  "@showForegroundNotification": {},
+  "showForegroundNotificationDescription": "Mostrar una notificación persistente para mantener activa la aplicación",
+  "@showForegroundNotificationDescription": {},
+  "extraAnimationSettingDescription": "Muestra animaciones que no están pulidas y que pueden provocar caídas de cuadros en dispositivos de gama baja",
+  "@extraAnimationSettingDescription": {}
 }

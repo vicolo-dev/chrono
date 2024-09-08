@@ -704,5 +704,13 @@
   "monthsString": "{count, plural, =0{} =1{1 个月} other{{count} 个月}}",
   "@monthsString": {},
   "combinedTime": "{hours}与{minutes}",
-  "@combinedTime": {}
+  "@combinedTime": {},
+  "extraAnimationSettingDescription": "显示完整动画(这可能会导致低端设备出现动画卡顿现象)",
+  "@extraAnimationSettingDescription": {},
+  "showForegroundNotification": "允许前台显示通知",
+  "@showForegroundNotification": {},
+  "showForegroundNotificationDescription": "显示持久通知以保持应用运行",
+  "@showForegroundNotificationDescription": {},
+  "notificationPermissionDescription": "允许显示通知",
+  "@notificationPermissionDescription": {}
 }
