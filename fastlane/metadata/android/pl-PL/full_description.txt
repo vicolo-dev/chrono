@@ -1,0 +1,35 @@
+<h2>Funkcje</h2>
+<ul>
+<li>Nowoczesny i łatwy w użyciu interfejs</li>
+</ul>
+<h3>Alarmy</h3>
+<ul>
+<li>Konfigurowalne harmonogramy (dzienny, tygodniowy, na określone dni tygodnia, na określone daty, zakres dat)</li>
+<li>Konfiguracja melodii, rosnącej głośności i wibracji</li>
+<li>Konfiguracja długości drzemki i maksymalnej liczby drzemek</li>
+<li>Zadania pobudkowe (działania matematyczne, przepisywanie tekstu, sekwencja, kolejne w przyszłości)</li>
+<li>Filtrowanie alarmów (wszystkie, dzisiejsze, jutrzejsze, odłożone, wyłączone, zakończone)</li>
+</ul>
+<h3>Zegar</h3>
+<ul>
+<li>Konfigurowalny wyświetlanie zegara</li>
+<li>Zegary światowe ze względną różnicą czasu</li>
+<li>Wyszukiwanie i dodawanie miast</li>
+</ul>
+<h3>Czasomierz</h3>
+<ul>
+<li>Konfiguracja melodii, rosnącej głośności i wibracji</li>
+<li>Wstępne ustawienia czasomierza</li>
+<li>Filtrowanie ustawionych minutników (wszystkie, uruchomione, wstrzymane, zatrzymane)</li>
+</ul>
+<h3>Stoper</h3>
+<ul>
+<li>Historia okrążeń z czasami okrążeń i czasami, które łącznie upłynęły przy danych okrążeniach</li>
+<li>Porównania okrążeń</li>
+</ul
+<h3>Wygląd</h3>
+<ul>
+<li>Motywy Material You</li>
+<li>Wysoce konfigurowalne motywy kolorystyczne</li>
+<li>Wysoce konfigurowalne motywy stylów</li>
+</ul>
