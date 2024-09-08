@@ -1,6 +1,7 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
@@ -98,6 +99,7 @@ class RingtonePlayer {
   }
 
   static Future<void> setVolume(double volume) async {
+    logger.t("Setting volume to $volume");
     await activePlayer?.setVolume(volume);
   }
 
@@ -117,15 +119,15 @@ class RingtonePlayer {
     await activePlayer?.stop();
     await activePlayer?.setLoopMode(loopMode);
     await activePlayer?.setAudioSource(AudioSource.uri(Uri.parse(ringtoneUri)));
-    await activePlayer?.setVolume(volume);
-    // activePlayer.setMode
+    await setVolume(volume);
 
+    // Gradually increase the volume
     if (secondsToMaxVolume > 0) {
       for (int i = 0; i <= 10; i++) {
         Future.delayed(
           Duration(milliseconds: i * (secondsToMaxVolume * 100)),
           () {
-            activePlayer?.setVolume((i / 10) * volume);
+            setVolume((i / 10) * volume);
           },
         );
       }

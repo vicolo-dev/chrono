@@ -11,9 +11,11 @@ class SliderField extends StatefulWidget {
       required this.max,
       required this.title,
       this.unit = '',
-      this.snapLength});
+      this.snapLength,
+      this.description = ''});
 
   final String title;
+  final String description;
   final double value;
   final double min;
   final double max;
@@ -89,6 +91,10 @@ class _SliderFieldState extends State<SliderField> {
             widget.title,
             style: textTheme.headlineMedium,
           ),
+          if (widget.description.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(widget.description, style: textTheme.bodyMedium)
+          ],
           const SizedBox(height: 8.0),
           Row(
             children: [
@@ -97,7 +103,7 @@ class _SliderFieldState extends State<SliderField> {
                 // height: textSize.height,
                 // width: 50,
                 child: Row(
-                // crossAxisAlignment: CrossAxisAlignment.end,
+                  // crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     IntrinsicWidth(
                       child: TextField(

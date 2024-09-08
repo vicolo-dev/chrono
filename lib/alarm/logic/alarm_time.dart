@@ -4,26 +4,34 @@ import 'package:clock_app/common/utils/date_time.dart';
 // Calculates the DateTime when the provided `time` will next occur
 DateTime getDailyAlarmDate(
   Time time, {
-  DateTime? scheduledDate,
+  DateTime? scheduleStartDate,
+  int interval = 1,
 }) {
-  if (scheduledDate != null && scheduledDate.isAfter(DateTime.now())) {
-    return DateTime(scheduledDate.year, scheduledDate.month, scheduledDate.day,
-        time.hour, time.minute, time.second);
+  if (scheduleStartDate != null && scheduleStartDate.isAfter(DateTime.now())) {
+    return DateTime(scheduleStartDate.year, scheduleStartDate.month,
+        scheduleStartDate.day, time.hour, time.minute, time.second);
   }
 
   // If a date has not been provided, assume it to be today
-  scheduledDate = DateTime.now();
+  DateTime scheduleDate = DateTime.now();
   DateTime alarmTime;
 
-  if (time.toHours() > scheduledDate.toHours()) {
+  if (time.toHours() > scheduleDate.toHours()) {
     // If the time is in the future, set the alarm for today
-    alarmTime = DateTime(scheduledDate.year, scheduledDate.month,
-        scheduledDate.day, time.hour, time.minute, time.second);
+    alarmTime = DateTime(scheduleDate.year, scheduleDate.month,
+        scheduleDate.day, time.hour, time.minute, time.second);
   } else {
-    // If the time has already passed, set the alarm for tomorrow
-    DateTime nextDateTime = scheduledDate.add(const Duration(days: 1));
-    alarmTime = DateTime(nextDateTime.year, nextDateTime.month,
-        nextDateTime.day, time.hour, time.minute, time.second);
+    // If the time has already passed, set the alarm for next occurence
+    if (scheduleStartDate != null) {
+      scheduleDate = scheduleStartDate;
+    }
+
+    while (scheduleDate.isBefore(DateTime.now())) {
+      scheduleDate = scheduleDate.add(Duration(days: interval));
+    }
+
+    alarmTime = DateTime(scheduleDate.year, scheduleDate.month,
+        scheduleDate.day, time.hour, time.minute, time.second);
   }
 
   return alarmTime;

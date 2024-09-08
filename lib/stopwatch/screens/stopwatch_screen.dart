@@ -40,15 +40,13 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   void initState() {
     super.initState();
     final stopwatches = loadListSync<ClockStopwatch>('stopwatches');
-    if(stopwatches.isEmpty){
-      _stopwatch =  ClockStopwatch();
+    if (stopwatches.isEmpty) {
+      _stopwatch = ClockStopwatch();
       saveList('stopwatches', [_stopwatch]);
+    } else {
+      _stopwatch = stopwatches.first;
     }
-    else{
-       _stopwatch = stopwatches.first;
 
-    }
-   
     _showNotificationSetting =
         appSettings.getGroup("Stopwatch").getSetting("Show Notification");
 
@@ -61,14 +59,18 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   void _handleStopwatchChange() {
     final newList = loadListSync<ClockStopwatch>('stopwatches');
-    if (mounted) {
-      newList.first.laps
-          .where((lap) => !_stopwatch.laps.contains(lap))
-          .forEach((lap) => _listController.addItem(lap));
+    _stopwatch.copyFrom(newList.first);
 
+    if (mounted) {
+      // // If there are any new laps, tell the listcontroller to update the ui with them
+      // newList.first.laps
+      //     .where((lap) =>
+      //         !_stopwatch.laps.map((l) => l.number).contains(lap.number))
+      //     .forEach((lap) => _listController.addItem(lap));
+
+      _listController.reload(_stopwatch.laps);
       setState(() {});
     }
-    _stopwatch.copyFrom(newList.first);
     showProgressNotification();
   }
 

@@ -1,6 +1,7 @@
 import 'package:clock_app/alarm/data/alarm_task_schemas.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/id.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 
@@ -55,21 +56,21 @@ class AlarmTask extends CustomizableListItem {
 
   AlarmTask(this.type)
       : _schema = alarmTaskSchemasMap[type]!.copy(),
-        _id = UniqueKey().hashCode;
+        _id = getId();
 
   AlarmTask.from(AlarmTask task)
       : type = task.type,
-        _id = UniqueKey().hashCode,
+        _id = getId(),
         _schema = task._schema.copy();
 
   AlarmTask.fromJson(Json json) {
     if (json == null) {
-      _id = UniqueKey().hashCode;
+      _id = getId();
       type = AlarmTaskType.math;
       _schema = alarmTaskSchemasMap[type]!.copy();
       return;
     }
-    _id = json['id'] ?? UniqueKey().hashCode;
+    _id = json['id'] ?? getId();
     type = AlarmTaskType.values.byName(json['type']);
     _schema = alarmTaskSchemasMap[type]!.copy();
     _schema.loadFromJson(json['schema']);

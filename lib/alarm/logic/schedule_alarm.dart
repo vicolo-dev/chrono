@@ -8,6 +8,7 @@ import 'package:clock_app/common/types/schedule_id.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 
 Future<void> scheduleAlarm(
@@ -68,7 +69,7 @@ Future<void> scheduleAlarm(
     scheduleIds.add(ScheduleId(id: scheduleId));
     await saveList<ScheduleId>(name, scheduleIds);
 
-    // 
+    //
     // if (type == ScheduledNotificationType.alarm && !snooze) {
     // }
     //
@@ -88,8 +89,10 @@ Future<void> scheduleAlarm(
         'type': type.name,
       },
     );
+
+    logger.i('Scheduled alarm $scheduleId for $startDate of type ${type.name}:  $description');
   }
-  }
+}
 
 Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
@@ -113,6 +116,8 @@ Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
     }
 
     AndroidAlarmManager.cancel(scheduleId);
+
+    logger.i('Canceled alarm $scheduleId of type ${type.name}');
   }
 }
 
@@ -128,4 +133,6 @@ Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
     await createSnoozeNotification(scheduleId, DateTime.now().add(delay));
   }
+
+  logger.i('Scheduled snooze alarm $scheduleId for ${DateTime.now().add(delay)} with type ${type.name}: $description');
 }

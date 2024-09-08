@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path/path.dart' as path;
@@ -50,7 +51,7 @@ List<T> loadListSync<T extends JsonSerializable>(String key) {
   try{
   return listFromString<T>(loadTextFileSync(key));
   }catch(e){
-    debugPrint("Error loading list ($key): $e");
+    logger.e("Error loading list ($key): $e");
     return [];
   }
 }
@@ -74,7 +75,7 @@ Future<void> initTextFile(String key, String value) async {
   if (GetStorage().read('init_$key') == null) {
     GetStorage().write('init_$key', true);
     if(!textFileExistsSync(key)){
-      debugPrint("Initializing $key");
+      logger.i("Initializing $key");
       await saveTextFile(key, value);
     }
   }

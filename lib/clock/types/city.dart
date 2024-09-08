@@ -1,6 +1,6 @@
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
-import 'package:flutter/material.dart';
+import 'package:clock_app/common/utils/id.dart';
 
 class City extends ListItem {
   late String _name = "Unknown";
@@ -17,7 +17,7 @@ class City extends ListItem {
   @override
   bool get isDeletable => true;
 
-  City(this._name, this._country, this._timezone) : _id = UniqueKey().hashCode;
+  City(this._name, this._country, this._timezone) : _id = getId();
 
   @override
   copy() {
@@ -26,13 +26,13 @@ class City extends ListItem {
 
   City.fromJson(Json json) {
     if (json == null) {
-      _id = UniqueKey().hashCode;
+      _id = getId();
       return;
     }
     _name = json['name'] ?? 'Unknown';
     _country = json['country'] ?? 'Unknown';
     _timezone = json['timezone'] ?? 'America/Detroit';
-    _id = json['id'] ?? UniqueKey().hashCode;
+    _id = json['id'] ?? getId();
   }
 
   @override

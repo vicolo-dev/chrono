@@ -73,6 +73,7 @@ class _ClockScreenState extends State<ClockScreen> {
                 onDelete: () => _listController.deleteItem(city)),
             placeholderText: "No cities added",
             isDuplicateEnabled: false,
+            isSelectable: true,
           ),
         ),
       ]),

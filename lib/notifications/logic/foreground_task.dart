@@ -1,4 +1,3 @@
-import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 void initForegroundTask() {
@@ -6,7 +5,8 @@ void initForegroundTask() {
     androidNotificationOptions: AndroidNotificationOptions(
       channelId: 'foreground_service',
       channelName: 'Foreground Service Notification',
-      channelDescription: 'This notification appears when the foreground service is running.',
+      channelDescription:
+          'This notification appears when the foreground service is running.',
       channelImportance: NotificationChannelImportance.LOW,
       priority: NotificationPriority.LOW,
       iconData: const NotificationIconData(
@@ -30,4 +30,5 @@ void initForegroundTask() {
       allowWakeLock: true,
       allowWifiLock: true,
     ),
-  );}
+  );
+}

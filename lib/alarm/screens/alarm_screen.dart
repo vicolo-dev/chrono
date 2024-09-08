@@ -11,13 +11,12 @@ import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
-import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/common/widgets/time_picker.dart';
+import 'package:clock_app/navigation/types/quick_action_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:great_list_view/great_list_view.dart';
@@ -30,7 +29,9 @@ typedef AlarmCardBuilder = Widget Function(
 );
 
 class AlarmScreen extends StatefulWidget {
-  const AlarmScreen({super.key});
+  const AlarmScreen({super.key, this.actionController});
+
+  final QuickActionController? actionController;
 
   @override
   State<AlarmScreen> createState() => _AlarmScreenState();
@@ -71,6 +72,12 @@ class _AlarmScreenState extends State<AlarmScreen> {
     // ListenerManager.addOnChangeListener("alarms", update);
 
     nextAlarm = getNextAlarm();
+
+    widget.actionController?.setAction((action) {
+      if (action == "add_alarm") {
+        _selectTime();
+      }
+    });
 
     // ListenerManager().addListener();
   }
@@ -187,7 +194,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _listController.changeItems((alarms) {});
   }
 
-  List<ListFilterItem<Alarm>> getListFilterItems() {
+  void handleAddAlarmActon(){
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            _selectTime();
+
+  }
+
+  List<ListFilterItem<Alarm>> _getListFilterItems() {
     List<ListFilterItem<Alarm>> listFilterItems =
         _showFilters.value ? [...alarmListFilters] : [];
 
@@ -205,31 +218,31 @@ class _AlarmScreenState extends State<AlarmScreen> {
     return listFilterItems;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Future<void> selectTime() async {
-      final PickerResult<TimeOfDay>? timePickerResult =
-          await showTimePickerDialog(
-        context: context,
-        initialTime: TimeOfDay.now(),
-        title: AppLocalizations.of(context)!.selectTime,
-        cancelText: AppLocalizations.of(context)!.cancelButton,
-        confirmText: AppLocalizations.of(context)!.saveButton,
-        useSimple: false,
-      );
+  Future<void> _selectTime() async {
+    final PickerResult<TimeOfDay>? timePickerResult =
+        await showTimePickerDialog(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      title: AppLocalizations.of(context)!.selectTime,
+      cancelText: AppLocalizations.of(context)!.cancelButton,
+      confirmText: AppLocalizations.of(context)!.saveButton,
+      useSimple: false,
+    );
 
-      if (timePickerResult != null) {
-        Alarm alarm = Alarm.fromTimeOfDay(timePickerResult.value);
-        if (timePickerResult.isCustomize) {
-          await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
-            _listController.addItem(newAlarm);
-          }, isNewAlarm: true);
-        } else {
-          _listController.addItem(alarm);
-        }
+    if (timePickerResult != null) {
+      Alarm alarm = Alarm.fromTimeOfDay(timePickerResult.value);
+      if (timePickerResult.isCustomize) {
+        await _openCustomizeAlarmScreen(alarm, onSave: (newAlarm) async {
+          _listController.addItem(newAlarm);
+        }, isNewAlarm: true);
+      } else {
+        _listController.addItem(alarm);
       }
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         PersistentListView<Alarm>(
@@ -257,8 +270,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
             nextAlarm = getNextAlarm();
             setState(() {});
           },
+          isSelectable: true,
           // header: getNextAlarmWidget(),
-          listFilters: getListFilterItems(),
+          listFilters: _getListFilterItems(),
           customActions: _showFilters.value
               ? [
                   ListFilterCustomAction(
@@ -294,11 +308,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
           sortOptions: _showSort.value ? alarmSortOptions : [],
         ),
         FAB(
-          onPressed: () {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            selectTime();
-          },
-        ),
+          onPressed: handleAddAlarmActon,
+          ),
         if (_showInstantAlarmButton.value)
           FAB(
             onPressed: () {

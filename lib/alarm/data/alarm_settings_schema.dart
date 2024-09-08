@@ -25,6 +25,7 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -209,6 +210,15 @@ SettingGroup alarmSettingsSchema = SettingGroup(
                 100,
                 100,
                 unit: "%"),
+            SliderSetting(
+              "task_volume",
+              (context) => AppLocalizations.of(context)!.volumeWhileTasks,
+              0,
+              100,
+              50,
+              unit: "%",
+              getDescription: (context) => "Percentage of base volume",
+            ),
             SwitchSetting(
               "Rising Volume",
               (context) => AppLocalizations.of(context)!.risingVolumeSetting,
@@ -294,7 +304,9 @@ SettingGroup alarmSettingsSchema = SettingGroup(
     ListSetting<AlarmTask>(
       "Tasks",
       (context) => AppLocalizations.of(context)!.tasksSetting,
-      [],
+      kDebugMode
+          ? [AlarmTask(AlarmTaskType.math), AlarmTask(AlarmTaskType.sequence)]
+          : [],
       alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
       addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
       cardBuilder: (item, [onDelete, onDuplicate]) => AlarmTaskCard(

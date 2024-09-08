@@ -6,6 +6,8 @@ import 'package:clock_app/common/logic/customize_screen.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
+import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/navigation/types/quick_action_controller.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/data/update_notification_intervals.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -112,7 +114,9 @@ typedef TimerCardBuilder = Widget Function(
 );
 
 class TimerScreen extends StatefulWidget {
-  const TimerScreen({super.key});
+  const TimerScreen({super.key, this.actionController});
+
+  final QuickActionController? actionController;
 
   @override
   State<TimerScreen> createState() => _TimerScreenState();
@@ -123,7 +127,6 @@ class _TimerScreenState extends State<TimerScreen> {
   late Setting _showFilters;
   late Setting _showSort;
   late Setting _showNotification;
-  ReceivePort? _receivePort;
 
   void update(value) {
     setState(() {});
@@ -186,6 +189,12 @@ class _TimerScreenState extends State<TimerScreen> {
     _showSort.addListener(update);
     _showNotification.addListener(update);
     ListenerManager.addOnChangeListener("timers", onTimerUpdate);
+    widget.actionController?.setAction((action) {
+      logger.i("Received action: $action");
+      if (action == "add_timer") {
+        handleAddTimerAction();
+      }
+    });
     // showProgressNotification();
   }
 
@@ -298,6 +307,28 @@ class _TimerScreenState extends State<TimerScreen> {
     );
   }
 
+  Future<void> handleAddTimerAction() async {
+    PickerResult<ClockTimer>? pickerResult = await showTimerPicker(context);
+    if (pickerResult != null) {
+      ClockTimer timer = ClockTimer.from(pickerResult.value);
+      if (pickerResult.isCustomize) {
+        await _openCustomizeTimerScreen(
+          timer,
+          onSave: (timer) async {
+            await timer.start();
+            _listController.addItem(timer);
+          },
+          isNewTimer: true,
+        );
+      } else {
+        await timer.start();
+        _listController.addItem(timer);
+      }
+      _updateTimerNotification();
+      // showProgressNotification();
+    }
+  }
+
   Future<ClockTimer?> _handleCustomizeTimer(ClockTimer timer) async {
     await _openCustomizeTimerScreen(timer, onSave: (newTimer) async {
       // Timer id gets reset after copyFrom, so we have to cancel the old one
@@ -347,6 +378,7 @@ class _TimerScreenState extends State<TimerScreen> {
                 // _listController.changeItems((item) {});
               },
               onDeleteItem: _onDeleteTimer,
+              isSelectable: true,
               placeholderText: AppLocalizations.of(context)!.noTimerMessage,
               reloadOnPop: true,
               listFilters: _showFilters.value ? timerListFilters : [],
@@ -375,28 +407,7 @@ class _TimerScreenState extends State<TimerScreen> {
         ],
       ),
       FAB(
-        onPressed: () async {
-          PickerResult<ClockTimer>? pickerResult =
-              await showTimerPicker(context);
-          if (pickerResult != null) {
-            ClockTimer timer = ClockTimer.from(pickerResult.value);
-            if (pickerResult.isCustomize) {
-              await _openCustomizeTimerScreen(
-                timer,
-                onSave: (timer) async {
-                  await timer.start();
-                  _listController.addItem(timer);
-                },
-                isNewTimer: true,
-              );
-            } else {
-              await timer.start();
-              _listController.addItem(timer);
-            }
-            _updateTimerNotification();
-            // showProgressNotification();
-          }
-        },
+        onPressed: handleAddTimerAction,
       )
     ]);
   }

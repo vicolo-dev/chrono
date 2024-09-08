@@ -1,8 +1,12 @@
+import 'dart:ui';
+
+import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/widgets/clock/clock.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
@@ -37,6 +41,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   void _setNextWidget() {
     setState(() {
       if (_currentIndex < 0) {
+        IsolateNameServer.lookupPortByName(setAlarmVolumePortName)
+            ?.send([alarm.volume]);
         _currentWidget = actionWidget;
       } else if (_currentIndex >= alarm.tasks.length) {
         if (widget.onPop != null) {
@@ -47,6 +53,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
               widget.dismissType, ScheduledNotificationType.alarm);
         }
       } else {
+        IsolateNameServer.lookupPortByName(setAlarmVolumePortName)
+            ?.send([alarm.volume * alarm.volumeDuringTasks / 100]);
         // RingtonePlayer.setVolume(0);
         _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
       }
@@ -81,7 +89,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
         snoozeLabel: "Snooze",
       );
 
-      debugPrint(e.toString());
+      logger.e(e.toString());
     }
 
     _setNextWidget();

@@ -76,6 +76,8 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
                     _handleCustomizeItem(task);
                   },
                   onModifyList: () => widget.onChanged(context),
+                  isReorderable: true,
+                  isSelectable: true,
                   placeholderText:
                       "No ${widget.setting.displayName(context).toLowerCase()} added yet",
                 ),

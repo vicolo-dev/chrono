@@ -70,13 +70,14 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
     this.isReorderable = true,
     this.isDeleteEnabled = true,
     this.isDuplicateEnabled = true,
+    this.isSelectable = false,
     this.reloadOnPop = false,
     this.shouldInsertOnTop = true,
     this.listFilters = const [],
     this.customActions = const [],
     this.sortOptions = const [],
     this.header,
-    this.onSaveItems = null,
+    this.onSaveItems ,
     // this.initialSortIndex = 0,
   });
 
@@ -92,6 +93,7 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
   final bool reloadOnPop;
+  final bool isSelectable;
   final bool shouldInsertOnTop;
       final Widget? header;
   // final int initialSortIndex;
@@ -190,6 +192,7 @@ class _PersistentListViewState<Item extends ListItem>
       onModifyList: _saveItems,
       isReorderable: widget.isReorderable,
       isDeleteEnabled: widget.isDeleteEnabled,
+      isSelectable: widget.isSelectable,
       isDuplicateEnabled: widget.isDuplicateEnabled,
       shouldInsertOnTop: widget.shouldInsertOnTop,
       listFilters: widget.listFilters,

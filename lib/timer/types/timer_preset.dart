@@ -1,13 +1,13 @@
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
+import 'package:clock_app/common/utils/id.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
-import 'package:flutter/foundation.dart';
 
 class TimerPreset extends ListItem {
   late int _id;
   String name = "Preset";
   TimeDuration duration = const TimeDuration(minutes: 5);
-  TimerPreset(this.name, this.duration) : _id = UniqueKey().hashCode;
+  TimerPreset(this.name, this.duration) : _id = getId();
 
   @override
   int get id => _id;
@@ -15,7 +15,7 @@ class TimerPreset extends ListItem {
   bool get isDeletable => true;
 
   TimerPreset.from(TimerPreset preset)
-      : _id = UniqueKey().hashCode,
+      : _id = getId(),
         name = preset.name,
         duration = TimeDuration.from(preset.duration);
 
@@ -28,10 +28,10 @@ class TimerPreset extends ListItem {
 
   TimerPreset.fromJson(Json json) {
     if (json == null) {
-      _id = UniqueKey().hashCode;
+      _id = getId();
       return;
     }
-    _id = json['id'] ?? UniqueKey().hashCode;
+    _id = json['id'] ?? getId();
     name = json['name'] ?? "Preset";
     duration = TimeDuration.fromJson(json['duration']);
   }

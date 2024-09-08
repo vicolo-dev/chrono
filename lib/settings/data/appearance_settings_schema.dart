@@ -198,6 +198,24 @@ SettingGroup appearanceSettingsSchema = SettingGroup(
         ),
       ],
     ),
+    SettingGroup("Animations",
+        (context) => AppLocalizations.of(context)!.animationSettingGroup, [
+      SliderSetting(
+        "Animation Speed",
+        (context) => AppLocalizations.of(context)!.animationSpeedSetting,
+        0.5,
+        2,
+        1,
+        snapLength: 0.1,
+      ),
+      SwitchSetting(
+        "Extra Animations",
+        (context) => AppLocalizations.of(context)!.extraAnimationSetting,
+        false,
+        getDescription: (context) =>
+            AppLocalizations.of(context)!.extraAnimationSettingDescription,
+      ),
+    ])
   ],
   icon: Icons.palette_outlined,
   getDescription: (context) =>

@@ -4,8 +4,8 @@ import 'dart:ui';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
-import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:clock_app/alarm/logic/schedule_alarm.dart';
@@ -21,18 +21,23 @@ import 'package:clock_app/timer/utils/timer_id.dart';
 
 const String stopAlarmPortName = "stopAlarmPort";
 const String updatePortName = "updatePort";
+const String setAlarmVolumePortName = "setAlarmVolumePort";
 
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
-  debugPrint("Alarm triggered: $scheduleId");
+  FlutterError.onError = (FlutterErrorDetails details) {
+    logger.f(details.exception.toString());
+  };
+
+  logger.i("Alarm isolate triggered $scheduleId");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
-    debugPrint("Params was null when triggering alarm");
+    logger.e("Params was null when triggering alarm");
     return;
   }
 
   if (params['type'] == null) {
-    debugPrint("Params Type was null when triggering alarm");
+    logger.e("Params Type was null when triggering alarm");
     return;
   }
 
@@ -73,10 +78,9 @@ void stopScheduledNotification(List<dynamic> message) {
 }
 
 void triggerAlarm(int scheduleId, Json params) async {
+  logger.i("Alarm triggered $scheduleId");
   if (params == null) {
-    if (kDebugMode) {
-      print("Params was null when triggering alarm");
-    }
+      logger.e("Params was null when triggering alarm");
     return;
   }
 
@@ -100,6 +104,7 @@ void triggerAlarm(int scheduleId, Json params) async {
       now.millisecondsSinceEpoch >
           alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
               1000 * 60 * 60) {
+    logger.i("Skipping alarm $scheduleId");
     return;
   }
 
@@ -117,6 +122,14 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   RingtonePlayer.playAlarm(alarm);
   RingingManager.ringAlarm(scheduleId);
+
+  ReceivePort receivePort = ReceivePort();
+  IsolateNameServer.removePortNameMapping(setAlarmVolumePortName);
+  IsolateNameServer.registerPortWithName(
+      receivePort.sendPort, setAlarmVolumePortName);
+  receivePort.listen((message) {
+    setVolume(message[0]);
+  });
 
   String timeFormatString = await loadTextFile("time_format_string");
   String title = alarm.label.isEmpty ? "Alarm Ringing..." : alarm.label;
@@ -137,10 +150,11 @@ void triggerAlarm(int scheduleId, Json params) async {
 }
 
 void setVolume(double volume) {
-  RingtonePlayer.setVolume(volume);
+  RingtonePlayer.setVolume(volume / 100);
 }
 
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
+  logger.i("Stopping alarm $scheduleId with action: ${action.name}");
   if (action == AlarmStopAction.snooze) {
     await updateAlarmById(scheduleId, (alarm) async => await alarm.snooze());
     // await createSnoozeNotification(scheduleId);
@@ -158,6 +172,7 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
 }
 
 void triggerTimer(int scheduleId, Json params) async {
+  logger.i("Timer triggered $scheduleId");
   ClockTimer? timer = getTimerById(scheduleId);
 
   if (timer == null || !timer.isRunning) {
@@ -194,18 +209,12 @@ void triggerTimer(int scheduleId, Json params) async {
 }
 
 void stopTimer(int scheduleId, AlarmStopAction action) async {
+  logger.i("Stopping timer $scheduleId with action: ${action.name}");
   ClockTimer? timer = getTimerById(scheduleId);
   if (timer == null) return;
   if (action == AlarmStopAction.snooze) {
-    await scheduleSnoozeAlarm(
-      scheduleId,
-      Duration(minutes: timer.addLength.floor()),
-      ScheduledNotificationType.timer,
-      "stopTimer(): ${timer.addLength.floor()} added to timer",
-    );
     updateTimerById(scheduleId, (timer) async {
-      timer.setTime(const TimeDuration(minutes: 1));
-      await timer.start();
+      await timer.snooze();
     });
   } else if (action == AlarmStopAction.dismiss) {
     // If there was an alarm already ringing when the timer was triggered, we

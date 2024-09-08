@@ -81,6 +81,7 @@ class Alarm extends CustomizableListItem {
   FileItem get ringtone => _settings.getSetting("Melody").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
   double get volume => _settings.getSetting("Volume").value;
+  double get volumeDuringTasks => _settings.getSetting("task_volume").value;
   double get snoozeLength => _settings.getSetting("Length").value;
   List<AlarmTask> get tasks => _settings.getSetting("Tasks").value;
   List<Tag> get tags => _settings.getSetting("Tags").value;
@@ -135,7 +136,6 @@ class Alarm extends CustomizableListItem {
 
   Alarm.fromAlarm(Alarm alarm)
       : _isEnabled = alarm._isEnabled,
-        // _isFinished = alarm._isFinished,
         _time = alarm._time,
         _snoozeCount = alarm._snoozeCount,
         _snoozeTime = alarm._snoozeTime,
@@ -148,7 +148,6 @@ class Alarm extends CustomizableListItem {
   @override
   void copyFrom(dynamic other) {
     _isEnabled = other._isEnabled;
-    // _isFinished = other._isFinished;
     _time = other._time;
     _snoozeCount = other._snoozeCount;
     _snoozeTime = other._snoozeTime;

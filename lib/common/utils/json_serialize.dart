@@ -9,6 +9,7 @@ import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
@@ -51,7 +52,7 @@ List<T> listFromString<T extends JsonSerializable>(String encodedItems) {
     List<T> list = rawList.map<T>((json) => fromJson(json)).toList();
     return list;
   } catch (e) {
-    debugPrint("Error decoding string: ${e.toString()}");
+    logger.e("Error decoding string: ${e.toString()}");
     rethrow;
   }
 }
