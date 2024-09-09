@@ -5,6 +5,7 @@ import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/notifications/logic/alarm_notifications.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
@@ -13,7 +14,6 @@ import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/ringing_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
-import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
@@ -116,7 +116,7 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   // Remove any existing alarm notifications
   if (RingingManager.isAlarmRinging) {
-    await AlarmNotificationManager.removeNotification(
+    await removeAlarmNotification(
         ScheduledNotificationType.alarm);
   }
 
@@ -134,9 +134,8 @@ void triggerAlarm(int scheduleId, Json params) async {
   String timeFormatString = await loadTextFile("time_format_string");
   String title = alarm.label.isEmpty ? "Alarm Ringing..." : alarm.label;
 
-  // AlarmNotificationManager.appVisibilityWhenCreated = fgbg
 
-  AlarmNotificationManager.showFullScreenNotification(
+  showAlarmNotification(
     type: ScheduledNotificationType.alarm,
     scheduleIds: [scheduleId],
     title: title,
@@ -190,14 +189,14 @@ void triggerTimer(int scheduleId, Json params) async {
 
   // Remove any existing timer notifications
   if (RingingManager.isTimerRinging) {
-    await AlarmNotificationManager.removeNotification(
+    await removeAlarmNotification(
         ScheduledNotificationType.timer);
   }
 
   RingtonePlayer.playTimer(timer);
   RingingManager.ringTimer(scheduleId);
 
-  AlarmNotificationManager.showFullScreenNotification(
+  showAlarmNotification(
     type: ScheduledNotificationType.timer,
     scheduleIds: RingingManager.ringingTimerIds,
     snoozeActionLabel: '+${timer.addLength.floor()}:00',

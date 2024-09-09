@@ -5,8 +5,8 @@ import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/data/update_notification_intervals.dart';
-import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
-import 'package:clock_app/notifications/types/notifications_controller.dart';
+import 'package:clock_app/notifications/logic/notifications_listeners.dart';
+import 'package:clock_app/notifications/types/alarm_notification_arguments.dart';
 import 'package:clock_app/onboarding/screens/onboarding_screen.dart';
 import 'package:clock_app/settings/data/appearance_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -62,7 +62,7 @@ class _AppState extends State<App> {
 
     setDigitalClockWidgetData(context);
 
-    NotificationController.setListeners();
+    setNotificationListeners();
 
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
