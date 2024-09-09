@@ -84,7 +84,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
         super();
 
   @override
-  Future<void> schedule(Time time,String description) async {
+  Future<void> schedule(Time time,String description, [bool alarmClock = false]) async {
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       weekdaySchedule.alarmRunner.cancel();
     }
@@ -103,7 +103,7 @@ class WeeklyAlarmSchedule extends AlarmSchedule {
 
     for (WeekdaySchedule weekdaySchedule in _weekdaySchedules) {
       DateTime alarmDate = getWeeklyAlarmDate(time, weekdaySchedule.weekday);
-      await weekdaySchedule.alarmRunner.schedule(alarmDate,description);
+      await weekdaySchedule.alarmRunner.schedule(alarmDate,description, alarmClock);
     }
   }
 
