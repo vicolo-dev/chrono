@@ -26,7 +26,7 @@ class DailyAlarmSchedule extends AlarmSchedule {
   @override
   Future<void> schedule(Time time, String description,
       [bool alarmClock = false]) async {
-    DateTime alarmDate = getDailyAlarmDate(time);
+    DateTime alarmDate = getScheduleDateForTime(time);
     await _alarmRunner.schedule(alarmDate, description, alarmClock);
   }
 

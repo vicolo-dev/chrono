@@ -122,7 +122,7 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         DateTimeSetting(
           "Date Range",
           (context) => AppLocalizations.of(context)!.alarmRangeSetting,
-          [DateTime.now(), DateTime.now().add(const Duration(days: 2))],
+          [],
           rangeOnly: true,
           enableConditions: [
             ValueCondition(["Type"], (value) => value == RangeAlarmSchedule)
@@ -312,9 +312,10 @@ SettingGroup alarmSettingsSchema = SettingGroup(
     ListSetting<AlarmTask>(
       "Tasks",
       (context) => AppLocalizations.of(context)!.tasksSetting,
-      kDebugMode
-          ? [AlarmTask(AlarmTaskType.math), AlarmTask(AlarmTaskType.sequence)]
-          : [],
+      [],
+      // kDebugMode
+          // ? [AlarmTask(AlarmTaskType.math), AlarmTask(AlarmTaskType.sequence)]
+          // : [],
       alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
       addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
       cardBuilder: (item, [onDelete, onDuplicate]) => AlarmTaskCard(

@@ -46,7 +46,7 @@ class RangeAlarmSchedule extends AlarmSchedule {
     int intervalDays = interval == RangeInterval.daily ? 1 : 7;
     // All the dates are not scheduled at once
     // Instead we schedule the next date after the current one is finished
-    DateTime alarmDate = getDailyAlarmDate(time,
+    DateTime alarmDate = getScheduleDateForTime(time,
         scheduleStartDate: startDate, interval: intervalDays);
     if (alarmDate.isAfter(endDate)) {
       _isFinished = true;

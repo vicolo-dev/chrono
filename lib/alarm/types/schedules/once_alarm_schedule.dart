@@ -30,7 +30,7 @@ class OnceAlarmSchedule extends AlarmSchedule {
     if (currentScheduleDateTime?.isBefore(DateTime.now()) ?? false) {
       _isDisabled = true;
     } else {
-      DateTime alarmDate = getDailyAlarmDate(time);
+      DateTime alarmDate = getScheduleDateForTime(time);
       await _alarmRunner.schedule(alarmDate, description, alarmClock);
       _isDisabled = false;
     }

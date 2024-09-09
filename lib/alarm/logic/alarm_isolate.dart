@@ -80,31 +80,45 @@ void stopScheduledNotification(List<dynamic> message) {
 void triggerAlarm(int scheduleId, Json params) async {
   logger.i("Alarm triggered $scheduleId");
   if (params == null) {
-      logger.e("Params was null when triggering alarm");
+    logger.e("Params was null when triggering alarm");
     return;
   }
 
   Alarm? alarm = getAlarmById(scheduleId);
   DateTime now = DateTime.now();
-
+  
+  // Note: this won't effect the variable `alarm` as we have already retrieved that
   await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
 
-  // Ignore in the following cases:
-  // 1. Alarm was deleted and somehow wasn't cancelled
-  // 2. Alarm is disabled and somehow wasn't cancelled
-  // 3. Alarm is set to skip the next alarm
-  // 4. Alarm is set to ring in the future but somehow was triggered
-  // 5. Alarm is ringing 1 hour later than its time
-  if (alarm == null ||
-      alarm.isEnabled == false ||
-      alarm.shouldSkipNextAlarm ||
-      alarm.currentScheduleDateTime == null ||
-      now.millisecondsSinceEpoch <
-          alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
-      now.millisecondsSinceEpoch >
-          alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
-              1000 * 60 * 60) {
-    logger.i("Skipping alarm $scheduleId");
+  // Skip the alarm in the following cases:
+  if (alarm == null) {
+    logger.i("Skipping alarm $scheduleId because it doesn't exist");
+    return;
+  }
+  if (alarm.isEnabled == false) {
+    logger.i("Skipping alarm $scheduleId because it is disabled");
+    return;
+  }
+  if (alarm.shouldSkipNextAlarm) {
+    logger.i(
+        "Skipping alarm $scheduleId because it is set to skip the next alarm");
+    return;
+  }
+  if (alarm.currentScheduleDateTime == null) {
+    logger.i(
+        "Skipping alarm $scheduleId because it has no scheduled date");
+    return;
+  }
+  if (now.millisecondsSinceEpoch <
+      alarm.currentScheduleDateTime!.millisecondsSinceEpoch) {
+    logger.i(
+        "Skipping alarm $scheduleId because it is set to ring in the future. Current time: $now, Scheduled time: ${alarm.currentScheduleDateTime}");
+    return;
+  }
+  if (now.millisecondsSinceEpoch >
+      alarm.currentScheduleDateTime!.millisecondsSinceEpoch + 1000 * 60 * 60) {
+    logger.i(
+        "Skipping alarm $scheduleId because it was set to ring more than an hour ago. Current time: $now, Scheduled time: ${alarm.currentScheduleDateTime}");
     return;
   }
 
@@ -116,13 +130,21 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   // Remove any existing alarm notifications
   if (RingingManager.isAlarmRinging) {
-    await removeAlarmNotification(
-        ScheduledNotificationType.alarm);
+    await removeAlarmNotification(ScheduledNotificationType.alarm);
   }
 
   RingtonePlayer.playAlarm(alarm);
   RingingManager.ringAlarm(scheduleId);
 
+
+  /*
+  Ports to set the volume of the alarm. As the RingtonePlayer only.
+  As the RingtonePlayer only exists in this isolate, when other isolate
+  (e.g the main UI isolate) want to change the alarm volumen, they have to send
+  message over a port.
+  In this case, this is used by the AlarmNotificationScreen to lower the volume
+  of alarm while solving tasks.
+  */
   ReceivePort receivePort = ReceivePort();
   IsolateNameServer.removePortNameMapping(setAlarmVolumePortName);
   IsolateNameServer.registerPortWithName(
@@ -133,7 +155,6 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   String timeFormatString = await loadTextFile("time_format_string");
   String title = alarm.label.isEmpty ? "Alarm Ringing..." : alarm.label;
-
 
   showAlarmNotification(
     type: ScheduledNotificationType.alarm,
@@ -189,8 +210,7 @@ void triggerTimer(int scheduleId, Json params) async {
 
   // Remove any existing timer notifications
   if (RingingManager.isTimerRinging) {
-    await removeAlarmNotification(
-        ScheduledNotificationType.timer);
+    await removeAlarmNotification(ScheduledNotificationType.timer);
   }
 
   RingtonePlayer.playTimer(timer);

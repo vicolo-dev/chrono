@@ -19,8 +19,10 @@ Future<void> scheduleAlarm(
   bool alarmClock = true,
   bool snooze = false,
 }) async {
-  if (startDate.isBefore(DateTime.now())) {
-    throw Exception('Attempted to schedule alarm in the past ($startDate)');
+  DateTime now = DateTime.now();
+  if (startDate.isBefore(now)) {
+    throw Exception(
+        'Attempted to schedule alarm in the past. Schedule time: $startDate, current time: $now');
   }
 
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
@@ -90,7 +92,8 @@ Future<void> scheduleAlarm(
       },
     );
 
-    logger.i('Scheduled alarm $scheduleId for $startDate of type ${type.name}: $description');
+    logger.i(
+        'Scheduled alarm $scheduleId for $startDate of type ${type.name}: $description');
   }
 }
 
@@ -134,5 +137,6 @@ Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
     await createSnoozeNotification(scheduleId, DateTime.now().add(delay));
   }
 
-  logger.i('Scheduled snooze alarm $scheduleId for ${DateTime.now().add(delay)} with type ${type.name}: $description');
+  logger.i(
+      'Scheduled snooze alarm $scheduleId for ${DateTime.now().add(delay)} with type ${type.name}: $description');
 }
