@@ -115,13 +115,13 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
                   await FilePicker.platform.getDirectoryPath();
 
               if (selectedDirectory != null && selectedDirectory.isNotEmpty) {
-                logger.t("selectedDirectory: $selectedDirectory");
+                // logger.t("selectedDirectory: $selectedDirectory");
 
                 final directory = Directory(selectedDirectory);
                 final List<FileSystemEntity> entities =
                     await directory.list().toList();
 
-                logger.t(entities);
+                // logger.t(entities);
 
                 String name = basename(selectedDirectory
                     .replaceAll("%3A", "/")

@@ -59,7 +59,7 @@ Future<String> getRingtoneUri(FileItem fileItem) async {
   switch (fileItem.type) {
     case FileItemType.directory:
       try {
-        logger.t(fileItem.uri);
+        // logger.t(fileItem.uri);
         // logger.t(
         //     await Directory(alarm.ringtone.uri).list(recursive: true).toList());
         List<DocumentFile>? documentFiles =
@@ -75,7 +75,7 @@ Future<String> getRingtoneUri(FileItem fileItem) async {
           Random random = Random();
           int index = random.nextInt(documentFiles.length);
           DocumentFile documentFile = documentFiles[index];
-          logger.t("${documentFile.name} ${documentFile.uri}");
+          // logger.t("${documentFile.name} ${documentFile.uri}");
           return documentFile.uri;
         } else {
           logger.t(

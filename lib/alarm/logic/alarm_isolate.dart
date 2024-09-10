@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:isolate';
 import 'dart:ui';
 
@@ -29,7 +30,8 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
     logger.f(details.exception.toString());
   };
 
-  logger.i("Alarm isolate triggered $scheduleId");
+  logger.i(
+      "Alarm isolate triggered $scheduleId, isolate: ${Service.getIsolateId(Isolate.current)}");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
     logger.e("Params was null when triggering alarm");
@@ -52,8 +54,11 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
   IsolateNameServer.registerPortWithName(
       receivePort.sendPort, stopAlarmPortName);
   receivePort.listen((message) {
+    logger.d("Received message: $message");
     stopScheduledNotification(message);
   });
+
+  // Isolate.current.addOnExitListener(receivePort.sendPort);
 
   if (notificationType == ScheduledNotificationType.alarm) {
     triggerAlarm(scheduleId, params);
@@ -75,6 +80,9 @@ void stopScheduledNotification(List<dynamic> message) {
   } else if (notificationType == ScheduledNotificationType.timer) {
     stopTimer(scheduleId, action);
   }
+
+  logger.i(
+      "Alarm stop triggered $scheduleId, isolate: ${Service.getIsolateId(Isolate.current)}");
 }
 
 void triggerAlarm(int scheduleId, Json params) async {
@@ -86,7 +94,7 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   Alarm? alarm = getAlarmById(scheduleId);
   DateTime now = DateTime.now();
-  
+
   // Note: this won't effect the variable `alarm` as we have already retrieved that
   await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
 
@@ -105,8 +113,7 @@ void triggerAlarm(int scheduleId, Json params) async {
     return;
   }
   if (alarm.currentScheduleDateTime == null) {
-    logger.i(
-        "Skipping alarm $scheduleId because it has no scheduled date");
+    logger.i("Skipping alarm $scheduleId because it has no scheduled date");
     return;
   }
   if (now.millisecondsSinceEpoch <
@@ -135,7 +142,6 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   RingtonePlayer.playAlarm(alarm);
   RingingManager.ringAlarm(scheduleId);
-
 
   /*
   Ports to set the volume of the alarm. As the RingtonePlayer only.

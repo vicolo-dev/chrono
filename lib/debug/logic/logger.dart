@@ -18,6 +18,6 @@ var logger = Logger(
 );
 
 void printIsolateInfo() {
-  logger.i(
+  logger.t(
       "Isolate: ${Isolate.current.debugName}, id: ${Isolate.current.hashCode}");
 }

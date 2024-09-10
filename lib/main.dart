@@ -17,7 +17,9 @@ import 'package:clock_app/settings/logic/initialize_settings.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:clock_app/system/data/app_info.dart';
 import 'package:clock_app/system/data/device_info.dart';
+import 'package:clock_app/system/logic/background_service.dart';
 import 'package:clock_app/system/logic/handle_boot.dart';
+import 'package:clock_app/system/logic/initialize_isolate_ports.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boot_receiver/flutter_boot_receiver.dart';
@@ -49,24 +51,14 @@ void main() async {
   await initializeStorage();
   await initializeSettings();
 
-  await updateAlarms("Update Alarms on Start");
-  await updateTimers("Update Timers on Start");
+  updateAlarms("Update Alarms on Start");
+  updateTimers("Update Timers on Start");
   AppVisibility.initialize();
   initForegroundTask();
-
-  ReceivePort receivePort = ReceivePort();
-  IsolateNameServer.removePortNameMapping(updatePortName);
-  IsolateNameServer.registerPortWithName(receivePort.sendPort, updatePortName);
-  printIsolateInfo();
-  receivePort.listen((message) {
-    if (message == "updateAlarms") {
-      ListenerManager.notifyListeners("alarms");
-    } else if (message == "updateTimers") {
-      ListenerManager.notifyListeners("timers");
-    } else if (message == "updateStopwatches") {
-      ListenerManager.notifyListeners("stopwatch");
-    }
-  });
+  initBackgroundService();
+  initializeIsolatePorts();
 
   runApp(const App());
+
+  registerHeadlessBackgroundService();
 }

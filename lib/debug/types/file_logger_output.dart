@@ -11,20 +11,20 @@ class FileLoggerOutput extends LogOutput {
   @override
   void output(OutputEvent event) {
     for (var line in event.lines) {
+      // ignore: avoid_print
       print(line);
     }
 
     String message = switch (event.origin.message.runtimeType) {
-      String => event.origin.message as String,
-      Exception => (event.origin.message as Exception).toString(),
+      const (String) => event.origin.message as String,
+      const (Exception) => (event.origin.message as Exception).toString(),
       _ => "Unknown error",
     };
 
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       _writeLog(message, event.level);
 
-      if (event.level == Level.error &&
-          App.navigatorKey.currentContext != null) {
+      if (App.navigatorKey.currentContext != null) {
         Future(() {
           showSnackBar(App.navigatorKey.currentContext!, message,
               error: true, navBar: false, fab: false);
