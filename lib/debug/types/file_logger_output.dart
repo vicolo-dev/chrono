@@ -24,7 +24,8 @@ class FileLoggerOutput extends LogOutput {
     if (!Platform.environment.containsKey('FLUTTER_TEST')) {
       _writeLog(message, event.level);
 
-      if (App.navigatorKey.currentContext != null) {
+      if (event.level.value >= Level.error.value &&
+          App.navigatorKey.currentContext != null) {
         Future(() {
           showSnackBar(App.navigatorKey.currentContext!, message,
               error: true, navBar: false, fab: false);
