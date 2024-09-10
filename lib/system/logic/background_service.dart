@@ -1,7 +1,9 @@
 import 'package:background_fetch/background_fetch.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
+import 'package:flutter/material.dart';
 
 Future<void> initBackgroundService() async {
   await BackgroundFetch.configure(
@@ -20,8 +22,10 @@ Future<void> initBackgroundService() async {
 
     // await initializeIsolate();
 
-  await updateAlarms("initBackgroundService(): Update alarms in background service");
-  await updateTimers("initBackgroundService(): Update timers in background service");
+    await updateAlarms(
+        "initBackgroundService(): Update alarms in background service");
+    await updateTimers(
+        "initBackgroundService(): Update timers in background service");
     // IMPORTANT:  You must signal completion of your task or the OS can punish your app
     // for taking too long in the background.
     BackgroundFetch.finish(taskId);
@@ -36,18 +40,24 @@ Future<void> initBackgroundService() async {
 // [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
 @pragma('vm:entry-point')
 void handleBackgroundServiceTask(HeadlessTask task) async {
+    FlutterError.onError = (FlutterErrorDetails details) {
+    logger.f("Error in handleBackgroundServiceTask isolate: ${details.exception.toString()}");
+  };
   String taskId = task.taskId;
   bool isTimeout = task.timeout;
   if (isTimeout) {
-    // This task has exceeded its allowed running-time.  
+    // This task has exceeded its allowed running-time.
     // You must stop what you're doing and immediately .finish(taskId)
     logger.i("[BackgroundFetch] Headless task timed-out: $taskId");
     BackgroundFetch.finish(taskId);
     return;
-  }  
+  }
+  await initializeIsolate();
   logger.i('[BackgroundFetch] Headless event received.');
-   await updateAlarms("handleBackgroundServiceTask(): Update alarms in background service");
-  await updateTimers("handleBackgroundServiceTask(): Update timers in background service");
+  await updateAlarms(
+      "handleBackgroundServiceTask(): Update alarms in background service");
+  await updateTimers(
+      "handleBackgroundServiceTask(): Update timers in background service");
 
   BackgroundFetch.finish(taskId);
 }

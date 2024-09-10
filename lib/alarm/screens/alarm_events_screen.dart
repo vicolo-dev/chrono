@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:clock_app/alarm/data/alarm_events_list_filters.dart';
+import 'package:clock_app/alarm/data/alarm_events_sort_options.dart';
 import 'package:clock_app/alarm/types/alarm_event.dart';
 import 'package:clock_app/alarm/widgets/alarm_event_card.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
@@ -73,6 +74,7 @@ class _AlarmEventsScreenState extends State<AlarmEventsScreen> {
                   placeholderText: "No alarm events",
                   reloadOnPop: true,
                   listFilters: alarmEventsListFilters,
+                  sortOptions: alarmEventSortOptions,
                 ),
               ),
             ],

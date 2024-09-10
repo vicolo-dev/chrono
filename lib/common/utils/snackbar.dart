@@ -6,13 +6,18 @@ void showSnackBar(BuildContext context, String text,
   ThemeData theme = Theme.of(context);
   ColorScheme colorScheme = theme.colorScheme;
   Color? color = error ? colorScheme.error : null;
+  Duration duration =
+      error ? const Duration(hours: 999) : const Duration(seconds: 4);
   ScaffoldMessenger.of(context).removeCurrentSnackBar();
-  ScaffoldMessenger.of(context)
-      .showSnackBar(getSnackbar(text, fab: fab, navBar: navBar, color: color));
+  ScaffoldMessenger.of(context).showSnackBar(getSnackbar(text,
+      fab: fab, navBar: navBar, color: color, duration: duration));
 }
 
 SnackBar getSnackbar(String text,
-    {bool fab = false, bool navBar = false, Color? color}) {
+    {bool fab = false,
+    bool navBar = false,
+    Color? color,
+    Duration duration = const Duration(seconds: 4)}) {
   double left = 20;
   double right = 20;
   double bottom = 12;
@@ -57,8 +62,9 @@ SnackBar getSnackbar(String text,
       right: right,
       bottom: bottom,
     ),
-    padding:  EdgeInsets.zero,
+    padding: EdgeInsets.zero,
     elevation: 2,
     dismissDirection: DismissDirection.vertical,
+    duration: duration,
   );
 }

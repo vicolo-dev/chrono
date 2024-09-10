@@ -27,9 +27,9 @@ import 'package:flutter_show_when_locked/flutter_show_when_locked.dart';
 import 'package:timezone/data/latest_all.dart';
 
 void main() async {
-  FlutterError.onError = (FlutterErrorDetails details) {
-    logger.f(details.exception.toString());
-  };
+  // FlutterError.onError = (FlutterErrorDetails details) {
+  //   logger.f(details.exception.toString());
+  // };
 
   WidgetsFlutterBinding.ensureInitialized();
 

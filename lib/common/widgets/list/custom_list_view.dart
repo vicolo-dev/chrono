@@ -267,8 +267,10 @@ class _CustomListViewState<Item extends ListItem>
 
   void _handleCustomAction(ListFilterCustomAction<Item> action) {
     final list = _getActionableItems();
-    List<Item> items = list.where((item) =>
-        widget.listFilters.every((filter) => filter.filterFunction(item))).toList();
+    List<Item> items = list
+        .where((item) =>
+            widget.listFilters.every((filter) => filter.filterFunction(item)))
+        .toList();
 
     action.action(items);
     _endSelection();
@@ -350,18 +352,20 @@ class _CustomListViewState<Item extends ListItem>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListFilterBar(
-            listFilters: widget.listFilters,
-            customActions: widget.customActions,
-            sortOptions: widget.sortOptions,
-            isSelecting: _isSelecting,
-            handleCustomAction: _handleCustomAction,
-            handleEndSelection: _endSelection,
-            handleDeleteAction: _handleDeleteAction,
-            handleSelectAll: _handleSelectAll,
-            selectedIds: _selectedIds,
-            handleFilterChange: _handleFilterChange,
-            selectedSortIndex: _selectedSortIndex,
-            handleSortChange: _handleSortChange),
+          listFilters: widget.listFilters,
+          customActions: widget.customActions,
+          sortOptions: widget.sortOptions,
+          isSelecting: _isSelecting,
+          handleCustomAction: _handleCustomAction,
+          handleEndSelection: _endSelection,
+          handleDeleteAction: _handleDeleteAction,
+          handleSelectAll: _handleSelectAll,
+          selectedIds: _selectedIds,
+          handleFilterChange: _handleFilterChange,
+          selectedSortIndex: _selectedSortIndex,
+          handleSortChange: _handleSortChange,
+          isDeleteEnabled: widget.isDeleteEnabled,
+        ),
         if (widget.header != null) widget.header!,
         Expanded(
           flex: 1,

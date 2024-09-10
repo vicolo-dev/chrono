@@ -27,7 +27,7 @@ const String setAlarmVolumePortName = "setAlarmVolumePort";
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
   FlutterError.onError = (FlutterErrorDetails details) {
-    logger.f(details.exception.toString());
+    logger.f("Error in triggerScheduledNotification isolate: ${details.exception.toString()}");
   };
 
   logger.i(

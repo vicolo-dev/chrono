@@ -169,6 +169,8 @@
   "@maxLogsSetting": {},
   "alarmLogSetting": "Alarm logs",
   "@alarmLogSetting": {},
+  "appLogs": "App logs",
+  "@appLogs": {},
   "saveLogs": "Save logs",
   "@saveLogs": {},
   "showErrorSnackbars": "Show error snackbars",

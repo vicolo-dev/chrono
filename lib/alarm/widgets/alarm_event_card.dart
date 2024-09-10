@@ -15,38 +15,35 @@ class AlarmEventCard extends StatelessWidget {
 
     Color textColor = colorScheme.onSurface.withOpacity(0.8);
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-              left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(event.isActive ? "Active" : "Inactive",
-                  style: textTheme.labelMedium?.copyWith(
-                      color: event.isActive
-                          ? colorScheme.primary
-                          : colorScheme.onSurface)),
-              Text('Scheduled for: ${event.startDate}',
-                  style: textTheme.labelMedium?.copyWith(color: textColor)),
-              Text(
-                  'Type: ${event.notificationType == ScheduledNotificationType.alarm ? "Alarm" : "Timer"}',
-                  style: textTheme.labelMedium?.copyWith(color: textColor)),
-              Text('Created at: ${event.eventTime}',
-                  style: textTheme.labelMedium?.copyWith(color: textColor)),
-              Text(
-                'Description: ${event.description}',
-                style: textTheme.labelMedium?.copyWith(color: textColor),
-                maxLines: 5,
-              ),
-              Text('Schedule Id: ${event.scheduleId}',
-                  style: textTheme.labelMedium?.copyWith(color: textColor)),
-            ],
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
+      child: Column(
+        
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(event.isActive ? "Active" : "Inactive",
+              style: textTheme.labelMedium?.copyWith(
+                  color: event.isActive
+                      ? colorScheme.primary
+                      : colorScheme.onSurface)),
+          Text('Scheduled for: ${event.startDate}',
+              style: textTheme.labelMedium?.copyWith(color: textColor)),
+          Text(
+              'Type: ${event.notificationType == ScheduledNotificationType.alarm ? "Alarm" : "Timer"}',
+              style: textTheme.labelMedium?.copyWith(color: textColor)),
+          Text('Created at: ${event.eventTime}',
+              style: textTheme.labelMedium?.copyWith(color: textColor)),
+          Text(
+            'Description: ${event.description}',
+            style: textTheme.labelMedium?.copyWith(color: textColor),
+            maxLines: 5,
           ),
-        ),
-      ],
+          Text('Schedule Id: ${event.scheduleId}',
+              style: textTheme.labelMedium?.copyWith(color: textColor)),
+        ],
+      ),
     );
   }
 }
