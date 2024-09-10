@@ -20,16 +20,17 @@ class FileLoggerOutput extends LogOutput {
       _ => "Unknown error",
     };
 
-    _writeLog(message, event.level);
+    if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+      _writeLog(message, event.level);
 
-    Future(() {
       if (event.level == Level.error &&
           App.navigatorKey.currentContext != null) {
-        showSnackBar(
-            App.navigatorKey.currentContext!, message,
-            error: true, navBar: false, fab: false);
+        Future(() {
+          showSnackBar(App.navigatorKey.currentContext!, message,
+              error: true, navBar: false, fab: false);
+        });
       }
-    });
+    }
   }
 
   Future<void> _writeLog(String message, Level level) async {
