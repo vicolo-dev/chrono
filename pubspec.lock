@@ -706,6 +706,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.0"
+  mime:
+    dependency: "direct main"
+    description:
+      name: mime
+      sha256: "801fd0b26f14a4a58ccb09d5892c3fbdeff209594300a542492cf13fba9d247a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   move_to_background:
     dependency: "direct main"
     description:
@@ -850,14 +858,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
-  pick_or_save:
-    dependency: "direct main"
-    description:
-      name: pick_or_save
-      sha256: "5e562e714e8486000b1144e580dfbd6db888a0b4dd02bf4c28501b244dd22fd3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.4"
   platform:
     dependency: transitive
     description:

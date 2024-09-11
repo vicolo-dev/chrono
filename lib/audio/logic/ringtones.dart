@@ -7,8 +7,8 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/debug/logic/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_system_ringtones/flutter_system_ringtones.dart';
+import 'package:mime/mime.dart';
 import 'package:path/path.dart';
-import 'package:pick_or_save/pick_or_save.dart';
 
 Future<List<FileItem>> getSystemRingtones() async {
   final ringtones = (await FlutterSystemRingtones.getAlarmSounds())
@@ -55,28 +55,26 @@ Future<List<int>> getNRandomRingtoneIndices(int n) async {
   return indices;
 }
 
+const methodChannel = MethodChannel('com.vicolo.chrono/documents');
+
 Future<String> getRingtoneUri(FileItem fileItem) async {
   switch (fileItem.type) {
     case FileItemType.directory:
       try {
-        // logger.t(fileItem.uri);
-        // logger.t(
-        //     await Directory(alarm.ringtone.uri).list(recursive: true).toList());
-        List<DocumentFile>? documentFiles =
-            await PickOrSave().directoryDocumentsPicker(
-          params: DirectoryDocumentsPickerParams(
-            directoryUri: fileItem.uri,
-            // recurseDirectories: true,
-            mimeTypesFilter: ["audio/*"],
-          ),
-        );
-        if (documentFiles != null && documentFiles.isNotEmpty) {
+        List<FileSystemEntity> audioFiles =
+            (await Directory(fileItem.uri).list(recursive: true).toList())
+                .whereType<File>()
+                .where((item) =>
+                    lookupMimeType(item.path)?.startsWith('audio/') ?? false)
+                .toList();
+
+        if (audioFiles.isNotEmpty) {
           logger.t("Audio files found in directory ${fileItem.uri}");
           Random random = Random();
-          int index = random.nextInt(documentFiles.length);
-          DocumentFile documentFile = documentFiles[index];
+          int index = random.nextInt(audioFiles.length);
+          FileSystemEntity documentFile = audioFiles[index];
           // logger.t("${documentFile.name} ${documentFile.uri}");
-          return documentFile.uri;
+          return documentFile.uri.toString();
         } else {
           logger.t(
               "No audio files found in directory ${fileItem.uri}, using default");

@@ -8,12 +8,13 @@ import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/debug/data/log_list_filters.dart';
 import 'package:clock_app/debug/data/log_sort_options.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/debug/types/log.dart';
 import 'package:clock_app/debug/widgets/log_card.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:pick_or_save/pick_or_save.dart';
 
 class LogsScreen extends StatefulWidget {
   const LogsScreen({
@@ -130,26 +131,24 @@ class _LogsScreenState extends State<LogsScreen> {
               icon: Icons.file_download,
               bottomPadding: 8,
               onPressed: () async {
-                final File file = File(await getLogsFilePath());
+                try {
+                  final File file = File(await getLogsFilePath());
 
-                if (!(await file.exists())) {
-                  await file.create(recursive: true);
-                }
-
-                final result = await PickOrSave().fileSaver(
-                    params: FileSaverParams(
-                  saveFiles: [
-                    SaveFileInfo(
-                      fileData: await file.readAsBytes(),
-                      fileName:
-                          "chrono_logs_${DateTime.now().toIso8601String().split(".")[0]}.txt",
-                    )
-                  ],
-                ));
-                if (result != null) {
-                  if (context.mounted) {
-                    showSnackBar(context, "Logs saved to device");
+                  if (!(await file.exists())) {
+                    await file.create(recursive: true);
                   }
+                  final result = await FilePicker.platform.saveFile(
+                    bytes: await file.readAsBytes(),
+                    fileName:
+                        "chrono_logs_${DateTime.now().toIso8601String().split(".")[0]}.txt",
+                  );
+                  if (result != null) {
+                    if (context.mounted) {
+                      showSnackBar(context, "Logs saved to device");
+                    }
+                  }
+                } catch (e) {
+                  logger.e("Error saving logs file: ${e.toString()}");
                 }
               }),
           // FAB(

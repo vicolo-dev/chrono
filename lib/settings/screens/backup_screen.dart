@@ -75,13 +75,10 @@ class _BackupExportScreenState extends State<BackupExportScreen> {
                     if (result == null) return;
                     if (context.mounted) {
                       showSnackBar(context, "Export successful!");
+                      Navigator.pop(context);
                     }
                   } catch (e) {
-                    logger.e(e.toString());
-                    if (context.mounted) {
-                      showSnackBar(context, "Error exporting: ${e.toString()}",
-                          error: true);
-                    }
+                    logger.e("Error exporting: $e");
                   }
                 },
                 child:
@@ -163,13 +160,10 @@ class _BackupImportScreenState extends State<BackupImportScreen> {
                     }
                     if (context.mounted) {
                       showSnackBar(context, "Import successful!");
+                      Navigator.pop(context);
                     }
                   } catch (e) {
-                    logger.e(e.toString());
-                    if (context.mounted) {
-                      showSnackBar(context, "Error importing: ${e.toString()}",
-                          error: true);
-                    }
+                    logger.e("Error importing: $e");
                   }
                 },
                 child:
