@@ -11,6 +11,7 @@ import 'package:clock_app/settings/data/general_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class CustomListView<Item extends ListItem> extends StatefulWidget {
   const CustomListView({
@@ -384,22 +385,24 @@ class _CustomListViewState<Item extends ListItem>
                     ),
                   )
                 : Container(),
-            AnimatedReorderableListView(
-              longPressDraggable: false,
-              buildDefaultDragHandles: false,
-              proxyDecorator: (widget, index, animation) =>
-                  reorderableListDecorator(context, widget),
-              items: currentList,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              isSameItem: (a, b) => a.id == b.id,
-              scrollDirection: Axis.vertical,
-              itemBuilder: _getItemBuilder(),
-              enterTransition: [FadeIn()],
-              exitTransition: [FadeIn()],
-              controller: _scrollController,
-              insertDuration: const Duration(milliseconds: 300),
-              removeDuration: const Duration(milliseconds: 300),
-              onReorder: _handleReorderItems,
+              SlidableAutoCloseBehavior(
+              child: AnimatedReorderableListView(
+                longPressDraggable: false,
+                buildDefaultDragHandles: false,
+                proxyDecorator: (widget, index, animation) =>
+                    reorderableListDecorator(context, widget),
+                items: currentList,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                isSameItem: (a, b) => a.id == b.id,
+                scrollDirection: Axis.vertical,
+                itemBuilder: _getItemBuilder(),
+                enterTransition: [FadeIn()],
+                exitTransition: [FadeIn()],
+                controller: _scrollController,
+                insertDuration: const Duration(milliseconds: 300),
+                removeDuration: const Duration(milliseconds: 300),
+                onReorder: _handleReorderItems,
+              ),
             )
           ]),
         ),
