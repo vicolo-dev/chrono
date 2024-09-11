@@ -18,21 +18,21 @@ Future<void> initBackgroundService() async {
           requiredNetworkType: NetworkType.NONE), (String taskId) async {
     // <-- Event handler
     // This is the fetch-event callback.
-    logger.i("[BackgroundFetch] Event received $taskId");
+    logger.t("[initBackgroundService] Event received $taskId");
 
     // await initializeIsolate();
 
     await updateAlarms(
-        "initBackgroundService(): Update alarms in background service");
+        "[initBackgroundService] Update alarms in background service");
     await updateTimers(
-        "initBackgroundService(): Update timers in background service");
+        "[initBackgroundService] Update timers in background service");
     // IMPORTANT:  You must signal completion of your task or the OS can punish your app
     // for taking too long in the background.
     BackgroundFetch.finish(taskId);
   }, (String taskId) async {
     // <-- Task timeout handler.
     // This task has exceeded its allowed running-time.  You must stop what you're doing and immediately .finish(taskId)
-    logger.i("[BackgroundFetch] TASK TIMEOUT taskId: $taskId");
+    logger.t("[initBackgroundService] Task timed-out taskId: $taskId");
     BackgroundFetch.finish(taskId);
   });
 }
@@ -48,16 +48,16 @@ void handleBackgroundServiceTask(HeadlessTask task) async {
   if (isTimeout) {
     // This task has exceeded its allowed running-time.
     // You must stop what you're doing and immediately .finish(taskId)
-    logger.i("[BackgroundFetch] Headless task timed-out: $taskId");
+    logger.t("[handleBackgroundServiceTask] Headless task timed-out: $taskId");
     BackgroundFetch.finish(taskId);
     return;
   }
   await initializeIsolate();
-  logger.i('[BackgroundFetch] Headless event received.');
+  logger.t('[handleBackgroundServiceTask] Headless event received.');
   await updateAlarms(
-      "handleBackgroundServiceTask(): Update alarms in background service");
+      "[handleBackgroundServiceTask] Update alarms in background service");
   await updateTimers(
-      "handleBackgroundServiceTask(): Update timers in background service");
+      "[handleBackgroundServiceTask] Update timers in background service");
 
   BackgroundFetch.finish(taskId);
 }

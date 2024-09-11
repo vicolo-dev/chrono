@@ -30,8 +30,8 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
     logger.f("Error in triggerScheduledNotification isolate: ${details.exception.toString()}");
   };
 
-  logger.i(
-      "Alarm isolate triggered $scheduleId, isolate: ${Service.getIsolateId(Isolate.current)}");
+  logger.t(
+      "[triggerScheduledNotification] Alarm isolate triggered $scheduleId, isolate: ${Service.getIsolateId(Isolate.current)}");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
     logger.e("Params was null when triggering alarm");
@@ -54,7 +54,6 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
   IsolateNameServer.registerPortWithName(
       receivePort.sendPort, stopAlarmPortName);
   receivePort.listen((message) {
-    logger.d("Received message: $message");
     stopScheduledNotification(message);
   });
 
@@ -81,8 +80,8 @@ void stopScheduledNotification(List<dynamic> message) {
     stopTimer(scheduleId, action);
   }
 
-  logger.i(
-      "Alarm stop triggered $scheduleId, isolate: ${Service.getIsolateId(Isolate.current)}");
+  logger.t(
+      "[stopScheduledNotification] Alarm stop triggered $scheduleId, isolate: ${Service.getIsolateId(Isolate.current)}");
 }
 
 void triggerAlarm(int scheduleId, Json params) async {
@@ -180,7 +179,7 @@ void setVolume(double volume) {
 }
 
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
-  logger.i("Stopping alarm $scheduleId with action: ${action.name}");
+  logger.i("[stopAlarm] Stopping alarm $scheduleId with action: ${action.name}");
   if (action == AlarmStopAction.snooze) {
     await updateAlarmById(scheduleId, (alarm) async => await alarm.snooze());
     // await createSnoozeNotification(scheduleId);
@@ -198,7 +197,7 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
 }
 
 void triggerTimer(int scheduleId, Json params) async {
-  logger.i("Timer triggered $scheduleId");
+  logger.i("[triggerTimer] Timer triggered $scheduleId");
   ClockTimer? timer = getTimerById(scheduleId);
 
   if (timer == null || !timer.isRunning) {
