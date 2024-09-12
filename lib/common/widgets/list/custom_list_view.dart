@@ -68,7 +68,6 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
 class _CustomListViewState<Item extends ListItem>
     extends State<CustomListView<Item>> {
   late List<Item> currentList = List.from(widget.items);
-  double _itemCardHeight = 0;
   final _scrollController = ScrollController();
   // final _controller = AnimatedListController();
   late int _selectedSortIndex = widget.initialSortIndex;
@@ -94,7 +93,7 @@ class _CustomListViewState<Item extends ListItem>
     widget.listController.setGetItemIndex(_getItemIndex);
     widget.listController.setDuplicateItem(_handleDuplicateItem);
     widget.listController.setReloadItems(_handleReloadItems);
-    widget.listController.setClearItems(_handleClear);
+    widget.listController.setClearItems(_handleClearItems);
     widget.listController.setGetItems(() => widget.items);
     _updateCurrentList();
     // widget.listController.setChangeItemWithId(_handleChangeItemWithId);
@@ -136,11 +135,11 @@ class _CustomListViewState<Item extends ListItem>
   int _getItemIndex(Item item) =>
       currentList.indexWhere((element) => element.id == item.id);
 
-  void _updateItemHeight() {
-    if (_itemCardHeight == 0) {
-      // _itemCardHeight = _controller.computeItemBox(0)?.height ?? 0;
-    }
-  }
+  // void _updateItemHeight() {
+  //   if (_itemCardHeight == 0) {
+  //     // _itemCardHeight = _controller.computeItemBox(0)?.height ?? 0;
+  //   }
+  // }
 
   bool _handleReorderItems(int oldIndex, int newIndex) {
     if (newIndex >= widget.items.length || _selectedSortIndex != 0) {
@@ -167,8 +166,8 @@ class _CustomListViewState<Item extends ListItem>
 
   Future<void> _handleDeleteItem(Item deletedItem,
       [bool callOnModifyList = true]) async {
+    widget.items.removeWhere((element) => element.id == deletedItem.id);
     setState(() {
-      widget.items.removeWhere((element) => element.id == deletedItem.id);
       _updateCurrentList();
     });
 
@@ -178,11 +177,12 @@ class _CustomListViewState<Item extends ListItem>
 
   Future<void> _handleDeleteItemList(List<Item> deletedItems) async {
     for (var item in deletedItems) {
-      setState(() {
-        widget.items.removeWhere((element) => element.id == item.id);
-        _updateCurrentList();
-      });
+      widget.items.removeWhere((element) => element.id == item.id);
     }
+    setState(() {
+      _updateCurrentList();
+    });
+
     for (var item in deletedItems) {
       await widget.onDeleteItem?.call(item);
     }
@@ -190,8 +190,8 @@ class _CustomListViewState<Item extends ListItem>
     widget.onModifyList?.call();
   }
 
-  void _handleClear() {
-    _handleDeleteItemList(List<Item>.from(widget.items));
+  void _handleClearItems() async {
+    await _handleDeleteItemList(List<Item>.from(widget.items));
   }
 
   Future<void> _handleAddItem(Item item, {int index = -1}) async {
@@ -206,7 +206,7 @@ class _CustomListViewState<Item extends ListItem>
 
     int currentListIndex = _getItemIndex(item);
     _scrollToIndex(currentListIndex);
-    _updateItemHeight();
+    // _updateItemHeight();
     widget.onModifyList?.call();
   }
 
@@ -215,8 +215,8 @@ class _CustomListViewState<Item extends ListItem>
   }
 
   void _scrollToIndex(int index) {
-    if (_itemCardHeight == 0 && index != 0) return;
-    _scrollController.animateTo(index * _itemCardHeight,
+    if (index != 0) return;
+    _scrollController.animateTo(index.toDouble(),
         duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
   }
 
@@ -267,12 +267,7 @@ class _CustomListViewState<Item extends ListItem>
   }
 
   void _handleCustomAction(ListFilterCustomAction<Item> action) {
-    final list = _getActionableItems();
-    List<Item> items = list
-        .where((item) =>
-            widget.listFilters.every((filter) => filter.filterFunction(item)))
-        .toList();
-
+    final items = _getActionableItems();
     action.action(items);
     _endSelection();
   }
@@ -283,19 +278,19 @@ class _CustomListViewState<Item extends ListItem>
     if (result == null || result == false) return;
 
     final list = _getActionableItems();
-    final itemsToRemove = List<Item>.from(list.where((item) =>
-        item.isDeletable &&
-        widget.listFilters.every((filter) => filter.filterFunction(item))));
+    final itemsToRemove =
+        List<Item>.from(list.where((item) => item.isDeletable));
     _endSelection();
     await _handleDeleteItemList(itemsToRemove);
-
-    widget.onModifyList?.call();
   }
 
   List<Item> _getActionableItems() {
     return _isSelecting
         ? widget.items.where((item) => _selectedIds.contains(item.id)).toList()
-        : widget.items;
+        : widget.items
+            .where((item) => widget.listFilters
+                .every((filter) => filter.filterFunction(item)))
+            .toList();
   }
 
   _getItemBuilder() {
@@ -385,14 +380,15 @@ class _CustomListViewState<Item extends ListItem>
                     ),
                   )
                 : Container(),
-              SlidableAutoCloseBehavior(
+            SlidableAutoCloseBehavior(
               child: AnimatedReorderableListView(
                 longPressDraggable: false,
                 buildDefaultDragHandles: false,
                 proxyDecorator: (widget, index, animation) =>
                     reorderableListDecorator(context, widget),
                 items: currentList,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 isSameItem: (a, b) => a.id == b.id,
                 scrollDirection: Axis.vertical,
                 itemBuilder: _getItemBuilder(),

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
-  final Widget? title;
+  final Widget? titleWidget;
+  final String? title;
   final List<Widget>? actions;
   final Color? systemNavBarColor;
 
@@ -12,8 +13,10 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
 
   const AppTopBar({
     super.key,
+    this.titleWidget,
+    this.actions,
+    this.systemNavBarColor,
     this.title,
-    this.actions, this.systemNavBarColor,
   });
 
   @override
@@ -22,7 +25,8 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
-    final systemNavigationBarColor = systemNavBarColor ?? colorScheme.background;
+    final systemNavigationBarColor =
+        systemNavBarColor ?? colorScheme.background;
 
     Brightness statusBarIconBrightness =
         colorScheme.surface.computeLuminance() > 0.179
@@ -32,6 +36,16 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
         systemNavigationBarColor.computeLuminance() > 0.179
             ? Brightness.dark
             : Brightness.light;
+
+    Widget? barTitleWidget = titleWidget ??
+        (title != null
+            ? Text(
+                title!,
+                style: textTheme.titleMedium?.copyWith(
+                  color: colorScheme.onBackground.withOpacity(0.6),
+                ),
+              )
+            : null);
 
     return PreferredSize(
       preferredSize: preferredSize,
@@ -48,9 +62,26 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           scrolledUnderElevation: 0,
           toolbarHeight: preferredSize.height,
-          title: title,
+          titleSpacing: 0,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (Navigator.of(context).canPop()) ...[
+                IconButton(
+                    icon: Icon(Icons.arrow_back,
+                        color: colorScheme.onSurface.withOpacity(0.8)),
+                    onPressed: () => Navigator.of(context).pop(),
+                    padding: EdgeInsets.zero),
+                const SizedBox(width: 8)
+              ],
+              if (!Navigator.of(context).canPop()) const SizedBox(width: 16),
+              if (barTitleWidget != null) barTitleWidget,
+            ],
+          ),
           actions: [...?actions],
           elevation: 0,
+          automaticallyImplyLeading: false,
           iconTheme: IconThemeData(
             color: colorScheme.onSurface.withOpacity(0.8),
           ),

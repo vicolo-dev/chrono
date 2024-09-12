@@ -214,7 +214,7 @@ class _NavScaffoldState extends State<NavScaffold> {
       child: Scaffold(
         appBar: orientation == Orientation.portrait
             ? AppTopBar(
-                title: Text(
+                titleWidget: Text(
                   tabs[_selectedTabIndex].title,
                   style: textTheme.titleMedium?.copyWith(
                         color: colorScheme

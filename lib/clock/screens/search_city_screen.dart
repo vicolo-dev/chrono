@@ -68,7 +68,7 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppTopBar(
-        title: TextField(
+        titleWidget: TextField(
           autofocus: true,
           controller: _filterController,
           decoration: InputDecoration(

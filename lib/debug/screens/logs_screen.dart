@@ -4,14 +4,17 @@ import 'package:clock_app/alarm/data/alarm_events_list_filters.dart';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
+import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
+import 'package:clock_app/common/widgets/list/static_list_view.dart';
 import 'package:clock_app/debug/data/log_list_filters.dart';
 import 'package:clock_app/debug/data/log_sort_options.dart';
 import 'package:clock_app/debug/logic/logger.dart';
 import 'package:clock_app/debug/types/log.dart';
 import 'package:clock_app/debug/widgets/log_card.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
+import 'package:clock_app/navigation/widgets/search_top_bar.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +30,7 @@ class LogsScreen extends StatefulWidget {
 
 class _LogsScreenState extends State<LogsScreen> {
   List<Log> _logs = [];
+  List<Log> _filteredLogs = [];
   final _listController = ListController<Log>();
 
   List<String> _mergeMultilineLogs(List<String> logLines) {
@@ -81,35 +85,53 @@ class _LogsScreenState extends State<LogsScreen> {
     TextTheme textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: AppTopBar(title: Text("App Logs", style: textTheme.titleMedium)),
+      appBar: SearchTopBar(
+        title: "App Logs",
+        searchParams: SearchParams<Log>(
+          onSearch: (searchedItems) {
+            setState(() {
+              _filteredLogs = searchedItems;
+            });
+          },
+          placeholder: "Search logs",
+          choices: _logs,
+          searchTermGetter: (log) {
+            return log.message;
+          },
+        ),
+      ),
       body: Stack(
         children: [
           Column(
             children: [
               Expanded(
                 flex: 1,
-                child: CustomListView<Log>(
-                  items: _logs,
-                  listController: _listController,
-                  itemBuilder: (log) => LogCard(
-                    key: ValueKey(log),
-                    log: log,
-                  ),
-                  // onTapItem: (fileItem, index) {
-                  //   // widget.setting.setValue(context, themeItem);
-                  //   // _listController.reload();
-                  // },
-                  // onDeleteItem: (event){},
-                  isDuplicateEnabled: false,
-                  isReorderable: false,
-                  isDeleteEnabled: false,
-                  // isDeleteEnabled: true,
-                  placeholderText: "No logs",
-                  listFilters: logListFilters,
-                  sortOptions: logSortOptions,
-                  // reloadOnPop: true,
-                  // listFilters: alarmEventsListFilters,
-                ),
+                child: _filteredLogs.isEmpty
+                    ? CustomListView<Log>(
+                        items: _logs,
+                        listController: _listController,
+                        itemBuilder: (log) => LogCard(
+                          key: ValueKey(log),
+                          log: log,
+                        ),
+                        isDuplicateEnabled: false,
+                        isReorderable: false,
+                        isDeleteEnabled: false,
+                        placeholderText: "No logs",
+                        listFilters: logListFilters,
+                        sortOptions: logSortOptions,
+                      )
+                    : StaticListView(
+                        children: _filteredLogs
+                            .map(
+                              (log) => CardContainer(
+                                child: LogCard(
+                                  key: ValueKey(log),
+                                  log: log,
+                                ),
+                              ),
+                            )
+                            .toList()),
               ),
             ],
           ),
@@ -124,6 +146,7 @@ class _LogsScreenState extends State<LogsScreen> {
               if (context.mounted) showSnackBar(context, "Logs cleared");
 
               _listController.clearItems();
+              setState(() {});
             },
           ),
           FAB(
@@ -151,41 +174,6 @@ class _LogsScreenState extends State<LogsScreen> {
                   logger.e("Error saving logs file: ${e.toString()}");
                 }
               }),
-          // FAB(
-          //     index: 2,
-          //     icon: Icons.file_upload,
-          //     bottomPadding: 8,
-          //     onPressed: () async {
-          //       List<String>? result = await PickOrSave().filePicker(
-          //         params: FilePickerParams(
-          //           getCachedFilePath: true,
-          //         ),
-          //       );
-          //       if (result != null && result.isNotEmpty) {
-          //         File file = File(result[0]);
-          //         final data = utf8.decode(file.readAsBytesSync());
-          //         final alarmEvents = listFromString<AlarmEvent>(data);
-          //         for (var event in alarmEvents) {
-          //           _listController.addItem(event);
-          //         }
-          //       }
-          //     }),
-
-          // FAB(
-          //   index: 1,
-          //   icon: Icons.folder_rounded,
-          //   bottomPadding: 8,
-          //   onPressed: () async {
-          //     // Item? themeItem = widget.createThemeItem();
-          //     // await _openCustomizeItemScreen(
-          //     //   themeItem,
-          //     //   onSave: (newThemeItem) {
-          //     //     _listController.addItem(newThemeItem);
-          //     //   },
-          //     //   isNewItem: true,
-          //     // );
-          //   },
-          // )
         ],
       ),
     );

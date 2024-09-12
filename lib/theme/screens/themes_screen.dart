@@ -79,7 +79,7 @@ class _ThemesScreenState<Item extends ThemeItem>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppTopBar(
-        title: Text(widget.setting.displayName(context)),
+        titleWidget: Text(widget.setting.displayName(context)),
       ),
       body: Stack(
         children: [

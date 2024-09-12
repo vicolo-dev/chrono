@@ -45,8 +45,7 @@ class _AlarmEventsScreenState extends State<AlarmEventsScreen> {
     TextTheme textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar:
-          AppTopBar(title: Text("Alarm Logs", style: textTheme.titleMedium)),
+      appBar: const AppTopBar(title: "Alarm Logs"),
       body: Stack(
         children: [
           Column(

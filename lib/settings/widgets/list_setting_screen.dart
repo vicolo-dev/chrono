@@ -55,9 +55,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppTopBar(
-        title: Text(widget.setting.displayName(context)),
-      ),
+      appBar: AppTopBar(title: widget.setting.displayName(context)),
       body: Stack(
         children: [
           Column(

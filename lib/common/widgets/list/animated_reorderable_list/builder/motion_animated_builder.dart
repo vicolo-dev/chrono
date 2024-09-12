@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:clock_app/common/widgets/list/animated_reorderable_list/component/sliver_grid_with_fixed_cross_axis_count.dart';
 import 'package:clock_app/common/widgets/list/animated_reorderable_list/component/sliver_grid_with_main_axis_extent.dart';
+import 'package:clock_app/debug/logic/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -437,7 +438,7 @@ class MotionBuilderState extends State<MotionBuilder>
   int _itemIndexToIndex(int itemIndex) {
     int index = itemIndex;
     for (final _ActiveItem item in _outgoingItems) {
-      assert(item.itemIndex != itemIndex);
+      // assert(item.itemIndex != itemIndex);
       if (item.itemIndex < itemIndex) {
         index -= 1;
       } else {
@@ -638,7 +639,8 @@ class MotionBuilderState extends State<MotionBuilder>
     final _ActiveItem? incomingItem = _activeItemAt(_incomingItems, index);
 
     if (outgoingItem != null) {
-      final child = _items[index]!.widget;
+      // logger.d("Outgoing item in $_items at index $index");
+      final child = _items[index]?.widget ?? Container();
       return _removeItemBuilder(outgoingItem, child);
     }
     if (_dragInfo != null && index >= _itemsCount) {

@@ -23,7 +23,6 @@ import 'package:clock_app/timer/widgets/timer_duration_picker.dart';
 import 'package:clock_app/timer/widgets/timer_picker.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:great_list_view/great_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
 import 'package:clock_app/timer/types/timer.dart';
@@ -109,11 +108,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 //   }
 // }
 
-typedef TimerCardBuilder = Widget Function(
-  BuildContext context,
-  int index,
-  AnimatedWidgetBuilderData data,
-);
 
 class TimerScreen extends StatefulWidget {
   const TimerScreen({super.key, this.actionController});

@@ -21,14 +21,8 @@ import 'package:clock_app/navigation/types/quick_action_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
-import 'package:great_list_view/great_list_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-typedef AlarmCardBuilder = Widget Function(
-  BuildContext context,
-  int index,
-  AnimatedWidgetBuilderData data,
-);
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({super.key, this.actionController});

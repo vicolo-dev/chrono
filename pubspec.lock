@@ -30,7 +30,7 @@ packages:
     description:
       path: "packages/android_alarm_manager_plus"
       ref: alarm_show_intent
-      resolved-ref: "2b9a1f38f0f5f647153507cae3a0f00c896fd06a"
+      resolved-ref: ae6c11c3eccd66ff79827424cbf8c208f727282e
       url: "https://github.com/AhsanSarwar45/plus_plugins"
     source: git
     version: "4.0.1"
@@ -242,14 +242,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
-  diffutil_dart:
-    dependency: transitive
-    description:
-      name: diffutil_dart
-      sha256: e0297e4600b9797edff228ed60f4169a778ea357691ec98408fa3b72994c7d06
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   dots_indicator:
     dependency: transitive
     description:
@@ -520,15 +512,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  great_list_view:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: master
-      resolved-ref: "6fb91f6f3b2480c490bfa57cb7a8b18e4db2c117"
-      url: "https://github.com/AhsanSarwar45/great_list_view"
-    source: git
-    version: "0.2.3"
   home_widget:
     dependency: "direct main"
     description:
@@ -1263,14 +1246,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.2"
-  worker_manager:
-    dependency: transitive
-    description:
-      name: worker_manager
-      sha256: "42501e49ee0acad9eeda562984e3dcfe6fe3d26f2d8dc410bd76308a86447eb5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.3"
   xdg_directories:
     dependency: transitive
     description:

@@ -92,7 +92,7 @@ Future<void> scheduleAlarm(
       },
     );
 
-    logger.i(
+    logger.t(
         'Scheduled alarm $scheduleId for $startDate of type ${type.name}: $description');
   }
 }
@@ -137,6 +137,6 @@ Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
     await createSnoozeNotification(scheduleId, DateTime.now().add(delay));
   }
 
-  logger.i(
+  logger.t(
       'Scheduled snooze alarm $scheduleId for ${DateTime.now().add(delay)} with type ${type.name}: $description');
 }
