@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 

@@ -129,7 +129,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
       if (nextScheduleDateTime == null) return;
-      ScaffoldMessenger.of(context).showSnackBar(getSnackbar(
+      ScaffoldMessenger.of(context).showSnackBar(getThemedSnackBar(
+      context,
           getNewAlarmText(context, alarm),
           fab: true,
           navBar: true));

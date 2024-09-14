@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_system_ringtones/flutter_system_ringtones.dart';
 import 'package:mime/mime.dart';

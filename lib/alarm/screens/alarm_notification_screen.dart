@@ -4,8 +4,8 @@ import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/types/notification_type.dart';
-import 'package:clock_app/common/widgets/clock/clock.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/common/widgets/clock/digital_clock.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/logic/alarm_notifications.dart';
 import 'package:clock_app/notifications/types/alarm_notification_arguments.dart';
@@ -127,7 +127,7 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         const SizedBox(height: 8),
-                        const Clock(
+                        const DigitalClock(
                           // dateTime: Date,
                           horizontalAlignment: ElementAlignment.center,
                           shouldShowDate: false,

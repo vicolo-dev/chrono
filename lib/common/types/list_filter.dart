@@ -1,6 +1,6 @@
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/id.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

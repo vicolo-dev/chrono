@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:clock_app/common/widgets/list/animated_reorderable_list/component/sliver_grid_with_fixed_cross_axis_count.dart';
 import 'package:clock_app/common/widgets/list/animated_reorderable_list/component/sliver_grid_with_main_axis_extent.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

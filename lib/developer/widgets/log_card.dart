@@ -1,4 +1,4 @@
-import 'package:clock_app/debug/types/log.dart';
+import 'package:clock_app/developer/types/log.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';

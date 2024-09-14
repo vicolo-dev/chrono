@@ -307,6 +307,7 @@ class Alarm extends CustomizableListItem {
   }
 
   void handleDismiss() {
+    _snoozeCount = 0;
     if (scheduleType == OnceAlarmSchedule && shouldDeleteAfterRinging ||
         shouldDeleteAfterFinish && isFinished) {
       _markedForDeletion = true;

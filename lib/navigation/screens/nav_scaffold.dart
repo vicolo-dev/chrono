@@ -16,6 +16,7 @@ import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/system/logic/handle_intents.dart';
 import 'package:clock_app/system/logic/quick_actions.dart';
+import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -65,10 +66,8 @@ class NavScaffold extends StatefulWidget {
 
 class _NavScaffoldState extends State<NavScaffold> {
   late int _selectedTabIndex;
-  late Setting useMaterialNavBarSetting;
   late Setting swipeActionSetting;
   late Setting showForegroundSetting;
-  late Setting useMaterialYouSetting;
   late StreamSubscription _sub;
   late PageController _controller;
   QuickActionController quickActionController = QuickActionController();
@@ -103,10 +102,9 @@ class _NavScaffoldState extends State<NavScaffold> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
       if (nextScheduleDateTime == null) return;
-      ScaffoldMessenger.of(context).showSnackBar(getSnackbar(
-          getNewAlarmText(context, alarm),
-          fab: true,
-          navBar: true));
+      ScaffoldMessenger.of(context).showSnackBar(getThemedSnackBar(
+          context, getNewAlarmText(context, alarm),
+          fab: true, navBar: true));
     });
   }
 
@@ -159,14 +157,7 @@ class _NavScaffoldState extends State<NavScaffold> {
     super.initState();
     initializeQuickActions(context, _onTabSelected);
     initReceiveIntent();
-    useMaterialNavBarSetting = appSettings
-        .getGroup("Appearance")
-        .getGroup("Style")
-        .getSetting("Use Material Style");
-    useMaterialYouSetting = appSettings
-      .getGroup("Appearance")
-      .getGroup("Colors")
-      .getSetting("Use Material You");
+
     swipeActionSetting =
         appSettings.getGroup("General").getSetting("Swipe Action");
     showForegroundSetting = appSettings
@@ -174,8 +165,6 @@ class _NavScaffoldState extends State<NavScaffold> {
         .getGroup("Reliability")
         .getSetting("Show Foreground Notification");
     swipeActionSetting.addListener(update);
-    useMaterialNavBarSetting.addListener(update);
-    useMaterialYouSetting.addListener(update);
     showForegroundSetting.addListener(_updateForegroundNotification);
     _controller = PageController(initialPage: widget.initialTabIndex);
     _selectedTabIndex = widget.initialTabIndex;
@@ -185,8 +174,6 @@ class _NavScaffoldState extends State<NavScaffold> {
 
   @override
   void dispose() {
-    useMaterialNavBarSetting.removeListener(update);
-    useMaterialYouSetting.removeListener(update);
     swipeActionSetting.removeListener(update);
     showForegroundSetting.removeListener(_updateForegroundNotification);
     _sub.cancel();
@@ -200,15 +187,16 @@ class _NavScaffoldState extends State<NavScaffold> {
     final tabs = getTabs(context, quickActionController);
     ThemeData theme = Theme.of(context);
     TextTheme textTheme = theme.textTheme;
+    ThemeSettingExtension themeSettings =
+        theme.extension<ThemeSettingExtension>()!;
     ColorScheme colorScheme = theme.colorScheme;
 
-     TonalPalette tonalPalette = toTonalPalette(colorScheme.surface.value);
+    TonalPalette tonalPalette = toTonalPalette(colorScheme.surface.value);
 
-  Color materialNavColor = 
-      useMaterialYouSetting.value
-          ? Color(tonalPalette
-              .get(Theme.of(context).brightness == Brightness.light ? 96 : 15))
-          : colorScheme.surface;
+    Color materialNavColor = themeSettings.useMaterialYou
+        ? Color(tonalPalette
+            .get(Theme.of(context).brightness == Brightness.light ? 96 : 15))
+        : colorScheme.surface;
 
     return WithForegroundTask(
       child: Scaffold(
@@ -217,13 +205,11 @@ class _NavScaffoldState extends State<NavScaffold> {
                 titleWidget: Text(
                   tabs[_selectedTabIndex].title,
                   style: textTheme.titleMedium?.copyWith(
-                        color: colorScheme
-                            .onBackground
-                            .withOpacity(0.6),
-                      ),
-                
+                    color: colorScheme.onBackground.withOpacity(0.6),
+                  ),
                 ),
-                systemNavBarColor: useMaterialNavBarSetting.value ? materialNavColor : null,
+                systemNavBarColor:
+                    themeSettings.useMaterialStyle ? materialNavColor : null,
                 actions: [
                   IconButton(
                     onPressed: () {
@@ -236,15 +222,13 @@ class _NavScaffoldState extends State<NavScaffold> {
                     },
                     icon: const Icon(FluxIcons.settings,
                         semanticLabel: "Settings"),
-                    color: colorScheme
-                        .onBackground
-                        .withOpacity(0.8),
+                    color: colorScheme.onBackground.withOpacity(0.8),
                   ),
                 ],
               )
             : null,
         bottomNavigationBar: orientation == Orientation.portrait
-            ? useMaterialNavBarSetting.value
+            ? themeSettings.useMaterialStyle
                 ? NavigationBar(
                     labelBehavior:
                         NavigationDestinationLabelBehavior.onlyShowSelected,
@@ -278,12 +262,9 @@ class _NavScaffoldState extends State<NavScaffold> {
                       )
                   ],
                   leading: Text(tabs[_selectedTabIndex].title,
-                      style:
-                          textTheme.headlineSmall?.copyWith(
-                                color: colorScheme
-                                    .onBackground
-                                    .withOpacity(0.6),
-                              )),
+                      style: textTheme.headlineSmall?.copyWith(
+                        color: colorScheme.onBackground.withOpacity(0.6),
+                      )),
                   trailing: IconButton(
                     onPressed: () {
                       ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -295,9 +276,7 @@ class _NavScaffoldState extends State<NavScaffold> {
                     },
                     icon: const Icon(FluxIcons.settings,
                         semanticLabel: "Settings"),
-                    color: colorScheme
-                        .onBackground
-                        .withOpacity(0.8),
+                    color: colorScheme.onBackground.withOpacity(0.8),
                   ),
                   selectedIndex: _selectedTabIndex,
                   onDestinationSelected: _onTabSelected,

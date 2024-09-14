@@ -7,13 +7,11 @@ import 'package:clock_app/theme/screens/themes_screen.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
+import 'package:clock_app/theme/types/theme_brightness.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-enum ThemeBrightness { light, dark, system }
-
-enum DarkMode { user, system, nightDay }
 
 SettingGroup appearanceSettingsSchema = SettingGroup(
   "Appearance",

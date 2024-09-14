@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:clock_app/alarm/screens/alarm_events_screen.dart';
-import 'package:clock_app/debug/screens/logs_screen.dart';
+import 'package:clock_app/developer/screens/logs_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';

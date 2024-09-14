@@ -5,7 +5,7 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/file_item_card.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
 import 'package:clock_app/system/data/device_info.dart';

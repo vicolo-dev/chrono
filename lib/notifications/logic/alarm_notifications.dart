@@ -7,7 +7,7 @@ import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/common/types/notification_type.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/notifications/data/action_keys.dart';
 import 'package:clock_app/notifications/data/fullscreen_notification_data.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';

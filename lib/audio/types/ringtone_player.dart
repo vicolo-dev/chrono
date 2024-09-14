@@ -4,7 +4,7 @@ import 'package:audio_session/audio_session.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/audio/logic/ringtones.dart';
 import 'package:clock_app/audio/types/ringtone_manager.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';

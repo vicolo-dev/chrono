@@ -1,4 +1,5 @@
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/theme/bottom_sheet.dart';
 import 'package:clock_app/theme/popup_menu.dart';
 import 'package:clock_app/theme/slider.dart';
@@ -38,19 +39,24 @@ ThemeData getTheme(
     {ColorScheme? colorScheme,
     ColorSchemeData? colorSchemeData,
     StyleTheme? styleTheme}) {
-  styleTheme ??= appSettings
-      .getGroup("Appearance")
-      .getGroup("Style")
-      .getSetting("Style Theme")
+SettingGroup appearanceSettings = appSettings
+      .getGroup("Appearance");
+      SettingGroup colorSettings = appearanceSettings.getGroup("Colors");
+      SettingGroup styleSettings = appearanceSettings.getGroup("Style");
+
+  styleTheme ??= styleSettings.getSetting("Style Theme")
       .value;
 
   colorSchemeData ??= colorScheme != null
       ? getColorSchemeData(colorScheme)
-      : appSettings
-          .getGroup("Appearance")
-          .getGroup("Colors")
-          .getSetting("Color Scheme")
+      : colorSettings.getSetting("Color Scheme")
           .value;
+
+  bool useMaterialYou = colorSettings.getSetting("Use Material You")
+      .value;
+  bool useMaterialStyle = styleSettings.getSetting("Use Material Style")
+      .value;
+
 
   if (styleTheme == null || colorSchemeData == null) {
     return defaultTheme;
@@ -95,6 +101,11 @@ ThemeData getTheme(
                 borderWidth: styleTheme.borderWidth,
               ) ??
           const ThemeStyleExtension(),
+          defaultTheme.extension<ThemeSettingExtension>()?.copyWith(
+                useMaterialYou: useMaterialYou,
+                useMaterialStyle: useMaterialStyle,
+              ) ?? 
+              const ThemeSettingExtension(),
     ],
   );
 }

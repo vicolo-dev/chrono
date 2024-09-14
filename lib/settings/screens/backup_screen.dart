@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/backup_options.dart';
 import 'package:clock_app/settings/logic/backup.dart';

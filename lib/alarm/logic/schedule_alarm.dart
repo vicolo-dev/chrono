@@ -8,7 +8,7 @@ import 'package:clock_app/common/types/schedule_id.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 
 Future<void> scheduleAlarm(

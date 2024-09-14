@@ -3,7 +3,7 @@ import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -150,7 +150,6 @@ class _PersistentListViewState<Item extends ListItem>
 
   void _loadItems() {
     if (widget.saveTag.isNotEmpty) {
-      logger.d('Loading items from ${widget.saveTag}');
       widget.listController.changeItems(
         (List<Item> items) {
           List<Item> newList = loadListSync<Item>(widget.saveTag);

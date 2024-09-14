@@ -1,5 +1,5 @@
 import 'package:clock_app/common/types/list_filter.dart';
-import 'package:clock_app/debug/types/log.dart';
+import 'package:clock_app/developer/types/log.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final List<ListSortOption<Log>> logSortOptions = [

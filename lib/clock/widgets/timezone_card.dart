@@ -1,7 +1,7 @@
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/common/utils/popup_action.dart';
 import 'package:clock_app/common/widgets/card_edit_menu.dart';
-import 'package:clock_app/common/widgets/clock/clock.dart';
+import 'package:clock_app/common/widgets/clock/digital_clock.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;
@@ -64,7 +64,7 @@ class TimeZoneCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Clock(
+                DigitalClock(
                   timezoneLocation: _timezoneLocation,
                   scale: 0.4,
                 ),

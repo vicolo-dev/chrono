@@ -55,3 +55,34 @@ class ThemeStyleExtension extends ThemeExtension<ThemeStyleExtension> {
     );
   }
 }
+
+class ThemeSettingExtension extends ThemeExtension<ThemeSettingExtension> {
+  final bool useMaterialYou;
+  final bool useMaterialStyle;
+
+  const ThemeSettingExtension({
+    this.useMaterialYou = false,
+    this.useMaterialStyle = false,
+  });
+
+  @override
+  ThemeExtension<ThemeSettingExtension> copyWith({
+    bool? useMaterialYou,
+    bool? useMaterialStyle,
+  }) {
+    return ThemeSettingExtension(
+        useMaterialYou: useMaterialYou ?? this.useMaterialYou,
+        useMaterialStyle: useMaterialStyle ?? this.useMaterialStyle);
+  }
+
+  @override
+  ThemeExtension<ThemeSettingExtension> lerp(
+      covariant ThemeExtension<ThemeSettingExtension>? other, double t) {
+    if (other is! ThemeSettingExtension) return this;
+
+    return ThemeSettingExtension(
+      useMaterialYou: t < 0.5 ? useMaterialYou : other.useMaterialYou,
+      useMaterialStyle: t < 0.5 ? useMaterialStyle : other.useMaterialStyle,
+    );
+  }
+}

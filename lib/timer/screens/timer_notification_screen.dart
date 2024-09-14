@@ -1,6 +1,6 @@
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/logic/alarm_notifications.dart';
 import 'package:clock_app/notifications/types/alarm_notification_arguments.dart';

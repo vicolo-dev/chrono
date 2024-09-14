@@ -2,7 +2,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:clock_app/alarm/logic/alarm_isolate.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 
 void initializeIsolatePorts(){

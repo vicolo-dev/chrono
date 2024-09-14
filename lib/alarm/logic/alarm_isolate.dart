@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/notifications/logic/alarm_notifications.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/types/timer.dart';

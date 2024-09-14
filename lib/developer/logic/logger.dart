@@ -1,5 +1,5 @@
-import 'package:clock_app/debug/types/file_logger_output.dart';
-import 'package:clock_app/debug/types/log_filter.dart';
+import 'package:clock_app/developer/types/file_logger_output.dart';
+import 'package:clock_app/developer/types/log_filter.dart';
 import 'package:logger/logger.dart';
 import 'dart:isolate';
 

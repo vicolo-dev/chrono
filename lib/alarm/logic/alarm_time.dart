@@ -1,6 +1,6 @@
 import 'package:clock/clock.dart';
 import 'package:clock_app/common/types/time.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 
 // Calculates the DateTime when the provided `time` will next occur
 DateTime getScheduleDateForTime(

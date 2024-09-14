@@ -1,6 +1,6 @@
 import 'package:background_fetch/background_fetch.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:flutter/material.dart';

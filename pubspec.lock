@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "61.0.0"
+  analog_clock:
+    dependency: "direct main"
+    description:
+      name: analog_clock
+      sha256: "6550dc371c5834d76295ec7b50c44b96c52f60e9bb2dd49568a3cb100e4b289e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   analyzer:
     dependency: transitive
     description:
@@ -34,6 +42,14 @@ packages:
       url: "https://github.com/AhsanSarwar45/plus_plugins"
     source: git
     version: "4.0.1"
+  animated_analog_clock:
+    dependency: "direct main"
+    description:
+      name: animated_analog_clock
+      sha256: "00ef12809ad0a95d1f6e50264e5b109a65448d97ba677be23d766261fb3378ce"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   ansicolor:
     dependency: transitive
     description:
@@ -1106,10 +1122,10 @@ packages:
     dependency: "direct main"
     description:
       name: timezone
-      sha256: "1cfd8ddc2d1cfd836bc93e67b9be88c3adaeca6f40a00ca999104c30693cdca0"
+      sha256: "2236ec079a174ce07434e89fcd3fcda430025eb7692244139a9cf54fdcf1fc7d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.2"
+    version: "0.9.4"
   typed_data:
     dependency: transitive
     description:

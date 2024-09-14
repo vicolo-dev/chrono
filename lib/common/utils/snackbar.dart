@@ -1,4 +1,5 @@
 import 'package:clock_app/settings/data/settings_schema.dart';
+import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 void showSnackBar(BuildContext context, String text,
@@ -6,16 +7,41 @@ void showSnackBar(BuildContext context, String text,
   ThemeData theme = Theme.of(context);
   ColorScheme colorScheme = theme.colorScheme;
   Color? color = error ? colorScheme.error : null;
+  ThemeSettingExtension themeSettings =
+      theme.extension<ThemeSettingExtension>()!;
+
   Duration duration =
       error ? const Duration(hours: 999) : const Duration(seconds: 4);
   ScaffoldMessenger.of(context).removeCurrentSnackBar();
   ScaffoldMessenger.of(context).showSnackBar(getSnackbar(text,
-      fab: fab, navBar: navBar, color: color, duration: duration));
+      fab: fab,
+      navBar: navBar,
+      color: color,
+      useMaterialStyle: themeSettings.useMaterialStyle,
+      duration: duration));
+}
+
+SnackBar getThemedSnackBar(BuildContext context, String text,
+    {bool fab = false,
+    bool navBar = false,
+    Color? color,
+    Duration duration = const Duration(seconds: 4)}) {
+  ThemeData theme = Theme.of(context);
+  ThemeSettingExtension themeSettings =
+      theme.extension<ThemeSettingExtension>()!;
+
+  return getSnackbar(text,
+      fab: fab,
+      navBar: navBar,
+      color: color,
+      useMaterialStyle: themeSettings.useMaterialStyle,
+      duration: duration);
 }
 
 SnackBar getSnackbar(String text,
     {bool fab = false,
     bool navBar = false,
+    bool useMaterialStyle = false,
     Color? color,
     Duration duration = const Duration(seconds: 4)}) {
   double left = 20;
@@ -37,12 +63,6 @@ SnackBar getSnackbar(String text,
   if (navBar) {
     bottom = 4;
   }
-
-  final useMaterialStyle = appSettings
-      .getGroup("Appearance")
-      .getGroup("Style")
-      .getSetting("Use Material Style")
-      .value;
 
   if (useMaterialStyle) {
     bottom += 20;

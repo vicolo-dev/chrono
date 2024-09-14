@@ -1,3 +1,4 @@
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,8 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+
+    final bool showBackButton = Navigator.of(context).canPop();
 
     final systemNavigationBarColor =
         systemNavBarColor ?? colorScheme.background;
@@ -67,7 +70,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (Navigator.of(context).canPop()) ...[
+              if (showBackButton) ...[
                 IconButton(
                     icon: Icon(Icons.arrow_back,
                         color: colorScheme.onSurface.withOpacity(0.8)),
@@ -75,7 +78,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
                     padding: EdgeInsets.zero),
                 const SizedBox(width: 8)
               ],
-              if (!Navigator.of(context).canPop()) const SizedBox(width: 16),
+              if (!showBackButton) const SizedBox(width: 16),
               if (barTitleWidget != null) barTitleWidget,
             ],
           ),

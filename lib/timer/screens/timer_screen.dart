@@ -8,7 +8,7 @@ import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/widgets/list/customize_list_item_screen.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/types/quick_action_controller.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/data/update_notification_intervals.dart';
