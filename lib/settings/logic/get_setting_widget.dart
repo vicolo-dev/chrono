@@ -184,7 +184,7 @@ Widget? getSettingItemWidget(
         setting: item,
         showAsCard: showAsCard,
       );
-    } else if (item is ListSetting) {
+    } else if (item is CustomizableListSetting) {
       return ListSettingCard(
         setting: item,
         showAsCard: showAsCard,

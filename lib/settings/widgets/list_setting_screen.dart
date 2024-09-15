@@ -9,23 +9,23 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/widgets/list_setting_add_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-class ListSettingScreen<Item extends CustomizableListItem>
+class CustomizableListSettingScreen<Item extends CustomizableListItem>
     extends StatefulWidget {
-  const ListSettingScreen({
+  const CustomizableListSettingScreen({
     super.key,
     required this.setting,
     required this.onChanged,
   });
 
-  final ListSetting<Item> setting;
+  final CustomizableListSetting<Item> setting;
   final void Function(BuildContext context) onChanged;
 
   @override
-  State<ListSettingScreen> createState() => _ListSettingScreenState<Item>();
+  State<CustomizableListSettingScreen> createState() => _CustomizableListSettingScreenState<Item>();
 }
 
-class _ListSettingScreenState<Item extends CustomizableListItem>
-    extends State<ListSettingScreen<Item>> {
+class _CustomizableListSettingScreenState<Item extends CustomizableListItem>
+    extends State<CustomizableListSettingScreen<Item>> {
   final _listController = ListController<Item>();
 
   Future<Item?> _openAddBottomSheet() async {
@@ -33,7 +33,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
 
     return await showModalBottomSheet(
       context: context,
-      builder: (context) => ListSettingAddBottomSheet(setting: widget.setting),
+      builder: (context) => CustomizableListSettingAddBottomSheet(setting: widget.setting),
     );
   }
 

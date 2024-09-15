@@ -68,19 +68,21 @@ class _SearchCityScreenState extends State<SearchCityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppTopBar(
-        titleWidget: TextField(
-          autofocus: true,
-          controller: _filterController,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            focusedBorder:
-                const OutlineInputBorder(borderSide: BorderSide.none),
-            fillColor: Colors.transparent,
-            hintText: AppLocalizations.of(context)!.searchCityPlaceholder,
-            hintStyle: Theme.of(context).textTheme.bodyLarge,
+        titleWidget: Expanded(
+          child: TextField(
+            autofocus: true,
+            controller: _filterController,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              focusedBorder:
+                  const OutlineInputBorder(borderSide: BorderSide.none),
+              fillColor: Colors.transparent,
+              hintText: AppLocalizations.of(context)!.searchCityPlaceholder,
+              hintStyle: Theme.of(context).textTheme.bodyLarge,
+            ),
+            textAlignVertical: TextAlignVertical.center,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
-          textAlignVertical: TextAlignVertical.center,
-          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
       body: Padding(
