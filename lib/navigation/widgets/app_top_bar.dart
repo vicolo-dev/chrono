@@ -59,7 +59,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
             systemNavigationBarColor: systemNavigationBarColor,
             systemNavigationBarDividerColor: Colors.transparent,
             systemNavigationBarIconBrightness: systemNavBarIconBrightness,
-            statusBarColor: colorScheme.surface,
+            statusBarColor: colorScheme.background,
             statusBarIconBrightness:
                 statusBarIconBrightness, // For Android (dark icons)
           ),
