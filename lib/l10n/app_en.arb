@@ -769,6 +769,7 @@
   "numeralTypeSetting": "Numeral type",
   "romanNumeral": "Roman",
   "arabicNumeral": "Arabic",
-  "showDigitalClock": "Show digital clock"
-
+  "showDigitalClock": "Show digital clock",
+  "backgroundServiceIntervalSetting": "Background service interval",
+  "backgroundServiceIntervalSettingDescription": "Lower interval will help keep the app alive, at the cost of some battery life"
 }

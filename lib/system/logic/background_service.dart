@@ -5,10 +5,12 @@ import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:flutter/material.dart';
 
-Future<void> initBackgroundService() async {
+Future<void> initBackgroundService({int interval = 60}) async {
+  assert(
+      interval >= 15, "Interval must be greater than or equal to 15 minutes.");
   await BackgroundFetch.configure(
       BackgroundFetchConfig(
-          minimumFetchInterval: 30,
+          minimumFetchInterval: interval,
           stopOnTerminate: false,
           enableHeadless: true,
           requiresBatteryNotLow: false,
@@ -40,8 +42,9 @@ Future<void> initBackgroundService() async {
 // [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
 @pragma('vm:entry-point')
 void handleBackgroundServiceTask(HeadlessTask task) async {
-    FlutterError.onError = (FlutterErrorDetails details) {
-    logger.f("Error in handleBackgroundServiceTask isolate: ${details.exception.toString()}");
+  FlutterError.onError = (FlutterErrorDetails details) {
+    logger.f(
+        "Error in handleBackgroundServiceTask isolate: ${details.exception.toString()}");
   };
   String taskId = task.taskId;
   bool isTimeout = task.timeout;
