@@ -2,14 +2,14 @@ import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
 
-class ListSettingAddBottomSheet<Item extends CustomizableListItem>
+class CustomizableListSettingAddBottomSheet<Item extends CustomizableListItem>
     extends StatelessWidget {
-  const ListSettingAddBottomSheet({
+  const CustomizableListSettingAddBottomSheet({
     required this.setting,
     super.key,
   });
 
-  final ListSetting<Item> setting;
+  final CustomizableListSetting<Item> setting;
 
   @override
   Widget build(BuildContext context) {

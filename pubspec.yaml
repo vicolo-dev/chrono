@@ -24,7 +24,7 @@ dependencies:
   sqflite: ^2.2.2
   flutter_slidable: ^3.1.0
   flutter_system_ringtones: ^0.0.6
-  # android_alarm_manager_plus: ^4.0.1
+  # android_alarm_manager_plus: ^4.0.4
   android_alarm_manager_plus:
     # path: "../plus_plugins/packages/android_alarm_manager_plus/"
     git:
@@ -39,12 +39,6 @@ dependencies:
   flutter_fgbg: ^0.3.0
   move_to_background: ^1.0.2
   vibration: ^1.7.6
-  great_list_view:
-    git:
-      url: https://github.com/AhsanSarwar45/great_list_view
-      ref: master
-  # great_list_view:
-  #   path: "../great_list_view"
   get_storage: ^2.1.1
   queue: ^3.1.0+2
   table_calendar: ^3.0.8
@@ -65,7 +59,6 @@ dependencies:
   introduction_screen: ^3.1.12
   app_settings: ^5.1.1
   auto_start_flutter: ^0.1.1
-  pick_or_save: ^2.2.4
   package_info_plus: ^6.0.0
   receive_intent: ^0.2.5
   watcher: ^1.1.0
@@ -90,6 +83,11 @@ dependencies:
   flutter_animate: ^4.5.0
   quick_actions: ^1.0.7
   file_picker: ^8.0.7
+  background_fetch: ^1.3.7
+  clock: ^1.1.1
+  mime: ^1.0.6
+  analog_clock: ^0.1.1
+  animated_analog_clock: ^0.1.0
   # animated_reorderable_list: ^1.1.1
   # animated_reorderable_list:
     # path: "../animated_reorderable_list"

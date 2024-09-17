@@ -14,26 +14,10 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
-
-
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.vicolo.chrono/alarm"
     
-    // // create static method channel
-    // companion object {
-    //     lateinit var channel: MethodChannel
-    // }
-
-    // override fun onCreate(savedInstanceState: Bundle?) {
-    //     super.onCreate(savedInstanceState)
-    //     // MethodChannelHolder.init(flutterView)
-    //     // MethodChannelHolder.invokeMethod("onBoot")
-    // }
-
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        // GeneratedPluginRegistrant.registerWith(flutterEngine)
-        // flutterEngine.plugins.add(InitiateCallsToDartInBgPlugin())
-        
     }
 }

@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:clock_app/common/data/paths.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:queue/queue.dart';

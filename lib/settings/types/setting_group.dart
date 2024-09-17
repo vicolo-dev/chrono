@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
@@ -104,7 +104,7 @@ class SettingGroup extends SettingItem {
     try {
       return _settingGroups.firstWhere((item) => item.name == name);
     } catch (e) {
-      logger.e("Could not find setting group $name: $e");
+      logger.e("Could not find setting group '$name'");
       rethrow;
     }
   }

@@ -21,12 +21,14 @@ class ListFilterBar<Item extends ListItem> extends StatelessWidget {
       required this.selectedIds,
       required this.handleFilterChange,
       required this.selectedSortIndex,
-      required this.handleSortChange});
+      required this.handleSortChange,
+      required this.isDeleteEnabled});
 
   final List<ListFilterItem<Item>> listFilters;
   final List<ListFilterCustomAction<Item>> customActions;
   final List<ListSortOption<Item>> sortOptions;
   final bool isSelecting;
+  final bool isDeleteEnabled;
   final Function(ListFilterCustomAction<Item>) handleCustomAction;
   final Function handleEndSelection;
   final void Function() handleFilterChange;
@@ -67,12 +69,13 @@ class ListFilterBar<Item extends ListItem> extends StatelessWidget {
                   action: () => handleCustomAction(action),
                 ),
               ),
-              ListFilterAction(
-                name: AppLocalizations.of(context)!.deleteAllFilteredAction,
-                icon: Icons.delete_rounded,
-                color: colorScheme.error,
-                action: handleDeleteAction,
-              )
+              if (isDeleteEnabled)
+                ListFilterAction(
+                  name: AppLocalizations.of(context)!.deleteAllFilteredAction,
+                  icon: Icons.delete_rounded,
+                  color: colorScheme.error,
+                  action: handleDeleteAction,
+                )
             ],
             activeFilterCount: activeFilterCount + (isSelecting ? 1 : 0),
           ),

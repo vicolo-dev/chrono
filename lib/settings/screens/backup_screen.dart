@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
+import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/data/backup_options.dart';
 import 'package:clock_app/settings/logic/backup.dart';
 import 'package:clock_app/settings/types/backup_option.dart';
-import 'package:clock_app/settings/widgets/settings_top_bar.dart';
+import 'package:clock_app/navigation/widgets/search_top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -57,7 +58,7 @@ class _BackupExportScreenState extends State<BackupExportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SettingsTopBar(
+      appBar: AppTopBar(
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -75,13 +76,10 @@ class _BackupExportScreenState extends State<BackupExportScreen> {
                     if (result == null) return;
                     if (context.mounted) {
                       showSnackBar(context, "Export successful!");
+                      Navigator.pop(context);
                     }
                   } catch (e) {
-                    logger.e(e.toString());
-                    if (context.mounted) {
-                      showSnackBar(context, "Error exporting: ${e.toString()}",
-                          error: true);
-                    }
+                    logger.e("Error exporting: $e");
                   }
                 },
                 child:
@@ -148,7 +146,7 @@ class _BackupImportScreenState extends State<BackupImportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SettingsTopBar(
+      appBar: SearchTopBar(
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -163,13 +161,10 @@ class _BackupImportScreenState extends State<BackupImportScreen> {
                     }
                     if (context.mounted) {
                       showSnackBar(context, "Import successful!");
+                      Navigator.pop(context);
                     }
                   } catch (e) {
-                    logger.e(e.toString());
-                    if (context.mounted) {
-                      showSnackBar(context, "Error importing: ${e.toString()}",
-                          error: true);
-                    }
+                    logger.e("Error importing: $e");
                   }
                 },
                 child:

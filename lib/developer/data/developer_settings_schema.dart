@@ -1,16 +1,13 @@
 import 'dart:io';
 
 import 'package:clock_app/alarm/screens/alarm_events_screen.dart';
-import 'package:clock_app/common/data/paths.dart';
-import 'package:clock_app/common/utils/snackbar.dart';
+import 'package:clock_app/developer/screens/logs_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
-import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:pick_or_save/pick_or_save.dart';
 
 SettingGroup developerSettingsSchema = SettingGroup(
   "Developer Options",
@@ -40,36 +37,12 @@ SettingGroup developerSettingsSchema = SettingGroup(
           "alarm_logs",
           (context) => AppLocalizations.of(context)!.alarmLogSetting,
           const AlarmEventsScreen()),
-      SettingAction(
-          "save_logs", (context) => AppLocalizations.of(context)!.saveLogs,
-          (context) async {
-        final File file = File(await getLogsFilePath());
+       SettingPageLink(
+          "app_logs",
+          (context) => AppLocalizations.of(context)!.appLogs,
+          const LogsScreen()),
 
-        if(!(await file.exists())) {
-          await file.create(recursive: true);
-        }
-
-        await PickOrSave().fileSaver(
-            params: FileSaverParams(
-          saveFiles: [
-            SaveFileInfo(
-              fileData: await file.readAsBytes(),
-              fileName:
-                  "chrono_logs_${DateTime.now().toIso8601String().split(".")[0]}.txt",
-            )
-          ],
-        ));
-      }),
-      SettingAction(
-          "clear_logs", (context) => AppLocalizations.of(context)!.clearLogs,
-          (context) async {
-        final File file = File(await getLogsFilePath());
-
-        await file.writeAsString("");
-
-        if(context.mounted) showSnackBar(context, "Logs cleared");
-      })
-    ]),
+        ]),
   ],
   icon: Icons.code_rounded,
 );

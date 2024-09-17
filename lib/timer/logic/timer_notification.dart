@@ -4,8 +4,6 @@ import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer.dart';
 
 Future<void> updateTimerNotification(ClockTimer timer, int count) async {
-  // print("------------ ${timer.remainingSeconds.toDouble() /
-  //           timer.currentDuration.inSeconds.toDouble()}");
   List<NotificationActionButton> actionButtons = [];
 
   if (count == 1) {

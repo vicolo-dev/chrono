@@ -5,15 +5,15 @@ import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/file_item_card.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/widgets/app_top_bar.dart';
 import 'package:clock_app/settings/types/setting_item.dart';
-import 'package:clock_app/settings/widgets/settings_top_bar.dart';
+import 'package:clock_app/system/data/device_info.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:pick_or_save/pick_or_save.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class RingtonesScreen extends StatefulWidget {
   const RingtonesScreen({
@@ -54,7 +54,7 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
     TextTheme textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: SettingsTopBar(
+      appBar: AppTopBar(
         title: AppLocalizations.of(context)!.melodiesSetting,
       ),
       body: Stack(
@@ -85,50 +85,68 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
             ],
           ),
           FAB(
-            icon: Icons.music_note_rounded,
-            bottomPadding: 8,
-            onPressed: () async {
-              RingtonePlayer.stop();
-              FilePickerResult? result = await FilePicker.platform
-                  .pickFiles(type: FileType.audio, allowMultiple: true);
+              icon: Icons.music_note_rounded,
+              bottomPadding: 8,
+              onPressed: () async {
+                RingtonePlayer.stop();
+                try {
+                  FilePickerResult? result = await FilePicker.platform
+                      .pickFiles(type: FileType.audio, allowMultiple: true);
 
-              // The result will be null, if the user aborted the dialog
-              if (result != null && result.files.isNotEmpty) {
-                for (PlatformFile file in result.files) {
-                  logger.t("Saving melody ${file.name}, size ${file.size}");
-                  final bytes = await file.xFile.readAsBytes();
-                  final fileItem = FileItem(file.name, "", FileItemType.audio);
-                  fileItem.uri =
-                      await saveRingtone(fileItem.id.toString(), bytes);
-                  _listController.addItem(fileItem);
+                  // The result will be null, if the user aborted the dialog
+                  if (result != null && result.files.isNotEmpty) {
+                    for (PlatformFile file in result.files) {
+                      logger.t("Saving melody ${file.name}, size ${file.size}");
+                      final bytes = await file.xFile.readAsBytes();
+                      final fileItem =
+                          FileItem(file.name, "", FileItemType.audio);
+                      fileItem.uri =
+                          await saveRingtone(fileItem.id.toString(), bytes);
+                      _listController.addItem(fileItem);
+                    }
+                  }
+                } catch (e) {
+                  logger.e("Error loading melody from directory: $e");
                 }
-              }
-            },
-          ),
+              }),
           FAB(
             index: 1,
             icon: Icons.create_new_folder_rounded,
             bottomPadding: 8,
             onPressed: () async {
+              if (androidInfo!.version.sdkInt >= 33) {
+                if (!await Permission.audio.isGranted) {
+                  await Permission.audio.request();
+                }
+              } else {
+                if (!await Permission.storage.isGranted) {
+                  await Permission.storage.request();
+                }
+              }
+
               RingtonePlayer.stop();
-              String? selectedDirectory =
-                  await FilePicker.platform.getDirectoryPath();
+              try {
+                String? selectedDirectory =
+                    await FilePicker.platform.getDirectoryPath();
 
-              if (selectedDirectory != null && selectedDirectory.isNotEmpty) {
-                logger.t("selectedDirectory: $selectedDirectory");
+                if (selectedDirectory != null && selectedDirectory.isNotEmpty) {
+                  // logger.t("selectedDirectory: $selectedDirectory");
 
-                final directory = Directory(selectedDirectory);
-                final List<FileSystemEntity> entities =
-                    await directory.list().toList();
+                  // final directory = Directory(selectedDirectory);
+                  // final List<FileSystemEntity> entities =
+                  //     await directory.list().toList();
 
-                logger.t(entities);
+                  // logger.t(entities);
 
-                String name = basename(selectedDirectory
-                    .replaceAll("%3A", "/")
-                    .replaceAll("%2F", "/"));
-                final fileItem =
-                    FileItem(name, selectedDirectory, FileItemType.directory);
-                _listController.addItem(fileItem);
+                  String name = basename(selectedDirectory
+                      .replaceAll("%3A", "/")
+                      .replaceAll("%2F", "/"));
+                  final fileItem =
+                      FileItem(name, selectedDirectory, FileItemType.directory);
+                  _listController.addItem(fileItem);
+                }
+              } catch (e) {
+                logger.e("Error loading directory: $e");
               }
             },
           )

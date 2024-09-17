@@ -1,8 +1,7 @@
 import 'package:clock_app/clock/types/city.dart';
-import 'package:clock_app/clock/widgets/timezone_card_content.dart';
 import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/common/widgets/clock/clock.dart';
+import 'package:clock_app/common/widgets/clock/digital_clock.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:timezone/timezone.dart' as timezone;
@@ -83,7 +82,7 @@ class TimeZoneSearchCard extends StatelessWidget {
               const SizedBox(width: 8),
               Column(
                 children: [
-                  Clock(
+                  DigitalClock(
                     timezoneLocation: timezoneLocation,
                     scale: 0.3,
                     color: textColor,
