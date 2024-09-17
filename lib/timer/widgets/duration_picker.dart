@@ -10,7 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 Future<TimeDuration?> showDurationPicker(
   BuildContext context, {
   TimeDuration initialTimeDuration =
-      const TimeDuration(hours: 0, minutes: 5, seconds: 0),
+      const TimeDuration(hours: 0, minutes: 0, seconds: 0),
   bool showHours = true,
 }) async {
   final theme = Theme.of(context);
