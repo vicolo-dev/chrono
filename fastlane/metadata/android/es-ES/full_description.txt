@@ -1,0 +1,35 @@
+<h2>Funciones</h2>
+<ul>
+<li>Interfaz moderna y fácil de usar</li>
+</ul>
+<h3>Alarmas</h3>
+<ul>
+<li>Horarios personalizables (diarios, semanales, días específicos de la semana, fechas específicas, rango de fechas)</li>
+<li>Configura la melodía, el aumento del volumen y las vibraciones</li>
+<li>Configurar la duración de la repetición y las repeticiones máximas</li>
+<li>Tareas de alarma (problemas matemáticos, volver a escribir texto, secuencia, más por venir)</li>
+<li>Filtrar alarmas (todas, hoy, mañana, pospuestas, desactivadas, completadas)</li>
+</ul>
+<h3>Reloj</h3>
+<ul>
+<li>Pantalla de reloj personalizable</li>
+<li>Relojes mundiales con diferencia horaria relativa</li>
+<li>Buscar y añadir ciudades</li>
+</ul>
+<h3>Temporizador</h3>
+<ul>
+<li>Configura la melodía, el aumento del volumen y las vibraciones</li>
+<li>Ajustes preestablecidos del temporizador</li>
+<li>Temporizadores de filtro (todos, en ejecución, en pausa, detenidos)</li>
+</ul>
+<h3>Cronómetro</h3>
+<ul>
+<li>Historial de vueltas con tiempos de vuelta y tiempos transcurridos</li>
+<li>Comparaciones de vueltas</li>
+</ul
+<h3>Apariencia</h3>
+<ul>
+<li>Temas Material You</li>
+<li>Temas de color altamente personalizables</li>
+<li>Temas de estilo altamente personalizables</li>
+</ul>

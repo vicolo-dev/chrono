@@ -7,6 +7,7 @@ BoxDecoration getCardDecoration(BuildContext context,
     bool isSelected = false,
     showShadow = true,
     elevationMultiplier = 1,
+    boxShape = BoxShape.rectangle,
     blurStyle = BlurStyle.normal}) {
   ThemeData theme = Theme.of(context);
   ColorScheme colorScheme = theme.colorScheme;
@@ -15,7 +16,7 @@ BoxDecoration getCardDecoration(BuildContext context,
   return BoxDecoration(
     border: isSelected ? Border.all(
             color: colorScheme.primary,
-            width: 1,
+            width: 2,
             strokeAlign: BorderSide.strokeAlignOutside
             
           ) : showLightBorder
@@ -32,9 +33,11 @@ BoxDecoration getCardDecoration(BuildContext context,
               )
             : null,
     color: color ?? colorScheme.surface,
-    borderRadius: theme.cardTheme.shape != null
+    borderRadius: boxShape == BoxShape.rectangle? theme.cardTheme.shape != null
         ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
-        : const BorderRadius.all(Radius.circular(8.0)),
+        : const BorderRadius.all(Radius.circular(8.0)) : null,
+    shape: boxShape,
+
     boxShadow: [
       if (showShadow && (themeStyle?.shadowOpacity ?? 0) > 0)
         BoxShadow(

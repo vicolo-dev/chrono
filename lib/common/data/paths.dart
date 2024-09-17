@@ -45,3 +45,7 @@ Future<String> getTimezonesDatabasePath() async {
 Future<String> getLogsFilePath() async {
   return path.join(await getAppDataDirectoryPath(), "logs.txt");
 }
+
+String getLogsFilePathSync(){
+  return path.join(getAppDataDirectoryPathSync(), "logs.txt");
+}

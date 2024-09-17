@@ -39,6 +39,6 @@ ThemeData defaultTheme = ThemeData(
   sliderTheme: getSliderTheme(defaultColorScheme),
   bottomSheetTheme: getBottomSheetTheme(defaultColorScheme, defaultStyleTheme),
   toggleButtonsTheme: toggleButtonsTheme,
-  extensions: const <ThemeExtension<dynamic>>[ThemeStyleExtension()],
+  extensions: const <ThemeExtension<dynamic>>[ThemeStyleExtension(), ThemeSettingExtension()],
   popupMenuTheme: getPopupMenuTheme(defaultColorScheme, defaultStyleTheme),
 );

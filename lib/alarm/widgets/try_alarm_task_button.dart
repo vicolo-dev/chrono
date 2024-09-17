@@ -4,8 +4,7 @@ import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:flutter/material.dart';
 
 class TryAlarmTaskButton extends StatelessWidget {
-  const TryAlarmTaskButton({Key? key, required this.alarmTask})
-      : super(key: key);
+  const TryAlarmTaskButton({super.key, required this.alarmTask});
 
   final AlarmTask alarmTask;
 

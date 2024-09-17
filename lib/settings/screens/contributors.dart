@@ -24,10 +24,7 @@ class ContributorsScreen extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppTopBar(
-        title: Text(AppLocalizations.of(context)!.contributorsSetting,
-            style: textTheme.titleMedium?.copyWith(
-              color: colorScheme.onBackground.withOpacity(0.6),
-            )),
+        title: AppLocalizations.of(context)!.contributorsSetting,
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -24,10 +24,7 @@ class AboutScreen extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppTopBar(
-        title: Text(AppLocalizations.of(context)!.aboutSettingGroup,
-            style: textTheme.titleMedium?.copyWith(
-              color: colorScheme.onBackground.withOpacity(0.6),
-            )),
+        title: AppLocalizations.of(context)!.aboutSettingGroup,
       ),
       body: SingleChildScrollView(
         child: Padding(

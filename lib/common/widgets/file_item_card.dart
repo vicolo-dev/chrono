@@ -65,7 +65,7 @@ class _FileItemCardState extends State<FileItemCard> {
           child: Row(
             children: [
               Icon(getFileItemIcon(widget.fileItem, isPlaying), color: colorScheme.primary),
-              const SizedBox(width: 4),
+              const SizedBox(width: 12),
               Expanded(
                 flex: 999,
                 child: Padding(

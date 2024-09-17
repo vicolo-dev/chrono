@@ -29,11 +29,10 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
   DateTime? _rangeEndDate;
   DateTime _focusedDate = DateTime.now();
   late Weekday firstWeekday = appSettings
-          .getGroup("General")
-          .getGroup("Display")
-          .getSetting("First Day of Week")
-          .value;
-
+      .getGroup("General")
+      .getGroup("Display")
+      .getSetting("First Day of Week")
+      .value;
 
   bool get _isSaveEnabled =>
       widget.rangeOnly ? _selectedDates.length == 2 : _selectedDates.isNotEmpty;
@@ -46,8 +45,13 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
         ? DateTime.now()
         : widget.initialDates.first;
     if (widget.rangeOnly) {
-      _rangeStartDate = widget.initialDates.first;
-      _rangeEndDate = widget.initialDates.last;
+      if (widget.initialDates.isEmpty) {
+        _rangeStartDate = DateTime.now();
+        _rangeEndDate = DateTime.now().add(const Duration(days: 2));
+      } else {
+        _rangeStartDate = widget.initialDates.first;
+        _rangeEndDate = widget.initialDates.last;
+      }
     }
   }
 
@@ -199,7 +203,8 @@ class _DatePickerBottomSheetState extends State<DatePickerBottomSheet> {
                         availableCalendarFormats: const {
                           CalendarFormat.month: 'Month',
                         },
-                        startingDayOfWeek: StartingDayOfWeek.values[firstWeekday.id - 1],
+                        startingDayOfWeek:
+                            StartingDayOfWeek.values[firstWeekday.id - 1],
                         rowHeight: 48,
                         headerStyle: HeaderStyle(
                           // headerMargin: EdgeInsets.symmetric(vertical: 8.0),
