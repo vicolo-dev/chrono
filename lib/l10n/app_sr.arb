@@ -401,7 +401,7 @@
   "@snoozePreventDeletionSetting": {},
   "whileSnoozedSettingGroup": "Док је одложено",
   "@whileSnoozedSettingGroup": {},
-  "noItemMessage": "Још увек нема додатих {ставки}",
+  "noItemMessage": "Још увек нема додатих {items}",
   "@noItemMessage": {},
   "showSortSetting": "Прикажи сортирање",
   "@showSortSetting": {},
