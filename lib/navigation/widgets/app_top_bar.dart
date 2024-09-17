@@ -26,7 +26,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
-    final bool showBackButton = Navigator.of(context).canPop();
+    // final bool showBackButton = Navigator.of(context).canPop();
 
     final systemNavigationBarColor =
         systemNavBarColor ?? colorScheme.background;
@@ -49,6 +49,9 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               )
             : null);
+
+    final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
+    final bool showBackButton = parentRoute?.impliesAppBarDismissal ?? false;
 
     return PreferredSize(
       preferredSize: preferredSize,
