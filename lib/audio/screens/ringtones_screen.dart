@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/common/utils/snackbar.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/common/widgets/file_item_card.dart';
 import 'package:clock_app/common/widgets/list/persistent_list_view.dart';
@@ -114,16 +115,18 @@ class _RingtonesScreenState extends State<RingtonesScreen> {
             icon: Icons.create_new_folder_rounded,
             bottomPadding: 8,
             onPressed: () async {
-              if (androidInfo!.version.sdkInt >= 33) {
-                if (!await Permission.audio.isGranted) {
-                  await Permission.audio.request();
-                }
-              } else {
-                if (!await Permission.storage.isGranted) {
-                  await Permission.storage.request();
+              Permission permission = androidInfo!.version.sdkInt >= 33
+                  ? Permission.audio
+                  : Permission.storage;
+              if (!await permission.isGranted) {
+                final result = await permission.request();
+                if (result != PermissionStatus.granted) {
+                  if (context.mounted) {
+                    showSnackBar(context, "You need to allow storage access");
+                  }
+                  return;
                 }
               }
-
               RingtonePlayer.stop();
               try {
                 String? selectedDirectory =
