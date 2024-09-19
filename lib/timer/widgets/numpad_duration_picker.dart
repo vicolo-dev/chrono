@@ -112,6 +112,7 @@ class _NumpadDurationPickerState extends State<NumpadDurationPicker> {
                 );
               } else if (index == 9) {
                 return TimerButton(
+                isHighlighted: true,
                     label: "00",
                     onTap: () {
                       _addDigit("0", 2);
@@ -123,6 +124,7 @@ class _NumpadDurationPickerState extends State<NumpadDurationPicker> {
                 );
               } else {
                 return TimerButton(
+                isHighlighted: true,
                 icon: Icons.backspace_outlined,
                   onTap: _removeDigit,
                 );
@@ -139,9 +141,10 @@ class TimerButton extends StatelessWidget {
   final String? label;
   final IconData? icon;
   final VoidCallback onTap;
+  final bool isHighlighted;
 
   const TimerButton(
-      {super.key, this.label, required this.onTap, this.icon});
+      {super.key, this.label, required this.onTap, this.icon, this.isHighlighted = false});
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +156,7 @@ class TimerButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(100),
       child: Container(
         decoration: BoxDecoration(
-          color: colorScheme.onBackground.withOpacity(0.1),
+          color: isHighlighted ? colorScheme.primary.withOpacity(0.2) : colorScheme.onBackground.withOpacity(0.1),
           borderRadius: BorderRadius.circular(100),
         ),
         child: Center(

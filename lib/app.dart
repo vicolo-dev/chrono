@@ -5,10 +5,9 @@ import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/data/update_notification_intervals.dart';
-import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
-import 'package:clock_app/notifications/types/notifications_controller.dart';
+import 'package:clock_app/notifications/logic/notifications_listeners.dart';
+import 'package:clock_app/notifications/types/alarm_notification_arguments.dart';
 import 'package:clock_app/onboarding/screens/onboarding_screen.dart';
-import 'package:clock_app/settings/data/appearance_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -16,6 +15,7 @@ import 'package:clock_app/system/data/app_info.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
+import 'package:clock_app/theme/types/theme_brightness.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:clock_app/widgets/logic/update_widgets.dart';
@@ -62,7 +62,7 @@ class _AppState extends State<App> {
 
     setDigitalClockWidgetData(context);
 
-    NotificationController.setListeners();
+    setNotificationListeners();
 
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
@@ -162,12 +162,6 @@ class _AppState extends State<App> {
       ThemeBrightness themeBrightness =
           _colorSettings.getSetting("Brightness").value;
       Locale locale = _generalSettings.getSetting("Language").value;
-      // if(!AppLocalizations.supportedLocales.contains(locale)){
-      //
-      // }
-      //
-      // print("locaaaaaaaale $locale");
-      // print(getLocaleOptions().map((e) => e.value).toList());
 
       return MaterialApp(
         scaffoldMessengerKey: _messangerKey,

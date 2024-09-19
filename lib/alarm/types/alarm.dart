@@ -79,6 +79,8 @@ class Alarm extends CustomizableListItem {
   String get label => _settings.getSetting("Label").value;
   Type get scheduleType => _settings.getSetting("Type").value;
   FileItem get ringtone => _settings.getSetting("Melody").value;
+  bool get shouldStartMelodyAtRandomPos =>
+      _settings.getSetting("start_melody_at_random_pos").value;
   bool get vibrate => _settings.getSetting("Vibration").value;
   double get volume => _settings.getSetting("Volume").value;
   double get volumeDuringTasks => _settings.getSetting("task_volume").value;
@@ -174,9 +176,13 @@ class Alarm extends CustomizableListItem {
     _settings.getSetting(name).setValueWithoutNotify(value);
   }
 
+  // Skipping the alarm doesn't actually remove the scheduled alarm. Instead, it
+  // just doesn't ring the alarm when it triggers. We don't remove the schedule
+  // because it is required to chain-schedule the next alarms in daily/weekly/date/range schedules
   void skip() {
     _skippedTime = currentScheduleDateTime;
-    updateReminderNotification();
+    // We reschedule the alarm as a non-alarmclock so it is no longer visible to the system
+    schedule("skip(): Update alarm on skip");
   }
 
   void cancelSkip() {
@@ -247,7 +253,9 @@ class Alarm extends CustomizableListItem {
     // So we cancel all others and schedule the active one
     for (var schedule in _schedules) {
       if (schedule.runtimeType == scheduleType) {
-        await schedule.schedule(_time, description);
+        // If alarm is skipped, we do not want it to show to the system,
+        // So we set alarmClock param of AlarmManager to false
+        await schedule.schedule(_time, description, _skippedTime == null);
       } else {
         await schedule.cancel();
       }
@@ -261,7 +269,7 @@ class Alarm extends CustomizableListItem {
         currentScheduleDateTime != null &&
         !shouldSkipNextAlarm) {
       await createAlarmReminderNotification(
-          id, currentScheduleDateTime!, tasks.isNotEmpty);
+          id, label, currentScheduleDateTime!, tasks.isNotEmpty);
     } else {
       for (var schedule in _schedules) {
         cancelAlarmReminderNotification(schedule.currentAlarmRunnerId);
@@ -299,6 +307,7 @@ class Alarm extends CustomizableListItem {
   }
 
   void handleDismiss() {
+    _snoozeCount = 0;
     if (scheduleType == OnceAlarmSchedule && shouldDeleteAfterRinging ||
         shouldDeleteAfterFinish && isFinished) {
       _markedForDeletion = true;
@@ -345,9 +354,9 @@ class Alarm extends CustomizableListItem {
     }
   }
 
-  // void _delete() {
-  //   _markedForDeletion = true;
-  // }
+  void setRingtone(BuildContext context, int index) {
+    ;
+  }
 
   void setTime(Time time) {
     _time = time;

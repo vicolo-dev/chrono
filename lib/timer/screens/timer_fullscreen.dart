@@ -66,7 +66,7 @@ class _TimerFullscreenState extends State<TimerFullscreen> {
     // Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
       appBar: AppTopBar(
-          title: Text(timer.label,
+          titleWidget: Text(timer.label,
               style: textTheme.titleMedium?.copyWith(
                 color: colorScheme.onBackground.withOpacity(0.6),
               )),

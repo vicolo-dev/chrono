@@ -16,10 +16,7 @@ class LicensesScreen extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     return Scaffold(
       appBar: AppTopBar(
-        title: Text(AppLocalizations.of(context)!.openSourceLicensesSetting,
-            style: textTheme.titleMedium?.copyWith(
-              color: colorScheme.onBackground.withOpacity(0.6),
-            )),
+        title: AppLocalizations.of(context)!.openSourceLicensesSetting,
       ),
       body: SingleChildScrollView(
         child: Padding(

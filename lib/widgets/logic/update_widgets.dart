@@ -1,5 +1,5 @@
 import 'package:clock_app/common/utils/time_format.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';

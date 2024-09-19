@@ -1,10 +1,12 @@
+import 'dart:developer';
 import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
+import 'package:clock_app/notifications/logic/alarm_notifications.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/types/timer.dart';
 import 'package:flutter/foundation.dart';
@@ -13,7 +15,6 @@ import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/ringing_manager.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
-import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
@@ -26,10 +27,11 @@ const String setAlarmVolumePortName = "setAlarmVolumePort";
 @pragma('vm:entry-point')
 void triggerScheduledNotification(int scheduleId, Json params) async {
   FlutterError.onError = (FlutterErrorDetails details) {
-    logger.f(details.exception.toString());
+    logger.f("Error in triggerScheduledNotification isolate: ${details.exception.toString()}");
   };
 
-  logger.i("Alarm isolate triggered $scheduleId");
+  logger.t(
+      "[triggerScheduledNotification] Alarm isolate triggered $scheduleId, isolate: ${Service.getIsolateId(Isolate.current)}");
   // print("Alarm Trigger Isolate: ${Service.getIsolateID(Isolate.current)}");
   if (params == null) {
     logger.e("Params was null when triggering alarm");
@@ -55,6 +57,8 @@ void triggerScheduledNotification(int scheduleId, Json params) async {
     stopScheduledNotification(message);
   });
 
+  // Isolate.current.addOnExitListener(receivePort.sendPort);
+
   if (notificationType == ScheduledNotificationType.alarm) {
     triggerAlarm(scheduleId, params);
   } else if (notificationType == ScheduledNotificationType.timer) {
@@ -75,36 +79,52 @@ void stopScheduledNotification(List<dynamic> message) {
   } else if (notificationType == ScheduledNotificationType.timer) {
     stopTimer(scheduleId, action);
   }
+
+  logger.t(
+      "[stopScheduledNotification] Alarm stop triggered $scheduleId, isolate: ${Service.getIsolateId(Isolate.current)}");
 }
 
 void triggerAlarm(int scheduleId, Json params) async {
   logger.i("Alarm triggered $scheduleId");
   if (params == null) {
-      logger.e("Params was null when triggering alarm");
+    logger.e("Params was null when triggering alarm");
     return;
   }
 
   Alarm? alarm = getAlarmById(scheduleId);
   DateTime now = DateTime.now();
 
+  // Note: this won't effect the variable `alarm` as we have already retrieved that
   await updateAlarms("triggerAlarm(): Updating all alarms on trigger");
 
-  // Ignore in the following cases:
-  // 1. Alarm was deleted and somehow wasn't cancelled
-  // 2. Alarm is disabled and somehow wasn't cancelled
-  // 3. Alarm is set to skip the next alarm
-  // 4. Alarm is set to ring in the future but somehow was triggered
-  // 5. Alarm is ringing 1 hour later than its time
-  if (alarm == null ||
-      alarm.isEnabled == false ||
-      alarm.shouldSkipNextAlarm ||
-      alarm.currentScheduleDateTime == null ||
-      now.millisecondsSinceEpoch <
-          alarm.currentScheduleDateTime!.millisecondsSinceEpoch ||
-      now.millisecondsSinceEpoch >
-          alarm.currentScheduleDateTime!.millisecondsSinceEpoch +
-              1000 * 60 * 60) {
-    logger.i("Skipping alarm $scheduleId");
+  // Skip the alarm in the following cases:
+  if (alarm == null) {
+    logger.i("Skipping alarm $scheduleId because it doesn't exist");
+    return;
+  }
+  if (alarm.isEnabled == false) {
+    logger.i("Skipping alarm $scheduleId because it is disabled");
+    return;
+  }
+  if (alarm.shouldSkipNextAlarm) {
+    logger.i(
+        "Skipping alarm $scheduleId because it is set to skip the next alarm");
+    return;
+  }
+  if (alarm.currentScheduleDateTime == null) {
+    logger.i("Skipping alarm $scheduleId because it has no scheduled date");
+    return;
+  }
+  if (now.millisecondsSinceEpoch <
+      alarm.currentScheduleDateTime!.millisecondsSinceEpoch) {
+    logger.i(
+        "Skipping alarm $scheduleId because it is set to ring in the future. Current time: $now, Scheduled time: ${alarm.currentScheduleDateTime}");
+    return;
+  }
+  if (now.millisecondsSinceEpoch >
+      alarm.currentScheduleDateTime!.millisecondsSinceEpoch + 1000 * 60 * 60) {
+    logger.i(
+        "Skipping alarm $scheduleId because it was set to ring more than an hour ago. Current time: $now, Scheduled time: ${alarm.currentScheduleDateTime}");
     return;
   }
 
@@ -116,13 +136,20 @@ void triggerAlarm(int scheduleId, Json params) async {
 
   // Remove any existing alarm notifications
   if (RingingManager.isAlarmRinging) {
-    await AlarmNotificationManager.removeNotification(
-        ScheduledNotificationType.alarm);
+    await removeAlarmNotification(ScheduledNotificationType.alarm);
   }
 
   RingtonePlayer.playAlarm(alarm);
   RingingManager.ringAlarm(scheduleId);
 
+  /*
+  Ports to set the volume of the alarm. As the RingtonePlayer only.
+  As the RingtonePlayer only exists in this isolate, when other isolate
+  (e.g the main UI isolate) want to change the alarm volumen, they have to send
+  message over a port.
+  In this case, this is used by the AlarmNotificationScreen to lower the volume
+  of alarm while solving tasks.
+  */
   ReceivePort receivePort = ReceivePort();
   IsolateNameServer.removePortNameMapping(setAlarmVolumePortName);
   IsolateNameServer.registerPortWithName(
@@ -134,9 +161,7 @@ void triggerAlarm(int scheduleId, Json params) async {
   String timeFormatString = await loadTextFile("time_format_string");
   String title = alarm.label.isEmpty ? "Alarm Ringing..." : alarm.label;
 
-  // AlarmNotificationManager.appVisibilityWhenCreated = fgbg
-
-  AlarmNotificationManager.showFullScreenNotification(
+  showAlarmNotification(
     type: ScheduledNotificationType.alarm,
     scheduleIds: [scheduleId],
     title: title,
@@ -154,7 +179,7 @@ void setVolume(double volume) {
 }
 
 void stopAlarm(int scheduleId, AlarmStopAction action) async {
-  logger.i("Stopping alarm $scheduleId with action: ${action.name}");
+  logger.i("[stopAlarm] Stopping alarm $scheduleId with action: ${action.name}");
   if (action == AlarmStopAction.snooze) {
     await updateAlarmById(scheduleId, (alarm) async => await alarm.snooze());
     // await createSnoozeNotification(scheduleId);
@@ -172,7 +197,7 @@ void stopAlarm(int scheduleId, AlarmStopAction action) async {
 }
 
 void triggerTimer(int scheduleId, Json params) async {
-  logger.i("Timer triggered $scheduleId");
+  logger.i("[triggerTimer] Timer triggered $scheduleId");
   ClockTimer? timer = getTimerById(scheduleId);
 
   if (timer == null || !timer.isRunning) {
@@ -190,14 +215,13 @@ void triggerTimer(int scheduleId, Json params) async {
 
   // Remove any existing timer notifications
   if (RingingManager.isTimerRinging) {
-    await AlarmNotificationManager.removeNotification(
-        ScheduledNotificationType.timer);
+    await removeAlarmNotification(ScheduledNotificationType.timer);
   }
 
   RingtonePlayer.playTimer(timer);
   RingingManager.ringTimer(scheduleId);
 
-  AlarmNotificationManager.showFullScreenNotification(
+  showAlarmNotification(
     type: ScheduledNotificationType.timer,
     scheduleIds: RingingManager.ringingTimerIds,
     snoozeActionLabel: '+${timer.addLength.floor()}:00',

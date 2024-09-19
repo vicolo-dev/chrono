@@ -1,9 +1,9 @@
-import 'package:clock_app/alarm/logic/schedule_alarm.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/widgets/card_container.dart';
-import 'package:clock_app/debug/logic/logger.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/types/routes.dart';
-import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
+import 'package:clock_app/notifications/logic/alarm_notifications.dart';
+import 'package:clock_app/notifications/types/alarm_notification_arguments.dart';
 import 'package:clock_app/notifications/widgets/notification_actions/slide_notification_action.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
@@ -37,12 +37,12 @@ class _TimerNotificationScreenState extends State<TimerNotificationScreen> {
       );
 
   void _addTime() {
-    AlarmNotificationManager.dismissNotification(widget.scheduleIds[0],
+    dismissAlarmNotification(widget.scheduleIds[0],
         AlarmDismissType.snooze, ScheduledNotificationType.timer);
   }
 
   void _stop() {
-    AlarmNotificationManager.dismissNotification(widget.scheduleIds[0],
+    dismissAlarmNotification(widget.scheduleIds[0],
         AlarmDismissType.dismiss, ScheduledNotificationType.timer);
   }
 

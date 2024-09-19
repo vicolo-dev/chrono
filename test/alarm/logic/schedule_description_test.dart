@@ -26,8 +26,8 @@ void testDescription(String name, Function(BuildContext) callback) {
 }
 
 void main() async {
-  group('getAlarmScheduleDescription', () {
-    testDescription('when alarm is snoozed', (context) async {
+  group('getAlarmScheduleDescription()', () {
+    testDescription('returns correctly when alarm is snoozed', (context) async {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
       await alarm.snooze();
 
@@ -52,7 +52,8 @@ void main() async {
     //   expect(result, 'No future dates');
     // });
 
-    testDescription('when alarm is not enabled', (context) async {
+    testDescription('returns correctly when alarm is not enabled',
+        (context) async {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
 
       await alarm.disable();
@@ -63,7 +64,8 @@ void main() async {
       expect(result, 'Not scheduled');
     });
 
-    testDescription('when alarm has once schedule', (context) {
+    testDescription('returns correctly when alarm has once schedule',
+        (context) {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
       alarm.setSettingWithoutNotify("Type", 0);
 
@@ -76,7 +78,8 @@ void main() async {
       );
     });
 
-    testDescription('when alarm has daily schedule', (context) {
+    testDescription('returns correctly when alarm has daily schedule',
+        (context) {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
       alarm.setSettingWithoutNotify("Type", 1);
 
@@ -86,7 +89,7 @@ void main() async {
       expect(result, 'Every day');
     });
 
-    group('when alarm has weekly schedule', () {
+    group('returns correctly when alarm has weekly schedule', () {
       final alarm = Alarm(const Time(hour: 8, minute: 30));
       alarm.setSettingWithoutNotify("Type", 2);
       testDescription("with all week days", (context) {
@@ -99,7 +102,7 @@ void main() async {
         expect(result, 'Every day');
       });
 
-      testDescription("with only weekends", (context) {
+      testDescription("returns correctly with only weekends", (context) {
         alarm.setSettingWithoutNotify(
             "Week Days", [false, false, false, false, false, true, true]);
 
@@ -108,7 +111,7 @@ void main() async {
 
         expect(result, 'Every weekend');
       });
-      testDescription("with only weekdays", (context) {
+      testDescription("returns correctly with only weekdays", (context) {
         alarm.setSettingWithoutNotify(
             "Week Days", [true, true, true, true, true, false, false]);
 
@@ -117,7 +120,7 @@ void main() async {
 
         expect(result, 'Every weekday');
       });
-      testDescription("with other week days", (context) {
+      testDescription("returns correctly with other week days", (context) {
         alarm.setSettingWithoutNotify(
             "Week Days", [true, false, false, false, false, false, true]);
 

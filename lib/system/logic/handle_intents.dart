@@ -4,20 +4,17 @@ import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
-import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
+import 'package:clock_app/notifications/logic/alarm_notifications.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:receive_intent/receive_intent.dart';
 
-// void navigateToTab(BuildContext context, int tab) {
-//   Navigator.of(context)
-//                       .pushNamedAndRemoveUntil(Routes.rootRoute, (Route<dynamic> route) => false, arguments: {'tabIndex': tab});}
-
 void handleIntent(Intent? receivedIntent, BuildContext context,
     Function(Alarm) onSetAlarm, Function(int) setTab) async {
   if (receivedIntent != null) {
-    print(
+    logger.i(
         "Intent received ${receivedIntent.action} ${receivedIntent.data} ${receivedIntent.extra}");
     switch (receivedIntent.action) {
       case "android.intent.action.MAIN":
@@ -96,8 +93,7 @@ void handleIntent(Intent? receivedIntent, BuildContext context,
       case "android.intent.action.VIEW_TIMERS":
         break;
       case "SELECT_NOTIFICATION":
-        AlarmNotificationManager.appVisibilityWhenCreated = AppVisibility.state;
-        print("************Select************************** ${AppVisibility.state}");
+        appVisibilityWhenAlarmNotificationCreated = AppVisibility.state;
         break;
       default:
         break;

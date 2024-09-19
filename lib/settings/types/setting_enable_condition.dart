@@ -4,12 +4,12 @@ import 'package:clock_app/settings/types/setting_item.dart';
 
 // TODO: OMG ALL THESE NAMES ARE SO BAD, PLEASE THINK OF NEW ONES :(
 
+// Allows us to check conditions for enabling settings
 abstract class EnableConditionParameter {
   void setupEnableSettings(SettingGroup group, SettingItem item);
   void setupChangesEnableCondition(SettingGroup group, SettingItem item);
   EnableConditionEvaluator getEvaluator(SettingGroup group);
 }
-
 
 class GeneralCondition extends EnableConditionParameter {
   bool Function() condition;
@@ -18,17 +18,16 @@ class GeneralCondition extends EnableConditionParameter {
 
   @override
   EnableConditionEvaluator getEvaluator(SettingGroup group) {
-    return GeneralConditionEvaluator (condition);
+    return GeneralConditionEvaluator(condition);
   }
 
   @override
   void setupEnableSettings(SettingGroup group, SettingItem item) {
     item.enableSettings.add(getEvaluator(group));
-      }
+  }
 
   @override
-  void setupChangesEnableCondition(SettingGroup group, SettingItem item) {
-  }
+  void setupChangesEnableCondition(SettingGroup group, SettingItem item) {}
 }
 
 class ValueCondition extends EnableConditionParameter {

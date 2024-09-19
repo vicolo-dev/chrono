@@ -3,6 +3,7 @@ import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -119,7 +120,6 @@ class _PersistentListViewState<Item extends ListItem>
     if (widget.saveTag.isNotEmpty) {
       _items = loadListSync<Item>(widget.saveTag);
     }
-    // watchList(widget.saveTag, (event) => reloadItems());
     ListenerManager.addOnChangeListener(widget.saveTag, _loadItems);
 
     if (widget.sortOptions.isNotEmpty) {
@@ -134,16 +134,12 @@ class _PersistentListViewState<Item extends ListItem>
     else {
       _initialSortIndex = 0;
     }
-    // ListenerManager.addOnChangeListener(
-    //     "${widget.saveTag}-reload", reloadItems);
   }
 
   @override
   void dispose() {
     ListenerManager.removeOnChangeListener(widget.saveTag, _loadItems);
-    // ListenerManager.removeOnChangeListener(
-    //     "${widget.saveTag}-reload", reloadItems);
-    // unwatchList(widget.saveTag);
+    
     super.dispose();
   }
 

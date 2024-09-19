@@ -25,7 +25,7 @@ Future<PickerResult<ClockTimer>?> showTimerPicker(
     context: context,
     builder: (BuildContext context) {
       ClockTimer timer = ClockTimer.from(
-          initialTimer ?? ClockTimer(const TimeDuration(minutes: 5)));
+          initialTimer ?? ClockTimer(const TimeDuration(minutes: 0)));
 
       TimerPreset? selectedPreset;
       List<TimerPreset> presets = loadListSync<TimerPreset>("timer_presets");

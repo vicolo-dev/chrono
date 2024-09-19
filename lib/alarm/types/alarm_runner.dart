@@ -7,16 +7,17 @@ class AlarmRunner extends JsonSerializable {
   late int _id;
   DateTime? _currentScheduleDateTime;
 
-   get id => _id;
+  get id => _id;
   DateTime? get currentScheduleDateTime => _currentScheduleDateTime;
 
   AlarmRunner() {
     _id = getId();
   }
 
-  Future<void> schedule(DateTime dateTime, String description) async {
+  Future<void> schedule(DateTime dateTime, String description,
+      [bool alarmClock = false]) async {
     _currentScheduleDateTime = dateTime;
-    await scheduleAlarm(_id, dateTime, description);
+    await scheduleAlarm(_id, dateTime, description, alarmClock: alarmClock);
   }
 
   Future<void> cancel() async {

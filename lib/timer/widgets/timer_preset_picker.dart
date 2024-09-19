@@ -16,7 +16,7 @@ Future<TimerPreset?> showTimerPresetPicker(BuildContext context,
     context: context,
     builder: (BuildContext context) {
       TimerPreset timerPreset = TimerPreset.from(initialTimerPreset ??
-          TimerPreset("New Preset", const TimeDuration(minutes: 5)));
+          TimerPreset("New Preset", const TimeDuration(minutes: 0)));
 
       TextEditingController controller = TextEditingController(
         text: timerPreset.name,

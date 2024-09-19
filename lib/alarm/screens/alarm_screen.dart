@@ -6,7 +6,9 @@ import 'package:clock_app/alarm/utils/next_alarm.dart';
 import 'package:clock_app/alarm/widgets/alarm_card.dart';
 import 'package:clock_app/alarm/widgets/alarm_description.dart';
 import 'package:clock_app/alarm/widgets/alarm_time_picker.dart';
+import 'package:clock_app/audio/logic/ringtones.dart';
 import 'package:clock_app/common/logic/customize_screen.dart';
+import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/time.dart';
@@ -19,14 +21,8 @@ import 'package:clock_app/navigation/types/quick_action_controller.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:flutter/material.dart';
-import 'package:great_list_view/great_list_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-typedef AlarmCardBuilder = Widget Function(
-  BuildContext context,
-  int index,
-  AnimatedWidgetBuilderData data,
-);
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({super.key, this.actionController});
@@ -133,7 +129,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       DateTime? nextScheduleDateTime = alarm.currentScheduleDateTime;
       if (nextScheduleDateTime == null) return;
-      ScaffoldMessenger.of(context).showSnackBar(getSnackbar(
+      ScaffoldMessenger.of(context).showSnackBar(getThemedSnackBar(
+      context,
           getNewAlarmText(context, alarm),
           fab: true,
           navBar: true));
@@ -194,10 +191,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
     _listController.changeItems((alarms) {});
   }
 
-  void handleAddAlarmActon(){
+  void handleAddAlarmActon() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            _selectTime();
-
+    _selectTime();
   }
 
   List<ListFilterItem<Alarm>> _getListFilterItems() {
@@ -241,6 +237,49 @@ class _AlarmScreenState extends State<AlarmScreen> {
     }
   }
 
+  List<ListFilterCustomAction<Alarm>> _getCustomActions() {
+    if (!_showFilters.value) return [];
+
+    return [
+      ListFilterCustomAction(
+          name: AppLocalizations.of(context)!.enableAllFilteredAlarmsAction,
+          icon: Icons.alarm_on_rounded,
+          action: (alarms) {
+            _handleEnableChangeMultiple(alarms, true);
+          }),
+      ListFilterCustomAction(
+          name: AppLocalizations.of(context)!.disableAllFilteredAlarmsAction,
+          icon: Icons.alarm_off_rounded,
+          action: (alarms) {
+            _handleEnableChangeMultiple(alarms, false);
+          }),
+      ListFilterCustomAction(
+          name: AppLocalizations.of(context)!.skipAllFilteredAlarmsAction,
+          icon: Icons.skip_next_rounded,
+          action: (alarms) {
+            _handleSkipChangeMultiple(alarms, true);
+          }),
+      ListFilterCustomAction(
+          name: AppLocalizations.of(context)!.cancelSkipAllFilteredAlarmsAction,
+          icon: Icons.skip_next_rounded,
+          action: (alarms) {
+            _handleSkipChangeMultiple(alarms, false);
+          }),
+      ListFilterCustomAction(
+          name: AppLocalizations.of(context)!.shuffleAlarmMelodiesAction,
+          icon: Icons.shuffle_rounded,
+          action: (alarms) async {
+            List<int> randomIndices =
+                await getNRandomRingtoneIndices(alarms.length);
+            for (var alarm in alarms) {
+              final setting = alarm.settings.getSetting("Melody")
+                  as DynamicSelectSetting<FileItem>;
+              setting.setIndex(context, randomIndices.removeAt(0));
+            }
+          }),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -273,43 +312,12 @@ class _AlarmScreenState extends State<AlarmScreen> {
           isSelectable: true,
           // header: getNextAlarmWidget(),
           listFilters: _getListFilterItems(),
-          customActions: _showFilters.value
-              ? [
-                  ListFilterCustomAction(
-                      name: AppLocalizations.of(context)!
-                          .enableAllFilteredAlarmsAction,
-                      icon: Icons.alarm_on_rounded,
-                      action: (alarms) {
-                        _handleEnableChangeMultiple(alarms, true);
-                      }),
-                  ListFilterCustomAction(
-                      name: AppLocalizations.of(context)!
-                          .disableAllFilteredAlarmsAction,
-                      icon: Icons.alarm_off_rounded,
-                      action: (alarms) {
-                        _handleEnableChangeMultiple(alarms, false);
-                      }),
-                  ListFilterCustomAction(
-                      name: AppLocalizations.of(context)!
-                          .skipAllFilteredAlarmsAction,
-                      icon: Icons.skip_next_rounded,
-                      action: (alarms) {
-                        _handleSkipChangeMultiple(alarms, true);
-                      }),
-                  ListFilterCustomAction(
-                      name: AppLocalizations.of(context)!
-                          .cancelSkipAllFilteredAlarmsAction,
-                      icon: Icons.skip_next_rounded,
-                      action: (alarms) {
-                        _handleSkipChangeMultiple(alarms, false);
-                      }),
-                ]
-              : [],
+          customActions: _getCustomActions(),
           sortOptions: _showSort.value ? alarmSortOptions : [],
         ),
         FAB(
           onPressed: handleAddAlarmActon,
-          ),
+        ),
         if (_showInstantAlarmButton.value)
           FAB(
             onPressed: () {

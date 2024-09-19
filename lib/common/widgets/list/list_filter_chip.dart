@@ -14,10 +14,13 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
     super.key,
     required this.listFilter,
     required this.onChange,
+    this.isEnabled = true,
+      
   });
 
   final ListFilter<Item> listFilter;
   final VoidCallback onChange;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +60,16 @@ class ListButtonChip<Item extends ListItem> extends StatelessWidget {
     this.onTap,
     required this.icon,
     this.isActive = false,
+    this.isEnabled = true,
+      
   });
 
   final String? label;
   final IconData? icon;
   final Function()? onTap;
   final bool isActive;
+     final bool isEnabled;
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,10 +120,12 @@ class ListFilterActionChip<Item extends ListItem> extends StatelessWidget {
     super.key,
     required this.actions,
     required this.activeFilterCount,
+    this.isEnabled = true,
   });
 
   final List<ListFilterAction> actions;
   final int activeFilterCount;
+  final bool isEnabled;
 
   void _showPopupMenu(BuildContext context) async {
     await showModalBottomSheet<List<int>>(
@@ -179,11 +188,15 @@ class ListFilterActionChip<Item extends ListItem> extends StatelessWidget {
 class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
   final FilterSelect<Item> listFilter;
   final VoidCallback onChange;
+  final bool isEnabled;
+   
 
   const ListFilterSelectChip({
     super.key,
     required this.listFilter,
     required this.onChange,
+    this.isEnabled = true,
+      
   });
 
   @override
@@ -249,11 +262,14 @@ class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
 class ListFilterMultiSelectChip<Item extends ListItem> extends StatelessWidget {
   final FilterMultiSelect<Item> listFilter;
   final VoidCallback onChange;
+  final bool isEnabled;
+   
 
   const ListFilterMultiSelectChip({
     super.key,
     required this.listFilter,
     required this.onChange,
+    this.isEnabled = true,
   });
 
   @override
@@ -323,12 +339,15 @@ class ListSortChip<Item extends ListItem> extends StatelessWidget {
   final List<ListSortOption> sortOptions;
   final Function(int) onChange;
   final int selectedIndex;
+  final bool isEnabled;
 
   const ListSortChip({
     super.key,
     required this.sortOptions,
     required this.onChange,
     required this.selectedIndex,
+    this.isEnabled = true,
+      
   });
 
   @override
