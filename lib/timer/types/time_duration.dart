@@ -112,4 +112,18 @@ class TimeDuration extends JsonSerializable {
         minutes = json != null ? json['minutes'] ?? 0 : 0,
         seconds = json != null ? json['seconds'] ?? 0 : 0,
         milliseconds = json != null ? json['milliseconds'] ?? 0 : 0;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is TimeDuration) {
+      return hours == other.hours &&
+          minutes == other.minutes &&
+          seconds == other.seconds &&
+          milliseconds == other.milliseconds;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => Object.hash(hours, minutes, seconds, milliseconds);
 }

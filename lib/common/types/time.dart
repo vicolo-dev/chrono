@@ -69,4 +69,18 @@ class Time extends JsonSerializable {
       return time >= startTime || time <= endTime;
     }
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is Time) {
+      return hour == other.hour &&
+          minute == other.minute &&
+          second == other.second;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => Object.hash(hour, minute, second);
+
 }

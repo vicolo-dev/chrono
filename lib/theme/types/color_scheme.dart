@@ -97,6 +97,22 @@ class ColorSchemeData extends ThemeItem {
 
   ColorSchemeData.fromJson(Json json)
       : super.fromJson(json, colorSchemeSettingsSchema.copy());
+
+  bool isEqualTo(ColorSchemeData other) {
+    return background == other.background &&
+        error == other.error &&
+        accent == other.accent &&
+        onError == other.onError &&
+        card == other.card &&
+        onCard == other.onCard &&
+        onAccent == other.onAccent &&
+        onBackground == other.onBackground &&
+        shadow == other.shadow &&
+        outline == other.outline &&
+        useAccentAsShadow == other.useAccentAsShadow &&
+        useAccentAsOutline == other.useAccentAsOutline &&
+        name == other.name;
+  }
 }
 
 ColorScheme getColorScheme(ColorSchemeData colorSchemeData) {
