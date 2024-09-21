@@ -8,6 +8,7 @@ import 'package:clock_app/common/types/schedule_id.dart';
 import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 
 Future<void> scheduleAlarm(
@@ -18,8 +19,10 @@ Future<void> scheduleAlarm(
   bool alarmClock = true,
   bool snooze = false,
 }) async {
-  if (startDate.isBefore(DateTime.now())) {
-    throw Exception('Attempted to schedule alarm in the past ($startDate)');
+  DateTime now = DateTime.now();
+  if (startDate.isBefore(now)) {
+    throw Exception(
+        'Attempted to schedule alarm in the past. Schedule time: $startDate, current time: $now');
   }
 
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
@@ -68,7 +71,7 @@ Future<void> scheduleAlarm(
     scheduleIds.add(ScheduleId(id: scheduleId));
     await saveList<ScheduleId>(name, scheduleIds);
 
-    // 
+    //
     // if (type == ScheduledNotificationType.alarm && !snooze) {
     // }
     //
@@ -88,8 +91,11 @@ Future<void> scheduleAlarm(
         'type': type.name,
       },
     );
+
+    logger.t(
+        'Scheduled alarm $scheduleId for $startDate of type ${type.name}: $description');
   }
-  }
+}
 
 Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
@@ -113,6 +119,8 @@ Future<void> cancelAlarm(int scheduleId, ScheduledNotificationType type) async {
     }
 
     AndroidAlarmManager.cancel(scheduleId);
+
+    logger.i('Canceled alarm $scheduleId of type ${type.name}');
   }
 }
 
@@ -128,4 +136,7 @@ Future<void> scheduleSnoozeAlarm(int scheduleId, Duration delay,
   if (!Platform.environment.containsKey('FLUTTER_TEST')) {
     await createSnoozeNotification(scheduleId, DateTime.now().add(delay));
   }
+
+  logger.t(
+      'Scheduled snooze alarm $scheduleId for ${DateTime.now().add(delay)} with type ${type.name}: $description');
 }

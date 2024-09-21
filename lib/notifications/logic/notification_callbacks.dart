@@ -1,7 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
+import 'package:clock_app/notifications/logic/alarm_notifications.dart';
+import 'package:clock_app/notifications/types/alarm_notification_arguments.dart';
 import 'package:clock_app/notifications/types/fullscreen_notification_data.dart';
-import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
 import 'package:clock_app/stopwatch/logic/update_stopwatch.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
@@ -17,7 +18,7 @@ Future<void> onNotificationCreatedMethod(
       Payload payload = receivedNotification.payload!;
       int? scheduleId = int.tryParse(payload['scheduleId']);
            if (scheduleId == null) return;
-      AlarmNotificationManager.handleNotificationCreated(receivedNotification);
+      // AlarmNotificationManager.handleNotificationCreated(receivedNotification);
       break;
   }
 }
@@ -35,7 +36,7 @@ Future<void> onDismissActionReceivedMethod(
 
   switch (receivedAction.channelKey) {
     case alarmNotificationChannelKey:
-      AlarmNotificationManager.handleNotificationDismiss(
+      handleAlarmNotificationDismiss(
           receivedAction, AlarmDismissType.dismiss);
       break;
   }
@@ -48,16 +49,16 @@ Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
 
   switch (receivedAction.channelKey) {
     case alarmNotificationChannelKey:
-      AlarmNotificationManager.handleNotificationAction(receivedAction);
+      handleAlarmNotificationAction(receivedAction);
       break;
     case reminderNotificationChannelKey:
       switch (receivedAction.buttonKeyPressed) {
         case 'alarm_skip':
-          await AlarmNotificationManager.handleNotificationDismiss(
+          await handleAlarmNotificationDismiss(
               receivedAction, AlarmDismissType.skip);
           break;
         case 'alarm_skip_snooze':
-          await AlarmNotificationManager.handleNotificationDismiss(
+          await handleAlarmNotificationDismiss(
               receivedAction, AlarmDismissType.unsnooze);
           break;
       }

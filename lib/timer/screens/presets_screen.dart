@@ -23,7 +23,7 @@ class _PresetsScreenState extends State<PresetsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppTopBar(
-        title: Text(
+        titleWidget: Text(
           AppLocalizations.of(context)!.editPresetsTitle,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color:
@@ -57,6 +57,7 @@ class _PresetsScreenState extends State<PresetsScreen> {
                   // onDeleteItem: _handleDeleteTimer,
                   placeholderText: "No presets created",
                   reloadOnPop: true,
+                  isSelectable: true,
                 ),
               ),
             ],

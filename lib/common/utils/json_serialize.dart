@@ -9,6 +9,8 @@ import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/types/time.dart';
 import 'package:clock_app/clock/types/city.dart';
 import 'package:clock_app/common/types/json.dart';
+import 'package:clock_app/developer/logic/logger.dart';
+import 'package:clock_app/stopwatch/types/lap.dart';
 import 'package:clock_app/stopwatch/types/stopwatch.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
@@ -27,6 +29,7 @@ final fromJsonFactories = <Type, Function>{
   StyleTheme: (Json json) => StyleTheme.fromJson(json),
   AlarmTask: (Json json) => AlarmTask.fromJson(json),
   Time: (Json json) => Time.fromJson(json),
+  Lap: (Json json) => Lap.fromJson(json),
   TimeOfDay: (Json json) => TimeOfDayUtils.fromJson(json),
   FileItem: (Json json) => FileItem.fromJson(json),
   AlarmEvent: (Json json) => AlarmEvent.fromJson(json),
@@ -34,21 +37,22 @@ final fromJsonFactories = <Type, Function>{
   Tag: (Json json) => Tag.fromJson(json),
 };
 
-
 String listToString<T extends JsonSerializable>(List<T> items) => json.encode(
       items.map<Json>((item) => item.toJson()).toList(),
     );
 
 List<T> listFromString<T extends JsonSerializable>(String encodedItems) {
   if (!fromJsonFactories.containsKey(T)) {
-    throw Exception("No fromJson factory for type '$T'");
+    throw Exception(
+        "No fromJson factory for type '$T'. Please add one in the file 'common/utils/json_serialize.dart'");
   }
   try {
-    return (json.decode(encodedItems) as List<dynamic>)
-        .map<T>((json) => fromJsonFactories[T]!(json))
-        .toList();
+    List<dynamic> rawList = json.decode(encodedItems) as List<dynamic>;
+    Function fromJson = fromJsonFactories[T]!;
+    List<T> list = rawList.map<T>((json) => fromJson(json)).toList();
+    return list;
   } catch (e) {
-    debugPrint("Error decoding string: ${e.toString()}");
+    logger.e("Error decoding string: ${e.toString()}");
     rethrow;
   }
 }

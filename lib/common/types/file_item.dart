@@ -2,8 +2,7 @@ import 'dart:convert';
 
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
-import 'package:clock_app/common/types/timer_state.dart';
-import 'package:flutter/material.dart';
+import 'package:clock_app/common/utils/id.dart';
 
 enum FileItemType {
   audio,
@@ -33,14 +32,14 @@ class FileItem extends ListItem {
   bool get isDeletable => _isDeletable;
 
   FileItem(this.name, this._uri, this._type, {isDeletable = true})
-      : _id = UniqueKey().hashCode,
+      : _id = getId(),
         _isDeletable = isDeletable;
 
   @override
   FileItem.fromJson(Json json)
       : _id = json != null
-            ? json['id'] ?? UniqueKey().hashCode
-            : UniqueKey().hashCode,
+            ? json['id'] ?? getId()
+            : getId(),
         _type = json != null
             ? json['type'] != null
                 ? FileItemType.values

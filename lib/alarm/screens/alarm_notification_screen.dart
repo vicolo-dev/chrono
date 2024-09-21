@@ -1,10 +1,14 @@
-import 'package:clock_app/alarm/logic/update_alarms.dart';
+import 'dart:ui';
+
+import 'package:clock_app/alarm/logic/alarm_isolate.dart';
 import 'package:clock_app/alarm/utils/alarm_id.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/common/types/notification_type.dart';
-import 'package:clock_app/common/widgets/clock/clock.dart';
+import 'package:clock_app/common/widgets/clock/digital_clock.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/types/routes.dart';
-import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
+import 'package:clock_app/notifications/logic/alarm_notifications.dart';
+import 'package:clock_app/notifications/types/alarm_notification_arguments.dart';
 import 'package:clock_app/navigation/types/alignment.dart';
 import 'package:clock_app/notifications/widgets/notification_actions/slide_notification_action.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -37,16 +41,20 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   void _setNextWidget() {
     setState(() {
       if (_currentIndex < 0) {
+        IsolateNameServer.lookupPortByName(setAlarmVolumePortName)
+            ?.send([alarm.volume]);
         _currentWidget = actionWidget;
       } else if (_currentIndex >= alarm.tasks.length) {
         if (widget.onPop != null) {
           widget.onPop!();
           Navigator.of(context).pop(true);
         } else {
-          AlarmNotificationManager.dismissNotification(widget.scheduleId,
-              widget.dismissType, ScheduledNotificationType.alarm);
+          dismissAlarmNotification(widget.scheduleId, widget.dismissType,
+              ScheduledNotificationType.alarm);
         }
       } else {
+        IsolateNameServer.lookupPortByName(setAlarmVolumePortName)
+            ?.send([alarm.volume * alarm.volumeDuringTasks / 100]);
         // RingtonePlayer.setVolume(0);
         _currentWidget = alarm.tasks[_currentIndex].builder(_setNextWidget);
       }
@@ -60,8 +68,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
 
     Alarm? currentAlarm = getAlarmById(widget.scheduleId);
     if (currentAlarm == null) {
-      AlarmNotificationManager.dismissNotification(widget.scheduleId,
-          widget.dismissType, ScheduledNotificationType.alarm);
+      dismissAlarmNotification(widget.scheduleId, widget.dismissType,
+          ScheduledNotificationType.alarm);
       return;
     }
     alarm = currentAlarm;
@@ -81,15 +89,15 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
         snoozeLabel: "Snooze",
       );
 
-      debugPrint(e.toString());
+      logger.e(e.toString());
     }
 
     _setNextWidget();
   }
 
   void _snoozeAlarm() {
-    AlarmNotificationManager.snoozeAlarm(
-        widget.scheduleId, ScheduledNotificationType.alarm);
+    dismissAlarmNotification(widget.scheduleId, AlarmDismissType.snooze,
+        ScheduledNotificationType.alarm);
   }
 
   @override
@@ -109,22 +117,34 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
               children: [
                 if (_currentIndex <= 0)
                   Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        const Spacer(),
-                        const Clock(
-                          // dateTime: Date,
-                          horizontalAlignment: ElementAlignment.center,
-                          shouldShowDate: false,
-                          shouldShowSeconds: false,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Alarm",
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ],
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          if (alarm.label.isNotEmpty)
+                            Text(
+                              alarm.label,
+                              style: Theme.of(context).textTheme.displayMedium,
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          const SizedBox(height: 8),
+                          const DigitalClock(
+                            // dateTime: Date,
+                            horizontalAlignment: ElementAlignment.center,
+                            shouldShowDate: false,
+                            shouldShowSeconds: false,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "Alarm",
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 Expanded(

@@ -9,23 +9,23 @@ import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/widgets/list_setting_add_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-class ListSettingScreen<Item extends CustomizableListItem>
+class CustomizableListSettingScreen<Item extends CustomizableListItem>
     extends StatefulWidget {
-  const ListSettingScreen({
+  const CustomizableListSettingScreen({
     super.key,
     required this.setting,
     required this.onChanged,
   });
 
-  final ListSetting<Item> setting;
+  final CustomizableListSetting<Item> setting;
   final void Function(BuildContext context) onChanged;
 
   @override
-  State<ListSettingScreen> createState() => _ListSettingScreenState<Item>();
+  State<CustomizableListSettingScreen> createState() => _CustomizableListSettingScreenState<Item>();
 }
 
-class _ListSettingScreenState<Item extends CustomizableListItem>
-    extends State<ListSettingScreen<Item>> {
+class _CustomizableListSettingScreenState<Item extends CustomizableListItem>
+    extends State<CustomizableListSettingScreen<Item>> {
   final _listController = ListController<Item>();
 
   Future<Item?> _openAddBottomSheet() async {
@@ -33,7 +33,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
 
     return await showModalBottomSheet(
       context: context,
-      builder: (context) => ListSettingAddBottomSheet(setting: widget.setting),
+      builder: (context) => CustomizableListSettingAddBottomSheet(setting: widget.setting),
     );
   }
 
@@ -55,9 +55,7 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppTopBar(
-        title: Text(widget.setting.displayName(context)),
-      ),
+      appBar: AppTopBar(title: widget.setting.displayName(context)),
       body: Stack(
         children: [
           Column(
@@ -76,6 +74,8 @@ class _ListSettingScreenState<Item extends CustomizableListItem>
                     _handleCustomizeItem(task);
                   },
                   onModifyList: () => widget.onChanged(context),
+                  isReorderable: true,
+                  isSelectable: true,
                   placeholderText:
                       "No ${widget.setting.displayName(context).toLowerCase()} added yet",
                 ),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:auto_start_flutter/auto_start_flutter.dart';
 import 'package:clock_app/app.dart';
+import 'package:clock_app/audio/screens/ringtones_screen.dart';
 import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/common/types/weekday.dart';
@@ -12,12 +13,12 @@ import 'package:clock_app/common/utils/time_format.dart';
 import 'package:clock_app/icons/flux_icons.dart';
 import 'package:clock_app/l10n/language_local.dart';
 import 'package:clock_app/notifications/logic/notifications.dart';
-import 'package:clock_app/settings/screens/ringtones_screen.dart';
 import 'package:clock_app/settings/screens/tags_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
+import 'package:clock_app/system/logic/background_service.dart';
 import 'package:clock_app/system/logic/permissions.dart';
 import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/foundation.dart';
@@ -29,7 +30,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum TimePickerType { dial, input, spinner }
 
-enum DurationPickerType { rings, spinner }
+enum DurationPickerType { rings, spinner, numpad }
 
 SelectSettingOption<String> _getDateSettingOption(String format) {
   return SelectSettingOption((context) {
@@ -73,6 +74,11 @@ enum SwipeAction {
   switchTabs,
 }
 
+enum LongPressAction {
+  reorder,
+  multiSelect,
+}
+
 final timeFormatOptions = [
   SelectSettingOption(
       (context) => AppLocalizations.of(context)!.timeFormat12, TimeFormat.h12),
@@ -107,7 +113,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           "Date Format",
           (context) => AppLocalizations.of(context)!.dateFormatSetting,
           dateFormatOptions,
-          getDescription: (context) => "How to display the dates",
           onChange: (context, index) async {
             // await HomeWidget.saveWidgetData(
             //     "dateFormat", dateFormatOptions[index].value);
@@ -118,7 +123,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           "Long Date Format",
           (context) => AppLocalizations.of(context)!.longDateFormatSetting,
           longDateFormatOptions,
-          getDescription: (context) => "How to display the dates",
           onChange: (context, index) async {
             setDigitalClockWidgetData(context);
 
@@ -131,7 +135,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           "Time Format",
           (context) => AppLocalizations.of(context)!.timeFormatSetting,
           timeFormatOptions,
-          getDescription: (context) => "12 or 24 hour time",
           onChange: (context, index) async {
             String timeFormat =
                 getTimeFormatString(context, timeFormatOptions[index].value);
@@ -185,36 +188,58 @@ SettingGroup generalSettingsSchema = SettingGroup(
             (context) => AppLocalizations.of(context)!.pickerSpinner,
             DurationPickerType.spinner,
           ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.pickerNumpad,
+            DurationPickerType.numpad,
+          ),
         ],
             searchTags: [
               "duration",
               "rings",
               "time",
-              "picker",
+              "numpad"
+                  "picker",
               "dial",
               "input",
               "spinner",
             ]),
       ],
     ),
-    SelectSetting(
-      "Swipe Action",
-      (context) => AppLocalizations.of(context)!.swipeActionSetting,
-      [
-        SelectSettingOption(
-          (context) => AppLocalizations.of(context)!.swipActionCardAction,
-          SwipeAction.cardActions,
-          getDescription: (context) =>
-              AppLocalizations.of(context)!.swipeActionCardActionDescription,
-        ),
-        SelectSettingOption(
-          (context) => AppLocalizations.of(context)!.swipActionSwitchTabs,
-          SwipeAction.switchTabs,
-          getDescription: (context) =>
-              AppLocalizations.of(context)!.swipeActionSwitchTabsDescription,
-        )
-      ],
-    ),
+    SettingGroup("Interactions",
+        (context) => AppLocalizations.of(context)!.interactionsSettingGroup, [
+      SelectSetting(
+        "Swipe Action",
+        (context) => AppLocalizations.of(context)!.swipeActionSetting,
+        [
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.swipActionCardAction,
+            SwipeAction.cardActions,
+            getDescription: (context) =>
+                AppLocalizations.of(context)!.swipeActionCardActionDescription,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.swipActionSwitchTabs,
+            SwipeAction.switchTabs,
+            getDescription: (context) =>
+                AppLocalizations.of(context)!.swipeActionSwitchTabsDescription,
+          )
+        ],
+      ),
+      SelectSetting(
+        "Long Press Action",
+        (context) => AppLocalizations.of(context)!.longPressActionSetting,
+        [
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.longPressSelectAction,
+            LongPressAction.multiSelect,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.longPressReorderAction,
+            LongPressAction.reorder,
+          ),
+        ],
+      ),
+    ]),
     SettingPageLink(
       "Melodies",
       (context) => AppLocalizations.of(context)!.melodiesSetting,
@@ -229,89 +254,120 @@ SettingGroup generalSettingsSchema = SettingGroup(
       searchTags: ["tags", "groups", "filter"],
       icon: Icons.label_outline_rounded,
     ),
-    SettingGroup("Reliability",
-        (context) => AppLocalizations.of(context)!.reliabilitySettingGroup, [
-      SettingAction(
-        "Ignore Battery Optimizations",
-        (context) =>
-            AppLocalizations.of(context)!.ignoreBatteryOptimizationSetting,
-        (context) async {
-          requestBatteryOptimizationPermission(
-              onAlreadyGranted: () => {
-                    showSnackBar(
-                        context,
-                        AppLocalizations.of(context)!
-                            .ignoreBatteryOptimizationAlreadyGranted)
-                  });
-        },
-        getDescription: (context) =>
-            AppLocalizations.of(context)!.batteryOptimizationSettingDescription,
-      ),
-      SettingAction(
-        "Notifications",
-        (context) =>
-            AppLocalizations.of(context)!.notificationPermissionSetting,
-        (context) async {
-          requestNotificationPermissions(
-              onAlreadyGranted: () => {
-                    showSnackBar(
-                        context,
-                        AppLocalizations.of(context)!
-                            .notificationPermissionAlreadyGranted)
-                  });
-        },
-      ),
-      SettingAction(
-        "Vendor Specific",
-        (context) => AppLocalizations.of(context)!.vendorSetting,
-        (context) => launchUrl(Uri.parse("https://dontkillmyapp.com")),
-        getDescription: (context) =>
-            AppLocalizations.of(context)!.vendorSettingDescription,
-      ),
-      SettingAction(
-        "Disable Battery Optimization",
-        (context) => AppLocalizations.of(context)!.batteryOptimizationSetting,
-        (context) async {
-          AppSettings.openAppSettings(
-              type: AppSettingsType.batteryOptimization);
-        },
-        getDescription: (context) =>
-            AppLocalizations.of(context)!.batteryOptimizationSettingDescription,
-      ),
-      SettingAction(
-        "Allow Notifications",
-        (context) => AppLocalizations.of(context)!.allowNotificationSetting,
-        (context) async {
-          AppSettings.openAppSettings(type: AppSettingsType.notification);
-        },
-        getDescription: (context) =>
-            AppLocalizations.of(context)!.allowNotificationSettingDescription,
-      ),
-      SettingAction(
-        "Auto Start",
-        (context) => AppLocalizations.of(context)!.autoStartSetting,
-        (context) async {
-          try {
-            //check auto-start availability.
-            var test = (await isAutoStartAvailable) ?? false;
-            //if available then navigate to auto-start setting page.
-            if (test) {
-              await getAutoStartPermission();
-            } else {
-              // ignore: use_build_context_synchronously
-              if (context.mounted) {
-                showSnackBar(
-                    context, "Auto Start is not available for your device");
+    SettingGroup(
+      "Reliability",
+      (context) => AppLocalizations.of(context)!.reliabilitySettingGroup,
+      [
+        SwitchSetting(
+          "Show Foreground Notification",
+          (context) => AppLocalizations.of(context)!.showForegroundNotification,
+          false,
+          getDescription: (context) => AppLocalizations.of(context)!
+              .showForegroundNotificationDescription,
+          searchTags: ["foreground", "notification"],
+        ),
+        SliderSetting(
+          "backgroundServiceInterval",
+          (context) =>
+              AppLocalizations.of(context)!.backgroundServiceIntervalSetting,
+          15,
+          300,
+          60,
+          unit: "m",
+          snapLength: 15,
+          getDescription: (context) => AppLocalizations.of(context)!
+              .backgroundServiceIntervalSettingDescription,
+          searchTags: ["background", "service", "interval"],
+          onChange: (context, value) {
+            initBackgroundService(interval: value.toInt());
+          },
+        ),
+        SettingAction(
+          "Ignore Battery Optimizations",
+          (context) =>
+              AppLocalizations.of(context)!.ignoreBatteryOptimizationSetting,
+          (context) async {
+            requestBatteryOptimizationPermission(
+                onAlreadyGranted: () => {
+                      showSnackBar(
+                          context,
+                          AppLocalizations.of(context)!
+                              .ignoreBatteryOptimizationAlreadyGranted)
+                    });
+          },
+          getDescription: (context) => AppLocalizations.of(context)!
+              .batteryOptimizationSettingDescription,
+        ),
+        SettingAction(
+          "Notifications",
+          (context) =>
+              AppLocalizations.of(context)!.notificationPermissionSetting,
+          (context) async {
+            requestNotificationPermissions(
+                onAlreadyGranted: () => {
+                      showSnackBar(
+                          context,
+                          AppLocalizations.of(context)!
+                              .notificationPermissionAlreadyGranted)
+                    });
+          },
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.notificationPermissionDescription,
+        ),
+        SettingAction(
+          "Vendor Specific",
+          (context) => AppLocalizations.of(context)!.vendorSetting,
+          (context) => launchUrl(Uri.parse("https://dontkillmyapp.com")),
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.vendorSettingDescription,
+        ),
+        SettingAction(
+          "Disable Battery Optimization",
+          (context) => AppLocalizations.of(context)!.batteryOptimizationSetting,
+          (context) async {
+            AppSettings.openAppSettings(
+                type: AppSettingsType.batteryOptimization);
+          },
+          getDescription: (context) => AppLocalizations.of(context)!
+              .batteryOptimizationSettingDescription,
+              
+        ),
+        SettingAction(
+          "Allow Notifications",
+          (context) => AppLocalizations.of(context)!.allowNotificationSetting,
+          (context) async {
+            AppSettings.openAppSettings(type: AppSettingsType.notification);
+          },
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.allowNotificationSettingDescription,
+        ),
+        SettingAction(
+          "Auto Start",
+          (context) => AppLocalizations.of(context)!.autoStartSetting,
+          (context) async {
+            try {
+              //check auto-start availability.
+              var test = (await isAutoStartAvailable) ?? false;
+              //if available then navigate to auto-start setting page.
+              if (test) {
+                await getAutoStartPermission();
+              } else {
+                // ignore: use_build_context_synchronously
+                if (context.mounted) {
+                  showSnackBar(
+                      context, "Auto Start is not available for your device");
+                }
               }
+            } on PlatformException catch (e) {
+              if (kDebugMode) print(e.message);
             }
-          } on PlatformException catch (e) {
-            if (kDebugMode) print(e.message);
-          }
-        },
-        getDescription: (context) =>
-            AppLocalizations.of(context)!.autoStartSettingDescription,
-      ),
-    ]),
+          },
+          getDescription: (context) =>
+              AppLocalizations.of(context)!.autoStartSettingDescription,
+        ),
+      ],
+      searchTags: ["reliability", "battery", "optimization", "notifications"],
+    ),
     SelectSetting(
       "Default Tab",
       (context) => AppLocalizations.of(context)!.defaultPageSetting,
@@ -334,26 +390,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
         ),
       ],
     ),
-    SettingGroup("Animations",
-        (context) => AppLocalizations.of(context)!.animationSettingGroup, [
-      SliderSetting(
-        "Animation Speed",
-        (context) => AppLocalizations.of(context)!.animationSpeedSetting,
-        0.5,
-        2,
-        1,
-        // unit: 'm',
-        snapLength: 0.1,
-        // enableConditions: [
-        //   ValueCondition(
-        //       ["Show Upcoming Alarm Notifications"], (value) => value),
-        // ],
-      ),
-      SwitchSetting(
-          "Extra Animations",
-          (context) => AppLocalizations.of(context)!.extraAnimationSetting,
-          false),
-    ])
   ],
   icon: FluxIcons.settings,
   getDescription: (context) =>

@@ -1,19 +1,22 @@
+import 'package:clock_app/alarm/data/alarm_app_settings_schema.dart';
+import 'package:clock_app/clock/data/clock_settings_schema.dart';
+import 'package:clock_app/developer/data/developer_settings_schema.dart';
 import 'package:clock_app/settings/data/accessibility_settings_schema.dart';
-import 'package:clock_app/settings/data/alarm_app_settings_schema.dart';
-import 'package:clock_app/settings/data/appearance_settings_schema.dart';
 import 'package:clock_app/settings/data/backup_settings_schema.dart';
-import 'package:clock_app/settings/data/developer_settings_schema.dart';
 import 'package:clock_app/settings/data/general_settings_schema.dart';
-import 'package:clock_app/settings/data/stopwatch_settings_schema.dart';
-import 'package:clock_app/settings/data/timer_app_settings_schema.dart';
-import 'package:clock_app/settings/data/widget_settings_schema.dart';
 import 'package:clock_app/settings/screens/about_screen.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
+import 'package:clock_app/stopwatch/data/stopwatch_settings_schema.dart';
+import 'package:clock_app/theme/data/appearance_settings_schema.dart';
+import 'package:clock_app/timer/data/timer_app_settings_schema.dart';
+import 'package:clock_app/widgets/data/widget_settings_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-const int settingsSchemaVersion = 5;
+
+// Increment this after every schema change
+const int settingsSchemaVersion = 7;
 
 SettingGroup appSettings = SettingGroup(
   "Settings",
@@ -24,6 +27,7 @@ SettingGroup appSettings = SettingGroup(
     generalSettingsSchema,
     appearanceSettingsSchema,
     alarmAppSettingsSchema,
+    clockSettingsSchema,
     timerAppSettingsSchema,
     stopwatchSettingsSchema,
     widgetSettingSchema,
@@ -39,5 +43,3 @@ SettingGroup appSettings = SettingGroup(
   ],
 );
 
-
-// Settings appSettings = Settings(settingsItems);

@@ -1,4 +1,3 @@
-import 'package:clock_app/settings/data/localized_names.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -14,16 +13,12 @@ abstract class SettingItem {
   List<void Function(dynamic)> get settingListeners => _settingListeners;
   List<String> searchTags = [];
   List<EnableConditionParameter> enableConditions;
-  // List<SettingCompoundEnableConditionParameter> compoundEnableConditions;
   // Settings which influence whether this setting is enabled
   List<EnableConditionEvaluator> enableSettings;
-  // List<SettingCompoundEnableCondition> compoundEnableSettings;
 
-  String displayName(BuildContext context) =>
-      getLocalizedName(context);
+  String displayName(BuildContext context) => getLocalizedName(context);
 
-  String displayDescription(BuildContext context) =>
-      getDescription(context);
+  String displayDescription(BuildContext context) => getDescription(context);
 
   bool get isEnabled {
     for (var enableSetting in enableSettings) {
@@ -51,8 +46,8 @@ abstract class SettingItem {
     return path.reversed.toList();
   }
 
-  SettingItem(
-      this.name, this.getLocalizedName, this.getDescription, this.searchTags, this.enableConditions )
+  SettingItem(this.name, this.getLocalizedName, this.getDescription,
+      this.searchTags, this.enableConditions)
       : id = name,
         _settingListeners = [],
         enableSettings = [];

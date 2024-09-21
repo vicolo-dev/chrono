@@ -41,3 +41,11 @@ String getRingtonesDirectoryPathSync() {
 Future<String> getTimezonesDatabasePath() async {
   return path.join(await getAppDataDirectoryPath(), 'timezones.db');
 }
+
+Future<String> getLogsFilePath() async {
+  return path.join(await getAppDataDirectoryPath(), "logs.txt");
+}
+
+String getLogsFilePathSync(){
+  return path.join(getAppDataDirectoryPathSync(), "logs.txt");
+}

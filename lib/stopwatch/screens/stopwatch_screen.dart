@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/common/types/list_controller.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
+import 'package:clock_app/common/widgets/card_container.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
 import 'package:clock_app/common/widgets/fab.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
@@ -17,8 +18,6 @@ import 'package:clock_app/stopwatch/widgets/stopwatch_ticker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
-
 class StopwatchScreen extends StatefulWidget {
   const StopwatchScreen({super.key});
 
@@ -30,9 +29,8 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   final _listController = ListController<Lap>();
 
   late Setting _showNotificationSetting;
-  
-  late final ClockStopwatch _stopwatch;
 
+  late final ClockStopwatch _stopwatch;
 
   void update(dynamic value) {
     setState(() {});
@@ -41,8 +39,14 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   @override
   void initState() {
     super.initState();
-    _stopwatch = loadListSync<ClockStopwatch>('stopwatches').first;
-   
+    final stopwatches = loadListSync<ClockStopwatch>('stopwatches');
+    if (stopwatches.isEmpty) {
+      _stopwatch = ClockStopwatch();
+      saveList('stopwatches', [_stopwatch]);
+    } else {
+      _stopwatch = stopwatches.first;
+    }
+
     _showNotificationSetting =
         appSettings.getGroup("Stopwatch").getSetting("Show Notification");
 
@@ -55,20 +59,23 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   void _handleStopwatchChange() {
     final newList = loadListSync<ClockStopwatch>('stopwatches');
-    if (mounted) {
-      newList.first.laps
-          .where((lap) => !_stopwatch.laps.contains(lap))
-          .forEach((lap) => _listController.addItem(lap));
+    _stopwatch.copyFrom(newList.first);
 
+    if (mounted) {
+      // // If there are any new laps, tell the listcontroller to update the ui with them
+      // newList.first.laps
+      //     .where((lap) =>
+      //         !_stopwatch.laps.map((l) => l.number).contains(lap.number))
+      //     .forEach((lap) => _listController.addItem(lap));
+
+      _listController.reload(_stopwatch.laps);
       setState(() {});
     }
-    _stopwatch.copyFrom(newList.first);
     showProgressNotification();
   }
 
   @override
   void dispose() {
-
     // updateNotificationInterval?.cancel();
     // updateNotificationInterval = null;
 
@@ -88,18 +95,23 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   void _handleAddLap() {
     if (_stopwatch.currentLapTime.inMilliseconds == 0) return;
+    _stopwatch.finishLap(_stopwatch.laps.first);
+    _listController.changeItems((laps) => {});
     _listController.addItem(_stopwatch.getLap());
     saveList('stopwatches', [_stopwatch]);
     showProgressNotification();
   }
 
   void _handleToggleState() {
+    if (_stopwatch.isStopped) {
+      _listController.addItem(_stopwatch.getLap());
+    }
     setState(() {
       _stopwatch.toggleState();
     });
+
     saveList('stopwatches', [_stopwatch]);
     if (_stopwatch.isRunning) {
-      // ticker!.start();
       showProgressNotification();
     } else {
       stopwatchNotificationInterval?.cancel();
@@ -137,16 +149,18 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          StopwatchTicker(stopwatch:_stopwatch),
-                      const SizedBox(height: 8),
+            StopwatchTicker(stopwatch: _stopwatch),
+            const SizedBox(height: 8),
             Expanded(
               child: CustomListView<Lap>(
                 items: _stopwatch.laps,
                 listController: _listController,
-                itemBuilder: (lap) => LapCard(
-                  key: ValueKey(lap),
-                  lap: lap,
-                ),
+                itemBuilder: (lap) => lap.isActive
+                    ? ActiveLapCard(stopwatch: _stopwatch)
+                    : LapCard(
+                        key: ValueKey(lap),
+                        lap: lap,
+                      ),
                 placeholderText: AppLocalizations.of(context)!.noLapsMessage,
                 isDeleteEnabled: false,
                 isDuplicateEnabled: false,
@@ -182,5 +196,3 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     );
   }
 }
-
-

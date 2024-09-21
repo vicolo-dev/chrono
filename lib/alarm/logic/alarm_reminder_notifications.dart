@@ -15,7 +15,7 @@ Future<void> cancelAlarmReminderNotification(int id) async {
 }
 
 Future<void> createAlarmReminderNotification(
-    int id, DateTime time, bool tasksRequired) async {
+    int id, String label, DateTime time, bool tasksRequired) async {
   await cancelAlarmReminderNotification(id);
   bool shouldShow = appSettings
       .getGroup("Alarm")
@@ -47,7 +47,7 @@ Future<void> createAlarmReminderNotification(
     content: NotificationContent(
       id: id,
       channelKey: reminderNotificationChannelKey,
-      title: "Upcoming alarm",
+      title: "Upcoming alarm${label.isEmpty ? "" : ": $label"}",
       body: time.toTimeOfDay().formatToString(timeFormatString),
       category: NotificationCategory.Reminder,
       payload: {
@@ -91,7 +91,7 @@ Future<void> createSnoozeNotification(int id, DateTime time) async {
     content: NotificationContent(
       id: id,
       channelKey: reminderNotificationChannelKey,
-      title: "Snoozed alarm",
+      title: "Snoozed alarm${alarm.label.isEmpty ? "" : ": ${alarm.label}"}",
       body: time.toTimeOfDay().formatToString(timeFormatString),
       // wakeUpScreen: true,
       category: NotificationCategory.Reminder,

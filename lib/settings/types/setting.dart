@@ -68,16 +68,17 @@ abstract class Setting<T> extends SettingItem {
   }
 }
 
-class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
+class CustomizableListSetting<T extends CustomizableListItem>
+    extends Setting<List<T>> {
   List<T> possibleItems;
   Widget Function(T item, [VoidCallback?, VoidCallback?]) cardBuilder;
   Widget Function(T item) addCardBuilder;
   Widget Function(T item)? itemPreviewBuilder;
   // The widget that will be used to display the value of this setting.
-  Widget Function(BuildContext context, ListSetting<T> setting)
+  Widget Function(BuildContext context, CustomizableListSetting<T> setting)
       valueDisplayBuilder;
 
-  ListSetting(
+  CustomizableListSetting(
     String name,
     String Function(BuildContext) getLocalizedName,
     List<T> defaultValue,
@@ -104,8 +105,8 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
         );
 
   @override
-  ListSetting<T> copy() {
-    return ListSetting<T>(
+  CustomizableListSetting<T> copy() {
+    return CustomizableListSetting<T>(
       name,
       getLocalizedName,
       _value,
@@ -137,6 +138,74 @@ class ListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
 
   Widget? getPreviewCard(T item) {
     return itemPreviewBuilder?.call(item);
+  }
+
+  @override
+  dynamic valueToJson() {
+    return _value.map((e) => e.toJson()).toList();
+  }
+
+  @override
+  void loadValueFromJson(dynamic value) {
+    if (value == null) return;
+    _value = (value as List).map((e) => fromJsonFactories[T]!(e) as T).toList();
+  }
+}
+
+class ListSetting<T extends ListItem> extends Setting<List<T>> {
+  List<T> possibleItems;
+  Widget Function(T item, [VoidCallback?, VoidCallback?]) cardBuilder;
+  Widget Function(T item) addCardBuilder;
+  // The widget that will be used to display the value of this setting.
+
+  ListSetting(
+    String name,
+    String Function(BuildContext) getLocalizedName,
+    List<T> defaultValue,
+    this.possibleItems, {
+    required this.cardBuilder,
+    required this.addCardBuilder,
+    String Function(BuildContext) getDescription = defaultDescription,
+    void Function(BuildContext, List<T>)? onChange,
+    bool isVisual = true,
+    List<EnableConditionParameter> enableConditions = const [],
+    List<String> searchTags = const [],
+  }) : super(
+          name,
+          getLocalizedName,
+          getDescription,
+          copyItemList(defaultValue),
+          onChange,
+          enableConditions,
+          searchTags,
+          isVisual,
+          valueCopyGetter: copyItemList,
+        );
+
+  @override
+  ListSetting<T> copy() {
+    return ListSetting<T>(
+      name,
+      getLocalizedName,
+      _value,
+      possibleItems,
+      cardBuilder: cardBuilder,
+      addCardBuilder: addCardBuilder,
+      getDescription: getDescription,
+      onChange: onChange,
+      enableConditions: enableConditions,
+      isVisual: isVisual,
+      searchTags: searchTags,
+    );
+  }
+
+  Widget getItemAddCard(T item) {
+    return addCardBuilder(item);
+  }
+
+  Widget getItemCard(T item,
+      {VoidCallback? onDelete, VoidCallback? onDuplicate}) {
+    return cardBuilder(item, onDelete, onDuplicate);
   }
 
   @override

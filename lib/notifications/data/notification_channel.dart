@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:clock_app/theme/theme.dart';
 
+const String foregroundNotificationChannelKey = 'foreground';
 const String chronoNotificationChannelGroupKey = 'chrono';
 const String reminderNotificationChannelKey = 'reminders';
 const String stopwatchNotificationChannelKey = 'stopwatch';
@@ -21,6 +22,23 @@ final NotificationChannel alarmNotificationChannel = NotificationChannel(
   enableVibration: false,
   enableLights: false,
 );
+
+
+// final NotificationChannel foregroundNotificationChannel = NotificationChannel(
+//   icon: 'resource://drawable/alarm_icon',
+//   // channelGroupKey: chronoNotificationChannelGroupKey,
+//   channelKey: foregroundNotificationChannelKey,
+//   channelName: 'Foreground Service',
+//   channelDescription: 'Notification channel for foreground service',
+//   defaultColor: defaultColorScheme.accent,
+//   locked: true,
+//   importance: NotificationImportance.Low,
+//   criticalAlerts: false,
+//   playSound: false,
+//   enableVibration: false,
+//   enableLights: false,
+// );
+
 
 final NotificationChannel reminderNotificationChannel = NotificationChannel(
   icon: 'resource://drawable/alarm_icon',

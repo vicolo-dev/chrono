@@ -32,12 +32,12 @@ List<Widget> getSettingWidgets(
   bool isAppSettings = true,
 }) {
   bool showExtraAnimations = appSettings
-      .getGroup("General")
+      .getGroup("Appearance")
       .getGroup("Animations")
       .getSetting("Extra Animations")
       .value;
   double animationSpeed = appSettings
-      .getGroup("General")
+      .getGroup("Appearance")
       .getGroup("Animations")
       .getSetting("Animation Speed")
       .value;
@@ -184,7 +184,7 @@ Widget? getSettingItemWidget(
         setting: item,
         showAsCard: showAsCard,
       );
-    } else if (item is ListSetting) {
+    } else if (item is CustomizableListSetting) {
       return ListSettingCard(
         setting: item,
         showAsCard: showAsCard,

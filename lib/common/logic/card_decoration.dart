@@ -4,15 +4,22 @@ import 'package:flutter/material.dart';
 BoxDecoration getCardDecoration(BuildContext context,
     {Color? color,
     bool showLightBorder = false,
+    bool isSelected = false,
     showShadow = true,
     elevationMultiplier = 1,
+    boxShape = BoxShape.rectangle,
     blurStyle = BlurStyle.normal}) {
   ThemeData theme = Theme.of(context);
   ColorScheme colorScheme = theme.colorScheme;
   ThemeStyleExtension? themeStyle = theme.extension<ThemeStyleExtension>();
 
   return BoxDecoration(
-    border: showLightBorder
+    border: isSelected ? Border.all(
+            color: colorScheme.primary,
+            width: 2,
+            strokeAlign: BorderSide.strokeAlignOutside
+            
+          ) : showLightBorder
         ? Border.all(
             color: colorScheme.outline.withOpacity(0.2),
             width: 0.5,
@@ -26,9 +33,11 @@ BoxDecoration getCardDecoration(BuildContext context,
               )
             : null,
     color: color ?? colorScheme.surface,
-    borderRadius: theme.cardTheme.shape != null
+    borderRadius: boxShape == BoxShape.rectangle? theme.cardTheme.shape != null
         ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
-        : const BorderRadius.all(Radius.circular(8.0)),
+        : const BorderRadius.all(Radius.circular(8.0)) : null,
+    shape: boxShape,
+
     boxShadow: [
       if (showShadow && (themeStyle?.shadowOpacity ?? 0) > 0)
         BoxShadow(

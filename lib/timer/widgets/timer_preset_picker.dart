@@ -1,4 +1,6 @@
 import 'package:clock_app/common/widgets/modal.dart';
+import 'package:clock_app/settings/data/general_settings_schema.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/timer/logic/get_duration_picker.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 import 'package:clock_app/timer/types/timer_preset.dart';
@@ -14,7 +16,7 @@ Future<TimerPreset?> showTimerPresetPicker(BuildContext context,
     context: context,
     builder: (BuildContext context) {
       TimerPreset timerPreset = TimerPreset.from(initialTimerPreset ??
-          TimerPreset("New Preset", const TimeDuration(minutes: 5)));
+          TimerPreset("New Preset", const TimeDuration(minutes: 0)));
 
       TextEditingController controller = TextEditingController(
         text: timerPreset.name,
@@ -28,6 +30,12 @@ Future<TimerPreset?> showTimerPresetPicker(BuildContext context,
               builder: (context) {
                 // Get available height and width of the build area of this widget. Make a choice depending on the size.
                 var width = MediaQuery.of(context).size.width;
+
+                DurationPickerType type = appSettings
+                    .getGroup("General")
+                    .getGroup("Display")
+                    .getSetting("Duration Picker")
+                    .value;
 
                 return SingleChildScrollView(
                   child: Column(
@@ -53,7 +61,7 @@ Future<TimerPreset?> showTimerPresetPicker(BuildContext context,
                       Text(timerPreset.duration.toString(),
                           style: textTheme.displayMedium),
                       const SizedBox(height: 16),
-                      getDurationPicker(context, timerPreset.duration,
+                      getDurationPicker(context, type, timerPreset.duration,
                           (TimeDuration newDuration) {
                         setState(() {
                           timerPreset.duration = newDuration;

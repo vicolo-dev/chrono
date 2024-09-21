@@ -1,7 +1,7 @@
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/types/notification_type.dart';
-import 'package:flutter/foundation.dart';
+import 'package:clock_app/common/utils/id.dart';
 
 // enum AlarmEventType{
 //   schedule,
@@ -26,7 +26,7 @@ class AlarmEvent extends ListItem {
     required this.scheduleId,
     required this.startDate,
     required this.isActive,
-  }) : id = UniqueKey().hashCode;
+  }) : id = getId();
 
   AlarmEvent.fromJson(Json json) {
     if (json == null) {

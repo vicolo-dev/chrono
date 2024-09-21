@@ -1,20 +1,21 @@
+import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
-import 'package:clock_app/common/utils/debug.dart';
+import 'package:clock_app/common/utils/id.dart';
+import 'package:clock_app/developer/logic/logger.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ListSortOption<Item extends ListItem> {
   final String Function(BuildContext) getLocalizedName;
-  // final String abbreviation;
   final int Function(Item, Item) sortFunction;
-
   String Function(BuildContext) get displayName => getLocalizedName;
-
-  const ListSortOption(
-      this.getLocalizedName,  this.sortFunction);
+  const ListSortOption(this.getLocalizedName, this.sortFunction);
 }
 
 abstract class ListFilterItem<Item extends ListItem> {
+  bool isEnabled = true;
+
   bool Function(Item) get filterFunction;
   String Function(BuildContext) get displayName;
   bool get isActive;
@@ -37,14 +38,13 @@ class ListFilter<Item extends ListItem> extends ListFilterItem<Item> {
 
   ListFilter(this.getLocalizedName, bool Function(Item) filterFunction,
       {int? id})
-      : _id = id ?? UniqueKey().hashCode,
+      : _id = id ?? getId(),
         _filterFunction = filterFunction;
 
   int get id => _id;
 
   @override
   bool Function(Item) get filterFunction {
-    // print("Filtering $name $isSelected");
     return isSelected ? _filterFunction : (Item item) => true;
   }
 
@@ -63,6 +63,7 @@ class ListFilter<Item extends ListItem> extends ListFilterItem<Item> {
 class ListFilterSearch<Item extends ListItem> extends ListFilterItem<Item> {
   final String Function(BuildContext) getLocalizedName;
   String searchText = '';
+
   @override
   bool Function(Item) get filterFunction {
     // if (searchText.isEmpty) {
@@ -198,7 +199,7 @@ abstract class FilterSelect<Item extends ListItem>
     try {
       return selectedFilter.filterFunction;
     } catch (e) {
-      printDebug("Error in getting filter function($displayName): $e");
+      logger.d("Error in getting filter function($displayName): $e");
       return (Item item) => true;
     }
   }

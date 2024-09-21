@@ -1,0 +1,35 @@
+<h2>Funzionalità</h2>
+<ul>
+<li>Interfaccia moderna e facile da usare</li>
+</ul>
+<h3>Allarmi</h3>
+<ul>
+<li>Pianificazioni personalizzabili (giornaliere, settimanali, giorni della settimana specifici, date specifiche, intervalli di date)</li>
+<li>Configura la melodia, l'aumento del volume e le vibrazioni</li>
+<li><li>Configurare la lunghezza e la durata massima delle ripetizioni</li>
+<li>Attività per le allarmi (problemi matematici, riscrivere testo, sequenze, e altro in arrivo)</li>
+<li>Filtra gli allarmi (tutti, oggi, domani, posticipati, disabilitati, completati)</li>
+</ul>
+<h3>Orologio</h3>
+<ul>
+<li>Schermata dell'orologio personalizzabile</li>
+<li>Orologi di tutto il mondo con differenza di fuso orario relativo</li>
+<li>Cercare e aggiungere città</li>
+</ul>
+<h3>Temporizzatore</h3>
+<ul>
+<li>Configura la melodia, l'aumento del volume e le vibrazioni</li>
+<li>Preimpostazioni del temporizzatore</li>
+<li>Filtro del temporizzatore(tutti, in esecuzione, in pausa, interrotti)</li>
+</ul>
+<h3>Cronometro</h3>
+<ul>
+<li>Cronologia dei giri con i tempi del giro e i tempi trascorsi</li>
+<li>Comparazioni dei giri</li>
+</ul
+<h3>Aspetto</h3>
+<ul>
+<li>Temi di Material You</li>
+<li>Temi di colore altamente personalizzabili</li>
+<li>Temi di stile altamente personalizzabili</li>
+</ul>

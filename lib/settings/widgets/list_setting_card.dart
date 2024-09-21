@@ -11,7 +11,7 @@ class ListSettingCard extends StatefulWidget {
     this.showAsCard = true,
   });
 
-  final ListSetting setting;
+  final CustomizableListSetting setting;
   final bool showAsCard;
   final void Function(BuildContext context) onChanged;
 
@@ -28,7 +28,7 @@ class _ListSettingCardState extends State<ListSettingCard> {
         onTap: () async {
           await Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ListSettingScreen(
+              builder: (context) => CustomizableListSettingScreen(
                   setting: widget.setting, onChanged: widget.onChanged),
             ),
           );

@@ -92,8 +92,7 @@ class ActionBottomSheet extends StatelessWidget {
                                   children: [
                                     Text(
                                       actions[index].name,
-                                      style: Theme.of(context)
-                                          .textTheme
+                                      style: textTheme
                                           .headlineMedium
                                           ?.copyWith(
                                               color: actions[index].color ?? colorScheme.onSurface),

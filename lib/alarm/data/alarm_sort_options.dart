@@ -14,7 +14,7 @@ final List<ListSortOption<Alarm>> alarmSortOptions = [
   ListSortOption((context) => AppLocalizations.of(context)!.timeOfDayDesc, sortTimeOfDayDescending),
 ];
 
-int sortRemainingTimeDescending(Alarm a, Alarm b) {
+int sortRemainingTimeAscending(Alarm a, Alarm b) {
   if (a.currentScheduleDateTime == null && b.currentScheduleDateTime == null) {
     return 0;
   } else if (a.currentScheduleDateTime == null) {
@@ -29,7 +29,7 @@ int sortRemainingTimeDescending(Alarm a, Alarm b) {
   return remainingB.compareTo(remainingA);
 }
 
-int sortRemainingTimeAscending(Alarm a, Alarm b) {
+int sortRemainingTimeDescending(Alarm a, Alarm b) {
   if (a.currentScheduleDateTime == null && b.currentScheduleDateTime == null) {
     return 0;
   } else if (a.currentScheduleDateTime == null) {

@@ -10,6 +10,7 @@ import 'package:clock_app/alarm/types/schedules/weekly_alarm_schedule.dart';
 import 'package:clock_app/alarm/widgets/alarm_task_card.dart';
 import 'package:clock_app/alarm/widgets/try_alarm_task_button.dart';
 import 'package:clock_app/audio/audio_channels.dart';
+import 'package:clock_app/audio/screens/ringtones_screen.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/data/weekdays.dart';
 import 'package:clock_app/common/logic/tags.dart';
@@ -19,7 +20,6 @@ import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/types/weekday.dart';
 import 'package:clock_app/common/utils/ringtones.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
-import 'package:clock_app/settings/screens/ringtones_screen.dart';
 import 'package:clock_app/settings/screens/tags_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
@@ -77,20 +77,6 @@ SettingGroup alarmSettingsSchema = SettingGroup(
             ),
           ],
         ),
-        //  DynamicToggleSetting(
-        //   "Week Days",
-        //   (context) => AppLocalizations.of(context)!.alarmWeekdaysSetting,
-        //   () {
-        //     return weekdays
-        //         .map((weekday) => SelectSettingOption(
-        //             (context) => weekday.getAbbreviation(context), weekday))
-        //         .toList();
-        //   },
-        //   enableConditions: [
-        //     ValueCondition(["Type"], (value) => value == WeeklyAlarmSchedule)
-        //   ],
-        // ),
-
         ToggleSetting(
           "Week Days",
           (context) => AppLocalizations.of(context)!.alarmWeekdaysSetting,
@@ -194,13 +180,12 @@ SettingGroup alarmSettingsSchema = SettingGroup(
               ],
               // shouldCloseOnSelect: false,
             ),
-            SelectSetting<AndroidAudioUsage>(
-              "Audio Channel",
-              (context) => AppLocalizations.of(context)!.audioChannelSetting,
-              audioChannelOptions,
-              onChange: (context, index) {
-                RingtonePlayer.stop();
-              },
+            SwitchSetting(
+              "start_melody_at_random_pos",
+              (context) => AppLocalizations.of(context)!.startMelodyAtRandomPos,
+              false,
+              getDescription: (context) => AppLocalizations.of(context)!
+                  .startMelodyAtRandomPosDescription,
             ),
             SliderSetting(
                 "Volume",
@@ -209,6 +194,15 @@ SettingGroup alarmSettingsSchema = SettingGroup(
                 100,
                 100,
                 unit: "%"),
+            SliderSetting(
+              "task_volume",
+              (context) => AppLocalizations.of(context)!.volumeWhileTasks,
+              0,
+              100,
+              50,
+              unit: "%",
+              getDescription: (context) => "Percentage of base volume",
+            ),
             SwitchSetting(
               "Rising Volume",
               (context) => AppLocalizations.of(context)!.risingVolumeSetting,
@@ -224,6 +218,14 @@ SettingGroup alarmSettingsSchema = SettingGroup(
                 enableConditions: [
                   ValueCondition(["Rising Volume"], (value) => value == true)
                 ]),
+            SelectSetting<AndroidAudioUsage>(
+              "Audio Channel",
+              (context) => AppLocalizations.of(context)!.audioChannelSetting,
+              audioChannelOptions,
+              onChange: (context, index) {
+                RingtonePlayer.stop();
+              },
+            ),
           ],
         ),
         SwitchSetting("Vibration",
@@ -291,10 +293,13 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         "Length",
       ],
     ),
-    ListSetting<AlarmTask>(
+    CustomizableListSetting<AlarmTask>(
       "Tasks",
       (context) => AppLocalizations.of(context)!.tasksSetting,
       [],
+      // kDebugMode
+      // ? [AlarmTask(AlarmTaskType.math), AlarmTask(AlarmTaskType.sequence)]
+      // : [],
       alarmTaskSchemasMap.keys.map((key) => AlarmTask(key)).toList(),
       addCardBuilder: (item) => AlarmTaskCard(task: item, isAddCard: true),
       cardBuilder: (item, [onDelete, onDuplicate]) => AlarmTaskCard(
@@ -307,9 +312,6 @@ SettingGroup alarmSettingsSchema = SettingGroup(
         return Text("${setting.value.length} tasks");
       },
       itemPreviewBuilder: (item) => TryAlarmTaskButton(alarmTask: item),
-      // onChange: (context, value)async{
-      //   await appSettings.save();
-      // }
     ),
     DynamicMultiSelectSetting<Tag>(
       "Tags",

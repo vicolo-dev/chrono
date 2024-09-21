@@ -5,10 +5,9 @@ import 'package:clock_app/navigation/screens/nav_scaffold.dart';
 import 'package:clock_app/navigation/types/routes.dart';
 import 'package:clock_app/notifications/data/notification_channel.dart';
 import 'package:clock_app/notifications/data/update_notification_intervals.dart';
-import 'package:clock_app/notifications/types/fullscreen_notification_manager.dart';
-import 'package:clock_app/notifications/types/notifications_controller.dart';
+import 'package:clock_app/notifications/logic/notifications_listeners.dart';
+import 'package:clock_app/notifications/types/alarm_notification_arguments.dart';
 import 'package:clock_app/onboarding/screens/onboarding_screen.dart';
-import 'package:clock_app/settings/data/appearance_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -16,12 +15,14 @@ import 'package:clock_app/system/data/app_info.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
+import 'package:clock_app/theme/types/theme_brightness.dart';
 import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:clock_app/timer/screens/timer_notification_screen.dart';
 import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -61,14 +62,14 @@ class _AppState extends State<App> {
 
     setDigitalClockWidgetData(context);
 
-    NotificationController.setListeners();
+    setNotificationListeners();
 
     _appearanceSettings = appSettings.getGroup("Appearance");
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
     _generalSettings = appSettings.getGroup("General");
     _animationSpeedSetting =
-        _generalSettings.getGroup("Animations").getSetting("Animation Speed");
+        _appearanceSettings.getGroup("Animations").getSetting("Animation Speed");
     _animationSpeedSetting.addListener(setAnimationSpeed);
 
     setAnimationSpeed(_animationSpeedSetting.value);
@@ -161,12 +162,6 @@ class _AppState extends State<App> {
       ThemeBrightness themeBrightness =
           _colorSettings.getSetting("Brightness").value;
       Locale locale = _generalSettings.getSetting("Language").value;
-      // if(!AppLocalizations.supportedLocales.contains(locale)){
-      //
-      // }
-      //
-      // print("locaaaaaaaale $locale");
-      // print(getLocaleOptions().map((e) => e.value).toList());
 
       return MaterialApp(
         scaffoldMessengerKey: _messangerKey,

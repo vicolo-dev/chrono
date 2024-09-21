@@ -3,6 +3,7 @@ import 'package:clock_app/common/types/list_filter.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/common/widgets/list/custom_list_view.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/settings/types/listener_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -70,11 +71,14 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
     this.isReorderable = true,
     this.isDeleteEnabled = true,
     this.isDuplicateEnabled = true,
+    this.isSelectable = false,
     this.reloadOnPop = false,
     this.shouldInsertOnTop = true,
     this.listFilters = const [],
     this.customActions = const [],
     this.sortOptions = const [],
+    this.header,
+    this.onSaveItems ,
     // this.initialSortIndex = 0,
   });
 
@@ -90,11 +94,14 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
   final bool isDeleteEnabled;
   final bool isDuplicateEnabled;
   final bool reloadOnPop;
+  final bool isSelectable;
   final bool shouldInsertOnTop;
+      final Widget? header;
   // final int initialSortIndex;
   final List<ListFilterItem<Item>> listFilters;
   final List<ListFilterCustomAction<Item>> customActions;
   final List<ListSortOption<Item>> sortOptions;
+  final Function(List<Item> items)? onSaveItems;
 
   @override
   State<PersistentListView> createState() => _PersistentListViewState<Item>();
@@ -113,7 +120,6 @@ class _PersistentListViewState<Item extends ListItem>
     if (widget.saveTag.isNotEmpty) {
       _items = loadListSync<Item>(widget.saveTag);
     }
-    // watchList(widget.saveTag, (event) => reloadItems());
     ListenerManager.addOnChangeListener(widget.saveTag, _loadItems);
 
     if (widget.sortOptions.isNotEmpty) {
@@ -128,16 +134,12 @@ class _PersistentListViewState<Item extends ListItem>
     else {
       _initialSortIndex = 0;
     }
-    // ListenerManager.addOnChangeListener(
-    //     "${widget.saveTag}-reload", reloadItems);
   }
 
   @override
   void dispose() {
     ListenerManager.removeOnChangeListener(widget.saveTag, _loadItems);
-    // ListenerManager.removeOnChangeListener(
-    //     "${widget.saveTag}-reload", reloadItems);
-    // unwatchList(widget.saveTag);
+    
     super.dispose();
   }
 
@@ -159,10 +161,12 @@ class _PersistentListViewState<Item extends ListItem>
     }
   }
 
-  void _saveItems() {
+  void _saveItems () async {
     if (widget.saveTag.isNotEmpty) {
-      saveList<Item>(widget.saveTag, _items);
+      await saveList<Item>(widget.saveTag, _items);
     }
+    widget.onSaveItems?.call(_items);
+      
   }
 
   void _handleChangeSort(int index) {
@@ -184,6 +188,7 @@ class _PersistentListViewState<Item extends ListItem>
       onModifyList: _saveItems,
       isReorderable: widget.isReorderable,
       isDeleteEnabled: widget.isDeleteEnabled,
+      isSelectable: widget.isSelectable,
       isDuplicateEnabled: widget.isDuplicateEnabled,
       shouldInsertOnTop: widget.shouldInsertOnTop,
       listFilters: widget.listFilters,
@@ -191,6 +196,7 @@ class _PersistentListViewState<Item extends ListItem>
       sortOptions: widget.sortOptions,
       initialSortIndex: _initialSortIndex,
       onChangeSortIndex: _handleChangeSort,
+      header: widget.header,
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:clock_app/common/types/file_item.dart';
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/notification_type.dart';
 import 'package:clock_app/common/types/tag.dart';
+import 'package:clock_app/common/utils/id.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,10 @@ class ClockTimer extends CustomizableListItem {
     if (isRunning) {
       return math.max(
           _milliSecondsRemainingOnPause -
-              DateTime.now().difference(_startTime).toTimeDuration().inMilliseconds,
+              DateTime.now()
+                  .difference(_startTime)
+                  .toTimeDuration()
+                  .inMilliseconds,
           0);
     } else {
       return _milliSecondsRemainingOnPause;
@@ -77,7 +81,7 @@ class ClockTimer extends CustomizableListItem {
   TimerState get state => _state;
 
   ClockTimer(this._duration)
-      : _id = UniqueKey().hashCode,
+      : _id = getId(),
         _currentDuration = TimeDuration.from(_duration),
         _milliSecondsRemainingOnPause = _duration.inSeconds * 1000,
         _startTime = DateTime(0),
@@ -90,7 +94,7 @@ class ClockTimer extends CustomizableListItem {
         _startTime = DateTime(0),
         _state = TimerState.stopped,
         _settings = timer._settings.copy(),
-        _id = UniqueKey().hashCode;
+        _id = getId();
 
   void setSetting(BuildContext context, String name, dynamic value) {
     _settings.getSetting(name).setValue(context, value);
@@ -146,6 +150,13 @@ class ClockTimer extends CustomizableListItem {
         alarmClock: false,
       );
     }
+  }
+
+  Future<void> snooze() async {
+    TimeDuration addedDuration = TimeDuration(minutes: addLength.floor());
+    _currentDuration = addedDuration;
+    _milliSecondsRemainingOnPause = addedDuration.inSeconds * 1000;
+    await start();
   }
 
   Future<void> pause() async {
@@ -211,7 +222,7 @@ class ClockTimer extends CustomizableListItem {
 
   ClockTimer.fromJson(Json json) {
     if (json == null) {
-      _id = UniqueKey().hashCode;
+      _id = getId();
       return;
     }
     _duration = TimeDuration.fromSeconds(json['duration'] ?? 0);
@@ -223,7 +234,7 @@ class ClockTimer extends CustomizableListItem {
         : DateTime.now();
     _state = TimerState.values.firstWhere((e) => e.toString() == json['state'],
         orElse: () => TimerState.stopped);
-    _id = json['id'] ?? UniqueKey().hashCode;
+    _id = json['id'] ?? getId();
     _settings = SettingGroup(
       "Timer Settings",
       (context) => "Timer Settings",
@@ -245,11 +256,14 @@ class ClockTimer extends CustomizableListItem {
     _state = other._state;
     _settings = other._settings.copy();
     _id = other._id;
-      
   }
 
   @override
   copy() {
     return ClockTimer.from(this);
+  }
+
+  bool isEqualTo(ClockTimer other) {
+    return _duration == other._duration && _settings.isEqualTo(other._settings);
   }
 }
