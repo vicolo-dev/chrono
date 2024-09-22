@@ -4,6 +4,7 @@ import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/alarm/types/alarm.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/clock/types/city.dart';
+import 'package:clock_app/common/types/tag.dart';
 import 'package:clock_app/common/utils/json_serialize.dart';
 import 'package:clock_app/common/utils/list_storage.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
@@ -27,11 +28,13 @@ final backupOptions = [
       return await loadTextFile("tags");
     },
     decode: (context, value) async {
-      await saveList<TimerPreset>("tags", [
-        ...listFromString<TimerPreset>(value)
-            .map((tag) => TimerPreset.from(tag)),
-        ...await loadList<TimerPreset>("tags")
-      ]);
+      final existingItems = await loadList<Tag>("tags");
+      final itemsToAdd = listFromString<Tag>(value)
+          .where((tag) =>
+              !existingItems.any((existingTag) => existingTag.isEqualTo(tag)))
+          .map((tag) => Tag.from(tag));
+
+      await saveList<Tag>("tags", [...itemsToAdd, ...existingItems]);
     },
   ),
   BackupOption(
@@ -45,10 +48,15 @@ final backupOptions = [
       return listToString(customColorSchemes);
     },
     decode: (context, value) async {
+      final existingItems = await loadList<ColorSchemeData>("color_schemes");
+      final itemsToAdd = listFromString<ColorSchemeData>(value)
+          .where((colorScheme) => !existingItems.any((existingColorScheme) =>
+              existingColorScheme.isEqualTo(colorScheme)))
+          .map((scheme) => ColorSchemeData.from(scheme));
+
       await saveList<ColorSchemeData>("color_schemes", [
-        ...listFromString<ColorSchemeData>(value)
-            .map((scheme) => ColorSchemeData.from(scheme)),
-        ...await loadList<ColorSchemeData>("color_schemes")
+        ...itemsToAdd,
+        ...existingItems,
       ]);
       if (context.mounted) App.refreshTheme(context);
     },
@@ -63,11 +71,13 @@ final backupOptions = [
       return listToString(customThemes);
     },
     decode: (context, value) async {
-      await saveList<StyleTheme>("style_themes", [
-        ...listFromString<StyleTheme>(value)
-            .map((theme) => StyleTheme.from(theme)),
-        ...await loadList<StyleTheme>("style_themes")
-      ]);
+      final existingItems = await loadList<StyleTheme>("style_themes");
+      final itemsToAdd = listFromString<StyleTheme>(value)
+          .where((theme) => !existingItems
+              .any((existingTheme) => existingTheme.isEqualTo(theme)))
+          .map((theme) => StyleTheme.from(theme));
+      await saveList<StyleTheme>(
+          "style_themes", [...itemsToAdd, ...existingItems]);
       if (context.mounted) App.refreshTheme(context);
     },
   ),
@@ -94,10 +104,12 @@ final backupOptions = [
       return await loadTextFile("alarms");
     },
     decode: (context, value) async {
-      await saveList<Alarm>("alarms", [
-        ...listFromString<Alarm>(value).map((alarm) => Alarm.fromAlarm(alarm)),
-        ...await loadList<Alarm>("alarms")
-      ]);
+      final existingItems = await loadList<Alarm>("alarms");
+      final itemsToAdd = listFromString<Alarm>(value)
+          .where((alarm) => !existingItems
+              .any((existingAlarm) => existingAlarm.isEqualTo(alarm)))
+          .map((alarm) => Alarm.fromAlarm(alarm));
+      await saveList<Alarm>("alarms", [...itemsToAdd, ...existingItems]);
       await updateAlarms("Updated alarms on importing backup");
     },
   ),
@@ -108,11 +120,12 @@ final backupOptions = [
       return await loadTextFile("timers");
     },
     decode: (context, value) async {
-      await saveList<ClockTimer>("timers", [
-        ...listFromString<ClockTimer>(value)
-            .map((timer) => ClockTimer.from(timer)),
-        ...await loadList<ClockTimer>("timers")
-      ]);
+      final existingItems = await loadList<ClockTimer>("timers");
+      final itemsToAdd = listFromString<ClockTimer>(value)
+          .where((timer) => !existingItems
+              .any((existingTimer) => existingTimer.isEqualTo(timer)))
+          .map((timer) => ClockTimer.from(timer));
+      await saveList<ClockTimer>("timers", [...itemsToAdd, ...existingItems]);
       await updateTimers("Updated timers on importing backup");
     },
   ),
@@ -151,11 +164,14 @@ final backupOptions = [
       return await loadTextFile("timer_presets");
     },
     decode: (context, value) async {
-      await saveList<TimerPreset>("timer_presets", [
-        ...listFromString<TimerPreset>(value)
-            .map((preset) => TimerPreset.from(preset)),
-        ...await loadList<TimerPreset>("timer_presets")
-      ]);
+      final existingItems = await loadList<TimerPreset>("timer_presets");
+      final itemsToAdd = listFromString<TimerPreset>(value)
+          .where((preset) => !existingItems
+              .any((existingPreset) => existingPreset.isEqualTo(preset)))
+          .map((preset) => TimerPreset.from(preset));
+
+      await saveList<TimerPreset>(
+          "timer_presets", [...itemsToAdd, ...existingItems]);
     },
   ),
 ];

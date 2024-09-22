@@ -49,8 +49,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
           widget.onPop!();
           Navigator.of(context).pop(true);
         } else {
-          dismissAlarmNotification(widget.scheduleId,
-              widget.dismissType, ScheduledNotificationType.alarm);
+          dismissAlarmNotification(widget.scheduleId, widget.dismissType,
+              ScheduledNotificationType.alarm);
         }
       } else {
         IsolateNameServer.lookupPortByName(setAlarmVolumePortName)
@@ -68,8 +68,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
 
     Alarm? currentAlarm = getAlarmById(widget.scheduleId);
     if (currentAlarm == null) {
-      dismissAlarmNotification(widget.scheduleId,
-          widget.dismissType, ScheduledNotificationType.alarm);
+      dismissAlarmNotification(widget.scheduleId, widget.dismissType,
+          ScheduledNotificationType.alarm);
       return;
     }
     alarm = currentAlarm;
@@ -96,8 +96,8 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
   }
 
   void _snoozeAlarm() {
-    snoozeAlarm(
-        widget.scheduleId, ScheduledNotificationType.alarm);
+    dismissAlarmNotification(widget.scheduleId, AlarmDismissType.snooze,
+        ScheduledNotificationType.alarm);
   }
 
   @override
@@ -117,28 +117,34 @@ class _AlarmNotificationScreenState extends State<AlarmNotificationScreen> {
               children: [
                 if (_currentIndex <= 0)
                   Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        const Spacer(),
-                        if (alarm.label.isNotEmpty)
-                          Text(
-                            alarm.label,
-                            style: Theme.of(context).textTheme.titleMedium,
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          if (alarm.label.isNotEmpty)
+                            Text(
+                              alarm.label,
+                              style: Theme.of(context).textTheme.displayMedium,
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          const SizedBox(height: 8),
+                          const DigitalClock(
+                            // dateTime: Date,
+                            horizontalAlignment: ElementAlignment.center,
+                            shouldShowDate: false,
+                            shouldShowSeconds: false,
                           ),
-                        const SizedBox(height: 8),
-                        const DigitalClock(
-                          // dateTime: Date,
-                          horizontalAlignment: ElementAlignment.center,
-                          shouldShowDate: false,
-                          shouldShowSeconds: false,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Alarm",
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ],
+                          const SizedBox(height: 8),
+                          Text(
+                            "Alarm",
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 Expanded(

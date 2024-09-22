@@ -1,6 +1,7 @@
 import 'package:clock_app/common/types/json.dart';
 import 'package:clock_app/common/types/list_item.dart';
 import 'package:clock_app/common/utils/id.dart';
+import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/timer/types/time_duration.dart';
 
 class TimerPreset extends ListItem {
@@ -43,6 +44,10 @@ class TimerPreset extends ListItem {
       name = other.name;
       duration = TimeDuration.from(other.duration);
     }
+  }
+
+  bool isEqualTo(TimerPreset other) {
+    return name == other.name && duration == other.duration;
   }
 
   @override

@@ -68,7 +68,8 @@ abstract class Setting<T> extends SettingItem {
   }
 }
 
-class CustomizableListSetting<T extends CustomizableListItem> extends Setting<List<T>> {
+class CustomizableListSetting<T extends CustomizableListItem>
+    extends Setting<List<T>> {
   List<T> possibleItems;
   Widget Function(T item, [VoidCallback?, VoidCallback?]) cardBuilder;
   Widget Function(T item) addCardBuilder;
@@ -198,8 +199,6 @@ class ListSetting<T extends ListItem> extends Setting<List<T>> {
     );
   }
 
-
-
   Widget getItemAddCard(T item) {
     return addCardBuilder(item);
   }
@@ -208,7 +207,6 @@ class ListSetting<T extends ListItem> extends Setting<List<T>> {
       {VoidCallback? onDelete, VoidCallback? onDuplicate}) {
     return cardBuilder(item, onDelete, onDuplicate);
   }
-
 
   @override
   dynamic valueToJson() {
@@ -221,7 +219,6 @@ class ListSetting<T extends ListItem> extends Setting<List<T>> {
     _value = (value as List).map((e) => fromJsonFactories[T]!(e) as T).toList();
   }
 }
-
 
 class CustomSetting<T extends JsonSerializable> extends Setting<T> {
   // The screen that will be navigated to when this setting is tapped.

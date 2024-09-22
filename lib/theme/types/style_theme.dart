@@ -40,7 +40,7 @@ class StyleTheme extends ThemeItem {
         .setValueWithoutNotify(borderWidth);
   }
 
-  StyleTheme.from(StyleTheme colorSchemeData) : super.from(colorSchemeData);
+  StyleTheme.from(StyleTheme super.colorSchemeData) : super.from();
 
   @override
   String get name => settings.getSetting("Name").value;
@@ -65,4 +65,14 @@ class StyleTheme extends ThemeItem {
 
   StyleTheme.fromJson(Json json)
       : super.fromJson(json, styleThemeSettingsSchema.copy());
+
+  bool isEqualTo(StyleTheme other) {
+    return name == other.name &&
+        shadowElevation == other.shadowElevation &&
+        shadowOpacity == other.shadowOpacity &&
+        shadowBlurRadius == other.shadowBlurRadius &&
+        shadowSpreadRadius == other.shadowSpreadRadius &&
+        borderRadius == other.borderRadius &&
+        borderWidth == other.borderWidth;
+  }
 }

@@ -49,4 +49,10 @@ class Tag extends ListItem {
     description = other.description;
     color = other.color;
   }
+
+  bool isEqualTo(Tag other) {
+    return name == other.name &&
+        description == other.description &&
+        color == other.color;
+  }
 }
