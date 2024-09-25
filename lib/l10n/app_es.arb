@@ -776,5 +776,7 @@
   "allTicks": "Toda las marcas",
   "@allTicks": {},
   "backgroundServiceIntervalSetting": "Intervalo del servicio en segundo plano",
-  "@backgroundServiceIntervalSetting": {}
+  "@backgroundServiceIntervalSetting": {},
+  "quarterNumbers": "Mostrar solo números en múltiplos de 15 minutos",
+  "@quarterNumbers": {}
 }
