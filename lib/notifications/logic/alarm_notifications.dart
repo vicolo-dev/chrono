@@ -43,7 +43,7 @@ void showAlarmNotification({
       key: dismissActionKey,
       label: '$dismissActionLabel All',
       actionType: ActionType.SilentAction,
-      autoDismissible: true,
+      autoDismissible: false,
     ));
   } else {
     if (showSnoozeButton) {
@@ -52,7 +52,7 @@ void showAlarmNotification({
         key: snoozeActionKey,
         label: snoozeActionLabel,
         actionType: ActionType.SilentAction,
-        autoDismissible: true,
+        autoDismissible: false,
       ));
     }
 
@@ -61,7 +61,7 @@ void showAlarmNotification({
       key: dismissActionKey,
       label: "${tasksRequired ? "Solve tasks to " : ""}$dismissActionLabel",
       actionType: tasksRequired ? ActionType.Default : ActionType.SilentAction,
-      autoDismissible: tasksRequired ? false : true,
+      autoDismissible: false,
     ));
   }
 
