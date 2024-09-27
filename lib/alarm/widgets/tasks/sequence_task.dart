@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 
 class SequenceTask extends StatefulWidget {
   const SequenceTask({
-    Key? key,
+    super.key,
     required this.onSolve,
     required this.settings,
-  }) : super(key: key);
+  });
 
   final VoidCallback onSolve;
   final SettingGroup settings;

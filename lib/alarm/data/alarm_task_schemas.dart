@@ -1,5 +1,6 @@
 import 'package:clock_app/alarm/types/alarm_task.dart';
 import 'package:clock_app/alarm/widgets/tasks/math_task.dart';
+import 'package:clock_app/alarm/widgets/tasks/memory_task.dart';
 import 'package:clock_app/alarm/widgets/tasks/retype_task.dart';
 import 'package:clock_app/alarm/widgets/tasks/sequence_task.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -96,6 +97,22 @@ Map<AlarmTaskType, AlarmTaskSchema> alarmTaskSchemasMap = {
     ]),
     (onSolve, settings) {
       return SequenceTask(onSolve: onSolve, settings: settings);
+    },
+  ),
+  AlarmTaskType.memory: AlarmTaskSchema(
+    (context) => AppLocalizations.of(context)!.memoryTask,
+    SettingGroup("memorySettings",
+        (context) => AppLocalizations.of(context)!.memoryTask, [
+      SliderSetting(
+          "numberOfPairs",
+          (context) => AppLocalizations.of(context)!.numberOfPairsSetting,
+          3,
+          10,
+          3,
+          snapLength: 1),
+    ]),
+    (onSolve, settings) {
+      return MemoryTask(onSolve: onSolve, settings: settings);
     },
   ),
 };
