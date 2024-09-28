@@ -745,9 +745,9 @@
   "@analogClock": {},
   "digitalClock": "Цифровий",
   "@digitalClock": {},
-  "showClockTicksSetting": "Показувати галочки",
+  "showClockTicksSetting": "Показати галочки",
   "@showClockTicksSetting": {},
-  "majorTicks": "Тільки основні галочки",
+  "majorTicks": "Лише основні галочки",
   "@majorTicks": {},
   "allTicks": "Всі галочки",
   "@allTicks": {},
@@ -776,5 +776,15 @@
   "shortSecondsString": "{seconds}с",
   "@shortSecondsString": {},
   "showNextAlarm": "Показати наступний будильник",
-  "@showNextAlarm": {}
+  "@showNextAlarm": {},
+  "showErrorSnackbars": "Показати панелі завантажень помилок",
+  "@showErrorSnackbars": {},
+  "longPressReorderAction": "Змінити порядок",
+  "@longPressReorderAction": {},
+  "volumeWhileTasks": "Обсяг під час розв’язування Завдань",
+  "@volumeWhileTasks": {},
+  "reorder": "Змінити порядок",
+  "@reorder": {},
+  "quarterNumbers": "Тільки квартальні номери",
+  "@quarterNumbers": {}
 }
