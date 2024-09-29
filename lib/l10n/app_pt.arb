@@ -710,5 +710,21 @@
   "selectAll": "Selecionar tudo",
   "@selectAll": {},
   "reorder": "Reordenar",
-  "@reorder": {}
+  "@reorder": {},
+  "volumeWhileTasks": "Volume durante a resolução de tarefas",
+  "@volumeWhileTasks": {},
+  "pauseAllFilteredTimersAction": "Pausar todos os temporizadores filtrados",
+  "@pauseAllFilteredTimersAction": {},
+  "startMelodyAtRandomPosDescription": "A música começará numa posição aleatória",
+  "@startMelodyAtRandomPosDescription": {},
+  "shuffleAlarmMelodiesAction": "Músicas aleatórias para todos os alarmes filtradas",
+  "@shuffleAlarmMelodiesAction": {},
+  "resetAllFilteredTimersAction": "Reiniciar todos os temporizados filtrados",
+  "@resetAllFilteredTimersAction": {},
+  "playAllFilteredTimersAction": "Reproduzir todos os tempoizadores filtrados",
+  "@playAllFilteredTimersAction": {},
+  "timeOfDayDesc": "Primeiro as ultimas horas",
+  "@timeOfDayDesc": {},
+  "timeOfDayAsc": "Primeiro as primeiras horas",
+  "@timeOfDayAsc": {}
 }
