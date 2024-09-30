@@ -778,5 +778,9 @@
   "majorTicks": "只显示主要节点",
   "@majorTicks": {},
   "showClockTicksSetting": "显示节点",
-  "@showClockTicksSetting": {}
+  "@showClockTicksSetting": {},
+  "startMelodyAtRandomPosDescription": "旋律将从随机位置开始",
+  "@startMelodyAtRandomPosDescription": {},
+  "shuffleTimerMelodiesAction": "随机播放所有已过滤定时器的旋律",
+  "@shuffleTimerMelodiesAction": {}
 }
