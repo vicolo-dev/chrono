@@ -35,7 +35,7 @@ Future<void> updateTimerNotification(ClockTimer timer, int count) async {
       showInCompactView: true,
       key: "timer_reset_all",
       label: 'Reset all',
-      actionType: ActionType.SilentAction,
+      actionType: ActionType.SilentBackgroundAction,
       autoDismissible: false,
     ));
   }
