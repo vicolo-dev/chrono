@@ -335,7 +335,7 @@
   "@showIstantTimerButtonSetting": {},
   "logsSettingGroup": "Journaux",
   "@logsSettingGroup": {},
-  "alarmLogSetting": "Logs des alarmes",
+  "alarmLogSetting": "Journaux des alarmes",
   "@alarmLogSetting": {},
   "resetButton": "Remettre à zéro",
   "@resetButton": {},
