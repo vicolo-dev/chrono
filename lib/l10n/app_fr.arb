@@ -730,5 +730,7 @@
   "pauseAllFilteredTimersAction": "Pause de toutes les minuteries filtrées",
   "@pauseAllFilteredTimersAction": {},
   "playAllFilteredTimersAction": "Jouer toutes les minuteries filtrées",
-  "@playAllFilteredTimersAction": {}
+  "@playAllFilteredTimersAction": {},
+  "selectionStatus": "{n} selectionné(es)",
+  "@selectionStatus": {}
 }
