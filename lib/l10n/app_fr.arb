@@ -732,5 +732,7 @@
   "playAllFilteredTimersAction": "Jouer toutes les minuteries filtrées",
   "@playAllFilteredTimersAction": {},
   "selectionStatus": "{n} selectionné(es)",
-  "@selectionStatus": {}
+  "@selectionStatus": {},
+  "secondsString": "{count, plural, =0{} =1{1 seconde} other{{count} secondes}}",
+  "@secondsString": {}
 }
