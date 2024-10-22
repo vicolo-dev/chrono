@@ -587,7 +587,7 @@
   "@wednesdayFull": {},
   "thursdayFull": "Jeudi",
   "@thursdayFull": {},
-  "maxLogsSetting": "Nombres de journaux",
+  "maxLogsSetting": "Nombre maximal de journaux d'alarme",
   "@maxLogsSetting": {},
   "styleThemeElevationSetting": "Élévation",
   "@styleThemeElevationSetting": {},
@@ -734,5 +734,11 @@
   "selectionStatus": "{n} selectionné(es)",
   "@selectionStatus": {},
   "secondsString": "{count, plural, =0{} =1{1 seconde} other{{count} secondes}}",
-  "@secondsString": {}
+  "@secondsString": {},
+  "pickerNumpad": "Pavé numérique",
+  "@pickerNumpad": {},
+  "longPressActionSetting": "Action d'Appui Long",
+  "@longPressActionSetting": {},
+  "shuffleTimerMelodiesAction": "Mélodies aléatoires pour toutes les minuteries filtrées",
+  "@shuffleTimerMelodiesAction": {}
 }
