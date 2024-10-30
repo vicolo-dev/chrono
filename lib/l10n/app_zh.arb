@@ -782,5 +782,9 @@
   "startMelodyAtRandomPosDescription": "旋律将从随机位置开始",
   "@startMelodyAtRandomPosDescription": {},
   "shuffleTimerMelodiesAction": "随机播放所有已过滤定时器的旋律",
-  "@shuffleTimerMelodiesAction": {}
+  "@shuffleTimerMelodiesAction": {},
+  "shuffleAlarmMelodiesAction": "为所有选中的闹钟随机一个铃声",
+  "@shuffleAlarmMelodiesAction": {},
+  "resetAllFilteredTimersAction": "重置所有选中的计时器",
+  "@resetAllFilteredTimersAction": {}
 }
