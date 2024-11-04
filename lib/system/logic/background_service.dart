@@ -1,6 +1,7 @@
 import 'package:background_fetch/background_fetch.dart';
 import 'package:clock_app/alarm/logic/update_alarms.dart';
 import 'package:clock_app/developer/logic/logger.dart';
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/system/logic/initialize_isolate.dart';
 import 'package:clock_app/timer/logic/update_timers.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,10 @@ Future<void> initBackgroundService({int interval = 60}) async {
   });
 }
 
+Future<void> stopBackgroundService() async {
+  await BackgroundFetch.stop();
+}
+
 // [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
 @pragma('vm:entry-point')
 void handleBackgroundServiceTask(HeadlessTask task) async {
@@ -66,5 +71,14 @@ void handleBackgroundServiceTask(HeadlessTask task) async {
 }
 
 void registerHeadlessBackgroundService() {
+  if (appSettings
+          .getGroup('General')
+          .getGroup('Reliability')
+          .getSetting('useBackgroundService')
+          .value ==
+      false) {
+    return;
+  }
+
   BackgroundFetch.registerHeadlessTask(handleBackgroundServiceTask);
 }

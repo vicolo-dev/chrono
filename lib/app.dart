@@ -12,6 +12,7 @@ import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/system/data/app_info.dart';
+import 'package:clock_app/system/logic/background_service.dart';
 import 'package:clock_app/theme/types/color_scheme.dart';
 import 'package:clock_app/theme/theme.dart';
 import 'package:clock_app/theme/types/style_theme.dart';
@@ -39,6 +40,11 @@ class App extends StatefulWidget {
     _AppState state = context.findAncestorStateOfType<_AppState>()!;
     state.refreshTheme();
   }
+
+  static void updateBackgroundService(BuildContext context) {
+    _AppState state = context.findAncestorStateOfType<_AppState>()!;
+    state.updateBackgroundService();
+  }
 }
 
 class AppTheme {
@@ -55,6 +61,8 @@ class _AppState extends State<App> {
   late SettingGroup _styleSettings;
   late Setting _animationSpeedSetting;
   late SettingGroup _generalSettings;
+  late Setting _useBackgroundServiceSetting;
+  late Setting _backgroundServiceIntervalSetting;
 
   @override
   void initState() {
@@ -68,9 +76,16 @@ class _AppState extends State<App> {
     _colorSettings = _appearanceSettings.getGroup("Colors");
     _styleSettings = _appearanceSettings.getGroup("Style");
     _generalSettings = appSettings.getGroup("General");
-    _animationSpeedSetting =
-        _appearanceSettings.getGroup("Animations").getSetting("Animation Speed");
+    _animationSpeedSetting = _appearanceSettings
+        .getGroup("Animations")
+        .getSetting("Animation Speed");
     _animationSpeedSetting.addListener(setAnimationSpeed);
+    _backgroundServiceIntervalSetting = _generalSettings
+        .getGroup('Reliability')
+        .getSetting('backgroundServiceInterval');
+    _useBackgroundServiceSetting = _generalSettings
+        .getGroup('Reliability')
+        .getSetting('useBackgroundService');
 
     setAnimationSpeed(_animationSpeedSetting.value);
   }
@@ -81,6 +96,14 @@ class _AppState extends State<App> {
 
   refreshTheme() {
     setState(() {});
+  }
+
+  void updateBackgroundService() {
+    if (_useBackgroundServiceSetting.value) {
+      initBackgroundService(interval: _backgroundServiceIntervalSetting.value);
+    } else {
+      stopBackgroundService();
+    }
   }
 
   @override
