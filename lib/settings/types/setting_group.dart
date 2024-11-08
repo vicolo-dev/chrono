@@ -171,6 +171,10 @@ class SettingGroup extends SettingItem {
     }
   }
 
+  bool isEqualTo(SettingGroup other) {
+    return json.encode(valueToJson()) == json.encode(other.valueToJson());
+  }
+
   @override
   dynamic valueToJson() {
     Json json = {};

@@ -450,4 +450,8 @@ class Alarm extends CustomizableListItem {
         'settings': _settings.valueToJson(),
         'skippedTime': _skippedTime?.millisecondsSinceEpoch,
       };
+
+  bool isEqualTo(Alarm other) {
+    return _time == other._time && _settings.isEqualTo(other._settings);
+  }
 }

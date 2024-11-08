@@ -153,7 +153,7 @@ class ClockTimer extends CustomizableListItem {
   }
 
   Future<void> snooze() async {
-     TimeDuration addedDuration = TimeDuration(minutes: addLength.floor());
+    TimeDuration addedDuration = TimeDuration(minutes: addLength.floor());
     _currentDuration = addedDuration;
     _milliSecondsRemainingOnPause = addedDuration.inSeconds * 1000;
     await start();
@@ -261,5 +261,9 @@ class ClockTimer extends CustomizableListItem {
   @override
   copy() {
     return ClockTimer.from(this);
+  }
+
+  bool isEqualTo(ClockTimer other) {
+    return _duration == other._duration && _settings.isEqualTo(other._settings);
   }
 }

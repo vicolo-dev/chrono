@@ -18,21 +18,21 @@ Future<void> updateStopwatchNotification(ClockStopwatch stopwatch) async {
           showInCompactView: true,
           key: "stopwatch_toggle_state",
           label: stopwatch.isRunning ? 'Pause' : 'Start',
-          actionType: ActionType.SilentAction,
+          actionType: ActionType.SilentBackgroundAction,
           autoDismissible: false,
         ),
         NotificationActionButton(
           showInCompactView: true,
           key: "stopwatch_reset",
           label: 'Reset',
-          actionType: ActionType.SilentAction,
+          actionType: ActionType.SilentBackgroundAction,
           autoDismissible: false,
         ),
         NotificationActionButton(
           showInCompactView: true,
           key: "stopwatch_lap",
           label: 'Lap',
-          actionType: ActionType.SilentAction,
+          actionType: ActionType.SilentBackgroundAction,
           autoDismissible: false,
         )
       ]);

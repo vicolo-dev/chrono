@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:auto_start_flutter/auto_start_flutter.dart';
+import 'package:background_fetch/background_fetch.dart';
 import 'package:clock_app/app.dart';
 import 'package:clock_app/audio/screens/ringtones_screen.dart';
 import 'package:clock_app/clock/types/time.dart';
@@ -16,6 +17,7 @@ import 'package:clock_app/notifications/logic/notifications.dart';
 import 'package:clock_app/settings/screens/tags_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_action.dart';
+import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/settings/types/setting_link.dart';
 import 'package:clock_app/system/logic/background_service.dart';
@@ -266,22 +268,36 @@ SettingGroup generalSettingsSchema = SettingGroup(
               .showForegroundNotificationDescription,
           searchTags: ["foreground", "notification"],
         ),
-        SliderSetting(
-          "backgroundServiceInterval",
+        SwitchSetting(
+          "useBackgroundService",
           (context) =>
-              AppLocalizations.of(context)!.backgroundServiceIntervalSetting,
-          15,
-          300,
-          60,
-          unit: "m",
-          snapLength: 15,
+              AppLocalizations.of(context)!.useBackgroundServiceSetting,
+          false,
           getDescription: (context) => AppLocalizations.of(context)!
-              .backgroundServiceIntervalSettingDescription,
-          searchTags: ["background", "service", "interval"],
+              .useBackgroundServiceSettingDescription,
           onChange: (context, value) {
-            initBackgroundService(interval: value.toInt());
+            stopBackgroundService();
           },
+          searchTags: ["background", "service"],
         ),
+        SliderSetting(
+            "backgroundServiceInterval",
+            (context) =>
+                AppLocalizations.of(context)!.backgroundServiceIntervalSetting,
+            15,
+            300,
+            60,
+            unit: "m",
+            snapLength: 15,
+            getDescription: (context) => AppLocalizations.of(context)!
+                .backgroundServiceIntervalSettingDescription,
+            searchTags: ["background", "service", "interval"],
+            onChange: (context, value) {
+              initBackgroundService(interval: value.toInt());
+            },
+            enableConditions: [
+              ValueCondition(["useBackgroundService"], (value) => value == true)
+            ]),
         SettingAction(
           "Ignore Battery Optimizations",
           (context) =>
@@ -330,7 +346,6 @@ SettingGroup generalSettingsSchema = SettingGroup(
           },
           getDescription: (context) => AppLocalizations.of(context)!
               .batteryOptimizationSettingDescription,
-              
         ),
         SettingAction(
           "Allow Notifications",

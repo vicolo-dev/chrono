@@ -86,8 +86,9 @@ class TimeDuration extends JsonSerializable {
     if (inMilliseconds == 0) return "0";
     String twoDigits(int n) => n.toString().padLeft(2, "0").substring(0, 2);
     String hoursString = hours > 0 ? '$hours:' : '';
-    String minutesString =
-        minutes > 0 ? (hours > 0 ? '${twoDigits(minutes)}:' : '$minutes:') : '';
+    String minutesString = (minutes > 0 || hours > 0)
+        ? (hours > 0 ? '${twoDigits(minutes)}:' : '$minutes:')
+        : '';
     String secondsString =
         (hours > 0 || minutes > 0) ? twoDigits(seconds) : '$seconds';
     String millisecondsString =
@@ -112,4 +113,18 @@ class TimeDuration extends JsonSerializable {
         minutes = json != null ? json['minutes'] ?? 0 : 0,
         seconds = json != null ? json['seconds'] ?? 0 : 0,
         milliseconds = json != null ? json['milliseconds'] ?? 0 : 0;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is TimeDuration) {
+      return hours == other.hours &&
+          minutes == other.minutes &&
+          seconds == other.seconds &&
+          milliseconds == other.milliseconds;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => Object.hash(hours, minutes, seconds, milliseconds);
 }
