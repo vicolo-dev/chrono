@@ -108,5 +108,19 @@
   "colorSchemeErrorSettingGroup": "Fout",
   "@colorSchemeErrorSettingGroup": {},
   "colorSchemeCardSettingGroup": "Kaart",
-  "@colorSchemeCardSettingGroup": {}
+  "@colorSchemeCardSettingGroup": {},
+  "interactionsSettingGroup": "Interacties",
+  "@interactionsSettingGroup": {},
+  "longPressActionSetting": "Lang Drukken Actie",
+  "@longPressActionSetting": {},
+  "longPressReorderAction": "Herordenen",
+  "@longPressReorderAction": {},
+  "longPressSelectAction": "Multiple-selectie",
+  "@longPressSelectAction": {},
+  "notificationPermissionSetting": "Notificaties Rechten",
+  "@notificationPermissionSetting": {},
+  "notificationPermissionAlreadyGranted": "Notificaties rechten zijn al toegekend",
+  "@notificationPermissionAlreadyGranted": {},
+  "ignoreBatteryOptimizationAlreadyGranted": "Negeer batterij optimalisatie rechten zijn al toegekend",
+  "@ignoreBatteryOptimizationAlreadyGranted": {}
 }

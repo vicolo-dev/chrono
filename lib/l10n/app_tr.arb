@@ -712,5 +712,9 @@
   "monthsString": "{count, plural, =0{} =1{1 ay} other{{count} ay}}",
   "@monthsString": {},
   "yearsString": "{count, plural, =0{} =1{1 yıl} other{{count} yıl}}",
-  "@yearsString": {}
+  "@yearsString": {},
+  "interactionsSettingGroup": "Etkileşimler",
+  "@interactionsSettingGroup": {},
+  "longPressSelectAction": "Çoklu-seçim",
+  "@longPressSelectAction": {}
 }
