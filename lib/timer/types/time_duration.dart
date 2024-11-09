@@ -86,8 +86,9 @@ class TimeDuration extends JsonSerializable {
     if (inMilliseconds == 0) return "0";
     String twoDigits(int n) => n.toString().padLeft(2, "0").substring(0, 2);
     String hoursString = hours > 0 ? '$hours:' : '';
-    String minutesString =
-        minutes > 0 ? (hours > 0 ? '${twoDigits(minutes)}:' : '$minutes:') : '';
+    String minutesString = (minutes > 0 || hours > 0)
+        ? (hours > 0 ? '${twoDigits(minutes)}:' : '$minutes:')
+        : '';
     String secondsString =
         (hours > 0 || minutes > 0) ? twoDigits(seconds) : '$seconds';
     String millisecondsString =

@@ -13,12 +13,15 @@ void handleBoot() async {
   // File('$appDataDirectory/log-dart.txt')
   //     .writeAsStringSync(message, mode: FileMode.append);
   //
-      FlutterError.onError = (FlutterErrorDetails details) {
+  FlutterError.onError = (FlutterErrorDetails details) {
     logger.f("Error in handleBoot isolate: ${details.exception.toString()}");
   };
 
   await initializeIsolate();
-
-  await updateAlarms("handleBoot(): Update alarms on system boot");
-  await updateTimers("handleBoot(): Update timers on system boot");
+  try {
+    await updateAlarms("handleBoot(): Update alarms on system boot");
+    await updateTimers("handleBoot(): Update timers on system boot");
+  } catch (e) {
+    logger.f("Error in handleBoot isolate: ${e.toString()}");
+  }
 }

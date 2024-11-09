@@ -42,7 +42,7 @@ void showAlarmNotification({
       showInCompactView: true,
       key: dismissActionKey,
       label: '$dismissActionLabel All',
-      actionType: ActionType.SilentAction,
+      actionType: ActionType.SilentBackgroundAction,
       autoDismissible: true,
     ));
   } else {
@@ -51,7 +51,7 @@ void showAlarmNotification({
         showInCompactView: true,
         key: snoozeActionKey,
         label: snoozeActionLabel,
-        actionType: ActionType.SilentAction,
+        actionType: ActionType.SilentBackgroundAction,
         autoDismissible: true,
       ));
     }
@@ -60,7 +60,9 @@ void showAlarmNotification({
       showInCompactView: true,
       key: dismissActionKey,
       label: "${tasksRequired ? "Solve tasks to " : ""}$dismissActionLabel",
-      actionType: tasksRequired ? ActionType.Default : ActionType.SilentAction,
+      actionType: tasksRequired
+          ? ActionType.Default
+          : ActionType.SilentBackgroundAction,
       autoDismissible: tasksRequired ? false : true,
     ));
   }

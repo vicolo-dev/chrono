@@ -6,7 +6,6 @@ import 'package:clock_app/app.dart';
 import 'package:clock_app/audio/logic/audio_session.dart';
 import 'package:clock_app/audio/types/ringtone_player.dart';
 import 'package:clock_app/common/data/paths.dart';
-import 'package:clock_app/developer/logic/logger.dart';
 import 'package:clock_app/navigation/types/app_visibility.dart';
 import 'package:clock_app/notifications/logic/foreground_task.dart';
 import 'package:clock_app/notifications/logic/notifications.dart';
@@ -47,8 +46,8 @@ void main() async {
   await initializeStorage();
   await initializeSettings();
 
-  updateAlarms("Update Alarms on Start");
-  updateTimers("Update Timers on Start");
+  await updateAlarms("Update Alarms on Start");
+  await updateTimers("Update Timers on Start");
   AppVisibility.initialize();
   initForegroundTask();
   initBackgroundService();
