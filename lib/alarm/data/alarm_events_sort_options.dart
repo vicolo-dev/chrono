@@ -4,9 +4,9 @@ import 'package:clock_app/common/types/list_filter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final List<ListSortOption<AlarmEvent>> alarmEventSortOptions = [
-  ListSortOption((context) => "Earlies start date", sortStartDateAscending),
+  ListSortOption((context) => "Earliest start date", sortStartDateAscending),
   ListSortOption((context) => "Latest start date", sortStartDateDescending),
-  ListSortOption((context) => "Earlies event date", sortEventDateAscending),
+  ListSortOption((context) => "Earliest event date", sortEventDateAscending),
   ListSortOption((context) => "Latest event date", sortEventDateDescending),
 ];
 
