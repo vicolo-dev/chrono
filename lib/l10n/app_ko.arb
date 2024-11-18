@@ -786,5 +786,7 @@
   "shortSecondsString": "{seconds}초",
   "@shortSecondsString": {},
   "showClockTicksSetting": "눈금 표시",
-  "@showClockTicksSetting": {}
+  "@showClockTicksSetting": {},
+  "memoryTask": "기억",
+  "@memoryTask": {}
 }
