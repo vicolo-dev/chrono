@@ -786,5 +786,13 @@
   "showDigitalClock": "Прикажи дигитални сат",
   "@showDigitalClock": {},
   "backgroundServiceIntervalSetting": "Интервал сервиса у позадини",
-  "@backgroundServiceIntervalSetting": {}
+  "@backgroundServiceIntervalSetting": {},
+  "memoryTask": "Меморија",
+  "@memoryTask": {},
+  "numberOfPairsSetting": "Број парова",
+  "@numberOfPairsSetting": {},
+  "useBackgroundServiceSetting": "Употреба позадинске услуге",
+  "@useBackgroundServiceSetting": {},
+  "useBackgroundServiceSettingDescription": "Може помоћи да апликација остане активна у позадини",
+  "@useBackgroundServiceSettingDescription": {}
 }
