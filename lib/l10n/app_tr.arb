@@ -738,5 +738,7 @@
   "appLogs": "Uygulama günlükleri",
   "@appLogs": {},
   "selectAll": "Hepsini seç",
-  "@selectAll": {}
+  "@selectAll": {},
+  "longPressReorderAction": "Yeniden Sipariş",
+  "@longPressReorderAction": {}
 }
