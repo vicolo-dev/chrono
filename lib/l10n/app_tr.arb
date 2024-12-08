@@ -742,5 +742,19 @@
   "longPressReorderAction": "Yeniden Sipariş",
   "@longPressReorderAction": {},
   "showErrorSnackbars": "Hata Snackbarlarını Göster",
-  "@showErrorSnackbars": {}
+  "@showErrorSnackbars": {},
+  "numberOfPairsSetting": "Çift sayısı",
+  "@numberOfPairsSetting": {},
+  "reorder": "Yeniden sırala",
+  "@reorder": {},
+  "pauseAllFilteredTimersAction": "Filtrelenen tüm zamanlayıcıları duraklat",
+  "@pauseAllFilteredTimersAction": {},
+  "shuffleTimerMelodiesAction": "Tüm filtrelenmiş zamanlayıcılar için karışık melodiler",
+  "@shuffleTimerMelodiesAction": {},
+  "volumeWhileTasks": "Görevleri çözerken hacim",
+  "@volumeWhileTasks": {},
+  "startMelodyAtRandomPos": "Rastgele pozisyon",
+  "@startMelodyAtRandomPos": {},
+  "startMelodyAtRandomPosDescription": "Melodi rastgele bir konumda başlayacaktır",
+  "@startMelodyAtRandomPosDescription": {}
 }
