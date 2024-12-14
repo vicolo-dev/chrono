@@ -559,7 +559,7 @@
   "@dismissActionSlide": {},
   "dismissActionButtons": "Tasti",
   "@dismissActionButtons": {},
-  "dismissActionAreaButtons": "Tasti di area",
+  "dismissActionAreaButtons": "Bottoni di area",
   "@dismissActionAreaButtons": {},
   "stopwatchTimeFormatSettingGroup": "Formato dell'ora",
   "@stopwatchTimeFormatSettingGroup": {},
