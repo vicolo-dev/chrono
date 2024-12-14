@@ -792,5 +792,7 @@
   "useBackgroundServiceSetting": "Hintergrunddienst verwenden",
   "@useBackgroundServiceSetting": {},
   "useBackgroundServiceSettingDescription": "Könnte helfen, die Anwendung im Hintergrund laufen zu lassen",
-  "@useBackgroundServiceSettingDescription": {}
+  "@useBackgroundServiceSettingDescription": {},
+  "memoryTask": "Gedächtnis",
+  "@memoryTask": {}
 }
