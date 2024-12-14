@@ -509,7 +509,7 @@
   "@swipActionCardAction": {},
   "skippingDescriptionSuffix": "(il prossimo allarme verrà saltato)",
   "@skippingDescriptionSuffix": {},
-  "alarmDescriptionFinished": "Non ci sono prossime date",
+  "alarmDescriptionFinished": "Non ci saranno date future",
   "@alarmDescriptionFinished": {},
   "alarmDescriptionNotScheduled": "Non programmato",
   "@alarmDescriptionNotScheduled": {},
