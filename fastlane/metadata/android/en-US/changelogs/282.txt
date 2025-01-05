@@ -1,0 +1,36 @@
+Changes since 0.5.1
+
+🚀 Features
+
+* Added option to select directory for ringtones (random ringtone will be selected from the directory each time)
+* Added multiselect for lists
+* Added option to shuffle alarm ringtone
+* Added backup and restore for alarms, timers, themes etc.
+* Added numpad input for timers
+* Added option to reduce volume while solving alarm tasks
+* Added quick home screen actions for alarms and timers
+* Added option to start ringtone at random position
+* Added background service to keep app alive
+* Added analog clock to clock tab
+* Added memory (card matching) task
+
+✨ Enhancements
+
+* Made alarm tasks reorderable
+* Added better logging system
+* Added alarm labels to alarm notifications
+
+🐛 Fixes
+
+* Fixed non-deletable items getting deleted by list actions
+* Fixed range weekly schedule not working
+* Fixed system navigation bar color
+* Fixed database for cities
+* Fixed skipped alarms being visible to the system
+* Fixed foreground notification foreground type
+* Fixed date picker being stuck in the past for range alarms
+* Fixed minutes not appearing when 0
+* Fixed sound still playing after dismissing alarm in some cases
+* Fixed data persisting even after uninstalling app (disabled auto backup)
+
+
