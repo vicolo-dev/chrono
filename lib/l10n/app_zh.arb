@@ -259,7 +259,7 @@
   "@sequenceLengthSetting": {},
   "sequenceGridSizeSetting": "网格大小",
   "@sequenceGridSizeSetting": {},
-  "numberOfProblemsSetting": "问题数",
+  "numberOfProblemsSetting": "问题数目",
   "@numberOfProblemsSetting": {},
   "saveReminderAlert": "你想要不保存退出吗？",
   "@saveReminderAlert": {},
@@ -786,5 +786,13 @@
   "shuffleAlarmMelodiesAction": "为所有选中的闹钟随机一个铃声",
   "@shuffleAlarmMelodiesAction": {},
   "resetAllFilteredTimersAction": "重置所有选中的计时器",
-  "@resetAllFilteredTimersAction": {}
+  "@resetAllFilteredTimersAction": {},
+  "numberOfPairsSetting": "配对数目",
+  "@numberOfPairsSetting": {},
+  "memoryTask": "记忆",
+  "@memoryTask": {},
+  "useBackgroundServiceSetting": "使用后台服务",
+  "@useBackgroundServiceSetting": {},
+  "useBackgroundServiceSettingDescription": "可能有助于保持应用在后台活动",
+  "@useBackgroundServiceSettingDescription": {}
 }

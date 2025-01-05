@@ -279,7 +279,7 @@
   "@scheduleTypeDailyDescription": {},
   "swipeActionSwitchTabsDescription": "Перелистывание вкладок",
   "@swipeActionSwitchTabsDescription": {},
-  "styleThemeNamePlaceholder": "Тема стиля",
+  "styleThemeNamePlaceholder": "Выбор стиля",
   "@styleThemeNamePlaceholder": {},
   "styleThemeElevationSetting": "Высота",
   "@styleThemeElevationSetting": {},
@@ -786,5 +786,13 @@
   "backgroundServiceIntervalSetting": "Интервал обновления фоновой службы",
   "@backgroundServiceIntervalSetting": {},
   "backgroundServiceIntervalSettingDescription": "Установка более короткого интервала позволит сохранить приложение активным, но может привести к увеличению расхода батареи",
-  "@backgroundServiceIntervalSettingDescription": {}
+  "@backgroundServiceIntervalSettingDescription": {},
+  "memoryTask": "Память",
+  "@memoryTask": {},
+  "numberOfPairsSetting": "Количество пар",
+  "@numberOfPairsSetting": {},
+  "useBackgroundServiceSetting": "Использовать фоновую службу",
+  "@useBackgroundServiceSetting": {},
+  "useBackgroundServiceSettingDescription": "Может помочь сохранить приложение активным в фоновом режиме",
+  "@useBackgroundServiceSettingDescription": {}
 }

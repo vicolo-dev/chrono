@@ -786,5 +786,11 @@
   "backgroundServiceIntervalSettingDescription": "較短的間隔有助於保持應用程式運作，但會消耗一些電池壽命",
   "@backgroundServiceIntervalSettingDescription": {},
   "quarterNumbers": "僅刻鐘數字",
-  "@quarterNumbers": {}
+  "@quarterNumbers": {},
+  "memoryTask": "記憶",
+  "@memoryTask": {},
+  "useBackgroundServiceSetting": "使用背景服務",
+  "@useBackgroundServiceSetting": {},
+  "useBackgroundServiceSettingDescription": "可能有助於讓應用程式在背景中保持運作",
+  "@useBackgroundServiceSettingDescription": {}
 }

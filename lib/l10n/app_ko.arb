@@ -786,5 +786,13 @@
   "shortSecondsString": "{seconds}초",
   "@shortSecondsString": {},
   "showClockTicksSetting": "눈금 표시",
-  "@showClockTicksSetting": {}
+  "@showClockTicksSetting": {},
+  "memoryTask": "기억",
+  "@memoryTask": {},
+  "numberOfPairsSetting": "쌍의 수",
+  "@numberOfPairsSetting": {},
+  "useBackgroundServiceSetting": "배경 서비스",
+  "@useBackgroundServiceSetting": {},
+  "useBackgroundServiceSettingDescription": "백그라운드에서 앱을 유지",
+  "@useBackgroundServiceSettingDescription": {}
 }
