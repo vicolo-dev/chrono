@@ -16,11 +16,11 @@
 <li>Orologi di tutto il mondo con differenza di fuso orario relativo</li>
 <li>Cercare e aggiungere città</li>
 </ul>
-<h3>Temporizzatore</h3>
+<h3>Timer</h3>
 <ul>
 <li>Configura la melodia, l'aumento del volume e le vibrazioni</li>
-<li>Preimpostazioni del temporizzatore</li>
-<li>Filtro del temporizzatore(tutti, in esecuzione, in pausa, interrotti)</li>
+<li>Preimpostazioni del timer</li>
+<li>Filtro del timer(tutti, in esecuzione, in pausa, interrotti)</li>
 </ul>
 <h3>Cronometro</h3>
 <ul>

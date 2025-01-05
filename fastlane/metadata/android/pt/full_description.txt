@@ -1,0 +1,35 @@
+<h2>Recursos</h2>
+<ul>
+<li>Interface moderna e fácil de usar</li>
+</ul>
+<h3>Alarmes</h3>
+<ul>
+<li>Programações personalizáveis (diariamente, semanalmente, dias da semana específicos, datas específicas, intervalo de datas)</li>
+<li>Configurar melodia, aumento de volume e vibrações</li>
+<li>Configurar a duração da soneca e o máximo de sonecas</li>
+<li>Tarefas de alarme (problemas matemáticos, redigitação de texto, sequência, mais por vir)</li>
+<li>Filtrar alarmes (todos, hoje, amanhã, adiados, desativados, concluídos)</li>
+</ul>
+<h3>Relógio</h3>
+<ul>
+<li>Exibição de relógio personalizável</li>
+<li>Relógios mundiais com diferença horária relativa</li>
+<li>Pesquisar e adicionar cidades</li>
+</ul>
+<h3>Temporizador</h3>
+<ul>
+<li>Configurar melodia, aumento de volume e vibrações</li>
+<li>Predefinições do temporizador</li>
+<li>Filtrar temporizadores (todos, em execução, pausados, parados)</li>
+</ul>
+<h3>Cronômetro</h3>
+<ul>
+<li>Histórico de voltas com tempos de volta e tempos decorridos</li>
+<li>Comparações de voltas</li>
+</ul
+<h3>Aparência</h3>
+<ul>
+<li>Temas do Material You</li>
+<li>Temas de cores altamente personalizáveis</li>
+<li>Temas de estilo altamente personalizáveis</li>
+</ul>
