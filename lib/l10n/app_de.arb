@@ -786,5 +786,13 @@
   "showDigitalClock": "Digitaluhr anzeigen",
   "@showDigitalClock": {},
   "backgroundServiceIntervalSettingDescription": "Ein kürzeres Intervall hält die App am Leben, allerdings auf Kosten der Akkulaufzeit",
-  "@backgroundServiceIntervalSettingDescription": {}
+  "@backgroundServiceIntervalSettingDescription": {},
+  "numberOfPairsSetting": "Anzahl der Paare",
+  "@numberOfPairsSetting": {},
+  "useBackgroundServiceSetting": "Hintergrunddienst verwenden",
+  "@useBackgroundServiceSetting": {},
+  "useBackgroundServiceSettingDescription": "Könnte helfen, die Anwendung im Hintergrund laufen zu lassen",
+  "@useBackgroundServiceSettingDescription": {},
+  "memoryTask": "Gedächtnis",
+  "@memoryTask": {}
 }
