@@ -17,7 +17,7 @@ Future<void> onNotificationCreatedMethod(
     case alarmNotificationChannelKey:
       Payload payload = receivedNotification.payload!;
       int? scheduleId = int.tryParse(payload['scheduleId']);
-           if (scheduleId == null) return;
+      if (scheduleId == null) return;
       // AlarmNotificationManager.handleNotificationCreated(receivedNotification);
       break;
   }
@@ -36,7 +36,7 @@ Future<void> onDismissActionReceivedMethod(
 
   switch (receivedAction.channelKey) {
     case alarmNotificationChannelKey:
-      handleAlarmNotificationDismiss(
+      await handleAlarmNotificationDismiss(
           receivedAction, AlarmDismissType.dismiss);
       break;
   }
@@ -49,7 +49,7 @@ Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
 
   switch (receivedAction.channelKey) {
     case alarmNotificationChannelKey:
-      handleAlarmNotificationAction(receivedAction);
+      await handleAlarmNotificationAction(receivedAction);
       break;
     case reminderNotificationChannelKey:
       switch (receivedAction.buttonKeyPressed) {

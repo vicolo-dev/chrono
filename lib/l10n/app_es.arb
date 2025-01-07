@@ -776,5 +776,15 @@
   "allTicks": "Toda las marcas",
   "@allTicks": {},
   "backgroundServiceIntervalSetting": "Intervalo del servicio en segundo plano",
-  "@backgroundServiceIntervalSetting": {}
+  "@backgroundServiceIntervalSetting": {},
+  "quarterNumbers": "Mostrar solo números en múltiplos de 15 minutos",
+  "@quarterNumbers": {},
+  "numberOfPairsSetting": "Número de pares",
+  "@numberOfPairsSetting": {},
+  "memoryTask": "Memoria",
+  "@memoryTask": {},
+  "useBackgroundServiceSetting": "Utilizar el servicio en segundo plano",
+  "@useBackgroundServiceSetting": {},
+  "useBackgroundServiceSettingDescription": "Podría ayudar a mantener la aplicación activa en segundo plano",
+  "@useBackgroundServiceSettingDescription": {}
 }
