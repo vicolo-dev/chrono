@@ -3,7 +3,7 @@ import 'package:clock_app/developer/types/log.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final List<ListSortOption<Log>> logSortOptions = [
-  ListSortOption((context) => "Earlies first", sortDateAscending),
+  ListSortOption((context) => "Earliest first", sortDateAscending),
   ListSortOption((context) => "Latest first", sortDateDescending),
 ];
 

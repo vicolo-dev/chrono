@@ -299,7 +299,7 @@
   "@sequenceLengthSetting": {},
   "sequenceGridSizeSetting": "Розмір таблиці",
   "@sequenceGridSizeSetting": {},
-  "numberOfProblemsSetting": "Кількість завдань",
+  "numberOfProblemsSetting": "Кількість проблем",
   "@numberOfProblemsSetting": {},
   "saveReminderAlert": "Ви хочете вийти без збереження?",
   "@saveReminderAlert": {},
@@ -786,5 +786,13 @@
   "reorder": "Змінити порядок",
   "@reorder": {},
   "quarterNumbers": "Тільки квартальні номери",
-  "@quarterNumbers": {}
+  "@quarterNumbers": {},
+  "numberOfPairsSetting": "Кількість пар",
+  "@numberOfPairsSetting": {},
+  "memoryTask": "Пам'ять",
+  "@memoryTask": {},
+  "useBackgroundServiceSettingDescription": "Може допомогти підтримувати програму у фоновому режимі",
+  "@useBackgroundServiceSettingDescription": {},
+  "useBackgroundServiceSetting": "Використовуйте фонову службу",
+  "@useBackgroundServiceSetting": {}
 }

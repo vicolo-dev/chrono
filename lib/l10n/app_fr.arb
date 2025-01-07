@@ -786,5 +786,13 @@
   "yearsString": "{count, plural, =0{} =1{1 an} other{{count} années}}",
   "@yearsString": {},
   "monthsString": "{count, plural, =0{} =1{1 mois} other{{count} mois}}",
-  "@monthsString": {}
+  "@monthsString": {},
+  "memoryTask": "Mémoire",
+  "@memoryTask": {},
+  "numberOfPairsSetting": "Nombre de paires",
+  "@numberOfPairsSetting": {},
+  "useBackgroundServiceSetting": "Utiliser le service en arrière-plan",
+  "@useBackgroundServiceSetting": {},
+  "useBackgroundServiceSettingDescription": "Pourrait aider à maintenir l'application en vie en arrière-plan",
+  "@useBackgroundServiceSettingDescription": {}
 }

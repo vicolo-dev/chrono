@@ -784,5 +784,15 @@
   "hoursString": "{count, plural, =0{} =1{1 hora} other{{count} horas}}",
   "@hoursString": {},
   "minutesString": "{count, plural, =0{} =1{1 minuto} other{{count} minutos}}",
-  "@minutesString": {}
+  "@minutesString": {},
+  "memoryTask": "Memória",
+  "@memoryTask": {},
+  "useBackgroundServiceSetting": "Usar serviço em segundo plano",
+  "@useBackgroundServiceSetting": {},
+  "extraAnimationSettingDescription": "Mostrar animações que não são polidas e podem causar quedas de quadros em dispositivos de baixo custo",
+  "@extraAnimationSettingDescription": {},
+  "numberOfPairsSetting": "Número de pares",
+  "@numberOfPairsSetting": {},
+  "useBackgroundServiceSettingDescription": "Pode ajudar a manter o aplicativo ativo em segundo plano",
+  "@useBackgroundServiceSettingDescription": {}
 }
