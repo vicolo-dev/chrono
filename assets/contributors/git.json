@@ -60,6 +60,11 @@
         "profile_url": "https://github.com/Stzyxh"
     },
     {
+        "username": "PeterDaveHello",
+        "avatar_url": "assets/contributors/avatars/3691490?v=4.jpg",
+        "profile_url": "https://github.com/PeterDaveHello"
+    },
+    {
         "username": "oersen",
         "avatar_url": "assets/contributors/avatars/88676873?v=4.jpg",
         "profile_url": "https://github.com/oersen"
@@ -70,14 +75,29 @@
         "profile_url": "https://github.com/baglayan"
     },
     {
+        "username": "warthesex",
+        "avatar_url": "assets/contributors/avatars/145045422?v=4.jpg",
+        "profile_url": "https://github.com/warthesex"
+    },
+    {
         "username": "FLVAL",
         "avatar_url": "assets/contributors/avatars/56921008?v=4.jpg",
         "profile_url": "https://github.com/FLVAL"
     },
     {
+        "username": "realgooseman",
+        "avatar_url": "assets/contributors/avatars/64812183?v=4.jpg",
+        "profile_url": "https://github.com/realgooseman"
+    },
+    {
         "username": "comradekingu",
         "avatar_url": "assets/contributors/avatars/13802408?v=4.jpg",
         "profile_url": "https://github.com/comradekingu"
+    },
+    {
+        "username": "TamilNeram",
+        "avatar_url": "assets/contributors/avatars/67970539?v=4.jpg",
+        "profile_url": "https://github.com/TamilNeram"
     },
     {
         "username": "crnobog69",
@@ -90,6 +110,11 @@
         "profile_url": "https://github.com/spiderVS"
     },
     {
+        "username": "mcuteangel",
+        "avatar_url": "assets/contributors/avatars/4150623?v=4.jpg",
+        "profile_url": "https://github.com/mcuteangel"
+    },
+    {
         "username": "yurical",
         "avatar_url": "assets/contributors/avatars/10844456?v=4.jpg",
         "profile_url": "https://github.com/yurical"
@@ -98,11 +123,6 @@
         "username": "Unacceptium",
         "avatar_url": "assets/contributors/avatars/145642963?v=4.jpg",
         "profile_url": "https://github.com/Unacceptium"
-    },
-    {
-        "username": "PeterDaveHello",
-        "avatar_url": "assets/contributors/avatars/3691490?v=4.jpg",
-        "profile_url": "https://github.com/PeterDaveHello"
     },
     {
         "username": "Kolumb761",
@@ -120,33 +140,13 @@
         "profile_url": "https://github.com/thejenja"
     },
     {
-        "username": "realgooseman",
-        "avatar_url": "assets/contributors/avatars/64812183?v=4.jpg",
-        "profile_url": "https://github.com/realgooseman"
-    },
-    {
         "username": "GWarp",
         "avatar_url": "assets/contributors/avatars/11271828?v=4.jpg",
         "profile_url": "https://github.com/GWarp"
     },
     {
-        "username": "NathanBnm",
-        "avatar_url": "assets/contributors/avatars/45366162?v=4.jpg",
-        "profile_url": "https://github.com/NathanBnm"
-    },
-    {
-        "username": "DuckyCB",
-        "avatar_url": "assets/contributors/avatars/66135366?v=4.jpg",
-        "profile_url": "https://github.com/DuckyCB"
-    },
-    {
-        "username": "q0ntinuum",
-        "avatar_url": "assets/contributors/avatars/132745784?v=4.jpg",
-        "profile_url": "https://github.com/q0ntinuum"
-    },
-    {
-        "username": "Rafee-M",
-        "avatar_url": "assets/contributors/avatars/69535896?v=4.jpg",
-        "profile_url": "https://github.com/Rafee-M"
+        "username": "Nick-Chicken",
+        "avatar_url": "assets/contributors/avatars/80152003?v=4.jpg",
+        "profile_url": "https://github.com/Nick-Chicken"
     }
 ]
