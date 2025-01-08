@@ -10,13 +10,22 @@
 ![tests](https://github.com/vicolo-dev/chrono/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/vicolo-dev/chrono/branch/master/graph/badge.svg?token=cKxMm8KVev)](https://codecov.io/gh/vicolo-dev/chrono)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7dc1e51c1616482baa5392bc0826c50a)](https://app.codacy.com/gh/vicolo-dev/chrono/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+<a href="https://hosted.weblate.org/engage/chrono/">
+<img src="https://hosted.weblate.org/widget/chrono/app/svg-badge.svg" alt="Translation status" />
+</a>
 <span class="badge-patreon"><a href="https://patreon.com/vicolo" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-orange.svg" alt="Patreon donate button" /></a></span>
+
+<a href="https://hosted.weblate.org/engage/chrono/">
+<img src="https://hosted.weblate.org/widget/chrono/app/287x66-grey.png" alt="Translation status" />
+</a>
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.vicolo.chrono)
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height=80/>](https://apt.izzysoft.de/fdroid/index/apk/com.vicolo.chrono)
 [<img src="https://i.ibb.co/q0mdc4Z/get-it-on-github.png" alt="Get it on Github" height=80/>](https://github.com/vicolo-dev/chrono/releases/latest)
 
+
 </div>
+
 
 Its usable, but still WIP, so you might encounter some bugs. Make sure to test it out thorougly on your device before using it for critical alarms. Feel free to open an issue.
 
@@ -30,6 +39,7 @@ Its usable, but still WIP, so you might encounter some bugs. Make sure to test i
 
 ## Features
 - Modern and easy to use interface
+- Available in variety of [languages](#translations)
 ### Alarms
 - Customizable schedules (Daily, Weekly, Specific week days, Specific dates, Date range)
 - Configure melody/ringtone, rising volume and vibrations
@@ -73,6 +83,17 @@ Feel free to create issues regarding any issues you might be facing, any improve
 Pull Requests are highly welcome. When contributing to this repository, please first discuss the change you wish to make via an issue. Also, please refer to [Effective Dart](https://dart.dev/effective-dart) as a guideline for the coding standards expected from pull requests.
 ### Translations
 You can help translate the app into your preferred language using weblate at https://hosted.weblate.org/projects/chrono/.
+
+<a href="https://hosted.weblate.org/engage/chrono/">
+<img src="https://hosted.weblate.org/widget/chrono/app/287x66-grey.png" alt="Translation status" />
+</a>
+
+Current progress:
+
+<a href="https://hosted.weblate.org/engage/chrono/">
+<img src="https://hosted.weblate.org/widget/chrono/app/horizontal-auto.svg" alt="Translation status" />
+</a>
+
 ### Spread the word!
 If you found the app useful, you can help the project by sharing it with friends and family.
 ### Donate

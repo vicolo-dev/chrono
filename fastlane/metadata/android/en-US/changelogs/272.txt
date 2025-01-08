@@ -1,0 +1,14 @@
+This is a beta release. Please report any issues via GitHub or email.
+
+🚀 Features
+
+* Added memory (card matching) task
+
+🐛 Fixes
+
+* Added option to disable background service
+* Fixed data corruption error in some cases
+* Fixed minutes not appearing when 0
+* Fixed sound still playing after dismissing alarm in some cases
+* Fixed data persisting even after uninstalling app (disabled auto backup)
+
