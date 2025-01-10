@@ -1,5 +1,4 @@
 import 'package:clock_app/common/logic/card_decoration.dart';
-import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/theme/types/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:clock_app/common/utils/color.dart';
@@ -14,12 +13,12 @@ TonalPalette toTonalPalette(int value) {
 Color getCardColor(BuildContext context, [Color? color]) {
   ThemeData theme = Theme.of(context);
   ColorScheme colorScheme = theme.colorScheme;
-  ThemeSettingExtension themeStyle = theme.extension<ThemeSettingExtension>()!;
+  ThemeSettingExtension? themeStyle = theme.extension<ThemeSettingExtension>();
 
   TonalPalette tonalPalette = toTonalPalette(colorScheme.surface.value);
 
   return color ??
-      (themeStyle.useMaterialYou
+      (themeStyle != null && themeStyle.useMaterialYou
           ? Color(tonalPalette
               .get(Theme.of(context).brightness == Brightness.light ? 96 : 15))
           : colorScheme.surface);

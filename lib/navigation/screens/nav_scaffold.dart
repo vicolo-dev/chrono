@@ -14,9 +14,11 @@ import 'package:clock_app/settings/data/general_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/screens/settings_group_screen.dart';
 import 'package:clock_app/settings/types/setting.dart';
+import 'package:clock_app/settings/types/setting_group.dart';
 import 'package:clock_app/system/logic/handle_intents.dart';
 import 'package:clock_app/system/logic/quick_actions.dart';
 import 'package:clock_app/theme/types/theme_extension.dart';
+import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -68,6 +70,7 @@ class _NavScaffoldState extends State<NavScaffold> {
   late int _selectedTabIndex;
   late Setting swipeActionSetting;
   late Setting showForegroundSetting;
+  ThemeData? _oldTheme;
   late StreamSubscription _sub;
   late PageController _controller;
   QuickActionController quickActionController = QuickActionController();
@@ -93,8 +96,19 @@ class _NavScaffoldState extends State<NavScaffold> {
     });
   }
 
-  void update(dynamic value) {
+  void _uupdate(dynamic value) {
     setState(() {});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final currentTheme = Theme.of(context);
+    if (_oldTheme != currentTheme) {
+      setDigitalClockWidgetData(context);
+      _oldTheme = currentTheme;
+    }
   }
 
   _showNextScheduleSnackBar(Alarm alarm) {
@@ -164,7 +178,7 @@ class _NavScaffoldState extends State<NavScaffold> {
         .getGroup("General")
         .getGroup("Reliability")
         .getSetting("Show Foreground Notification");
-    swipeActionSetting.addListener(update);
+    swipeActionSetting.addListener(_uupdate);
     showForegroundSetting.addListener(_updateForegroundNotification);
     _controller = PageController(initialPage: widget.initialTabIndex);
     _selectedTabIndex = widget.initialTabIndex;
@@ -174,7 +188,7 @@ class _NavScaffoldState extends State<NavScaffold> {
 
   @override
   void dispose() {
-    swipeActionSetting.removeListener(update);
+    swipeActionSetting.removeListener(_uupdate);
     showForegroundSetting.removeListener(_updateForegroundNotification);
     _sub.cancel();
     _controller.dispose();
@@ -205,7 +219,7 @@ class _NavScaffoldState extends State<NavScaffold> {
                 titleWidget: Text(
                   tabs[_selectedTabIndex].title,
                   style: textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onBackground.withOpacity(0.6),
+                    color: colorScheme.onSurface.withOpacity(0.6),
                   ),
                 ),
                 systemNavBarColor:
@@ -222,7 +236,7 @@ class _NavScaffoldState extends State<NavScaffold> {
                     },
                     icon: const Icon(FluxIcons.settings,
                         semanticLabel: "Settings"),
-                    color: colorScheme.onBackground.withOpacity(0.8),
+                    color: colorScheme.onSurface.withOpacity(0.8),
                   ),
                 ],
               )
@@ -263,7 +277,7 @@ class _NavScaffoldState extends State<NavScaffold> {
                   ],
                   leading: Text(tabs[_selectedTabIndex].title,
                       style: textTheme.headlineSmall?.copyWith(
-                        color: colorScheme.onBackground.withOpacity(0.6),
+                        color: colorScheme.onSurface.withOpacity(0.6),
                       )),
                   trailing: IconButton(
                     onPressed: () {
@@ -276,7 +290,7 @@ class _NavScaffoldState extends State<NavScaffold> {
                     },
                     icon: const Icon(FluxIcons.settings,
                         semanticLabel: "Settings"),
-                    color: colorScheme.onBackground.withOpacity(0.8),
+                    color: colorScheme.onSurface.withOpacity(0.8),
                   ),
                   selectedIndex: _selectedTabIndex,
                   onDestinationSelected: _onTabSelected,

@@ -1,3 +1,4 @@
+import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
 import 'package:clock_app/settings/types/setting_enable_condition.dart';
 import 'package:clock_app/settings/types/setting_group.dart';
@@ -5,6 +6,11 @@ import 'package:clock_app/system/data/device_info.dart';
 import 'package:clock_app/widgets/logic/update_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+enum ColorSchemeType {
+  custom,
+  app,
+}
 
 SettingGroup widgetSettingSchema = SettingGroup(
   "Widgets",
@@ -14,6 +20,31 @@ SettingGroup widgetSettingSchema = SettingGroup(
       "Digital Clock",
       (context) => AppLocalizations.of(context)!.digitalClockSettingGroup,
       [
+        SelectSetting(
+          "colorScheme",
+          (context) => AppLocalizations.of(context)!.colorSchemeSetting,
+          [
+            SelectSettingOption(
+                (context) => AppLocalizations.of(context)!.custom,
+                ColorSchemeType.custom),
+            SelectSettingOption((context) => AppLocalizations.of(context)!.app,
+                ColorSchemeType.app),
+          ],
+          onChange: (context, value) async {
+            if (value > 0) {
+              appSettings
+                  .getGroup('Widgets')
+                  .getGroup('Digital Clock')
+                  .getGroup('background')
+                  .getSetting('backgroundOpacity')
+                  .setValue(context, 100.0);
+              await appSettings.save();
+            }
+            if (context.mounted) {
+              setDigitalClockWidgetData(context);
+            }
+          },
+        ),
         SettingGroup(
           "Layout",
           (context) => AppLocalizations.of(context)!.layoutSettingGroup,
@@ -88,7 +119,9 @@ SettingGroup widgetSettingSchema = SettingGroup(
               70,
               enableConditions: [
                 GeneralCondition(
-                    () => (androidInfo?.version.sdkInt ?? 34) >= 26)
+                    () => (androidInfo?.version.sdkInt ?? 34) >= 26),
+                // ValueCondition(["..", "colorScheme"],
+                // (value) => value == ColorSchemeType.custom)
               ],
 
               onChange: (context, value) async {

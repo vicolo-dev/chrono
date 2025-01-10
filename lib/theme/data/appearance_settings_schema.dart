@@ -12,7 +12,6 @@ import 'package:clock_app/theme/utils/color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 SettingGroup appearanceSettingsSchema = SettingGroup(
   "Appearance",
   (context) => AppLocalizations.of(context)!.appearanceSettingGroup,

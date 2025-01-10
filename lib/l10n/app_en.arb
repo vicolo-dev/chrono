@@ -775,5 +775,8 @@
   "arabicNumeral": "Arabic",
   "showDigitalClock": "Show digital clock",
   "backgroundServiceIntervalSetting": "Background service interval",
-  "backgroundServiceIntervalSettingDescription": "Lower interval will help keep the app alive, at the cost of some battery life"
+  "backgroundServiceIntervalSettingDescription": "Lower interval will help keep the app alive, at the cost of some battery life",
+  "custom": "Custom",
+  "app": "App",
+  "materialYou": "Material You"
 }
