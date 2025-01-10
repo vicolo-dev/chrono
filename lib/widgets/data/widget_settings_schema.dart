@@ -196,6 +196,44 @@ SettingGroup widgetSettingSchema = SettingGroup(
             ),
           ],
         ),
+        SettingGroup(
+          "background",
+          (context) =>
+              AppLocalizations.of(context)!.colorSchemeBackgroundSettingGroup,
+          [
+            ColorSetting(
+              "backgroundColor",
+              (context) => AppLocalizations.of(context)!.colorSetting,
+              Colors.black,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+            ),
+            SliderSetting(
+              "backgroundBorderRadius",
+              (context) =>
+                  AppLocalizations.of(context)!.styleThemeRadiusSetting,
+              0,
+              64,
+              0,
+              snapLength: 4,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+            ),
+            SliderSetting(
+              "backgroundOpacity",
+              (context) =>
+                  AppLocalizations.of(context)!.styleThemeOpacitySetting,
+              0,
+              100,
+              0,
+              onChange: (context, value) async {
+                setDigitalClockWidgetData(context);
+              },
+            )
+          ],
+        ),
         // SettingGroup(
         //   "Shadow",
         //   (context) =>

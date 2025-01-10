@@ -11,6 +11,7 @@ void setDigitalClockWidgetData(BuildContext context) async {
     final layoutSettingGroup = digitalClockSettingGroup.getGroup('Layout');
     final dateSettingGroup = digitalClockSettingGroup.getGroup('Date');
     final timeSettingGroup = digitalClockSettingGroup.getGroup('Time');
+    final backgroundSettingGroup = digitalClockSettingGroup.getGroup('background');
     final int horizontalAlignment =
         layoutSettingGroup.getSetting('Horizontal Alignment').value;
     final bool showDate = dateSettingGroup.getSetting('Show Date').value;
@@ -43,6 +44,10 @@ void setDigitalClockWidgetData(BuildContext context) async {
       .getGroup('Display')
       .getSetting('Long Date Format')
       .value;
+    final String backgroundColor =
+      '#${backgroundSettingGroup.getSetting('backgroundColor').value.value.toRadixString(16)}';
+    final int backgroundOpacity = backgroundSettingGroup.getSetting('backgroundOpacity').value.round();
+    final int backgroundBorderRadius = backgroundSettingGroup.getSetting('backgroundBorderRadius').value.round();
 
     await HomeWidget.saveWidgetData("timeFormat", timeFormat);
     await HomeWidget.saveWidgetData("dateFormat", dateFormat);
@@ -56,6 +61,9 @@ void setDigitalClockWidgetData(BuildContext context) async {
     // await HomeWidget.saveWidgetData<int>('verticalAlignment', verticalAlignment);
     await HomeWidget.saveWidgetData<int>('timeFontWeight', timeFontWeight);
     await HomeWidget.saveWidgetData<int>('dateFontWeight', dateFontWeight);
+    await HomeWidget.saveWidgetData<int>('backgroundOpacity', backgroundOpacity);
+    await HomeWidget.saveWidgetData<int>('backgroundBorderRadius', backgroundBorderRadius);
+    await HomeWidget.saveWidgetData<String>('backgroundColor', backgroundColor);
 
     updateDigitalClockWidget();
   } catch (e) {
