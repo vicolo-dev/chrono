@@ -387,8 +387,8 @@ class _CustomListViewState<Item extends ListItem>
                 proxyDecorator: (widget, index, animation) =>
                     reorderableListDecorator(context, widget),
                 items: currentList,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, top: 8, bottom: 64),
                 isSameItem: (a, b) => a.id == b.id,
                 scrollDirection: Axis.vertical,
                 itemBuilder: _getItemBuilder(),
