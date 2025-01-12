@@ -38,9 +38,9 @@ class NumpadTimePicker extends StatefulWidget {
 
 class _NumpadTimePickerState extends State<NumpadTimePicker>
     with SingleTickerProviderStateMixin {
-  late int _hours;    // 0..23 in 24h mode, or 1..12 in 12h mode
-  late int _minutes;  // 0..59
-  late bool _isAm;    // Only relevant if use24hFormat=false
+  late int _hours; // 0..23 in 24h mode, or 1..12 in 12h mode
+  late int _minutes; // 0..59
+  late bool _isAm; // Only relevant if use24hFormat=false
 
   _CursorPosition? _cursorPosition;
 
@@ -52,12 +52,12 @@ class _NumpadTimePickerState extends State<NumpadTimePicker>
     super.initState();
 
     // Convert initialTime to local fields:
-    _hours = widget.initialTime.hour;   // e.g. 5 if 05:32
+    _hours = widget.initialTime.hour; // e.g. 5 if 05:32
     _minutes = widget.initialTime.minute;
 
     if (widget.use24hFormat) {
       // For 24h mode, 0..23 is valid
-      _isAm = _hours < 12; 
+      _isAm = _hours < 12;
     } else {
       // Convert 24h to 12h
       _isAm = _hours < 12;
@@ -233,31 +233,31 @@ class _NumpadTimePickerState extends State<NumpadTimePicker>
   }
 
   // =========== Hour Ones Logic ===========
- 
-void _handleHourOnesInput(int digit) {
-  final tens = _hours ~/ 10; // e.g., if _hours=10 => tens=1
-  final normalCandidate = tens * 10 + digit;
-  if (_isValidHour(normalCandidate)) {
-    // normal path
-    setState(() {
-      _hours = normalCandidate;
-    });
-    _moveCursorForward();
-  } else {
-    // fallback => single-digit hour
-    if (_isValidHour(digit)) {
+
+  void _handleHourOnesInput(int digit) {
+    final tens = _hours ~/ 10; // e.g., if _hours=10 => tens=1
+    final normalCandidate = tens * 10 + digit;
+    if (_isValidHour(normalCandidate)) {
+      // normal path
       setState(() {
-        _hours = digit;
+        _hours = normalCandidate;
       });
-      // move only one step forward, NOT skip
-      _moveCursorForward(); 
+      _moveCursorForward();
     } else {
-      // if fallback is also invalid, then skip
-      _skipNextCursor();
+      // fallback => single-digit hour
+      if (_isValidHour(digit)) {
+        setState(() {
+          _hours = digit;
+        });
+        // move only one step forward, NOT skip
+        _moveCursorForward();
+      } else {
+        // if fallback is also invalid, then skip
+        _skipNextCursor();
+      }
     }
+    _notifyChange();
   }
-  _notifyChange();
-}
 
   // =========== Minute Tens Logic ===========
   void _handleMinuteTensInput(int digit) {
@@ -321,17 +321,16 @@ void _handleHourOnesInput(int digit) {
     double originalWidth = MediaQuery.of(context).size.width;
 
     // For display:
-    final hh = _hours.toString().padLeft(2, '0'); 
+    final hh = _hours.toString().padLeft(2, '0');
     final mm = _minutes.toString().padLeft(2, '0');
     final amPmText = widget.use24hFormat ? '' : (_isAm ? 'AM' : 'PM');
-           final textStyle = textTheme.displayLarge
+    final textStyle = textTheme.displayLarge
         ?.copyWith(color: colorScheme.onSurface, height: 1, fontSize: 48);
-
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-              const SizedBox(height: 8),
+        const SizedBox(height: 8),
 
         // Time Display Row
         Row(
@@ -366,7 +365,7 @@ void _handleHourOnesInput(int digit) {
                 child: Text(
                   amPmText,
                   style: textTheme.displayMedium
-                      ?.copyWith(color: colorScheme.onSurface, height:1.2),
+                      ?.copyWith(color: colorScheme.onSurface, height: 1.2),
                 ),
               ),
           ],
@@ -396,18 +395,19 @@ void _handleHourOnesInput(int digit) {
               } else if (index == 9) {
                 // "00"
                 return _buildNumpadButton(
-    label: "00",
-    onTap: () {
-      // CHANGES: Press '0' twice in a row.
-      if (_cursorPosition != null) {
-        _onDigitInput(0); // first zero
-      }
-      // If the first zero did not disable the cursor, press zero again
-      if (_cursorPosition != null) {
-        _onDigitInput(0); // second zero
-      }
-    },
-  );              } else if (index == 10) {
+                  label: "00",
+                  onTap: () {
+                    // CHANGES: Press '0' twice in a row.
+                    if (_cursorPosition != null) {
+                      _onDigitInput(0); // first zero
+                    }
+                    // If the first zero did not disable the cursor, press zero again
+                    if (_cursorPosition != null) {
+                      _onDigitInput(0); // second zero
+                    }
+                  },
+                );
+              } else if (index == 10) {
                 // "0"
                 return _buildNumpadButton(
                   label: "0",
@@ -416,9 +416,7 @@ void _handleHourOnesInput(int digit) {
               } else {
                 // Toggle AM/PM if 12h mode
                 return _buildNumpadButton(
-                  label: widget.use24hFormat
-                      ? '' 
-                      : (_isAm ? 'PM' : 'AM'),
+                  label: widget.use24hFormat ? '' : (_isAm ? 'PM' : 'AM'),
                   onTap: widget.use24hFormat ? null : _onToggleAmPm,
                   isHighlighted: true,
                 );
@@ -452,8 +450,8 @@ void _handleHourOnesInput(int digit) {
                 opacity: _opacityAnimation,
                 child: Text(
                   text,
-                  style: textStyle,)
-              )
+                  style: textStyle,
+                ))
             : Text(
                 text,
                 style: textStyle,
@@ -474,8 +472,8 @@ void _handleHourOnesInput(int digit) {
     final textTheme = theme.textTheme;
 
     final isAmPmToggle = (label == 'AM' || label == 'PM');
-    final isEnabled = (onTap != null) &&
-        (_cursorPosition != null || isAmPmToggle);
+    final isEnabled =
+        (onTap != null) && (_cursorPosition != null || isAmPmToggle);
 
     return InkWell(
       onTap: isEnabled ? onTap : null,
