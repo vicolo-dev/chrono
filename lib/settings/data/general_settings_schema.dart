@@ -30,7 +30,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-enum TimePickerType { dial, input, spinner }
+enum TimePickerType { dial, input, spinner, numpad }
 
 enum DurationPickerType { rings, spinner, numpad }
 
@@ -171,6 +171,10 @@ SettingGroup generalSettingsSchema = SettingGroup(
           SelectSettingOption(
             (context) => AppLocalizations.of(context)!.pickerSpinner,
             TimePickerType.spinner,
+          ),
+          SelectSettingOption(
+            (context) => AppLocalizations.of(context)!.pickerNumpad,
+            TimePickerType.numpad,
           ),
         ],
             searchTags: [

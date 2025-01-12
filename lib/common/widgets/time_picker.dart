@@ -8,8 +8,10 @@ import 'package:clock_app/clock/types/time.dart';
 import 'package:clock_app/common/logic/show_select.dart';
 import 'package:clock_app/common/types/picker_result.dart';
 import 'package:clock_app/common/types/select_choice.dart';
+import 'package:clock_app/common/utils/date_time.dart';
 import 'package:clock_app/common/utils/time_of_day.dart';
 import 'package:clock_app/common/utils/time_picker_builder.dart';
+import 'package:clock_app/common/widgets/numpad_time_picker.dart';
 import 'package:clock_app/settings/data/general_settings_schema.dart';
 import 'package:clock_app/settings/data/settings_schema.dart';
 import 'package:clock_app/settings/types/setting.dart';
@@ -2625,6 +2627,8 @@ class _TimePickerDialogState extends State<TimePickerDialog>
           break;
         case TimePickerType.spinner:
           break;
+        case TimePickerType.numpad:
+          break;
         // case TimePickerEntryMode.dialOnly:
         // case TimePickerEntryMode.inputOnly:
         //   FlutterError('Can not change entry mode from $_entryMode');
@@ -2740,6 +2744,7 @@ class _TimePickerDialogState extends State<TimePickerDialog>
         }
         break;
       case TimePickerType.input:
+      case TimePickerType.numpad:
       case TimePickerType.spinner:
         timePickerWidth = _kTimePickerWidthPortrait;
         timePickerHeight = _kTimePickerHeightInput;
@@ -2868,6 +2873,32 @@ class _TimePickerDialogState extends State<TimePickerDialog>
         );
 
         break;
+      case TimePickerType.numpad:
+        picker = SizedBox(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _TitleBar(
+                helpText: widget.title,
+                onPickerModeChanged: _handlePickerTypeChange,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: NumpadTimePicker(
+                  initialTime: _selectedTime.value.toDateTime().toTimeOfDay(),
+                  onTimeChange: (time) {
+                    _handleTimeChanged(
+                        TimeOfDay(hour: time.hour, minute: time.minute));
+                  },
+                  use24hFormat: use24hMode,
+                ),
+              ),
+            ],
+          ),
+        );
+
+        break;
+
       case TimePickerType.dial:
         final Widget header = _TimePickerHeader(
           selectedTime: _selectedTime.value,
