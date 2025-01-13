@@ -91,7 +91,7 @@ class _AlarmDescriptionState extends State<AlarmDescription> {
                 context, widget.alarm, dateFormat, timeFormat),
             maxLines: 2,
             style: textTheme.displaySmall?.copyWith(
-              color: colorScheme.onBackground.withOpacity(0.6),
+              color: colorScheme.onSurface.withOpacity(0.6),
             ),
             textAlign: TextAlign.center,
           ),

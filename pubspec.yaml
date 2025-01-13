@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_boot_receiver: ^1.1.0
+  flutter_boot_receiver: ^1.3.0
   flutter_localizations:
     sdk: flutter
   intl: any

@@ -17,6 +17,8 @@ void handleBoot() async {
     logger.f("Error in handleBoot isolate: ${details.exception.toString()}");
   };
 
+  logger.i("handleBoot(): Boot event received");
+
   await initializeIsolate();
   try {
     await updateAlarms("handleBoot(): Update alarms on system boot");

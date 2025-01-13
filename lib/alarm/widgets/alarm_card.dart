@@ -152,8 +152,8 @@ class _AlarmCardState extends State<AlarmCard> {
                       widget.alarm.label,
                       style: textTheme.bodyLarge?.copyWith(
                         color: widget.alarm.isEnabled
-                            ? colorScheme.onBackground.withOpacity(0.8)
-                            : colorScheme.onBackground.withOpacity(0.6),
+                            ? colorScheme.onSurface.withOpacity(0.8)
+                            : colorScheme.onSurface.withOpacity(0.6),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -166,7 +166,7 @@ class _AlarmCardState extends State<AlarmCard> {
                           scale: 0.6,
                           color: widget.alarm.isEnabled
                               ? null
-                              : colorScheme.onBackground.withOpacity(0.6)),
+                              : colorScheme.onSurface.withOpacity(0.6)),
                     ],
                   ),
                   Row(
@@ -175,7 +175,7 @@ class _AlarmCardState extends State<AlarmCard> {
                         timeOfDayIcon.icon,
                         color: widget.alarm.isEnabled
                             ? timeOfDayIcon.color
-                            : colorScheme.onBackground.withOpacity(0.6),
+                            : colorScheme.onSurface.withOpacity(0.6),
                         size: 24,
                       ),
                       const SizedBox(width: 8),
@@ -186,8 +186,8 @@ class _AlarmCardState extends State<AlarmCard> {
                           maxLines: 2,
                           style: textTheme.bodyMedium?.copyWith(
                             color: widget.alarm.isEnabled
-                                ? colorScheme.onBackground.withOpacity(0.8)
-                                : colorScheme.onBackground.withOpacity(0.6),
+                                ? colorScheme.onSurface.withOpacity(0.8)
+                                : colorScheme.onSurface.withOpacity(0.6),
                           ),
                         ),
                       ),

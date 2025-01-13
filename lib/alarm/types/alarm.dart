@@ -355,7 +355,6 @@ class Alarm extends CustomizableListItem {
   }
 
   void setRingtone(BuildContext context, int index) {
-    ;
   }
 
   void setTime(Time time) {
